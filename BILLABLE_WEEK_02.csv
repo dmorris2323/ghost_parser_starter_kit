@@ -1,0 +1,6 @@
+GUI v0.2 (presets/session/report),1.5,140,210,"Usability + ops reporting ready for demos"
+GUI v0.2 (presets/session/report),1.5,140,210,"Usability + ops reporting ready for demos"
+Parser-GUI Integration,1.25,150,187.50,"Fixed import chain + verified Streamlit linkage"
+Parser-GUI Integration,1.25,150,187.50,"Fixed import chain + verified Streamlit linkage"
+GUI Maintenance,1.0,140,140,"Verified session persistence + quick QA pass"
+Fusion module (design+test),2.0,140,280,"core_fusion.py + test_fusion.py bench validated"

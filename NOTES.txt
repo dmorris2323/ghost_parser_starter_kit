@@ -1,0 +1,282 @@
+Parser v1.0/v1.1 Baseline (Oct 6, 2025)
+
+Purpose:
+- Convert raw sensor-style lines into normalized CSV/JSONL and flag events of interest.
+
+Inputs:
+- raw.log (synthetic events)
+- aoi.json (AOI_NK_TEST_ZONE, AOI_MINING_REGION)
+
+Core Logic (v1.1 defaults):
+- Shallow if Depth_km <= 2.5
+- Magnitude window 3.5–6.5
+- Flag if (inside any AOI) AND (shallow AND mag in window)
+- Special: any AOI name containing "MINING" can flag on Mag >= 3.0 even if deep
+
+Today’s Run:
+- Baseline executed, outputs produced.
+- Added 3 freehand events:
+  - PS901 -> expected FLAGGED (inside AOI + shallow + mag window)
+  - PS902 -> expected NOT flagged (inside AOI but deep)
+  - PS903 -> expected NOT flagged (outside AOI)
+
+Next:
+- Practice threshold knobs (--min-mag, --max-depth-km).
+- Add QC Log for edge cases; keep counts reproducible.
+2025-10-07: Day 2 QC drill complete. New 5-event set verified; flags match expectations; QC_LOG.txt updated.
+2025-10-07: Day 2 QC drill complete. Verified PS921-PS925; only PS925 flagged; QC_LOG.txt updated.
+2025-10-08: Day 3 AOI expansion + RF fusion teaser complete. RDR02 correlates with PS931 (time+location). RDR01 near PS930 (low-mag). RDR03 unrelated.
+
+
+
+2025-10-06 — Day 1 Parser Baseline + Doctrine
+
+Doctrine (AFDP 3-12, pp.1–3 skim):
+- Cyberspace = a warfighting domain alongside air/land/sea/space.
+- Defined by interconnected networks, systems, and information flow.
+- Analysts must understand cyberspace threats as part of intel fusion.
+
+Fusion Angle:
+Like cyberspace, seismic data is invisible until parsed. Both require turning raw signals into structured information that commanders can act on.
+
+Problem Restatement (Thinker’s Toolkit – Technique 1):
+How do I build a baseline parser to transform raw seismic logs into structured outputs (CSV/JSON) and apply one triage rule?
+
+QC_LOG Update (Day 1 Baseline):
+- Parser v1.0 built and tested on raw.log (3 sample events).
+- Outputs confirmed in CSV and JSONL.
+- Triage rule flagged shallow, AOI-bound events.
+
+Teach-Back (to family):
+I wrote a tool that takes messy log lines and turns them into a clean spreadsheet. The tool highlights important events (like shallow quakes in certain areas) so analysts don’t have to read every line.
+
+Intel Reflection:
+Day 1 established my parser baseline. This is like building my first analytic tool — converting raw noise into structured insight. It shows me how invisible data can become actionable intel.
+
+
+2025-10-07 — Day 2 QC Drill + Doctrine
+
+Doctrine (AFDP 3-12, pp.1–3 skim):
+- Cyberspace operations involve offense (deny/disrupt) and defense (protect/assure).
+- Quality control ensures systems and data are reliable under stress or change.
+- Same principle applies to cyber logs and EM signatures.
+
+Fusion Angle:
+Stress-testing a parser is like stress-testing a defensive system. If rules break under new data, the analysis can’t be trusted. Intel fusion requires confidence that outputs hold up against unexpected cases.
+
+Problem Restatement (Thinker’s Toolkit – Technique 1):
+How can I confirm my parser’s triage rules remain accurate when new, varied seismic events are introduced?
+
+QC_LOG Update (Day 2 QC Drill):
+- Added 5 new events (deep inside AOI, shallow outside AOI, shallow inside AOI with mag in range).
+- Parser flagged only PS925 (correct).
+- QC_LOG.txt verified expected vs actual results.
+
+Teach-Back (to family):
+I tested my tool by giving it tricky cases. Some events looked important but weren’t, others were real signals. The tool passed — it only flagged what mattered. That’s how analysts avoid false alarms.
+
+Intel Reflection:
+Day 2 validated my parser under new conditions. Quality control ensures outputs stay trustworthy. This reflects how intel systems must be tested constantly against edge cases to keep commanders confident in the analysis.
+
+
+2025-10-08 — Day 3 Fusion Inject + Doctrine
+
+Doctrine (AFDP 3-12, pp.1–3):
+- Cyberspace = a distinct warfighting domain (like air/land/sea/space).
+- Control of cyberspace means control of information flow, operations, and denial/disruption.
+- Cyberspace + EM spectrum both operate in “invisible domains.”
+
+Fusion Angle:
+Both cyberspace and the EM spectrum are invisible battlegrounds. Mastery of these domains = ability to intercept, deny, and protect critical signals.
+
+Problem Restatement (Thinker’s Toolkit – Technique 1):
+How can I confirm whether EM signatures (radar emissions) are correlated with seismic anomalies (possible underground tests)?
+
+QC_LOG Update (Fusion Section Added):
+- RDR01 vs PS930 → Possible correlation (time/location close; seismic low-mag).
+- RDR02 vs PS931 → Likely correlation (time/location matched; seismic flagged).
+- RDR03 vs PS932 → No correlation (too far apart; unrelated).
+
+Teach-Back (to family):
+Radars send invisible waves. Seismic sensors listen for rumbles. If both show activity at the same time and place, it may signal an underground test. Analysts connect those dots.
+
+Intel Reflection:
+Today I practiced correlating radar and seismic events, showing how invisible domains (cyberspace and EM spectrum) overlap with underground test detection. Restating the mission improved clarity, and explaining it to family sharpened my briefing skills.
+
+2025-10-09 Fusion: Considered impact of messy radar logs. Conclusion: fusion still possible because true signals retain structure; QC must filter junk.
+2025-10-06 — Day 1 Parser Baseline + Doctrine
+
+Doctrine (AFDP 3-12, pp.1–3 skim):
+- Cyberspace = a warfighting domain alongside air/land/sea/space.
+- Defined by interconnected networks, systems, and information flow.
+- Analysts must understand cyberspace threats as part of intel fusion.
+
+Fusion Angle:
+Like cyberspace, seismic data is invisible until parsed. Both require turning raw signals into structured information that commanders can act on.
+
+Problem Restatement (Thinker’s Toolkit – Technique 1):
+How do I build a baseline parser to transform raw seismic logs into structured outputs (CSV/JSON) and apply one triage rule?
+
+QC_LOG Update (Day 1 Baseline):
+- Parser v1.0 built and tested on raw.log (3 sample events).
+- Outputs confirmed in CSV and JSONL.
+- Triage rule flagged shallow, AOI-bound events.
+
+Teach-Back (to family):
+I wrote a tool that takes messy log lines and turns them into a clean spreadsheet. The tool highlights important events (like shallow quakes in certain areas) so analysts don’t have to read every line.
+
+Intel Reflection:
+Day 1 established my parser baseline. This is like building my first analytic tool — converting raw noise into structured insight. It shows me how invisible data can become actionable intel.
+
+----
+2025-10-07 — Day 2 QC Drill + Doctrine
+
+Doctrine (AFDP 3-12, pp.1–3 skim):
+- Cyberspace operations involve offense (deny/disrupt) and defense (protect/assure).
+- Quality control ensures systems and data are reliable under stress or change.
+- Same principle applies to cyber logs and EM signatures.
+
+Fusion Angle:
+Stress-testing a parser is like stress-testing a defensive system. If rules break under new data, the analysis can’t be trusted. Intel fusion requires confidence that outputs hold up against unexpected cases.
+
+Problem Restatement (Thinker’s Toolkit – Technique 1):
+How can I confirm my parser’s triage rules remain accurate when new, varied seismic events are introduced?
+
+QC_LOG Update (Day 2 QC Drill):
+- Added 5 new events (deep inside AOI, shallow outside AOI, shallow inside AOI with mag in range).
+- Parser flagged only PS925 (correct).
+- QC_LOG.txt verified expected vs actual results.
+
+Teach-Back (to family):
+I tested my tool by giving it tricky cases. Some events looked important but weren’t, others were real signals. The tool passed — it only flagged what mattered. That’s how analysts avoid false alarms.
+
+Intel Reflection:
+Day 2 validated my parser under new conditions. Quality control ensures outputs stay trustworthy. This reflects how intel systems must be tested constantly against edge cases to keep commanders confident in the analysis.
+
+----
+2025-10-08 — Day 3 Fusion Inject + Doctrine
+
+Doctrine (AFDP 3-12, pp.1–3):
+- Cyberspace = a distinct warfighting domain (like air, land, sea, space).
+- Cyberspace segments are connected and supported by physical infrastructure and the EMS.
+- Cyberspace operations enable and are enabled by effects in other domains.
+
+Fusion Angle:
+Both cyberspace and the EM spectrum are invisible battlegrounds. Mastery of these domains = ability to intercept, deny, and protect critical signals.
+
+Problem Restatement (Thinker’s Toolkit – Technique 1):
+How can I confirm whether EM signatures (radar emissions) are correlated with seismic anomalies (possible underground tests)?
+
+QC_LOG Update (Fusion Section Added):
+- RDR01 vs PS930 → Possible correlation (time/location close; seismic low-mag).
+- RDR02 vs PS931 → Likely correlation (time/location matched; seismic flagged).
+- RDR03 vs PS932 → No correlation (too far apart; unrelated).
+
+Teach-Back (to family):
+Radars send invisible waves. Seismic sensors listen for rumbles. If both show activity at the same time and place, it may signal an underground test. Analysts connect those dots.
+
+Intel Reflection:
+Today I practiced correlating radar and seismic events, showing how invisible domains (cyberspace and EM spectrum) overlap with underground test detection. Restating the mission improved clarity, and explaining it to family sharpened my briefing skills.
+
+----
+2025-10-09 — Day 4 Error Handling + Information Ops
+
+Doctrine (AFDP 3-13, pp.1–3):
+- Information is both a weapon and a battlespace.
+- Adversaries exploit misinformation, denial, and manipulation.
+- Protecting information integrity is as critical as protecting networks or signals.
+
+Fusion Angle:
+Messy logs = disinformation. Just like bad intel can mislead commanders, garbage in raw data can break analysis. Cleaning and filtering ensures only real signals shape decisions.
+
+Problem Restatement (Thinker’s Toolkit – Technique 1):
+How can I confirm my parser continues to deliver reliable outputs when confronted with malformed, incomplete, or misleading data?
+
+QC_LOG Update (Day 4 Error-Handling):
+| Event ID | Condition     | Expected | Actual | Notes |
+|----------|---------------|----------|--------|-------|
+| BAD01    | Nonsense      | Skip     | Skip   | OK    |
+| (garbage)| Wrong format  | Skip     | Skip   | OK    |
+| PS999    | Wrong sep     | Skip     | Skip   | OK    |
+
+Fusion Inject Note:
+If radar logs also had junk lines, true correlations would still stand out. Structured signals (time + location match) survive; noise must be filtered.
+
+Teach-Back (to family):
+Sometimes intel logs contain junk or fake entries. My role is to filter out the garbage and focus only on real signals. That way, leaders don’t get fooled by noise.
+
+Intel Reflection:
+Today I tested parser resilience with bad input. This reinforced that intel analysis isn’t just about finding signals — it’s about filtering deception. In the information battlespace, resilience means commanders can trust what they’re given.
+2025-10-10: Day 5 parser handled mixed data; valid events flagged (PS940/PS942), errors skipped, low-mag ignored.
+RDR02 correlates with PS942 (time/location); noise didn't prevent detection.
+2025-10-10: Day 5 doctrine skim — AFDP 3-13 pp.1-3; takeaway: clean inputs = clean perceptions; info is a joint function shaping ops.
+2025-10-10: EMS study — BLUF written, spectrum order memorized (radio→gamma).
+2025-10-10: Intel reflection — filtering noise still lets me detect true signals; ties to shaping the information environment.
+2025-10-10: Day 5 bearing/memory complete — chain, creed, core values, and daily discipline marker done.
+2025-10-10: Day 5 doctrine — AFDP 3-13 (pp.1–3). Key takeaway: Information is a joint function; every action/word shapes perceptions. Focus: clean inputs → clean perceptions; dirty inputs → misperceptions.
+2025-10-10: EMS study — BLUF: EM spectrum runs radio → microwave → infrared → visible → UV → X-ray → gamma; each band maps to military roles (comm, radar, SAT, EW). Flashcard added: 'Order of EM spectrum bands?'
+2025-10-10: Intel reflection — I stress-tested my parser against messy data; still detected true signals. Filtering noise prevents misperceptions and supports the commander’s decision advantage (OIE). RF + seismic correlation strengthened confidence in the signal.
+2025-10-10: Bearing/Memory — chain of command, enlisted ranks, Airman’s Creed, Core Values recited; discipline marker completed precisely.
+2025-10-11: Day 6 parser audit complete – baseline integrity confirmed, outputs stable, no flag drift.
+2025-10-11: PT maintenance – 14.27  mile run; legs good, recovery logged.
+2025-10-11: Bearing drill – ranks backward + uniform layout grid passed 3 min inspection.
+2025-10-11: Doctrine assignment – AFDP 3-13 (pp.4–6). Key takeaway: Information operations merge physical and cognitive actions to shape decision-space before combat. Focus: My parser + RF/EM fusion work is a direct analog to shaping the info environment—clean data and narrative = command advantage.
+2025-10-11: EMS study – watched ‘Defense Primer: Military Use of the Electromagnetic Spectrum’; BLUF + flashcard added.
+2025-10-11: EMS study – watched ‘Defense Primer: Military Use of the Electromagnetic Spectrum’; BLUF + flashcard added.
+2025-10-12: Bearing/Memory drill complete — Core Values, Chain of Command, ISR/SIGINT/EW added.
+2025-10-12 (Doctrine): Control of information flow and perception = control of tempo and advantage (AFDP 3-13).
+2025-10-12 (Doctrine 1-liner): Information dominance isn’t about volume — it’s about shaping perception and speed of truth.
+2025-10-12 (Day 7): Fusion insight — Radar (RDR02) gave the clearest time anchor; seismic confirmed shallow event inside AOI. Use radar for timing; seismic for confirmation.
+2025-10-12: Bearing/Memory drill complete — Core Values, chain-of-command template, ISR/SIGINT/EW recited.
+2025-10-12 (Doctrine): Control of information flow & perception = control of tempo (AFDP 3-13).
+2025-10-12 (Doctrine 1-liner): Information dominance isn’t about volume — it’s about shaping perception and speed of truth.
+2025-10-12 (EMS BLUF): Radar is controlled EM reflection — the faster you interpret the echo, the faster you act.
+2025-10-12: Day 7 closed — QC checked, fusion insight logged, doctrine/EMS recorded, stand-up & billing saved.
+2025-10-13 PREP: Start Parser GUI (Streamlit) skeleton; keep 1 doctrine page + 1 EMS card; log civilian hours.
+2025-10-13 (Doctrine): Information advantage = shaping perception and tempo (AFDP 3-13, cognitive domain).
+2025-10-13 (Doctrine 1-liner): Control the narrative and decision speed, or lose the fight.
+2025-10-13 (EMS BLUF): X-band radars trade weather penetration for higher resolution; know the band to predict capability.
+2025-10-13: Bearing/Memory drill done — reporting statement x5; EOB/CEW added.
+2025-10-13: Day 8 complete — GUI v0.1 working; doctrine/EMS logged; civilian hours tracked.
+2025-10-13: GUI v0.1 → parsed raw.log with aoi.json; flags verified; exported outputs/gui_day8.csv.
+2025-10-14 (Doctrine Applied): AFDP 3-13 pp. 3–8 — Emphasis on speed, credibility, and cross-domain integration. Ghost Lantern embodies this by fusing technical (parser/AI) and analytical (intel) tools into one decision platform.
+2025-10-14 (Intel Reflection): Modern analysts must integrate radar, cyber, and data analytics into unified situational awareness. My workflow simulates this integration daily.
+2025-10-14: Day 9 — GUI v0.2 live (presets + session save/load + MD report). Acceptance test passed.
+2025-10-14: Day 9 — GUI v0.2 live (presets + session save/load + MD report). Acceptance test passed.
+2025-10-14: Bearing/Memory done — Core Values + Reporting x5; new terms: ESM, RCS, EOB.
+2025-10-14 (Doctrine): AFDP 3-13 — Integration. Info effects = perception + tempo advantage.
+2025-10-14 (EMS): RCS basics — shape/material/frequency control detectability.
+2025-10-14 (EMS): RCS basics — shape/material/frequency control detectability.
+2025-10-18: Parser-GUI integration restored — code imports stable and clean.
+2025-10-16: GUI parsed sample lines from text area; table + counts verified; CSV downloaded.
+2025-10-21: Parser-GUI stability verified — session save/restore confirmed.
+2025-10-18: Parser-GUI integration restored — code imports stable and clean.
+2025-10-18 (Doctrine): Commanders who control perception and tempo achieve decision superiority — this is the heart of information advantage (AFDP 3-13, pp. 8-10).
+Info advantage = perception control + decision speed superiority.
+2025-10-18 (EMS BLUF): Different radar bands balance range vs resolution — L band sees far, X band sees clear. Electronic Support Measures exploit band fingerprints to ID systems.
+2025-10-18: Bearing/Memory drill done — CEW & ELINT added; Core Values recited x3.
+2025-10-21: Parser-GUI stability verified — session save/restore confirmed.
+2025-10-21 (Doctrine): AFDP 3-13 pp.8–10 — Information tempo = decision dominance.
+2025-10-21 (EMS BLUF): EM spectrum is finite; radar and comm systems fight for bandwidth. Control the band, control the field.
+2025-10-21: Bearing drill complete — recited core values; logged EOB, CEW, ISR.
+2025-10-16: GUI session save/restore verified; parser outputs stable.
+2025-10-16: Bearing/Memory complete — Core Values + ISR/SIGINT/EW reviewed.
+2025-10-16 (Doctrine): Information advantage = control of perception and decision tempo (AFDP 3-13 pp.8–10).
+2025-10-16 (EMS BLUF): L-band = longer range/less detail; X-band = shorter range/higher resolution — ESM exploits these fingerprints.
+2025-10-17: GUI strict-validation implemented — duplicate inputs removed; BAD01 + garbage lines skipped; Parsed=3, Flagged=2.
+2025-10-17: Parser v0.2 — MITRE/NIST auto-mapping working.
+2025-10-17 (Doctrine): Info ops = silent weapons shaping cognition. Control perception to control tempo.
+2025-10-17: Bearing drill done — Creed recited; new term ESM logged.
+2025-10-17: Fusion module initialized — parser + EM data merge successful.
+2025-10-17: Bearing Day 13 — EOB, CEW, ESM drilled and logged.
+2025-10-17: Doctrine 3-13 p9-12 — Control of spectrum enables information superiority and tempo advantage.
+2025-10-17: Fusion module online. Created src/ghost_parser/fusion/core_fusion.py and validated with test_fusion.py (asof merge, ±10min, ≤0.5°). Result: PS931↔RDR02 = correlate; PS932↔RDR03 = no-link (distance).
+2025-10-19: Fusion Stage 3 — distance + confidence scoring operational.
+2025-10-20: Markdown + AOI integration complete — parser now region-aware; report generation validated.
+2025-10-20: Day 15 — CLI+GUI match; PS930/PS931 flagged; strict validation skips junk.
+2025-10-20: Fusion quick-look — RDR02 ↔ PS931 (time+loc); PS932 no match.
+2025-10-21: Fusion sanity — moved RF points closer to seismic; confidence rose to High as expected (distance & time windows validated).
+2025-10-21: Verified csvkit subcommands (csvgrep, csvstat) in Poetry env; data stats accessible.
+2025-10-21: Fusion validation stats confirmed — Match_confidence 92.9–93.0, system stable and consistent; CSV analysis verified with csvkit.
+2025-10-21: Fusion confidence scoring validated; GUI report exports working.
+2025-10-22: Day 17 — Fusion confidence validated on imperfect data (PS901/RDR01 ≈69, PS902/RDR02 ≈76). GUI export verified.

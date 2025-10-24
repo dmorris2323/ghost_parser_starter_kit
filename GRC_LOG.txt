@@ -1,0 +1,2 @@
+2025-10-21: Parser session audit verified. Access limited to authorized users. Control ID: NIST AC-6 / Audit Trail AU-3 — Status: Compliant.
+2025-10-16 (GRC): Audit trail present (NOTES + GUI CSV). Control: NIST AU-3 — Status: Compliant.

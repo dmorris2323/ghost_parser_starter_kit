@@ -1,0 +1,8 @@
+{
+  "AOI_NK_TEST_ZONE": {
+    "lat_min": 39.0,
+    "lat_max": 41.0,
+    "lon_min": 128.0,
+    "lon_max": 130.0
+  }
+}

@@ -1,0 +1,31 @@
+Mission Profile – Parser v1.1 (Day 1)
+
+1) Problem Statement:
+   Monitor AOI for shallow, mid-mag events and surface only those matching operational interest.
+
+2) Customer / Decisionmaker:
+   Flight leadership/NCOIC; supports commander SA.
+
+3) AOI:
+   NK_TEST_ZONE (Lat 39–41 / Lon 128–130); MINING_REGION for alternate signature.
+
+4) EEIs:
+   Time, lat/lon, depth, magnitude, AOI membership, flag reason.
+
+5) Assumptions:
+   AOI bounds correct; thresholds reflect current TTPs.
+
+6) Constraints:
+   Synthetic/unclass data only; local batch run.
+
+7) Threshold knobs:
+   --max-depth-km, --min-mag, --max-mag, --min-mag-mining
+
+8) Outputs / Dissemination:
+   CSV (analyst), JSONL (pipeline), flagged counts (brief).
+
+9) MOE:
+   Low false positives; reproducible counts on test cases.
+
+10) Next Step:
+   Day 2 QC drill to validate behavior under controlled changes.

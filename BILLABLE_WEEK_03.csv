@@ -1,0 +1,10 @@
+Category,Hours,Billable Rate (USD/hr),Value (USD),Notes
+Markdown Report + AOI Integration,1.0,150,150,"Enabled tabulate + AOI zone awareness; verified GUI and Markdown export"
+2025-10-19,Fusion Core QA + GUI Validation,2.0,$150,Complete
+
+Fusion QA (confidence calibration),0.6,150,90,"Adjusted test vectors; verified High confidence behavior"
+Fusion Confidence QA,1.0,150,150,"Validated confidence computation using csvkit; confirmed consistent fusion logic (92.9–93.0%)"
+2025-10-21,Fusion Confidence Engine + GUI Visual Integration,2.0,150,300,Complete
+2025-10-21,Fusion Confidence Engine + GUI Visual Integration,2.0,150,300,Complete
+2025-10-21,Fusion Confidence Engine + GUI Visual Integration,2.0,150,300,Complete
+2025-10-22,Fusion Confidence QA,2.0,150,Validated confidence math on noisy pairs; GUI export working

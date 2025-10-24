@@ -1,0 +1,87 @@
+QC LOG – Day 2 (Oct 7, 2025)
+
+| Event ID | Condition                         | Expected | Actual | Notes |
+|----------|-----------------------------------|----------|--------|-------|
+| PS921    | Inside NK AOI + Deep (>2.5 km)    | No Flag  | No Flag| OK    |
+| PS922    | Inside NK AOI + Deep (>2.5 km)    | No Flag  | No Flag| OK    |
+| PS923    | Shallow + Outside AOI             | No Flag  | No Flag| OK    |
+| PS924    | Shallow + Outside AOI             | No Flag  | No Flag| OK    |
+| PS925    | Shallow + Inside NK + mag 3.5–6.5 | Flag     | Flag   | OK    |
+
+
+Verification notes:
+- Used --aoi aoi.json
+- NK AOI bounds ~ Lat 39–41, Lon 128–130
+- MINING AOI avoided for this drill
+
+
+
+
+
+
+Fusion Correlation (Day 3 – 2025-10-08)
+
+| RadarID | Time  | Location        | Matched Seismic | Time Δ | Loc Δ   | Expected | Actual  | Notes                          |
+|---------|-------|-----------------|-----------------|--------|---------|----------|---------|--------------------------------|
+| RDR01   | 14:05 | 39.800,128.900  | PS930 (14:10)   | 5 min  | 0.0/0.2 | Possible | Match   | Seismic didn’t flag (low mag) |
+| RDR02   | 14:15 | 40.200,129.200  | PS931 (14:20)   | 5 min  | 0.3/0.2 | Likely   | Match   | Inside AOI; seismic flagged   |
+| RDR03   | 14:25 | 37.500,127.900  | PS932 (14:30)   | 5 min  | 2.1/1.2 | Unlikely | No link | Too far; ignore               |
+
+
+
+Day 4 – Error-Handling QC (2025-10-09)
+
+| Event ID | Condition     | Expected | Actual | Notes |
+|----------|---------------|----------|--------|-------|
+| BAD01    | Nonsense      | Skip     | Skip   | OK    |
+| (garbage)| Wrong format  | Skip     | Skip   | OK    |
+| PS999    | Wrong sep     | Skip     | Skip   | OK    |
+
+Day 5 QC (2025-10-10)
+
+| Event ID | Condition             | Expected | Actual | Notes |
+|----------|-----------------------|----------|--------|-------|
+| PS940    | Valid inside AOI      | Flag     | Flag     | OK    |
+| PS941    | Bad data (???/BAD)    | Skip     | Skip     | OK    |
+| PS942    | Valid inside AOI      | Flag     | Flag     | OK    |
+| (garbage)| Wrong format          | Skip     | Skip     | OK    |
+| PS943    | Mag <3.5              | No Flag  | No Flag  | OK    |
+
+Day 5 QC (2025-10-10) — Autofill
+
+| Event ID | Condition             | Expected | Actual   | Notes  |
+|----------|-----------------------|----------|----------|--------|
+| PS940    | Valid inside AOI      | Flag     | Flag | OK |
+| PS941    | Bad data (???/BAD)    | Skip     | No Flag | CHECK |
+| PS942    | Valid inside AOI      | Flag     | Flag | OK |
+| (garbage)| Wrong format          | Skip     | (unexpected)| CHECK |
+| PS943    | Mag <3.5              | No Flag  | No Flag | OK |
+Day 5 QC (2025-10-10) — Autofill
+
+| Event ID | Condition             | Expected | Actual   | Notes  |
+|----------|-----------------------|----------|----------|--------|
+| PS940    | Valid inside AOI      | Flag     | Flag | OK |
+| PS941    | Bad data (???/BAD)    | Skip     | No Flag | CHECK |
+| PS942    | Valid inside AOI      | Flag     | Flag | OK |
+| (garbage)| Wrong format          | Skip     | (unexpected)| CHECK |
+| PS943    | Mag <3.5              | No Flag  | No Flag | OK |
+---
+Fusion Bench Test — 2025-10-17
+Inputs:
+- Seismic (log): PS931@14:10 (40.500,129.400), PS932@14:30 (39.600,129.100)
+- Radar (em):    RDR02@14:15 (40.200,129.200), RDR03@14:25 (37.500,127.900)
+Rules: window ±10 min, Δlat/Δlon ≤ 0.5°
+
+| Station | RadarID | Δt (s) | ΔLat | ΔLon | Expected   | Actual     | Notes                    |
+|---------|---------|--------|------|------|------------|------------|--------------------------|
+| PS931   | RDR02   | 300    | 0.30 | 0.20 | Correlate  | Correlate  | Inside AOI, within bounds|
+| PS932   | RDR03   | 300    | 2.10 | 1.20 | No link    | No link    | Too far (beyond 0.5°)    |
+
+Day 15 QC (2025-10-20)
+| ID    | Condition                 | Expected | Actual | Notes         |
+|-------|---------------------------|----------|--------|---------------|
+| PS930 | Inside AOI + shallow + M  | Flag     | ____   |               |
+| PS931 | Inside AOI + shallow + M  | Flag     | ____   |               |
+| PS932 | Mag < 3.5                 | No Flag  | ____   |               |
+| BAD01 | Nonsense                  | Skip     | ____   | GUI strict ok |
+| PS933 | Wrong separators          | Skip     | ____   | CLI may parse |

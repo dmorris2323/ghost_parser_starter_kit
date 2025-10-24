@@ -1,0 +1,2 @@
+Category,Hours,Billable Rate (USD/hr),Value (USD),Notes
+GUI / Parser (Streamlit),1.5,140,210,"Built v0.1 GUI, upload+parse+download flow"

@@ -1,0 +1,5 @@
+2025-10-12 (Day 7) — Fusion Insight
+- Clearest signal today: RADAR (RDR02) provided the strongest correlation anchor (precise time & known emitter behavior).
+- Seismic confirmed shallow activity inside AOI; radar timing narrowed the window → faster confidence.
+- Rule of thumb captured: “Use radar for timing anchors; use seismic for event confirmation.”
+

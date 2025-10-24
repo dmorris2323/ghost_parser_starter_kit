@@ -1,0 +1,106 @@
+Parser v1.0/v1.1 Baseline (Oct 6, 2025)
+
+Purpose:
+- Convert raw sensor-style lines into normalized CSV/JSONL and flag events of interest.
+
+Inputs:
+- raw.log (synthetic events)
+- aoi.json (AOI_NK_TEST_ZONE, AOI_MINING_REGION)
+
+Core Logic (v1.1 defaults):
+- Shallow if Depth_km <= 2.5
+- Magnitude window 3.5–6.5
+- Flag if (inside any AOI) AND (shallow AND mag in window)
+- Special: any AOI name containing "MINING" can flag on Mag >= 3.0 even if deep
+
+Today’s Run:
+- Baseline executed, outputs produced.
+- Added 3 freehand events:
+  - PS901 -> expected FLAGGED (inside AOI + shallow + mag window)
+  - PS902 -> expected NOT flagged (inside AOI but deep)
+  - PS903 -> expected NOT flagged (outside AOI)
+
+Next:
+- Practice threshold knobs (--min-mag, --max-depth-km).
+- Add QC Log for edge cases; keep counts reproducible.
+2025-10-07: Day 2 QC drill complete. New 5-event set verified; flags match expectations; QC_LOG.txt updated.
+2025-10-07: Day 2 QC drill complete. Verified PS921-PS925; only PS925 flagged; QC_LOG.txt updated.
+2025-10-08: Day 3 AOI expansion + RF fusion teaser complete. RDR02 correlates with PS931 (time+location). RDR01 near PS930 (low-mag). RDR03 unrelated.
+
+
+
+2025-10-06 — Day 1 Parser Baseline + Doctrine
+
+Doctrine (AFDP 3-12, pp.1–3 skim):
+- Cyberspace = a warfighting domain alongside air/land/sea/space.
+- Defined by interconnected networks, systems, and information flow.
+- Analysts must understand cyberspace threats as part of intel fusion.
+
+Fusion Angle:
+Like cyberspace, seismic data is invisible until parsed. Both require turning raw signals into structured information that commanders can act on.
+
+Problem Restatement (Thinker’s Toolkit – Technique 1):
+How do I build a baseline parser to transform raw seismic logs into structured outputs (CSV/JSON) and apply one triage rule?
+
+QC_LOG Update (Day 1 Baseline):
+- Parser v1.0 built and tested on raw.log (3 sample events).
+- Outputs confirmed in CSV and JSONL.
+- Triage rule flagged shallow, AOI-bound events.
+
+Teach-Back (to family):
+I wrote a tool that takes messy log lines and turns them into a clean spreadsheet. The tool highlights important events (like shallow quakes in certain areas) so analysts don’t have to read every line.
+
+Intel Reflection:
+Day 1 established my parser baseline. This is like building my first analytic tool — converting raw noise into structured insight. It shows me how invisible data can become actionable intel.
+
+
+2025-10-07 — Day 2 QC Drill + Doctrine
+
+Doctrine (AFDP 3-12, pp.1–3 skim):
+- Cyberspace operations involve offense (deny/disrupt) and defense (protect/assure).
+- Quality control ensures systems and data are reliable under stress or change.
+- Same principle applies to cyber logs and EM signatures.
+
+Fusion Angle:
+Stress-testing a parser is like stress-testing a defensive system. If rules break under new data, the analysis can’t be trusted. Intel fusion requires confidence that outputs hold up against unexpected cases.
+
+Problem Restatement (Thinker’s Toolkit – Technique 1):
+How can I confirm my parser’s triage rules remain accurate when new, varied seismic events are introduced?
+
+QC_LOG Update (Day 2 QC Drill):
+- Added 5 new events (deep inside AOI, shallow outside AOI, shallow inside AOI with mag in range).
+- Parser flagged only PS925 (correct).
+- QC_LOG.txt verified expected vs actual results.
+
+Teach-Back (to family):
+I tested my tool by giving it tricky cases. Some events looked important but weren’t, others were real signals. The tool passed — it only flagged what mattered. That’s how analysts avoid false alarms.
+
+Intel Reflection:
+Day 2 validated my parser under new conditions. Quality control ensures outputs stay trustworthy. This reflects how intel systems must be tested constantly against edge cases to keep commanders confident in the analysis.
+
+
+2025-10-08 — Day 3 Fusion Inject + Doctrine
+
+Doctrine (AFDP 3-12, pp.1–3):
+- Cyberspace = a distinct warfighting domain (like air/land/sea/space).
+- Control of cyberspace means control of information flow, operations, and denial/disruption.
+- Cyberspace + EM spectrum both operate in “invisible domains.”
+
+Fusion Angle:
+Both cyberspace and the EM spectrum are invisible battlegrounds. Mastery of these domains = ability to intercept, deny, and protect critical signals.
+
+Problem Restatement (Thinker’s Toolkit – Technique 1):
+How can I confirm whether EM signatures (radar emissions) are correlated with seismic anomalies (possible underground tests)?
+
+QC_LOG Update (Fusion Section Added):
+- RDR01 vs PS930 → Possible correlation (time/location close; seismic low-mag).
+- RDR02 vs PS931 → Likely correlation (time/location matched; seismic flagged).
+- RDR03 vs PS932 → No correlation (too far apart; unrelated).
+
+Teach-Back (to family):
+Radars send invisible waves. Seismic sensors listen for rumbles. If both show activity at the same time and place, it may signal an underground test. Analysts connect those dots.
+
+Intel Reflection:
+Today I practiced correlating radar and seismic events, showing how invisible domains (cyberspace and EM spectrum) overlap with underground test detection. Restating the mission improved clarity, and explaining it to family sharpened my briefing skills.
+
+2025-10-09 Fusion: Considered impact of messy radar logs. Conclusion: fusion still possible because true signals retain structure; QC must filter junk.

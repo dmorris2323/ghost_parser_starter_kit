@@ -1,0 +1,5 @@
+2025-10-20T12:01:00Z | Station: PS930 | Mag: 4.0 | Depth: 1.2km | Lat: 39.800 | Lon: 128.700 | Type: event
+2025-10-20T12:05:00Z | Station: PS931 | Mag: 5.1 | Depth: 1.0km | Lat: 40.200 | Lon: 129.200 | Type: event
+2025-10-20T12:10:00Z | Station: PS932 | Mag: 2.9 | Depth: 1.8km | Lat: 39.500 | Lon: 128.900 | Type: event
+2025-10-20T12:15:00Z | Station: BAD01 | Mag: ??? | Depth: N/A  | Lat: X | Lon: Y | Type: error
+2025-10-20T12:20:00Z Station=PS933 Mag=4.2 Depth=1km Lat=39.900 Lon=129.000

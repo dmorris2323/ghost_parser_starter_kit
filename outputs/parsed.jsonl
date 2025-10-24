@@ -1,0 +1,33 @@
+{"DateTime": "2025-10-06T20:10:00Z", "Station": "PS901", "Mag": 4.8, "Depth_km": 1.2, "Lat": 39.7, "Lon": 128.9, "Type": "event", "Flagged": true, "Reasons": "nk_zone+shallow+mag_range"}
+{"DateTime": "2025-10-06T20:15:00Z", "Station": "PS902", "Mag": 4.5, "Depth_km": 3.6, "Lat": 40.2, "Lon": 129.2, "Type": "event", "Flagged": false, "Reasons": ""}
+{"DateTime": "2025-10-06T20:20:00Z", "Station": "PS903", "Mag": 3.2, "Depth_km": 1.0, "Lat": 39.9, "Lon": 128.5, "Type": "event", "Flagged": false, "Reasons": ""}
+{"DateTime": "2025-10-06T20:25:00Z", "Station": "PS904", "Mag": 5.1, "Depth_km": 1.1, "Lat": 37.5, "Lon": 127.9, "Type": "event", "Flagged": false, "Reasons": ""}
+{"DateTime": "2025-10-06T20:30:00Z", "Station": "PS905", "Mag": 6.2, "Depth_km": 0.9, "Lat": 39.3, "Lon": 129.5, "Type": "event", "Flagged": true, "Reasons": "nk_zone+shallow+mag_range"}
+{"DateTime": "2025-09-18T05:34:12Z", "Station": "PS123", "Mag": 4.2, "Depth_km": 1.5, "Lat": 39.5, "Lon": 128.9, "Type": "event", "Flagged": true, "Reasons": "nk_zone+shallow+mag_range"}
+{"DateTime": "2025-09-18T08:02:10Z", "Station": "PS201", "Mag": 3.1, "Depth_km": 12.0, "Lat": 34.1, "Lon": 117.2, "Type": "event", "Flagged": false, "Reasons": ""}
+{"DateTime": "2025-09-19T14:22:44Z", "Station": "PS777", "Mag": 5.0, "Depth_km": 0.8, "Lat": 40.1, "Lon": 129.4, "Type": "event", "Flagged": true, "Reasons": "nk_zone+shallow+mag_range"}
+{"DateTime": "2025-10-06T20:10:00Z", "Station": "PS901", "Mag": 4.8, "Depth_km": 1.2, "Lat": 39.7, "Lon": 128.9, "Type": "event", "Flagged": true, "Reasons": "nk_zone+shallow+mag_range"}
+{"DateTime": "2025-10-06T20:15:00Z", "Station": "PS902", "Mag": 4.5, "Depth_km": 3.6, "Lat": 40.2, "Lon": 129.2, "Type": "event", "Flagged": false, "Reasons": ""}
+{"DateTime": "2025-10-06T20:20:00Z", "Station": "PS903", "Mag": 3.2, "Depth_km": 1.0, "Lat": 39.9, "Lon": 128.5, "Type": "event", "Flagged": false, "Reasons": ""}
+{"DateTime": "2025-10-06T20:25:00Z", "Station": "PS904", "Mag": 5.1, "Depth_km": 1.1, "Lat": 37.5, "Lon": 127.9, "Type": "event", "Flagged": false, "Reasons": ""}
+{"DateTime": "2025-10-06T20:30:00Z", "Station": "PS905", "Mag": 6.2, "Depth_km": 0.9, "Lat": 39.3, "Lon": 129.5, "Type": "event", "Flagged": true, "Reasons": "nk_zone+shallow+mag_range"}
+{"DateTime": "2025-10-06T18:01:00Z", "Station": "PS901", "Mag": 4.6, "Depth_km": 1.2, "Lat": 39.8, "Lon": 128.9, "Type": "event", "Flagged": true, "Reasons": "nk_zone+shallow+mag_range"}
+{"DateTime": "2025-10-06T18:03:00Z", "Station": "PS902", "Mag": 4.1, "Depth_km": 3.8, "Lat": 40.1, "Lon": 129.2, "Type": "event", "Flagged": false, "Reasons": ""}
+{"DateTime": "2025-10-06T18:05:00Z", "Station": "PS903", "Mag": 4.0, "Depth_km": 1.0, "Lat": 37.4, "Lon": 127.8, "Type": "event", "Flagged": false, "Reasons": ""}
+{"DateTime": "2025-10-07T14:10:00Z", "Station": "PS921", "Mag": 4.7, "Depth_km": 3.8, "Lat": 40.2, "Lon": 129.4, "Type": "event", "Flagged": false, "Reasons": ""}
+{"DateTime": "2025-10-07T14:15:00Z", "Station": "PS922", "Mag": 5.2, "Depth_km": 5.1, "Lat": 39.9, "Lon": 129.8, "Type": "event", "Flagged": false, "Reasons": ""}
+{"DateTime": "2025-10-07T14:20:00Z", "Station": "PS923", "Mag": 4.3, "Depth_km": 1.0, "Lat": 37.5, "Lon": 127.9, "Type": "event", "Flagged": false, "Reasons": ""}
+{"DateTime": "2025-10-07T14:25:00Z", "Station": "PS924", "Mag": 4.6, "Depth_km": 1.2, "Lat": 41.5, "Lon": 130.5, "Type": "event", "Flagged": false, "Reasons": ""}
+{"DateTime": "2025-10-07T14:30:00Z", "Station": "PS925", "Mag": 4.5, "Depth_km": 1.1, "Lat": 39.7, "Lon": 129.0, "Type": "event", "Flagged": true, "Reasons": "nk_zone+shallow+mag_range"}
+{"DateTime": "2025-10-07T14:10:00Z", "Station": "PS921", "Mag": 4.7, "Depth_km": 3.8, "Lat": 40.2, "Lon": 129.4, "Type": "event", "Flagged": false, "Reasons": ""}
+{"DateTime": "2025-10-08T14:10:00Z", "Station": "PS930", "Mag": 2.9, "Depth_km": 1.0, "Lat": 39.8, "Lon": 128.7, "Type": "event", "Flagged": false, "Reasons": ""}
+{"DateTime": "2025-10-08T14:20:00Z", "Station": "PS931", "Mag": 4.2, "Depth_km": 1.1, "Lat": 40.5, "Lon": 129.4, "Type": "event", "Flagged": true, "Reasons": "nk_zone+shallow+mag_range"}
+{"DateTime": "2025-10-08T14:30:00Z", "Station": "PS932", "Mag": 5.0, "Depth_km": 0.9, "Lat": 39.6, "Lon": 129.1, "Type": "event", "Flagged": true, "Reasons": "nk_zone+shallow+mag_range"}
+{"DateTime": "2025-10-09T10:00:00Z", "Station": "BAD01", "Mag": 0.0, "Depth_km": 0.0, "Lat": 0.0, "Lon": 0.0, "Type": "error", "Flagged": false, "Reasons": ""}
+{"DateTime": "Garbage line with no format at all", "Station": "", "Mag": 0.0, "Depth_km": 0.0, "Lat": 0.0, "Lon": 0.0, "Type": "", "Flagged": false, "Reasons": ""}
+{"DateTime": "2025-10-09T10:05:00Z Station=PS999 Mag=4.5 Depth=1km Lat=40 Lon=129", "Station": "", "Mag": 0.0, "Depth_km": 0.0, "Lat": 0.0, "Lon": 0.0, "Type": "", "Flagged": false, "Reasons": ""}
+{"DateTime": "2025-10-10T09:00:00Z", "Station": "PS940", "Mag": 4.2, "Depth_km": 1.1, "Lat": 39.9, "Lon": 128.8, "Type": "event", "Flagged": true, "Reasons": "nk_zone+shallow+mag_range"}
+{"DateTime": "2025-10-10T09:05:00Z", "Station": "PS941", "Mag": 0.0, "Depth_km": 0.0, "Lat": 0.0, "Lon": 0.0, "Type": "error", "Flagged": false, "Reasons": ""}
+{"DateTime": "2025-10-10T09:10:00Z", "Station": "PS942", "Mag": 5.5, "Depth_km": 0.9, "Lat": 40.0, "Lon": 129.0, "Type": "event", "Flagged": true, "Reasons": "nk_zone+shallow+mag_range"}
+{"DateTime": "Bad Line That Makes No Sense", "Station": "", "Mag": 0.0, "Depth_km": 0.0, "Lat": 0.0, "Lon": 0.0, "Type": "", "Flagged": false, "Reasons": ""}
+{"DateTime": "2025-10-10T09:15:00Z", "Station": "PS943", "Mag": 3.1, "Depth_km": 1.2, "Lat": 39.7, "Lon": 128.9, "Type": "event", "Flagged": false, "Reasons": ""}

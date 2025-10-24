@@ -1,0 +1,16 @@
+[Q] What determines radar resolution?
+[A] Pulse width and wavelength — shorter = finer detail.
+[Q] Why use X-band for tracking?
+[A] Shorter wavelength → finer resolution for precise target updates.
+[Q] What is radar cross-section (RCS)?
+[A] The measure of how much radar energy an object reflects back—smaller RCS = harder to detect.
+[Q] What determines RCS?
+[A] Shape, material, and orientation relative to radar source.
+[Q] What lowers radar cross-section (RCS)?
+[A] Shaping (deflect energy away), absorptive materials, and band-specific design to reduce returns at threat frequencies.
+[Q] What does L-band radar provide over X-band?  
+[A] Greater range but lower resolution — used for search and early warning.
+[Q] Why choose X-band for tracking?
+[A] Short wavelength → finer resolution for precise target updates.
+[Q] What are the three pillars of Electronic Warfare?
+[A] Electronic Attack (EA), Electronic Protection (EP), Electronic Support (ES).

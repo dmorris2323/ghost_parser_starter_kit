@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+# notes_day5.sh — append the Day 5 NOTES line
+
+set -euo pipefail
+
+NOTES="NOTES.txt"
+
+LINE="2025-10-10: Day 5 QC drill complete. Parser handled mixed inputs (PS940, PS942 flagged; PS941 + garbage skipped; PS943 no-flag). Fusion check: RDR02 aligned with PS942 despite messy data. Doctrine (AFDP 3-13 pp.1–3) tie-in: clean inputs prevent misperceptions in the information fight. EMS study BLUF: EM spectrum runs radio → gamma, each band tied to military use. Teach-back delivered: filtering noise protects commanders from bad perceptions."
+
+# Ensure NOTES exists (create if missing)
+touch \"$NOTES\"
+
+# Append and show confirmation
+echo \"$LINE\" >> \"$NOTES\"
+echo \"Appended Day 5 line to $NOTES\"
+tail -n 3 \"$NOTES\"
+
