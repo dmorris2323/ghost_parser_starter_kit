@@ -14,3 +14,5 @@
 [A] Short wavelength → finer resolution for precise target updates.
 [Q] What are the three pillars of Electronic Warfare?
 [A] Electronic Attack (EA), Electronic Protection (EP), Electronic Support (ES).
+[Q] Why can SAR see at night and through clouds?
+[A] It uses microwaves and processing, not sunlight, so weather and darkness matter less.

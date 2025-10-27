@@ -280,3 +280,17 @@ Info advantage = perception control + decision speed superiority.
 2025-10-21: Fusion validation stats confirmed — Match_confidence 92.9–93.0, system stable and consistent; CSV analysis verified with csvkit.
 2025-10-21: Fusion confidence scoring validated; GUI report exports working.
 2025-10-22: Day 17 — Fusion confidence validated on imperfect data (PS901/RDR01 ≈69, PS902/RDR02 ≈76). GUI export verified.
+2025-10-24: Day 19 — Parser GUI stable; run/metrics/report verified; optional chart ready.
+2025-10-24: Day 19 — Parser GUI stable; run/metrics/report verified; optional chart ready.
+2025-10-24: Day 19 — Parser GUI stable; run/metrics/report verified; optional chart ready.
+2025-10-24: Day 19 — Parser GUI stable; run/metrics/report verified; optional chart ready.
+2025-10-24: Day 19 — Parser GUI stable; run/metrics/report verified; optional chart ready.
+2025-10-24: Day 19 — Parser GUI stable; run/metrics/report verified; optional chart ready.
+2025-10-24: Day 19 — Parser GUI stable; run/metrics/report verified; AOI uploader fixed; report export working; optional chart block added.
+2025-10-25 (Doctrine): Assess info ops with MOP (did we do it?) and MOE (did it work?); aim for decision speed and perception effects.
+2025-10-25 (EMS BLUF): SAR fakes a huge antenna by moving; longer dwell + processing = sharp images through clouds/night.
+2025-10-25 (China Study): PLARF is China’s missile arm (SRBM/MRBM/IRBM). It underpins A2/AD by holding bases, ships, and runways at risk; intel fusion helps detect pre-launch patterns.
+2025-10-25: Bearing/Memory drill complete — reporting x5; AF creed; MOP/MOE/SAR added.
+2025-10-25: Day 20 — Added parser smoke tests; GUI sanity passed; doctrine/EMS/China logged.
+2025-10-24: Day 19 — Parser GUI stable; AOI upload fixed; Markdown report + chart integrated; system running clean.
+2025-10-25: Day 20 — Parser smoke tests passed; doctrine/EMS/China sessions scheduled; mural progress (painting phase).

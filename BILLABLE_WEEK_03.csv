@@ -1,10 +1,6 @@
-Category,Hours,Billable Rate (USD/hr),Value (USD),Notes
-Markdown Report + AOI Integration,1.0,150,150,"Enabled tabulate + AOI zone awareness; verified GUI and Markdown export"
-2025-10-19,Fusion Core QA + GUI Validation,2.0,$150,Complete
-
-Fusion QA (confidence calibration),0.6,150,90,"Adjusted test vectors; verified High confidence behavior"
-Fusion Confidence QA,1.0,150,150,"Validated confidence computation using csvkit; confirmed consistent fusion logic (92.9–93.0%)"
-2025-10-21,Fusion Confidence Engine + GUI Visual Integration,2.0,150,300,Complete
-2025-10-21,Fusion Confidence Engine + GUI Visual Integration,2.0,150,300,Complete
-2025-10-21,Fusion Confidence Engine + GUI Visual Integration,2.0,150,300,Complete
-2025-10-22,Fusion Confidence QA,2.0,150,Validated confidence math on noisy pairs; GUI export working
+Date,Category,Hours,Rate,Value,Notes
+2025-10-24,GUI/Parser QA,1.5,150,225,"Run flow verified + Markdown report export + chart block option"
+2025-10-24,GUI Polishing,0.5,150,75,"AOI uploader error handling + layout/alignment fixes"
+2025-10-25,Test Engineering,1.0,150,150,"Parser smoke tests (valid/garbage) + GUI sanity check"
+2025-10-24,Parser GUI QA,1.5,150,225,"Verified GUI flow, AOI upload, report export, chart integration"
+2025-10-25,Test Engineering,1.0,150,150,"Parser smoke test run and verification complete; GUI sanity passed"

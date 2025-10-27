@@ -1,0 +1,2 @@
+[Q] Why does PLARF matter to ISR?
+[A] Missiles change the risk map fast; indicators (movement, comms, EM) must be fused early.
