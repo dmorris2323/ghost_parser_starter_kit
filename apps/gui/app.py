@@ -140,15 +140,21 @@ if log_file is not None:
 elif raw_text.strip():
     lines = raw_text.splitlines()
 
-# --- SAFE AOI LOAD (outside the button so aois is always defined) ---
+# ---- AOI upload (safe) ----
+aoi_file = st.file_uploader("AOI (aoi.json) [optional]", type=["json"], key="aoi_file_upload")
+
+# Always define aois so it's never undefined
 aois = {}
-if aoi_file is not None:
+
+if aoi_file:
     try:
+        # Streamlit UploadedFile -> bytes -> text -> JSON
         aois = json.loads(aoi_file.getvalue().decode("utf-8"))
         st.success(f"Loaded {len(aois)} AOI boxes")
     except Exception as e:
         st.error(f"AOI load error: {e}")
         aois = {}
+# else: leave aois = {}  (no file uploaded is okay)
 
 # --- RUN PARSER ---
 if run_parse:
@@ -164,6 +170,34 @@ if run_parse:
             st.metric("Parsed events", len(df))
             st.metric("Flagged", flagged_count)
             st.dataframe(df, use_container_width=True, hide_index=True)
+            # --- Confidence or Reasons Chart (Auto-select) ---
+            try:
+                if "Match_confidence" in df.columns and df["Match_confidence"].notna().any():
+                    st.subheader("Fusion Confidence (0–100)")
+                    import matplotlib.pyplot as plt
+                    fig, ax = plt.subplots()
+                    df["Match_confidence"].astype(float).plot(
+                        kind="hist",
+                        bins=10,
+                        ax=ax,
+                        title="Match Confidence Distribution"
+                    )
+                    ax.set_xlabel("Confidence Score")
+                    st.pyplot(fig)
+                else:
+                    st.subheader("Why Were Events Flagged?")
+                    reason_counts = (
+                        df.get("Reasons", pd.Series([], dtype=str))
+                          .fillna("")
+                          .replace("", "(none)")
+                          .value_counts()
+                    )
+                    if len(reason_counts) > 0:
+                        st.bar_chart(reason_counts)
+                    else:
+                        st.caption("No flagged events to chart.")
+            except Exception as e:
+                st.warning(f"Chart not displayed: {e}")
 
             # --- Quick chart (auto-switch) ---
             try:

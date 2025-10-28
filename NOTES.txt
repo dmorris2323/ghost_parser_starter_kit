@@ -294,3 +294,8 @@ Info advantage = perception control + decision speed superiority.
 2025-10-25: Day 20 — Added parser smoke tests; GUI sanity passed; doctrine/EMS/China logged.
 2025-10-24: Day 19 — Parser GUI stable; AOI upload fixed; Markdown report + chart integrated; system running clean.
 2025-10-25: Day 20 — Parser smoke tests passed; doctrine/EMS/China sessions scheduled; mural progress (painting phase).
+2025-10-27: Day 22 — GUI QA successful; GitHub push checkpoint; EW/China/Mandarin blocks recorded.
+2025-10-27 (Doctrine → Application): GLL fuses seismic + RF + SAR to confirm hostile activity faster than legacy systems — reduces decision latency and gives information advantage.
+China ISR: PLARF creates seismic + RF signatures — GLL could detect TEL movement and launch changes earlier than radar alone.
+
+2025-10-28: Day 23 — Chart fallback OK; AOI safe load OK; report export OK.
