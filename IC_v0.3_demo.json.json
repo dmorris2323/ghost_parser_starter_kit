@@ -1,0 +1,38 @@
+{
+    "id": "IC-2025-001",
+    "timestamp": "2025-10-31T14:00:00Z",
+    "location": {
+        "lat": 5.345,
+        "lon": -4.024
+    },
+    "simulation_flag": true,
+    "fusion_score": 72,
+    "analyst_confidence": 81,
+    "evidence": {
+        "iq_clip_sha256": "1f4b9c...",
+        "psd_path": "data/psd/ic-2025-001.png",
+        "gnss_log_path": "logs/gnss/ic-2025-001.txt",
+        "context_refs": [
+            "AIS:Vessel123",
+            "ADS-B:Flight456",
+            "OSINT:local-report"
+        ]
+    },
+    "rationale": {
+        "signals_observed": [
+            "L-band burst",
+            "GNSS noise spike"
+        ],
+        "baseline_deviation": "Transient RF surge outside historical mean by +27 dB",
+        "cross_checks": [
+            "GNSS drift verified",
+            "No matching SATCOM traffic"
+        ],
+        "confidence_drivers": [
+            "Thermal correlation with IR sensor",
+            "No spoof signature detected"
+        ],
+        "decision_note": "Likely training exercise; maintain Yellow status"
+    },
+    "recommended_coa": "Continue monitoring; correlate with AF-03 pattern database"
+}

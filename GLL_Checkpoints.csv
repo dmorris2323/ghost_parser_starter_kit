@@ -1,0 +1,2 @@
+Week_Start(YYYY-MM-DD),Friday_Deliverable_Uploaded_(Y/N),New_Proof_Artifact_(Y/N),AF_Asks_Advanced_(IDs),Scope_Drift_(Y/N),Scope_Correction_Note,Sunday_Stable_or_Bigger_(Stable/Bigger),Guardrails_Intact_(Y/N),Action_Items_For_Next_Week
+10/27/25,Y,Y (the new Incident Card v0.3 counts),"AF-01, AF-03, AF-05",N,,,Y,Finalize API schema; draft two low-risk playbooks

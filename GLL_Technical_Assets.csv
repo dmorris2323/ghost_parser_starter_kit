@@ -1,0 +1,6 @@
+Asset_ID,Asset_Name,Asset_Type_(Parser/IncidentCard/SensorKit/API/Playbook/Other),Version,Linked_AF_Ask_IDs_(comma_sep),Objective/Outcome,Current_Status,Owner,Next_Milestone,Due_Date(YYYY-MM-DD),Repo_or_Location(URL_or_Path),Notes
+AS-IC-03,Incident Card Template v0.3,IncidentCard,0.3,"AF-01,AF-03,AF-04,AF-05",Commander-ready card w/ evidence and rationale,Drafting,Ghost,Add rationale block + C2 tags,11/8/25,Notion:GLL/IncidentCards,
+AS-API-01,Incident JSON API Stub,API,0.1,"AF-01,AF-05",Serve incident cards via REST/JSON,Planned,Ghost,Define schema fields; mock endpoint,11/15/25,Notion:GLL/API,
+AS-SK-01,Edge Sensor Kit Spec,SensorKit,0.1,"AF-02,AF-07",Document SDR+GNSS+Mini-PC kit w/ power + time-sync,Drafting,Ghost,Add power budget & PPS discipline notes,11/22/25,Notion:GLL/SensorKit,
+AS-PB-02,Automation Threshold Matrix,Playbook,0.1,"AF-06,AF-04",Map fusion score bands → actions,Planned,Ghost,Draft two low-risk playbooks,11/29/25,Notion:GLL/Playbooks,
+AS-COMP-01,Compliance & Security Roadmap,Other,0.1,AF-08,Outline data handling + IL4/IL5 pathway,Not Started,Ghost,Draft 1-pager + export control check,11/29/25,Notion:GLL/Compliance,

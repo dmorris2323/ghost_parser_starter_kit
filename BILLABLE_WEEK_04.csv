@@ -1,3 +1,10 @@
 2025-10-27,QA & Ops Console Testing,2.0,150,300,QA + report/CSV + Git push
 2025-10-27,Doctrine+ISR+Bearing,1.0,150,150,PLARF ISR + Mandarin Mini-block + Bearing/Memory
 2025-10-28,GUI/Chart+AOI+Report,1.0,150,150,Confidence/Reason auto-chart + AOI safe load + MD report
+2025-10-28,Doctrine/EMS/China Study,1.0,150,150,AFDP 3-13 focused reading + EMS overview + PLARF micro study
+2025-10-28,GUI/Chart+AOI+Report,1.0,150,150,Confidence/Reason auto-chart + AOI safe load + MD report
+2025-10-28,Doctrine/EMS/PLARF,1.0,150,150,Doctrine + EMS + China ISR integration
+
+2025-10-29,Parser Synthetic Data Integration,1.0,150,150,Automated+Manual hybrid ingestion validated.
+2025-10-31,Env Stabilization,1.0,150,150,Pyenv 3.12 configured; Poetry lock/install; added streamlit/matplotlib/tabulate; app sanity check OK
+2025-11-01,Doctrine+EMS+China+Bearing+Admin,1.0,150,150,AFDP 3-13 review + EMS TTP + PLARF study + bearing brief + admin log

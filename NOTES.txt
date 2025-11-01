@@ -299,3 +299,75 @@ Info advantage = perception control + decision speed superiority.
 China ISR: PLARF creates seismic + RF signatures — GLL could detect TEL movement and launch changes earlier than radar alone.
 
 2025-10-28: Day 23 — Chart fallback OK; AOI safe load OK; report export OK.
+
+2025-10-28 (Doctrine): AFDP 3-13 focused reading
+• BLUF: Decision advantage = sense → understand → act faster than opponent.
+• GLL contribution: faster fusion across seismic/RF/SAR reduces sensor-to-decision latency.
+• Target effects: compresses OODA loop for friendly forces; increases adversary uncertainty.
+
+2025-10-28 (Doctrine): AFDP 3-13 focused reading
+• BLUF: Decision advantage = sense → understand → act faster than opponent.
+• GLL contribution: faster fusion across seismic/RF/SAR reduces sensor-to-decision latency.
+• Target effects: compresses OODA loop for friendly forces; increases adversary uncertainty.
+2025-10-28 (EMS BLUF): EMS is contested; jamming/spoofing precede kinetic actions.
+• GLL detects RF anomalies and correlates with seismic/SAR to validate events.
+• Practical win: early detection → safer sensor tasking and faster commander choices.
+2025-10-28 (China ISR: PLARF)
+• PLARF launches create multi-sensor signatures: seismic shock, RF radar sweep, SAR thermal/visual change.
+• GLL value: fuse these signatures to increase confidence & reduce false positives.
+• Operational note: surface/sea launches produce different fallout and sensor footprints — plan sensor tasking accordingly.
+2025-10-28 Quiz (quick):
+Q1: Name 2 sensors that GLL fuses for missile launch detection.
+A1: seismic, RF (radar), SAR (satellite radar).
+Q2: Why is EMS important?
+A2: Enemy can jam/spoof in EMS, which precedes kinetic attacks; detecting it gives early warning.
+2025-10-28: Day 23 complete — doctrine/EMS/China study logged.
+2025-10-29: Day 24 — Automated + Manual logs confirmed; parser stable; NK test data injected successfully.
+AFDP 3-13 — Info Advantage = 
+• Faster understanding than adversaries
+• Degrade adversary decisions
+• Protect friendly operations
+
+GLL impact today:
+• Faster detection of activity inside AOIs
+• Automated decision support (flag + reason logic)
+• Repeatable reports → trust + tempo
+The EM spectrum is where modern warfare happens.
+If missiles, radar, or jammers turn on — GLL should know.
+
+GLL will:
+• Identify “surprise transmitters”
+• Link radar/seismic events to a single hostile activity
+• Support protective actions for friendly assets
+China missile launches → produce:
+• Seismic signature (ground shakes)
+• Heat + EM signals → radar sees
+• Radio link to guidance → RF logs detect
+
+GLL value:
+Fuse all 3 → fast threat confirmation
+2025-10-30: Day 25 Fusion Calibration Module validated — cross-sensor confidence operational.
+2025-10-30 — Day 25 Technical:
+• Fusion calibration complete
+• Cross-confidence operational
+• System modular and stable
+2025-10-31: Day 26 — Environment stabilized (pyenv 3.12 + Poetry); resolved pyarrow build issue; added streamlit/matplotlib/tabulate; GUI launches clean.
+2025-11-01 (Doctrine — AFDP 3-13 Information in Air Force Operations)
+• Information advantage = see first, decide fast, act precisely.
+• GLL reduces decision latency by fusing disparate sensors.
+• Repeatability + audit trail → commander confidence.
+(8-yr-old: win by seeing clearly and moving first.)
+2025-11-01 (EMS — My TTP for Logs)
+If radar noise spikes + RF anomalies + our AOI box lights up → elevate to Yellow (probable interference).  
+If repeated within 30 min → Orange (persistent threat).
+(8-yr-old: when three alarms ring near our box, we raise the flag faster.)
+2025-11-01 (China ISR Study — PLARF)
+• PLARF launches leave seismic + RF + radar signatures GLL can correlate.
+• Watch for timing clusters: telemetry → RF → seismic.
+• AOI boxes near launch corridors = faster confirmation.
+(8-yr-old: rockets make shakes and beeps — we catch both.)
+2025-11-01 (Bearing / Memory)
+Today I can parse + flag + export; by Jan 20 I can parse + fuse + brief.
+2025-11-01 (Admin / Family)
+Mural work block logged (start/stop times).  
+Backup policy: commit daily; push daily; export one MD report per day to /exports.

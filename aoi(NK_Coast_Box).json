@@ -1,0 +1,8 @@
+{
+    "NK_Coast_Box": {
+        "lat_min": 39.0,
+        "lat_max": 41.0,
+        "lon_min": 128.5,
+        "lon_max": 129.5
+    }
+}
