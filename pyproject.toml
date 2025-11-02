@@ -24,3 +24,6 @@ ruff = "^0.6.0"
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
 
+[tool.poetry.scripts]
+ghost-parse = "ghost_parser_cli:main"
+
