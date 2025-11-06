@@ -1,0 +1,145 @@
+====================================================
+DAY 32 – THURSDAY, NOVEMBER 6, 2025
+T-MINUS 76 DAYS TO BMT
+====================================================
+
+📘 OVERVIEW
+• Theme of the day: Fusion Scoring & Commander Brief Prep  
+• Objective: Score detected AOI hits to prioritize threat events and begin brief summary design.  
+• Duration: ~1 hour technical + 30 min doctrine + 25 min EMS/China + 10 min bearing.  
+• Result Summary: Fusion scoring function validated and hardened; I&W principles linked to nuclear ops and AFTAC mission; China PLARF pattern studied; memory reinforced.
+
+----------------------------------------------------
+🧠 TECHNICAL BLOCK – Fusion Scoring & Brief-Prep
+----------------------------------------------------
+Step-by-Step:
+1. Navigate to project:  
+    `cd ~/ghost/parser_starter_kit/src`
+2. Create or edit file `fusion_scoring.py` with final version:
+    ```python
+    import pandas as pd
+    from pathlib import Path
+
+    def score_fusion(fused_file="fused_output.csv"):
+       fused_path = Path(fused_file)
+       if not fused_path.exists():
+          print(f"❌ File not found: {fused_path.resolve()}")
+          print("➡️ Create fused_output.csv in src/ and rerun.")
+          return None
+       df = pd.read_csv(fused_path)
+       df['Score'] = df.apply(lambda r: 100 if r.get('AOI_Hit', False) else 10, axis=1)
+       df_sorted = df.sort_values(by='Score', ascending=False)
+       df_sorted.to_csv("scored_output.csv", index=False)
+       print(f"✅ Scoring complete — {len(df_sorted)} rows saved to scored_output.csv")
+       return df_sorted.head()
+    ```
+3. Create mock data `fused_output.csv`:
+    ```csv
+    id,AOI_Hit,Description
+    1,True,Missile test near known range
+    2,False,Weather balloon telemetry
+    3,True,Unscheduled seismic event
+    4,False,Routine satellite ping
+    5,True,Telemetry spike over Pacific
+    ```
+4. Run:  
+    `poetry run python -c "from fusion_scoring import score_fusion; print(score_fusion())"`
+5. Verify output shows ✅ and file `scored_output.csv` exists with sorted rows.
+6. Open CSV to confirm three AOI_Hit rows at top.
+7. Commit and push:  
+    ```
+    git add fusion_scoring.py fused_output.csv scored_output.csv
+    git commit -m "Day 32: Fusion scoring function validated and hardened"
+    git push
+    ```
+
+Log Notes:
+• Task: Fusion scoring function validated and hardened  
+• Action: Added mock fused_output.csv and safety check  
+• Result: Script runs cleanly, outputs scored_output.csv (sorted priority list)  
+• Next Phase (Day 33): Build “Commander Brief Extract” – convert top 5 scores to summary table for intel brief.
+
+----------------------------------------------------
+📜 DOCTRINE BLOCK – AFDP 3-72 (Intro + I&W)
+----------------------------------------------------
+Step-by-Step:
+1. Open https://www.doctrine.af.mil/Doctrine-Publications/AFDP-3-72-Nuclear-Ops/   
+2. Download PDF and read Introduction + “Indications & Warning” section (≈5 min).   
+3. Write notes verbatim.
+
+Notes:
+• Indications & Warning (I&W) is core to nuclear ops — timely intel saves lives.  
+• Fusion scoring helps prioritize high-risk events first.  
+• Nuclear WMD ops demand fewer false positives than normal ISR.  
+
+8-year-old view:  
+> When the alarm goes off, you want to know if it’s a false fire drill or the real thing — fast.
+
+----------------------------------------------------
+⚡ EMS / NUCLEAR STUDY – AFTAC Mission
+----------------------------------------------------
+Step-by-Step:
+1. Open AFTAC mission page https://www.16af.af.mil/Units/AFTAC/   
+2. Read the mission paragraph on nuclear treaty compliance and sensor networks.   
+3. Capture 3 notes.
+
+Notes:
+• AFTAC monitors nuclear detonations from ground, air, space sensors.  
+• GLL-style fusion scoring builds dashboards AFTAC commanders can trust.  
+• Space and EM domains combine for I&W: bursts in space, seismic on earth, telemetry on air.  
+
+8-year-old view:  
+> AFTAC listens to the sky, earth, and satellites for a boo-boom — our code shows where and when.
+
+----------------------------------------------------
+🇨🇳 CHINA STUDY – PLA Rocket Force
+----------------------------------------------------
+Step-by-Step:
+1. Open https://en.wikipedia.org/wiki/People%27s_Liberation_Army_Rocket_Force   
+2. Skim overview + missions sections.  
+3. Record 3 notes.
+
+Notes:
+• PLARF often uses timed windows and known test ranges — pattern detection matters.  
+• Scoring events helps distinguish training vs new threat episodes.  
+• GLL fusion scoring offers clearer vantage than raw telemetry.  
+
+8-year-old view:  
+> If you know your friend throws a ball at 3 PM, but today it’s 4 PM and the ball looks bigger — you stop and listen.
+
+----------------------------------------------------
+🧍 BEARING / MEMORY BLOCK
+----------------------------------------------------
+Step-by-Step:
+1. Recite phrase 3×: “Score the hits so the commander sees the threat before it acts.”  
+2. Airman’s Creed 3× aloud.  
+3. E-1 → E-9 ranks (write once from memory, once corrected).  
+4. Reporting Statement 1× word-perfect: “Sir/Ma’am, Trainee Morris reports as ordered.”  
+
+Log Notes:
+• Recited bearing phrase and Creed 3×.  
+• Ranks written and corrected.  
+• Reporting statement flawless.  
+• Confidence level: 95%.
+
+----------------------------------------------------
+📅 CHECKLIST
+----------------------------------------------------
+☑ PT completed  
+☑ Technical block complete  
+☑ Doctrine block complete  
+☑ EMS/Nuclear study complete  
+☑ China study complete  
+☑ Bearing/Memory complete  
+☑ NOTES logged + committed  
+
+----------------------------------------------------
+🕒 END OF DAY SUMMARY
+----------------------------------------------------
+• Stabilized: Fusion pipeline no longer crashes; doctrine alignment with I&W.  
+• Refine tomorrow: Commander Extract output format.  
+• Mental note: Confidence feels earned not borrowed.  
+• Commander Quote: “Clarity is the first act of leadership.”
+
+--- END OF DAY 32 ---
+
