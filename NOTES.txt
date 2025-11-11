@@ -371,3 +371,347 @@ Today I can parse + flag + export; by Jan 20 I can parse + fuse + brief.
 2025-11-01 (Admin / Family)
 Mural work block logged (start/stop times).  
 Backup policy: commit daily; push daily; export one MD report per day to /exports.
+2025-11-02 (Doctrine → Application)
+• Information advantage = see first, decide fast, act precisely.
+• GLL reduces decision latency by fusing disparate sensors (seismic/RF/radar/SAR).
+• Repeatability + audit trail → commander confidence; same inputs → same outputs.
+2025-11-02 (EMS/Nuclear TTP)
+If radar noise spikes + RF anomalies + AOI box lights up → elevate to Yellow (probable interference).
+If repeated in 30 min or coincident with seismic impulse → Orange (persistent or kinetic-related).
+Nuclear cue awareness: seismic (P/S), infrasound, radionuclide (external feed), plus telemetry RF = triad of confidence.
+2025-11-02 (China — PLARF cues)
+• Launch chain to watch: pre-launch telemetry → RF links → ignition seismic pop → radar track.
+• AOIs along known corridors = faster confirmation; time clustering matters.
+• GLL priority: correlating timestamps across feeds to cut uncertainty.
+2025-11-02 Bearing: Today I can parse (GUI+CLI), flag, export; by Jan 20 I can parse + fuse + brief repeatably.
+2025-11-02 Admin: Commit daily; push daily; export one MD report per day to /exports.
+2025-11-03: Day 29 — Parser CLI smoke test verified (sample.log clean).
+2025-11-04: Day 30 — AOI + Fusion integration live; GUI button + CLI fusion verified.
+2025-11-04: Day 30 — AOI Fusion integrated successfully.
+2025-11-04: Day 30 — AOI + fusion path verified; fused_output.csv generated from parsed_gui.csv + aoi.json.
+2025-11-03: Added OODA_Link_ID column to GLL_Technical_Assets.csv and mapped key assets to T01/F01/D01/A01/FB01. GLL_Telemetry_OODA_Map.csv now drives traceability from sensors → OODA phases → assets.
+2025-11-03: Added OODA_Link_ID column to GLL_Gap_Map.csv. All AF-Asks now mapped to relevant Observe-Orient-Decide-Act phases. Verified traceability across Technical_Assets and Gap_Map.
+2025-11-05: Telemetry QA fusion complete and verified — Day 31 success.
+2025-11-05: Day 31 — Telemetry QA fusion complete; signal-to-noise ratios validated.
+2025-11-05 (Doctrine — AFDP 2)
+• ISR fusion = combining many sensors so commanders see one clear picture.
+• Ghost Lantern Labs helps by parsing, fusing, and scoring events automatically.
+• Human analysts still decide what matters, but machines make them much faster.
+2025-11-05 (EMS/Nuclear)
+• Nuclear events are confirmed by combining space, seismic, and infrasound data.
+• Telemetry QA makes sure we are not chasing bad sensor noise.
+• GLL can simulate this 'multi-sensor confirmation' for training and exercises.
+2025-11-05 (Bearing/Memory) — Telemetry is the battlefield heartbeat; I separate strong signals from noise.
+✅ Commander Extract verified
+• All 5 events scored Moderate — system functioning with safe thresholds.
+• Confirms fusion scoring engine resists false positives.
+• Next step: tune AOI_Hit threshold (raise or lower radiation/ seismic breakpoints).
+Threshold line updated in sum_of_all_fears_sim.py (4.8 / 1.5 / Burst) — ready for Critical-event validation run tomorrow (Day 34).
+====================================================
+DAY 33 – FRIDAY, NOVEMBER 7, 2025
+T–MINUS 75 DAYS TO BMT
+====================================================
+
+📘 OVERVIEW
+• Theme: Commander Brief Extract + Attribution Integrity
+• Objective: Complete commander_extract pipeline, execute Sum of All Fears attribution simulation, reinforce nuclear/EMS doctrine.
+• Duration: ~2 hrs projected (technical + doctrine + admin)
+• Result Summary: Fusion scoring verified, all outputs Moderate; system stable and ready for PDF export build tomorrow.
+
+----------------------------------------------------
+🧠 TECHNICAL BLOCK – Commander Extract Validation
+----------------------------------------------------
+Step-by-Step
+1. 
+2. Verified  with dynamic Description builder.
+3. Ran:  
+   ❌ File not found: /Users/dextermorris/ghost/parser_starter_kit/scored_output.csv
+None
+4. Output:  
+   ✅ Commander Extract complete — 5 events summarized to commander_extract.csv  
+   All five events scored 10 (Moderate).  
+5. Verified commander_extract.csv exists with columns id, Description, Score, Confidence_Level.
+
+Log Notes  
+• Error resolved: missing Description column now auto-generated from Seismic/Radiation/Comms.  
+• Fix verified — script runs cleanly and exports usable brief.  
+• Result: Fusion engine resists false positives (5/5 Moderate = stable).  
+• Next Phase: Adjust AOI thresholds to generate Critical cases for Day 34.
+
+Commander Brief (Summarized)  
+> “Sir/Ma’am, today’s telemetry fusion produced five Moderate events — seismic magnitudes between 4.1 and 5.2 with radiation ≤ 3.7 µSv. None crossed the AOI critical threshold, confirming baseline network stability. Recommend maintaining current thresholds and expanding watch coverage before next simulation cycle.”
+
+----------------------------------------------------
+⚔️ GLL Fusion Simulation #004 – “The Sum of All Fears Attribution Simulation”
+----------------------------------------------------
+Phase 1 – Evidence Rebuild  
+1 Lost Soviet warhead  
+2 Illicit arms deal undetected  
+3 Sensor ping ignored  
+4 Analyst bias toward Russia  
+5 Lack of multi-agency fusion  
+6 Political pressure to retaliate  
+7 No attribution challenge board  
+8 Unverified radiation signature  
+9 No AFTAC–CIA cross-cue  
+10 No confidence dashboard  
+
+Phase 2 – Failure Isolation  
+Root Cause: Process failure – escalation before verification.  
+
+Phase 3 – GLL Countermeasure  
+> “GLL’s Attribution Matrix (AMX) would ingest seismic, radiation, and comms data from AFTAC sensors and run cross-correlation to detect false signatures. The system would auto-trigger a Decision Assurance Layer (DAL) review and delay retaliatory action until confidence ≥ 95 %. Baltimore never happens.”  
+
+Phase 4 – Three-Sentence Fusion Brief  
+> “Loss of fusion validation enabled false Russian attribution and premature readiness. This violated Air Force I&W principles requiring multi-source corroboration. Deploy GLL AMX dashboard to pause escalation until sources converge.”  
+
+Fusion Score – 9 / 12 (Strong Performance)  
+
+----------------------------------------------------
+📜 DOCTRINE BLOCK – AFDP 3-72 Deterrence Integration
+----------------------------------------------------
+Notes  
+• Deterrence rests on credible power + restraint.  
+• I&W compresses decision timeline without sacrificing verification.  
+• Fusion and confidence scores preserve command credibility.  
+8-year-old view: “If you double-check before you hit back, nobody gets hurt by mistake.”  
+
+----------------------------------------------------
+⚡ EMS / NUCLEAR STUDY – AFTAC Space Sensors
+----------------------------------------------------
+Notes  
+• AFTAC satellites detect gamma flashes and seismic signatures.  
+• Cross-domain correlation reduces false positives.  
+• GLL mirrors AFTAC’s mission in software form.  
+8-year-old view: “The satellites see the flash; the earth feels the shake; our computer tells the truth.”  
+
+----------------------------------------------------
+🇨🇳 CHINA STUDY – PLARF Modernization
+----------------------------------------------------
+Notes  
+• PLARF mobility and decoys require pattern detection over location tracking.  
+• Fusion models catch timing irregularities faster than manual analysis.  
+• Commander Extract can highlight outlier launch patterns.  
+8-year-old view: “If they move their launchers to trick you, you watch the pattern not the spot.”  
+
+----------------------------------------------------
+🧍 BEARING / MEMORY BLOCK – Friday Checkpoint
+----------------------------------------------------
+• Recited phrase 3×: “Stability proves readiness.”  
+• Airman’s Creed 3× aloud.  
+• Ranks E-1 → E-9 (2× rounds).  
+• Reporting Statement: “Sir/Ma’am, Trainee Morris reports as ordered.”  
+Reflection: “Discipline today prevents panic tomorrow.”  
+
+----------------------------------------------------
+💼 FRIDAY PAUSE + DOCUMENT + BILL CHECKPOINT
+----------------------------------------------------
+Deliverables  
+• fusion_scoring.py ✅  
+• commander_extract.py ✅  
+• sum_of_all_fears_sim.py ✅  
+• GLL-004 Attribution Simulation ✅  
+
+Totals  
+• Hours: ≈ 6.5  
+• Total:  (Week 7)  
+• Stability Score: 4.5 / 5  
+
+Commit Commands
+
+====================================================
+DAY 34 – SATURDAY, NOVEMBER 8, 2025
+T–MINUS 74 DAYS TO BMT
+====================================================
+
+📘 OVERVIEW
+• Theme: Critical-Event Simulation + Doctrine & Communication Reps
+• Objective: Use tuned thresholds to generate Critical events, update Commander Extract, and deepen nuclear/EMS/PLARF understanding.
+• Duration: ~1.5–2 hrs total split across the day (early AM technical before gymnastics; doctrine/EMS/China/Memory later).
+• Result Summary: [Fill in after execution]
+
+----------------------------------------------------
+🧠 TECHNICAL BLOCK – Critical-Event Simulation & Commander Extract V2
+----------------------------------------------------
+(Goal: Turn yesterday’s “all Moderate” output into a run that produces at least one Critical event via tuned thresholds.)
+
+Step-by-Step – Early AM (before 0800)
+1. Go to src directory:
+   cd ~/ghost/parser_starter_kit/src
+
+2. Confirm threshold line in sum_of_all_fears_sim.py:
+   grep "AOI_Hit" sum_of_all_fears_sim.py
+
+   You should see:
+   AOI_Hit = (seismic > 4.8 and radiation > 1.5 and comms == "Burst")
+
+3. Run the simulation to generate fresh telemetry:
+   poetry run python sum_of_all_fears_sim.py
+
+   Expect:
+   ✅ Generated 10 simulated telemetry events (sum_fears_sim.csv)
+
+4. Run the scoring engine on the simulation output:
+   poetry run python -c "from fusion_scoring import score_fusion; print(score_fusion('sum_fears_sim.csv'))"
+
+   Confirm:
+   • No errors
+   • A new scored_output.csv exists
+   • At least some rows have AOI_Hit = True and Score = 100
+
+5. Run Commander Extract V2 on the new scores:
+   poetry run python -c "from commander_extract import commander_extract; print(commander_extract('scored_output.csv'))"
+
+   Expect:
+   ✅ Commander Extract complete — 5 events summarized to commander_extract.csv
+   and at least one row with Confidence_Level = Critical (if not, it’s okay; thresholds are still conservative).
+
+6. Inspect the extract:
+   cat commander_extract.csv
+
+   Verify columns:
+   • id
+   • Description (auto-built from Seismic_Mag/Radiation_uSv/Comms_State)
+   • Score
+   • Confidence_Level
+
+Log Notes – Technical
+• Task: Ran Sum-of-All-Fears simulation with tuned thresholds and regenerated Commander Extract.
+• Action: sum_fears_sim.csv → scored_output.csv → commander_extract.csv (pipeline fully exercised).
+• Result: [Note if you got at least one Critical event or all Moderate; either way it’s valid.]
+• Next Phase: Use commander_extract.csv as the core table for a spoken “Critical vs Moderate Day” commander brief.
+
+Commander Brief V2 (fill this after you see the actual output)
+> “Sir/Ma’am, today’s tuned fusion simulation produced [X] Critical and [Y] Moderate events, driven by seismic magnitudes above 4.8 and radiation above 1.5 µSv in Burst comms conditions. This confirms the system’s ability to flag escalation-level signatures while preserving discrimination against background noise. Recommend retaining the current thresholds for training while planning a multi-sensor drill next week to validate against additional datasets.”
+
+----------------------------------------------------
+📜 DOCTRINE BLOCK – AFDP 3-72 (Command & Control Slice)
+----------------------------------------------------
+(Goal: Understand how nuclear command & control ties into your confidence scoring and simulation work.)
+
+Step-by-Step
+1. Open AFDP 3-72 – Nuclear Operations (official AF doctrine).
+   (Doctrine site: AFDP 3-72 – Nuclear Ops)
+
+2. Read ONLY:
+   • The section that describes nuclear command and control (C2).
+   • Any references to “decision timelines,” “escalation,” or “warning.”
+
+3. In NOTES.txt under this block, add:
+
+Notes
+• Nuclear C2 must balance rapid response with verified attribution.
+• Doctrine emphasizes multi-source I&W and clear chains of authority to avoid accidental escalation.
+• Fusion scoring and Commander Extract directly support C2 by turning sensor noise into decision-ready confidence levels.
+
+8-year-old view
+> “The big red button only works right if the people in charge are really sure what happened.”
+
+----------------------------------------------------
+⚡ BLOCK 4 – EMS / NUCLEAR STUDY – AFTAC Space & Seismic Integration
+----------------------------------------------------
+(Goal: Tie your simulation to real-world space/seismic nuclear detection.)
+
+Step-by-Step
+1. Open an AFTAC mission source (any one of the following):
+   • AFTAC unit fact sheet / mission page.
+   • AFTAC overview on Wikipedia.
+   • An article on space-based nuclear detection (USNDS / Global Burst Detection).
+
+2. Focus your reading on:
+   • Use of satellites for flash / EMP / gamma / X-ray detection.
+   • Use of seismic/hydroacoustic sensors to confirm yield and location.
+   • How these inputs support national-level nuclear treaty monitoring.
+
+3. Log 3–4 bullets in NOTES.txt:
+
+Notes
+• USAF and partners use a mix of space, seismic, hydroacoustic, and infrasound sensors to detect nuclear events across all environments.
+• Space-based systems see the flash and radiation; seismic/hydroacoustic arrays confirm that the signal is real and locate it.
+• GLL’s fusion logic mirrors this redundancy: no single sensor is trusted alone; confidence comes from cross-domain convergence.
+
+8-year-old view
+> “The satellites see the flash in space, the ground feels the shake, and our computer makes sure it’s really a nuke before anyone panics.”
+
+----------------------------------------------------
+🇨🇳 BLOCK 5 – CHINA STUDY – PLARF Modernization & Patterns
+----------------------------------------------------
+(Goal: Understand how PLARF’s modern missile force stresses early warning and why pattern detection matters.)
+
+Step-by-Step
+1. Open a PLARF modernization source:
+   • PLARF overview (structure, role in China’s deterrence).
+   • A PLARF order of battle / modernization article (DF-17, DF-26, DF-41).
+   • An article on DF-26 (“Guam Express”) and its dual conventional/nuclear roles.
+
+2. Focus reading on:
+   • Road-mobile launchers and hiding tactics (decoys, mobility).
+   • New missile types (DF-17, DF-26, DF-41) and what they are designed to hit.
+   • Why this compresses detection and decision timelines for the U.S.
+
+3. Log 3–4 bullets:
+
+Notes
+• PLARF’s road-mobile launchers and decoys make it harder to predict where and when they will fire; patterns over time matter more than fixed locations.
+• New DF-series missiles (like DF-26) are designed for fast, flexible strikes at regional and distant targets, with both conventional and nuclear options.
+• Fusion tools like Commander Extract help flag outlier launch behavior (unusual timing, different ranges) instead of chasing every movement.
+
+8-year-old view
+> “If they keep moving their launchers to hide them, you stop staring at one spot and start watching how they move every day.”
+
+----------------------------------------------------
+🧍 BEARING / MEMORY BLOCK – Weekend Reps
+----------------------------------------------------
+Step-by-Step
+1. Bearing phrase for today (say 3× out loud):
+   “Clarity over complexity.”
+
+2. Airman’s Creed:
+   • Recite 3× out loud.
+   • On the last rep, aim for zero stumbles.
+
+3. Ranks E-1 → E-9:
+   • Write from memory once.
+   • Check and correct.
+   • Rewrite cleanly.
+
+4. Reporting Statement:
+   • “Sir/Ma’am, Trainee Morris reports as ordered.” (3×, word-perfect)
+
+5. Optional: Add one line you’d say to a 5–8 year old explaining what you do:
+   > “My job is to help the good guys see danger early so nobody gets hurt.”
+
+Log Notes
+• Bearing phrase and Creed reps complete.
+• Ranks and reporting statement refreshed.
+• Communication intent: be able to explain my work to both a child and a commander without changing the truth.
+
+----------------------------------------------------
+📅 CHECKLIST
+----------------------------------------------------
+☐ Technical block – Critical-event simulation + Commander Extract V2  
+☐ Doctrine block – AFDP 3-72 C2 slice read and logged  
+☐ EMS/Nuclear AFTAC block – space + seismic integration logged  
+☐ China/PLARF block – modernization & pattern notes logged  
+☐ Bearing/Memory block – phrase + Creed + ranks + reporting done  
+☐ NOTES.txt updated and committed  
+
+----------------------------------------------------
+🕒 END OF DAY SUMMARY
+----------------------------------------------------
+• What stabilized today:
+  - Fusion chain now exercised under tuned thresholds for potential Critical events.
+  - Nuclear C2, EMS, and PLARF context tightened in my mental model.
+
+• What to refine tomorrow:
+  - Practice delivering the “Critical vs Moderate Day” commander brief in under 60 seconds.
+  - Consider adding a simple PDF/Markdown export script for commander_extract.csv.
+
+• Emotional/mental note:
+  - Early-morning reps before family time make me feel like a professional, not a hobbyist.
+
+• Commander Quote:
+  - “Say it so a child understands it and a commander can act on it.”
+
+--- END OF DAY 34 ---
+
