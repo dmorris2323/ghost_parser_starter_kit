@@ -4,5 +4,18 @@
     "lat_max": 41.0,
     "lon_min": 128.0,
     "lon_max": 130.0
+  },
+  "Test_Site_A": {
+    "lat_min": 38.50,
+    "lat_max": 38.60,
+    "lon_min": 125.80,
+    "lon_max": 125.95
+  },
+  "Test_Site_B": {
+    "lat_min": 37.90,
+    "lat_max": 38.00,
+    "lon_min": 126.00,
+    "lon_max": 126.10
   }
 }
+

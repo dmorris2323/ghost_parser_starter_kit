@@ -1,6 +1,6 @@
 id,Description,Score,Confidence_Level
-1,"Seismic 5.1, Rad 3.66 µSv, Comms: Normal",10,Moderate
-2,"Seismic 5.2, Rad 1.62 µSv, Comms: Burst",10,Moderate
-3,"Seismic 5.0, Rad 3.17 µSv, Comms: Normal",10,Moderate
-4,"Seismic 4.4, Rad 0.19 µSv, Comms: Silence",10,Moderate
-5,"Seismic 4.1, Rad 3.39 µSv, Comms: Normal",10,Moderate
+1,Missile test near known range,100,Critical
+3,Unscheduled seismic event,100,Critical
+5,Telemetry spike over Pacific,100,Critical
+2,Weather balloon telemetry,10,Moderate
+4,Routine satellite ping,10,Moderate

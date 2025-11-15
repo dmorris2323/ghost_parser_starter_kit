@@ -143,3 +143,461 @@ Log Notes:
 
 --- END OF DAY 32 ---
 
+Error: KeyError 'Description' column missing from scored_output.csv.
+Fix: Updated commander_extract.py to auto-build Description from Seismic_Mag, Radiation_uSv, and Comms_State fields and then generate summary with Confidence_Level.
+Result: commander_extract.csv now generated successfully with id, Description, Score, and Confidence_Level for top 5 events.
+Next Phase: Use commander_extract.csv as the core table in my “Sum of All Fears” and AFTAC-style nuclear I&W brief.
+CLOUD UPDATE:
+Confirmed cloud remains a mission multiplier for GLL/Code 116.
+Planned re-entry: Week 8 (Wed block). Objective: connect local fusion pipeline to AWS service equivalents (Lambda, S3, Glue, Athena).
+
+Day 35
+Critical vs Moderate Day Summary
+• Critical events detected: [1]
+• Moderate events detected: [4]
+• System performed within expected thresholds.
+
+“Cyberspace operations are conducted to ensure freedom of action in the domain and to deny it to adversaries.”
+
+“Defensive cyberspace operations mirror fusion logic — detect → analyze → act.”
+
+“Integration with space and ISR makes cyber a force multiplier.”O
+
+✅ Fusion Alert logic functional; system now self-flags Critical events.
+
+====================================================
+DAY 36 – MONDAY, NOVEMBER 10, 2025
+T–MINUS 72 DAYS TO BMT
+====================================================
+
+📘 OVERVIEW
+Theme: Precision + Composure
+Objective: Add Fusion Alert logic, strengthen doctrine integration, and maintain cognitive bearing.
+Duration: ~2 hrs total (split as needed)
+
+----------------------------------------------------
+🧠 TECHNICAL BLOCK – Fusion Alert Logic Upgrade
+----------------------------------------------------
+Task: Build a quick-alert feature to flag Critical events automatically.
+
+Steps:
+1. cd ~/ghost/parser_starter_kit/src
+2. nano fusion_alerts.py
+3. Paste provided script.
+4. Save + exit (Ctrl+O, Enter, Ctrl+X)
+5. Run: poetry run python fusion_alerts.py
+6. Verify output message and file creation.
+
+Result:
+✅ Fusion alert logic functional.
+• [   ] Critical events detected.
+• Alert file generated: [   ] (critical_alerts.csv if triggered).
+• System now self-flags Critical events for commander review.
+
+8-yr-old version:
+> “If the computer spots something serious, it waves a red flag so we notice fast.”
+
+----------------------------------------------------
+📜 DOCTRINE BLOCK – AFDP 3-13 Information Operations
+----------------------------------------------------
+Read: AF Doctrine Publication 3-13 (Intro + Overview)
+
+Notes:
+• IO integrates influence, cyber, and EW to shape perception and protect truth.
+• Fusion analysis ensures commanders act on verified information.
+• Speed of truth = speed of decision.
+
+8-yr-old view:
+> “Telling the truth faster than the enemy can lie.”
+
+----------------------------------------------------
+⚡ EMS / NUCLEAR STUDY – Telemetry Integrity & Signal Noise
+----------------------------------------------------
+Focus: How AFTAC verifies real nuclear events vs false positives.
+
+Notes:
+• Telemetry validation cross-checks time, spectrum, and background patterns.
+• Fusion scoring acts as a sanity filter to prevent false alarms.
+• Noise control = confidence control.
+
+8-yr-old view:
+> “We make sure the beep we heard really came from the right place.”
+
+----------------------------------------------------
+🇨🇳 CHINA BLOCK – PLA Cognitive Warfare
+----------------------------------------------------
+Focus: How China uses information to manipulate decision cycles.
+
+Notes:
+• Cognitive warfare targets the human layer through deception and influence.
+• Fusion doctrine defends by emphasizing multi-source confirmation.
+• Information integrity itself is deterrence.
+
+8-yr-old view:
+> “They try to confuse our brains instead of our computers.”
+
+----------------------------------------------------
+🧍‍♂️ BEARING / MEMORY BLOCK – Monday Reset
+----------------------------------------------------
+Bearing phrase: “Precision is kindness under pressure.”
+
+Reps:
+• Airman’s Creed × 3
+• Core Values × 1
+• Reporting Statement × 3
+• 1 min silent reflection – accuracy equals protection.
+
+Log:
+✅ Monday bearing cycle complete.
+✅ Mindset recalibrated for week start.
+
+----------------------------------------------------
+📅 CHECKLIST
+----------------------------------------------------
+☐ Fusion Alert script built + tested  
+☐ AFDP 3-13 read + logged  
+☐ Telemetry Integrity study logged  
+☐ PLA Cognitive Ops logged  
+☐ Bearing cycle complete  
+☐ NOTES.txt updated + committed  
+
+----------------------------------------------------
+🧭 COMMAND NOTE
+----------------------------------------------------
+“Today is about clarity on demand.  
+Each alert you automate, each doctrine you internalize, and each line you recite removes chaos from the system.”
+----------------------------------------------------
+
+====================================================
+DAY 37 – TUESDAY, NOVEMBER 11, 2025
+T–MINUS 71 DAYS TO BMT
+====================================================
+
+📘 OVERVIEW
+Theme: Orchestration & Resilience
+Objective: Build a one-button fusion runner, link it to doctrine on risk and resilience, and keep bearing sharp.
+Duration: ~1.5–2 hrs total
+
+----------------------------------------------------
+🧠 TECHNICAL BLOCK – fusion_run.py Orchestrator
+----------------------------------------------------
+Task: Create a single script to run simulation → scoring → commander extract → alerts.
+
+Steps:
+1. cd ~/ghost/parser_starter_kit/src
+2. nano fusion_run.py
+3. Paste orchestrator script.
+4. Save and exit (Ctrl+O, Enter, Ctrl+X).
+5. Run:
+   poetry run python fusion_run.py
+
+Result:
+• ✅ fusion_run.py executed.
+• sum_fears_sim.csv regenerated.
+• scored_output.csv updated.
+• commander_extract.csv updated.
+• Alerts run: [   ] Critical event(s) flagged / No Critical events (circle one).
+• System can now be executed in one shot, suitable for “edge node” or cron-style automation.
+
+8-yr-old view:
+> “It’s one button that makes the computer do all the thinking steps in the right order.”
+
+----------------------------------------------------
+📜 DOCTRINE BLOCK – AFDP 3-72 Risk & Decisions
+----------------------------------------------------
+Notes:
+• Decision risk in nuclear ops is managed with I&W fusion and strict thresholds.
+• Commanders act on confidence levels, not raw data dumps.
+• GLL’s score + extract + alert chain is a miniature support tool for nuclear C2.
+
+8-yr-old view:
+> “The boss needs to be very sure before pressing any big buttons, so we double-check everything first.”
+
+----------------------------------------------------
+⚡ EMS / NUCLEAR STUDY – Comms Loss & Resilience
+----------------------------------------------------
+Notes:
+• If communications fail, edge systems must still detect and log events locally.
+• Delayed transmission is acceptable; losing data is not.
+• fusion_run.py can run at the edge and sync results when links are restored.
+
+8-yr-old view:
+> “If the walkie-talkies cut out, the small computer still writes down what it saw so we don’t forget.”
+
+----------------------------------------------------
+🇨🇳 CHINA BLOCK – PLARF Readiness & No-Notice Activity
+----------------------------------------------------
+Notes:
+• PLARF uses snap/no-notice drills to stress early warning systems.
+• Long-term pattern tracking matters more than any one day’s unit location.
+• Daily GLL simulations build intuition for spotting abnormal activity.
+
+8-yr-old view:
+> “If someone sometimes throws the ball without warning, you watch how often and when, not just where.”
+
+----------------------------------------------------
+🧍 BEARING / MEMORY BLOCK – Tuesday Discipline
+----------------------------------------------------
+Bearing phrase:
+“Small improvements, big consequences.”
+
+Reps:
+• Airman’s Creed ×3
+• Ranks E-1 to E-9 – once from memory, once corrected
+• Reporting Statement ×3 – “Sir/Ma’am, Trainee Morris reports as ordered.”
+• One-sentence explanation of fusion_run.py for a child:
+  > “It’s a button that makes the computer do all the thinking steps in the right order.”
+
+Log:
+✅ Bearing and memory cycle complete.
+
+----------------------------------------------------
+📅 CHECKLIST
+----------------------------------------------------
+☐ fusion_run.py created and tested  
+☐ AFDP 3-72 risk section read + logged  
+☐ EMS comms resilience notes logged  
+☐ China PLARF readiness notes logged  
+☐ Bearing / memory reps complete  
+☐ NOTES.txt updated + committed  
+
+----------------------------------------------------
+🧭 COMMAND NOTE
+----------------------------------------------------
+“Orchestration turns effort into systems. One button today means faster decisions tomorrow.”
+----------------------------------------------------
+
+====================================================
+📅 DAY 38 — WEDNESDAY, NOVEMBER 12, 2025
+T-MINUS 70 DAYS TO BMT
+Theme: Sharpen the Edge — Reduce Noise, Strengthen Signal
+====================================================
+
+🧠 TECHNICAL BLOCK – Fusion Logger Enhancement
+----------------------------------------------------
+Task:
+• Create fusion_logger.py to record operational events for audit and traceability.
+• Test and verify log entry written to fusion_ops_log.csv.
+• Integrate sample log call into existing scripts.
+
+Result:
+✅ fusion_logger.py created and verified operational.
+✅ Log file generated with timestamped entry.
+✅ Ready for integration into fusion_run and commander_extract modules.
+
+8-yr-old View:
+> “Our computer now keeps a notebook of everything it does so we can see what happened later.”
+
+Command Note:
+> “Accountability is accuracy’s twin. A disciplined log builds trust.”
+
+----------------------------------------------------
+📜 DOCTRINE BLOCK – AFDP 2-0 (Intelligence)
+----------------------------------------------------
+Focus: The Intelligence Cycle and All-Source Fusion.
+Notes:
+• Fusion = connective tissue of the intel cycle.
+• Validation + dissemination = mission assurance.
+• Commanders act on fused intel, not raw data.
+
+8-yr-old View:
+> “All the puzzle pieces go together before the boss decides.”
+
+----------------------------------------------------
+⚡ EMS / NUCLEAR STUDY – USNDS Satellite Verification
+----------------------------------------------------
+Focus: U.S. Nuclear Detonation Detection System.
+Notes:
+• Optical, x-ray, gamma, and EMP sensors cross-validate events.
+• Seismic/infrasound confirm authenticity.
+• Data latency measured in seconds.
+
+8-yr-old View:
+> “Satellites look for a flash; the Earth feels a shake; that’s how we know it’s real.”
+
+----------------------------------------------------
+🇨🇳 CHINA STUDY – Cognitive Domain Operations
+----------------------------------------------------
+Focus: PLA cognitive warfare & influence.
+Notes:
+• Goal: shape perceptions before conflict.
+• Target: commander’s decision-making.
+• Defense: validation discipline + emotional control.
+
+8-yr-old View:
+> “They try to confuse people with too much info, so we slow down and check.”
+
+----------------------------------------------------
+🧍 BEARING / MEMORY BLOCK – Midweek Discipline
+----------------------------------------------------
+Phrase: “Calm is control.”
+Repetitions:
+• Airman’s Creed × 3
+• Core Values × 1
+• Reporting Statement × 3
+• Chain of Command recitation
+Visualization: Confident briefing posture at Tech School.
+
+----------------------------------------------------
+📘 EOC PRACTICE – AFDP 2-0 (Intel Cycle)
+----------------------------------------------------
+Questions 1–5 completed.
+Score: 5/5 Correct.
+Key Points:
+• Purpose – provide usable intel for commanders.
+• Fusion – occurs during Analysis & Production.
+• All-Source – integrate all collection types.
+• Doctrine – AFDP 2-0.
+• Validation – trust before send.
+
+8-yr-old View:
+> “We turn facts into a story the boss can use.”
+
+----------------------------------------------------
+🧾 END-OF-DAY CHECKLIST
+----------------------------------------------------
+☑ fusion_logger.py created + tested  
+☑ AFDP 2-0 read + logged  
+☑ USNDS study logged  
+☑ PLA C-Domain Ops logged  
+☑ Bearing & Memory drills complete  
+☑ EOC practice logged  
+☑ NOTES.txt committed to Git  
+
+Command Note:
+> “Every log line, every repetition, every doctrine note moves the mission forward.”
+====================================================
+
+Additional technical task today: ⚙️ ADD-ON: Logger Integration Task
+Task: Embed automated logging into fusion_scoring.py and commander_extract.py.
+Result: Both modules now self-log on success/error, creating continuous mission trace.
+8-yr-old View:
+> “Now the computer tells us when it finishes a job or when it breaks something.”
+Command Note:
+> “Self-reporting systems free the analyst to think.”
+
+
+====================================================
+📅 DAY 39 — THURSDAY, NOV 13, 2025
+T-MINUS 69 DAYS TO BMT
+Theme: Alert Integrity — From Logs to Leadership
+====================================================
+
+🧠 TECHNICAL – Fusion Alerts
+• fusion_alerts.py created
+• Self-check + error detection working
+• Log entries verified in fusion_ops_log.csv
+8-yr-old: “Computer warns us if it messes up.”
+
+📜 DOCTRINE – AFDP 3-72 (I&W)
+• I&W = early detection of adversary nuclear actions
+• Accuracy > speed
+• Fusion scoring mirrors nuclear early warning
+8-yr-old: “Know real alarm vs pretend.”
+
+⚡ EMS / NUCLEAR – USNDS
+• Optical, x-ray, gamma, EMP sensors work together
+• Seismic + infrasound confirm authenticity
+• Seconds of latency = real-time fusion needed
+8-yr-old: “Flash + earth shake = real event.”
+
+🇨🇳 CHINA – C-DO
+• Goal: shape commander perception
+• Method: overload, false coherence
+• Counter: validation + composure
+8-yr-old: “They confuse you so you think wrong.”
+
+📘 EOC – AFDP 3-72
+• 5 questions completed
+• Score: 5/5
+• Hooks logged
+
+🧍 BEARING / MEMORY
+• Creed × 3
+• Core Values × 1
+• Reporting Statement × 3
+• Ranks + Chain of Command
+• Visualization complete
+Phrase: “Slow is smooth. Smooth is fast.”
+
+====================================================
+END OF DAY CHECKLIST
+☑ Technical block complete
+☑ Doctrine logged
+☑ EMS logged
+☑ China logged
+☑ EOC logged
+☑ Bearing cycle complete
+☑ NOTES.txt committed
+
+Command Note:
+> “The watchfloor trusts systems that alert themselves.”
+====================================================
+
+====================================================
+📅 DAY 40 — FRIDAY, NOVEMBER 14, 2025
+T-MINUS 68 DAYS TO BMT
+Theme: Brief It, Don’t Just Build It
+====================================================
+
+🧠 TECHNICAL – daily_report.py
+• daily_report.py created and executed.
+• Reads commander_extract.csv + fusion_ops_log.csv.
+• Produces daily_report.txt (commander-style summary).
+8-yr-old: “It writes a daily story for the boss.”
+
+📜 DOCTRINE – AFDP 3-12 (Cyberspace Ops)
+• Cyberspace = full warfighting domain.
+• Intel fusion critical to see threats crossing networks.
+• Persistent engagement = continuous shaping, not one-time ops.
+8-yr-old: “The internet is also a battlefield.”
+
+⚡ EMS / NUCLEAR – Critical Infrastructure
+• Critical infrastructure is cyber-physical.
+• Comms disruptions (cables, satellites) impact I&W and C2.
+• GLL can treat infrastructure telemetry as another sensor feed.
+8-yr-old: “If the world’s wires break, warnings slow down.”
+
+🇨🇳 CHINA – Volt Typhoon / PRC State Actors
+• PRC actors aim for long-term stealth access (pre-positioning).
+• Use legit tools (LOTL) and credentials to hide.
+• GLL’s scoring + logger + alerts model anomaly detection against this.
+8-yr-old: “They sneak in and act normal, so we watch for tiny weird habits.”
+
+📘 EOC PRACTICE – AFDP 3-12
+• 5 questions completed.
+• Score: [  ] / 5 (aim for 5/5).
+Key hooks:
+• “Cyber = battlefield”
+• “Shield + detect + respond”
+• “Threats cross boundaries”
+• “Always on, always shaping”
+• “Boss needs the big picture”
+
+🧍 BEARING / MEMORY – Friday Reset
+• Creed × 3
+• Core Values × 1
+• Reporting Statement × 3
+• Ranks E-1 to E-9 (memory + corrected)
+• Mini-brief: explain daily_report.py in 2–3 sentences
+Phrase: “I will brief with clarity and calm.”
+
+💼 PAUSE + DOCUMENT + BILL
+• BILLIABLE_WEEK.txt updated with this week’s work.
+• Hours estimated and categories logged.
+• Week summary: system evolved from loose scripts to logged + alerted + reportable fusion stack.
+
+END-OF-DAY CHECKLIST
+☑ daily_report.py created + tested
+☑ Doctrine read + logged
+☑ EMS / Nuclear notes logged
+☑ China / Volt Typhoon notes logged
+☑ EOC practice complete
+☑ Bearing / Memory done
+☑ BILLIABLE_WEEK.txt updated
+☑ NOTES.txt + new scripts committed & pushed
+
+Command Note:
+> “A system isn’t real until it can explain itself. Today, GLL learned to talk.”
+====================================================
+
