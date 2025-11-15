@@ -32,3 +32,9 @@ telemetry_qacheck.csv
 # Python __pycache__ in src explicitly (belt + suspenders)
 src/__pycache__/
 
+# Runtime/output CSVs (do not track)
+src/critical_alerts.csv
+src/heatmap_data.csv
+src/scored_output.csv
+src/sum_fears_sim.csv
+
