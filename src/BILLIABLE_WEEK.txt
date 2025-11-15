@@ -1,0 +1,23 @@
+WEEK ENDING: FRIDAY, NOV 14, 2025 (WEEK X)
+
+Technical:
+- Fusion logger, fusion_alerts (system), fusion_event_alerts (commander), daily_report pipeline
+Estimated hours: [  ]
+
+Doctrine:
+- AFDP 2-0, AFDP 3-72 (I&W), AFDP 3-12 review
+Estimated hours: [  ]
+
+EMS / Nuclear / China:
+- USNDS, infrastructure cyber-physical linkage, Volt Typhoon mapping
+Estimated hours: [  ]
+
+Bearing / Memory / EOC:
+- Daily creed, ranks, reporting, EOC practice
+Estimated hours: [  ]
+
+Total hours: [  ]
+Notes:
+- This week: system moved from “scripts” to “mini-fusion platform with logging + alerting + reporting.”
+- Ready for: next phase — cloud awareness + more polished briefs.
+

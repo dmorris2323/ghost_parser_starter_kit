@@ -1,0 +1,30 @@
+# Python cache
+__pycache__/
+*.pyc
+
+# Logs and temp
+*.log
+*.tmp
+
+# Data outputs
+*.csv
+*.jsonl
+*.txty
+
+# Local runs / experiments
+fused_output.*
+fusion_ops_log.*
+parsed_output.*
+parsed_gui.*
+telemetry_qacheck.*
+sample.log
+BILLABLE_WEEK_*.csv
+GLL_Telemetry_OODA_Map.csv
+GLL_Gap_Map.csv
+GLL_Technical_Assets.csv
+
+# OS/editor junk
+.DS_Store
+.vscode/
+.idea/
+

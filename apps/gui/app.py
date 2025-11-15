@@ -32,7 +32,12 @@ left, right = st.columns(2)
 
 with left:
     st.subheader("Log Input")
-    log_file = st.file_uploader("Upload seismic/RF log (.log/.txt)", type=["log", "txt"], key="log_file_upload")
+    log_file = st.file_uploader(
+        "Upload seismic/RF log (.log/.txt)",
+        type=["log", "txt"],
+        key="log_file_upload"
+    )
+
     text_area = st.text_area("Or paste raw lines", height=150)
 
 with right:
@@ -90,6 +95,16 @@ if run_parse:
     st.metric("Flagged", flagged_count)
 
     st.dataframe(df, use_container_width=True, hide_index=True)
+    from src.fusion_aoi import fuse_with_aoi
+
+    if st.button("🔬 Run AOI Fusion Check"):
+        try:
+            with st.spinner("Running AOI Fusion..."):
+                fusion_df = fuse_with_aoi("parsed_gui.csv", "aoi.json")
+                st.success(f"Fusion complete — {fusion_df['Fused'].sum()} AOI hits.")
+                st.dataframe(fusion_df, use_container_width=True, hide_index=True)
+        except Exception as e:
+            st.error(f"Fusion step failed: {e}")
 
 
     # AUTO-CHART BLOCK

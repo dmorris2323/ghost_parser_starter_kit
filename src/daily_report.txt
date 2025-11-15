@@ -1,0 +1,22 @@
+=== GLL DAILY REPORT — Day 40 ===
+Generated (UTC): 2025-11-15T11:08:42.668694
+
+>> Commander Extract Summary
+Total events summarized: 5
+Top Event: id=1 | Score=100 | Confidence=Critical
+Description: Missile test near known range
+
+>> System Health Summary
+Total log entries: 13
+Errors recorded: 0
+Recent activity (last 3 entries):
+  [2025-11-15T11:08:40.376150] fusion_scoring | completed | 5 rows -> scored_output.csv
+  [2025-11-15T11:08:41.263609] commander_extract | completed | 5 events -> commander_extract.csv
+  [2025-11-15T11:08:41.990094] heatmap_prep | completed | Output -> heatmap_data.csv
+
+>> Analyst Notes (fill in manually):
+- [ ] Key threat takeaway:
+- [ ] System issues to address next run:
+- [ ] Items to brief to leadership / instructor:
+
+=== END OF REPORT ===
