@@ -1,44 +1,80 @@
 import pandas as pd
 from pathlib import Path
 
-def commander_extract(scored_file="scored_output.csv", top_n=5):
+from fusion_logger import log_event
+from settings import SCORED_FILE, COMMANDER_FILE
+
+
+def commander_extract(
+    scored_file: Path | str = SCORED_FILE,
+    top_n: int = 5,
+    out_file: Path | str = COMMANDER_FILE
+):
+    """
+    Build commander-facing summary table from a scored CSV.
+    Uses central paths from settings.py by default.
+    """
     path = Path(scored_file)
+    out_path = Path(out_file)
+
     if not path.exists():
-        print(f"❌ File not found: {path.resolve()}")
+        msg = f"File not found: {path.resolve()}"
+        print(f"❌ {msg}")
+        log_event("commander_extract", "error", msg)
         return None
 
-    df = pd.read_csv(path)
+    try:
+        df = pd.read_csv(path)
 
-    # Take top N by Score (assumes already sorted, but we’ll be explicit)
-    df_sorted = df.sort_values(by="Score", ascending=False)
-    df_top = df_sorted.head(top_n).copy()
+        if "Score" not in df.columns:
+            raise ValueError("Missing 'Score' column in scored input.")
 
-    # If there's no Description column, build one from the telemetry fields
-    if "Description" not in df_top.columns:
-        def build_desc(r):
-            seismic = r.get("Seismic_Mag", "NA")
-            rad = r.get("Radiation_uSv", "NA")
-            comms = r.get("Comms_State", "NA")
-            return f"Seismic {seismic}, Rad {rad} µSv, Comms: {comms}"
+        # sort & take top N (explicit even if pre-sorted)
+        df_sorted = df.sort_values(by="Score", ascending=False)
+        df_top = df_sorted.head(top_n).copy()
 
-        df_top["Description"] = df_top.apply(build_desc, axis=1)
+        # Build Description if not already present
+        if "Description" not in df_top.columns:
+            def build_desc(r):
+                seismic = r["Seismic_Mag"] if "Seismic_Mag" in r else "NA"
+                rad     = r["Radiation_uSv"] if "Radiation_uSv" in r else "NA"
+                comms   = r["Comms_State"] if "Comms_State" in r else "NA"
+                return f"Seismic {seismic}, Rad {rad} µSv, Comms: {comms}"
+            df_top["Description"] = df_top.apply(build_desc, axis=1)
 
-    # Now construct the commander-facing summary
-    summary = df_top[["id", "Description", "Score"]].copy()
+        # Ensure an id exists
+        if "id" not in df_top.columns:
+            df_top["id"] = range(1, len(df_top) + 1)
 
-    # Add a simple confidence label based on Score
-    def confidence_label(score):
-        if score >= 90:
-            return "Critical"
-        elif score >= 50:
-            return "High"
-        else:
-            return "Moderate"
+        summary = df_top.loc[:, ["id", "Description", "Score"]].copy()
 
-    summary["Confidence_Level"] = summary["Score"].apply(confidence_label)
+        def confidence_label(x):
+            try:
+                s = float(x)
+            except Exception:
+                return "Moderate"
+            if s >= 90:
+                return "Critical"
+            elif s >= 50:
+                return "High"
+            else:
+                return "Moderate"
 
-    summary.to_csv("commander_extract.csv", index=False)
+        summary["Confidence_Level"] = summary["Score"].apply(confidence_label)
 
-    print(f"✅ Commander Extract complete — {len(summary)} events summarized to commander_extract.csv")
-    return summary
+        summary.to_csv(out_path, index=False)
+        print(f"✅ Commander Extract complete — {len(summary)} events summarized to {out_path.name}")
+
+        log_event("commander_extract", "completed", f"{len(summary)} events -> {out_path.name}")
+        return summary
+
+    except Exception as e:
+        msg = f"Error in commander_extract: {e}"
+        print(f"⚠️ {msg}")
+        log_event("commander_extract", "error", msg)
+        return None
+
+
+if __name__ == "__main__":
+    commander_extract()
 
