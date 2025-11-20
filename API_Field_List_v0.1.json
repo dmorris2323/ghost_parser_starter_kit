@@ -1,0 +1,22 @@
+{
+  "id": "IC-YYYY-XXX",
+  "timestamp": "ISO8601",
+  "location": {"lat": 0, "lon": 0},
+  "simulation_flag": true,
+  "fusion_score": 0,
+  "analyst_confidence": 0,
+  "evidence": {
+    "iq_clip_sha256": "",
+    "psd_path": "",
+    "gnss_log_path": "",
+    "context_refs": []
+  },
+  "rationale": {
+    "signals_observed": [],
+    "baseline_deviation": "",
+    "cross_checks": [],
+    "confidence_drivers": [],
+    "decision_note": ""
+  },
+  "recommended_coa": ""
+}

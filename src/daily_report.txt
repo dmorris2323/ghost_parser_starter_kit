@@ -1,22 +1,32 @@
-=== GLL DAILY REPORT — Day 40 ===
-Generated (UTC): 2025-11-15T11:08:42.668694
+========================================
+GLL DAILY REPORT — Day 45
+Generated (UTC): 2025-11-20T11:09:20.472823
+========================================
 
->> Commander Extract Summary
-Total events summarized: 5
-Top Event: id=1 | Score=100 | Confidence=Critical
-Description: Missile test near known range
+Commander Extract Summary
+- Total events: 5
+- Critical events: 2
 
->> System Health Summary
-Total log entries: 13
-Errors recorded: 0
-Recent activity (last 3 entries):
-  [2025-11-15T11:08:40.376150] fusion_scoring | completed | 5 rows -> scored_output.csv
-  [2025-11-15T11:08:41.263609] commander_extract | completed | 5 events -> commander_extract.csv
-  [2025-11-15T11:08:41.990094] heatmap_prep | completed | Output -> heatmap_data.csv
+Top Events:
+- [Critical] Score 100: Seismic 5.2, Rad 1.62 µSv, Comms: Burst
+- [Critical] Score 100: Seismic 4.1, Rad 3.39 µSv, Comms: Normal
+- [Moderate] Score 10: Seismic 5.1, Rad 3.66 µSv, Comms: Normal
 
->> Analyst Notes (fill in manually):
-- [ ] Key threat takeaway:
-- [ ] System issues to address next run:
-- [ ] Items to brief to leadership / instructor:
+Ops Log Summary
+- Recent errors: 0
+- Recent missing files: 0
 
-=== END OF REPORT ===
+Last 10 Log Entries:
+2025-11-19T11:08:10.607271 | build_fused_output | completed | 5 rows -> fused_output.csv
+2025-11-19T11:08:11.288134 | fusion_scoring | completed | 5 rows -> scored_output.csv
+2025-11-19T11:08:11.968605 | commander_extract | completed | 5 events -> commander_extract.csv
+2025-11-19T11:08:12.638280 | heatmap_prep | completed | 5 records -> heatmap_data.csv
+2025-11-19T11:08:13.322333 | fusion_alerts | completed | 2 critical events -> critical_alerts.csv
+2025-11-19T11:08:13.993151 | daily_report | completed | Report -> daily_report.txt
+2025-11-20T11:06:43.363504 | fusion_scoring | completed | 5 rows -> scored_output.csv
+2025-11-20T11:07:22.196184 | commander_extract | completed | 5 events -> commander_extract.csv
+2025-11-20T11:08:10.276093 | heatmap_prep | completed | 5 records -> heatmap_data.csv
+2025-11-20T11:08:48.282236 | fusion_alerts | completed | 2 critical events -> critical_alerts.csv
+
+End of Report
+========================================

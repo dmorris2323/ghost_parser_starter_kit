@@ -601,3 +601,427 @@ Command Note:
 > “A system isn’t real until it can explain itself. Today, GLL learned to talk.”
 ====================================================
 
+====================================================
+📅 DAY 42 — SUNDAY, NOVEMBER 16, 2025  
+T–66 DAYS TO BMT  
+Theme: Refine → Reset → Prepare
+====================================================
+
+🧠 TECH – Unified Error Handling + Full Pipeline Check
+
+• Implemented error_handler.py with safe_run() wrapper:
+  - Catches FileNotFoundError and general exceptions.
+  - Logs missing_file and error states via fusion_logger.
+  - Prevents hard crashes and keeps pipeline behavior predictable.
+
+• Updated core modules to use centralized config + logging + error handling:
+  - fusion_scoring.py
+  - commander_extract.py
+  - heatmap_prep.py
+  - fusion_alerts.py
+  - daily_report.py
+
+• Verified full pipeline end-to-end:
+  - fusion_scoring.py → scored_output.csv
+  - commander_extract.py → commander_extract.csv
+  - heatmap_prep.py → heatmap_data.csv
+  - fusion_alerts.py → critical_alerts.csv (3 critical events detected)
+  - daily_report.py → daily_report.txt (includes ops log summary)
+
+• All modules now:
+  - Import log_event from fusion_logger.
+  - Use settings.py for file paths.
+  - Wrap execution via safe_run() for clean error handling.
+  - Log a single, precise “completed” entry on success.
+
+8-year-old view:
+“The computers now have a safety net, and they all write in the same notebook when they finish or when something goes wrong.”
+
+----------------------------------------------------
+
+📜 DOCTRINE – AFDP 3-13 (Information Operations)
+• Information superiority comes from integration, not isolation.
+• Fusion turns scattered data into commander decision power.
+• Speed + accuracy = decision advantage.
+
+⚡ EMS / NUCLEAR – USNDS Sensor Timelines
+• Optical sensors see the flash in milliseconds.
+• EMP and x-ray sensors confirm within seconds.
+• Seismic and infrasound confirm within minutes.
+• Fusion logic decides what’s real fast enough for leaders to act.
+
+🇨🇳 CHINA – PLA Rocket Force Patterns
+• Launches follow pre-ignition patterns: movement, comms behavior, and telemetry changes.
+• Pattern-of-life across multiple sensors is more reliable than any single feed.
+• Fusion scoring helps flag “this is not a normal exercise.”
+
+📘 EOC – Target Development Basics
+• Target folders capture ID, location, pattern-of-life, and ISR history.
+• BDA (battle damage assessment) checks if desired effects were achieved.
+• No-strike lists protect civilians, critical infrastructure, and sensitive sites.
+• PID (Positive ID) is required before engagement.
+• Intel’s job is to reduce uncertainty before weapons are employed.
+
+🧍 BEARING / MEMORY
+• Reporting Statement × 2
+• Air Force Mission Statement × 2
+• Enlisted Ranks (up and down)
+Phrase of the day:
+“My mind stays calm when information gets loud.”
+
+====================================================
+
+v====================================================
+📅 DAY 43 — MONDAY, NOVEMBER 17, 2025
+T–65 DAYS TO BMT
+Theme: Harden the Pipeline / No-Compromise Engineering
+====================================================
+
+🧠 TECH — FULL PIPELINE HARDENING (CORE MILESTONE)
+• Rewrote fusion_scoring.py with clean structure:
+  - Centralized paths via settings.py
+  - Proper validation: integrity + required cols + numeric fields
+  - Safe score calculation
+  - Clean success logging
+  - Wrapped with safe_run() for controlled failures
+
+• Rewrote commander_extract.py cleanly:
+  - Perfect indentation
+  - Early validation (row integrity → required columns → numeric fields)
+  - Description autogenerator
+  - Confidence scoring (Critical / High / Moderate)
+  - Centralized file paths
+  - safe_run wrapper and single clean "completed" event log
+
+• All modules now comply with:
+  ✔ Centralized error handling
+  ✔ Centralized logging
+  ✔ Centralized config
+  ✔ Centralized validation
+  ✔ Audible success/failure
+  ✔ Crash-proof ingestion
+
+• This is your first "production-grade" refactor block.
+
+8-year-old view:
+“We made the computer double-check its homework before it shows the answers.”
+
+----------------------------------------------------
+
+📜 DOCTRINE — AFDP 2-0 (Intelligence)
+• Intel drives operations by reducing uncertainty.
+• Reliability of data determines reliability of decisions.
+• Validation is a core function of all-source intelligence.
+• Your pipeline now mirrors a low-tier ISR fusion cell.
+
+Key takeaway:
+“Bad data kills. Good analysis begins with clean inputs.”
+
+----------------------------------------------------
+
+⚡ EMS / NUCLEAR STUDY — Sensor Confidence Logic
+• Nuclear/near-space signatures require multi-domain confirmation.
+• Real-world systems (DSP, USNDS) use:
+  - Optical → ms
+  - X-ray/Gamma → ms–sec
+  - EMP → sec
+  - Seismic/Infrasound → min
+• Fusion = confidence scoring based on sensor convergence.
+• Your commander_extract Confidence_Level now mirrors this.
+
+8-year-old:
+“More sensors agreeing = we trust it more.”
+
+----------------------------------------------------
+
+🇨🇳 CHINA STUDY — Mobility, Deception, Pattern Integrity
+• PLA Rocket Force uses:
+  - Launcher dispersal
+  - Decoys
+  - Emission control periods
+  - Predictable “windows”
+• Data integrity checks defeat deception.
+• Your validate_row_integrity() is the software version of:
+  “Don’t fall for the decoy.”
+
+----------------------------------------------------
+
+🎯 EOC – ANALYTICAL STANDARDS BLOCK
+• Indicators vs. warnings
+• Reliability & validity
+• Corroboration requirement
+• Analyst integrity under pressure
+• Mirror checks = delay, verify, re-evaluate
+
+8-year-old:
+“Check the clues twice before you tell the teacher.”
+
+----------------------------------------------------
+
+🧍 BEARING / MEMORY
+• Reporting Statement × 3
+• Air Force Mission Statement × 2
+• Enlisted Rank Flow (E-1 → E-9 → E-1)
+• Creed lines: “I will not falter, and I will not fail.”
+
+Phrase of the Day:
+“My analysis is calm, disciplined, and validated.”
+
+====================================================
+
+====================================================
+📅 DAY 44 — TUESDAY, NOVEMBER 18, 2025
+T–64 DAYS TO BMT
+Theme: Physics Check / No-BS Data / Analyst Discipline
+====================================================
+
+🧠 TECH — PHYSICS-AWARE VALIDATION UPGRADE
+
+• Implemented validate_physics() in validators.py:
+  - Rejects negative seismic magnitudes.
+  - Rejects negative radiation levels.
+  - Enforces Comms_State ∈ {Normal, Burst, Silence}.
+  - Logs invalid_physics events with indexes of bad rows.
+
+• Updated fusion_scoring.py:
+  - Rebuilt with clean, ordered validation chain:
+      1) File exists
+      2) Row integrity
+      3) Required columns (Seismic_Mag, Radiation_uSv, Comms_State)
+      4) Numeric fields (Seismic_Mag, Radiation_uSv)
+      5) Physics sanity (no impossible values)
+  - Only after passing all checks:
+      → Computes Score from AOI_Hit
+      → Sorts by Score
+      → Writes scored_output.csv
+  - Logs single “completed” event on success.
+
+• Updated commander_extract.py:
+  - File exists → load → row integrity check.
+  - Validates Score column and numeric type.
+  - Runs physics validation on telemetry fields.
+  - Sorts top N by Score, builds Description if missing.
+  - Ensures id column exists.
+  - Adds Confidence_Level (Critical / High / Moderate).
+  - Writes commander_extract.csv and logs “completed”.
+
+• End state:
+  - Pipeline is now physics-aware, not just “CSV-aware.”
+  - Garbage or impossible input dies early and loudly in logs instead of corrupting commander-facing outputs.
+
+8-year-old view:
+“If the numbers don’t make sense in real life, the computer stops and tells on them.”
+
+• Built build_fused_output.py to generate a strict telemetry-style fused_output.csv
+  (id, Seismic_Mag, Radiation_uSv, Comms_State, AOI_Hit). fusion_scoring now validates
+  against real seismic/radiation/comms fields instead of dummy data. Pipeline is now
+  end-to-end consistent with a realistic sensor fusion feed instead of toy CSVs.
+
+----------------------------------------------------
+
+📜 DOCTRINE — AFDP 2-0 (INTELLIGENCE EFFECTS)
+
+• Reviewed how intelligence effects shape operations and tempo.
+• “ISR shapes the battlespace before conflict begins.”
+• “Intel advantage = decision advantage.”
+• Fusion scoring and validation directly support rapid, trusted situational understanding.
+
+8-year-old:
+“Knowing what’s really happening helps your team move first and smarter.”
+
+----------------------------------------------------
+
+⚡ EMS / NUCLEAR — EMP BASICS (UNCLASSIFIED)
+
+• Studied nuclear EMP components (E1, E2, E3):
+  - E1: ultra-fast spike, fries electronics.
+  - E2: lightning-like, less severe if protected.
+  - E3: slow, geomagnetic-style effect on power grids.
+• Timeline concept:
+  - EMP → optical flash → seismic/infrasound → radiation sampling.
+• Fusion logic must line up these signals in time to avoid false alarms and misreads.
+
+8-year-old:
+“A nuclear boom sends a super-fast invisible wave, a normal-ish wave, and a slow wave.”
+
+----------------------------------------------------
+
+🇨🇳 CHINA STUDY — ADVANCED COGNITIVE WARFARE (C-DO)
+
+• Reviewed PLA concepts for cognitive domain operations:
+  - Target = commander’s mind, public will, and friendly cohesion.
+  - Method = information overload, false narratives, manipulated ‘patterns.’
+• Counter:
+  - Disciplined fusion.
+  - Hard validation (what you just built).
+  - Emotional control and analytic rigor.
+
+8-year-old:
+“They try to confuse your brain before you even fight, so you slow down and double-check before believing.”
+
+----------------------------------------------------
+
+📘 EOC STUDY — ISR + TARGETING SYNC
+
+• Positive Identification (PID) requires near-zero doubt before lethal force.
+• Targeting without fresh ISR is essentially blind.
+• Fusion scoring becomes a way to:
+  - Prioritize targets.
+  - Flag anomalies.
+  - Support “is this really what we think it is?” checks before action.
+
+8-year-old:
+“Make extra sure you’re hitting the right thing, not the wrong thing.”
+
+----------------------------------------------------
+
+🧍 BEARING / MEMORY
+
+• Reporting Statement × 3 (confident, no stumbles).
+• Airman’s Creed × 1 (full).
+• AF Mission Statement × 2.
+• Enlisted rank flow E-1 → E-9 → E-1.
+
+Phrase of the Day:
+“Calm analysis, disciplined execution.”
+
+====================================================
+
+• Physics-aware validation correctly blocked fusion_scoring because fused_output.csv doesn’t yet contain Seismic_Mag / Radiation_uSv / Comms_State. Commander extract, heatmap_prep, fusion_alerts, and daily_report are fully operational. Next step: upgrade fused_output to full telemetry schema or temporarily relax required columns in fusion_scoring.
+
+====================================================
+📅 DAY 45 — WEDNESDAY, NOVEMBER 19, 2025
+T–75 DAYS TO BMT
+Theme: Fusion Stack v1 Locked / Commander-Ready
+====================================================
+
+🧠 TECHNICAL — FUSION STACK V1 HARDENED (DOUBLE WORK)
+
+• Rebuilt core fusion modules into a clean, validated stack:
+  - build_fused_output.py → generates strict telemetry-style fused_output.csv
+    (id, Seismic_Mag, Radiation_uSv, Comms_State, AOI_Hit)
+  - fusion_scoring.py → now uses:
+      • required column validation
+      • row-integrity check (no nulls)
+      • numeric validation (Seismic_Mag, Radiation_uSv)
+      • physics validation (seismic, radiation range, comms state)
+      • soft fallback: drops invalid rows and logs rows_dropped instead of crashing
+  - commander_extract.py → builds commander_extract.csv with:
+      • id, Description, Score, Confidence_Level (Critical/High/Moderate)
+      • description auto-built from telemetry if missing
+      • physics sanity enforced before briefing
+  - heatmap_prep.py → creates heatmap_data.csv with:
+      • id, Score, Threat_Level (Critical/High/Moderate)
+      • fully validated id + Score with numeric enforcement
+  - fusion_alerts.py → scans commander_extract.csv and writes critical_alerts.csv
+      • now cleanly reports Critical events and logs outcome
+  - daily_report.py → generates daily_report.txt
+      • commander summary, critical count, top events
+      • last 10 log entries + error/missing counts
+
+• End state: 
+  - Full green run:
+      ✅ build_fused_output.py
+      ✅ fusion_scoring.py
+      ✅ commander_extract.py
+      ✅ heatmap_prep.py
+      ✅ fusion_alerts.py
+      ✅ daily_report.py
+  - 2 Critical events correctly detected and written to critical_alerts.csv
+  - Daily report generated without errors and logged to fusion_ops_log.csv
+
+8-year-old view:
+“My computer now takes the sensor numbers, throws out the broken ones, and gives the boss a clean list of the biggest problems first.”
+
+----------------------------------------------------
+📜 DOCTRINE — AFDP 2-0 (INTEL / PED CYCLE) — [TO COMPLETE]
+
+Focus: How the PED (Processing–Exploitation–Dissemination) cycle drives operations.
+
+Notes to add after reading:
+• “PED cycle is the engine of intelligence support to ops.”
+• “Fusion reduces friction in dissemination by simplifying the picture.”
+• “Bad processing = blind commander.”
+
+8-year-old:
+“You look at the clues, fix the messy ones, and tell the boss fast so they’re not guessing.”
+
+----------------------------------------------------
+⚡ EMS / NUCLEAR — FLASH + SEISMIC CORRELATION — [TO COMPLETE]
+
+Focus: How double-flash, seismic, and radiation combine to confirm nuclear events.
+
+Notes to add after reading:
+• “Double-flash optical signature gives atmospheric cue.”
+• “Seismic waveforms give rough yield estimate.”
+• “Radiation sampling confirms event type and strength.”
+
+8-year-old:
+“A bright flash then a ground shake usually means a serious boom, not just thunder.”
+
+----------------------------------------------------
+🇨🇳 CHINA STUDY — SSF & COGNITIVE WARFARE — [TO COMPLETE]
+
+Focus: How PLA’s Strategic Support Force uses information and perception as a weapon.
+
+Notes to add:
+• “Cognitive ops target human decision-makers, not just systems.”
+• “Goal: overload, confuse, and mislead before kinetic conflict.”
+• “Counter: disciplined fusion, validation, and emotional control.”
+
+8-year-old:
+“They try to trick our eyes and brains so we make bad choices even if our computers work.”
+
+----------------------------------------------------
+📘 EOC STUDY — ISR & TARGETING SYNC — [TO COMPLETE]
+
+Focus: Relationship between ISR and targeting.
+
+Notes to add:
+• “ISR must validate and refine targets before fires.”
+• “Targeting without current ISR is effectively blind.”
+• “Fusion scoring helps build the priority target list.”
+
+8-year-old:
+“You double-check what you’re aiming at before you shoot so you don’t hit the wrong thing.”
+
+----------------------------------------------------
+🧍 BEARING / MEMORY
+
+• Reporting Statement: 1× perfect, no stumbles.
+• Airman’s Creed: 2–3× out loud.
+• Enlisted ranks E-1 → E-9 → E-1: 2×.
+• AF Mission Statement: 2×.
+
+Phrase of the day:
+“Validate. Filter. Adapt. Then brief.”
+
+====================================================
+
+Day 46 - TECH BLOCK A(Integration Validation)
+(base) dextermorris@Dexters-Mac-mini src % poetry run python fusion_scoring.py
+✅ Scoring complete — 5 rows saved to scored_output.csv
+📝 Logged: fusion_scoring | completed | 5 rows -> scored_output.csv
+(base) dextermorris@Dexters-Mac-mini src % poetry run python commander_extract.py
+✅ Commander Extract complete — 5 events summarized to commander_extract.csv
+📝 Logged: commander_extract | completed | 5 events -> commander_extract.csv
+(base) dextermorris@Dexters-Mac-mini src % ls commander_extract.csv
+commander_extract.csv
+(base) dextermorris@Dexters-Mac-mini src % poetry run python heatmap_prep.py
+🔥 Heatmap-ready data written to heatmap_data.csv
+📝 Logged: heatmap_prep | completed | 5 records -> heatmap_data.csv
+(base) dextermorris@Dexters-Mac-mini src % ls heatmap_data.csv
+heatmap_data.csv
+(base) dextermorris@Dexters-Mac-mini src % poetry run python fusion_alerts.py
+🚨 ALERT: Critical events detected!
+2 event(s) saved to critical_alerts.csv
+📝 Logged: fusion_alerts | completed | 2 critical events -> critical_alerts.csv
+(base) dextermorris@Dexters-Mac-mini src % poetry run python daily_report.py
+/Users/dextermorris/ghost/parser_starter_kit/src/daily_report.py:82: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+  now_str = datetime.utcnow().isoformat()
+🧾 Daily report written to daily_report.txt
+📝 Logged: daily_report | completed | Report -> daily_report.txt
+(base) dextermorris@Dexters-Mac-mini src % ls daily_report.txt
+daily_report.txt
+(base) dextermorris@Dexters-Mac-mini src % ls fusion_ops_log.csv
+tail -n 15 fusion_ops_log.csv
