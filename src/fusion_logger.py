@@ -1,20 +1,33 @@
+import csv
+import os
 from datetime import datetime
-import csv, os
+from settings import OPS_LOG_FILE
 
-LOG_FILE = "fusion_ops_log.csv"
+# Standard header for all ops logs
+HEADER = ["timestamp", "module", "status", "note"]
 
 def log_event(module, status, note=""):
-    """Append operational event to fusion log."""
-    ts = datetime.utcnow().isoformat()
-    header = ["timestamp", "module", "status", "note"]
-    exists = os.path.exists(LOG_FILE)
-    with open(LOG_FILE, "a", newline="") as f:
+    """
+    Append a clean operational log entry to the unified log file.
+    Uses OPS_LOG_FILE from settings.py for consistent architecture.
+    """
+
+    timestamp = datetime.utcnow().isoformat()
+    file_exists = os.path.exists(OPS_LOG_FILE)
+
+    with open(OPS_LOG_FILE, "a", newline="") as f:
         writer = csv.writer(f)
-        if not exists:
-            writer.writerow(header)
-        writer.writerow([ts, module, status, note])
+
+        # Write header only once (first run)
+        if not file_exists:
+            writer.writerow(HEADER)
+
+        # Write actual event
+        writer.writerow([timestamp, module, status, note])
+
+    # Console echo for debugging during development
     print(f"📝 Logged: {module} | {status} | {note}")
 
 if __name__ == "__main__":
-    log_event("fusion_logger", "initialized", "Day38 test entry")
+    log_event("fusion_logger", "initialized", "Self-test")
 

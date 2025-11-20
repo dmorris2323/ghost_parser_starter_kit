@@ -1,99 +1,121 @@
 from datetime import datetime
 from pathlib import Path
+import csv
+
 import pandas as pd
 
-from fusion_logger import log_event, LOG_FILE
-from settings import COMMANDER_FILE, DAILY_REPORT_FILE
+from fusion_logger import log_event
+from settings import COMMANDER_FILE, OPS_LOG_FILE, DAILY_REPORT_FILE
+from validators import validate_row_integrity
+from error_handler import safe_run
 
 
 def build_daily_report(
+    day_label: str = "Day 45",
     commander_file: Path | str = COMMANDER_FILE,
-    log_file: Path | str = LOG_FILE,
+    log_file: Path | str = OPS_LOG_FILE,
     out_file: Path | str = DAILY_REPORT_FILE,
-    day_label: str = "Day 40"
 ):
+    """
+    Build a simple text-based daily report using:
+      - commander_extract.csv
+      - fusion_ops_log.csv
+
+    Output:
+      - daily_report.txt
+    """
+
+    commander_path = Path(commander_file)
+    log_path = Path(log_file)
+    out_path = Path(out_file)
+
+    # 1) Check commander file exists
+    if not commander_path.exists():
+        msg = f"Commander file not found: {commander_path.resolve()}"
+        print(f"❌ {msg}")
+        log_event("daily_report", "error", msg)
+        return None
+
+    # 2) Load commander summary
+    df_cmd = pd.read_csv(commander_path)
+
+    # 3) Validate commander data integrity
+    if not validate_row_integrity(df_cmd, "daily_report"):
+        return None
+
+    # --- Commander summary ---
+    total_events = len(df_cmd)
+    if "Confidence_Level" in df_cmd.columns:
+        crit_mask = df_cmd["Confidence_Level"].astype(str).str.lower() == "critical"
+        num_critical = crit_mask.sum()
+    else:
+        num_critical = 0
+
+    # Top 3 lines as mini-brief
+    top_brief_lines = []
+    for _, row in df_cmd.head(3).iterrows():
+        desc = row.get("Description", "No description")
+        score = row.get("Score", "NA")
+        conf = row.get("Confidence_Level", "NA")
+        top_brief_lines.append(f"- [{conf}] Score {score}: {desc}")
+
+    # --- Ops log summary ---
+    recent_errors = 0
+    recent_missing = 0
+    last_entries = []
+
+    if log_path.exists():
+        with open(log_path, newline="") as f:
+            reader = list(csv.DictReader(f))
+            tail = reader[-10:]
+            for entry in tail:
+                last_entries.append(
+                    f"{entry['timestamp']} | {entry['module']} | {entry['status']} | {entry['note']}"
+                )
+                status = entry.get("status", "").lower()
+                if status == "error":
+                    recent_errors += 1
+                if status == "missing_file":
+                    recent_missing += 1
+
+    # --- Build report text ---
+    now_str = datetime.utcnow().isoformat()
+
     lines = []
-    ts = datetime.utcnow().isoformat()
-
-    lines.append(f"=== GLL DAILY REPORT — {day_label} ===")
-    lines.append(f"Generated (UTC): {ts}")
+    lines.append("========================================")
+    lines.append(f"GLL DAILY REPORT — {day_label}")
+    lines.append(f"Generated (UTC): {now_str}")
+    lines.append("========================================")
+    lines.append("")
+    lines.append("Commander Extract Summary")
+    lines.append(f"- Total events: {total_events}")
+    lines.append(f"- Critical events: {num_critical}")
+    lines.append("")
+    lines.append("Top Events:")
+    lines.extend(top_brief_lines or ["- No events available"])
+    lines.append("")
+    lines.append("Ops Log Summary")
+    lines.append(f"- Recent errors: {recent_errors}")
+    lines.append(f"- Recent missing files: {recent_missing}")
+    lines.append("")
+    lines.append("Last 10 Log Entries:")
+    if last_entries:
+        lines.extend(last_entries)
+    else:
+        lines.append("- No log entries found.")
+    lines.append("")
+    lines.append("End of Report")
+    lines.append("========================================")
     lines.append("")
 
-    # 1) Commander Extract summary
-    c_path = Path(commander_file)
-    if c_path.exists():
-        try:
-            df_cmd = pd.read_csv(c_path)
-            lines.append(">> Commander Extract Summary")
-            lines.append(f"Total events summarized: {len(df_cmd)}")
+    out_path.write_text("\n".join(lines), encoding="utf-8")
 
-            # Top line threat (if exists)
-            if len(df_cmd) > 0:
-                top = df_cmd.iloc[0]
-                lines.append(
-                    f"Top Event: id={top.get('id','NA')} "
-                    f"| Score={top.get('Score','NA')} "
-                    f"| Confidence={top.get('Confidence_Level','NA')}"
-                )
-                lines.append(f"Description: {top.get('Description','NA')}")
-            else:
-                lines.append("No events in commander_extract.csv.")
-            lines.append("")
-        except Exception as e:
-            lines.append(f"[ERROR] Could not read commander extract: {e}")
-    else:
-        lines.append(">> Commander Extract Summary")
-        lines.append("File not found — no commander_extract.csv present.")
-        lines.append("")
+    print(f"🧾 Daily report written to {out_path.name}")
+    log_event("daily_report", "completed", f"Report -> {out_path.name}")
 
-    # 2) System health from fusion_ops_log.csv
-    l_path = Path(log_file)
-    if l_path.exists():
-        try:
-            df_log = pd.read_csv(l_path)
-            lines.append(">> System Health Summary")
-            # Count errors vs total
-            total_rows = len(df_log)
-            error_rows = df_log[df_log["status"].str.lower() == "error"]
-            lines.append(f"Total log entries: {total_rows}")
-            lines.append(f"Errors recorded: {len(error_rows)}")
-
-            # Last 3 events
-            lines.append("Recent activity (last 3 entries):")
-            for _, row in df_log.tail(3).iterrows():
-                lines.append(
-                    f"  [{row.get('timestamp','NA')}] "
-                    f"{row.get('module','NA')} | {row.get('status','NA')} "
-                    f"| {row.get('note','')}"
-                )
-            lines.append("")
-        except Exception as e:
-            lines.append(f"[ERROR] Could not read ops log: {e}")
-    else:
-        lines.append(">> System Health Summary")
-        lines.append("No fusion_ops_log.csv found — logger may not have run yet.")
-        lines.append("")
-
-    # 3) Wrap up
-    lines.append(">> Analyst Notes (fill in manually):")
-    lines.append("- [ ] Key threat takeaway:")
-    lines.append("- [ ] System issues to address next run:")
-    lines.append("- [ ] Items to brief to leadership / instructor:")
-    lines.append("")
-    lines.append("=== END OF REPORT ===")
-
-    with open(out_file, "w") as f:
-        f.write("\n".join(lines))
-
-    print(f"✅ Daily report written to {out_file}")
-    try:
-        log_event("daily_report", "completed", f"Output -> {out_file}")
-    except Exception:
-        pass
-
-    return out_file
+    return out_path
 
 
 if __name__ == "__main__":
-    build_daily_report()
+    safe_run("daily_report", build_daily_report)
 
