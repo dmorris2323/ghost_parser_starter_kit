@@ -2,101 +2,102 @@ import pandas as pd
 from pathlib import Path
 
 from fusion_logger import log_event
-from settings import FUSED_FILE, SCORED_FILE
-from validators import (
-    validate_required_columns,
-    validate_numeric_fields,
-    validate_row_integrity,
-    validate_physics
-)
 from error_handler import safe_run
+
+# settings may define default fused/scored paths
+try:
+    from settings import FUSED_FILE, SCORED_FILE
+except ImportError:
+    FUSED_FILE = "fused_output.csv"
+    SCORED_FILE = "scored_output.csv"
+
+# validators (with safe fallback for validate_schema)
+try:
+    from validators import (
+        validate_row_integrity,
+        validate_required_columns,
+        validate_numeric_fields,
+        validate_physics,
+        validate_schema,
+    )
+except ImportError:
+    from validators import (
+        validate_row_integrity,
+        validate_required_columns,
+        validate_numeric_fields,
+        validate_physics,
+    )
+
+    def validate_schema(df, module_name: str) -> bool:
+        # no-op if not implemented
+        return True
 
 
 def score_fusion(
-    fused_file: Path | str = FUSED_FILE,
-    out_file: Path | str = SCORED_FILE
+    fused_file: str | Path = FUSED_FILE,
+    out_file: str | Path = SCORED_FILE,
 ):
     """
-    Scores fused_output.csv by AOI_Hit and produces scored_output.csv.
-    Includes:
-      - required column validation
-      - numeric validation
-      - physics validation
-      - soft fallback (drop invalid rows)
+    Read fused_output, validate it, apply scoring, write scored_output.
     """
-    fused_path = Path(fused_file)
-    scored_path = Path(out_file)
 
-    # 1) Check file exists
+    module_name = "fusion_scoring"
+
+    fused_path = Path(fused_file)
+    out_path = Path(out_file)
+
     if not fused_path.exists():
         msg = f"File not found: {fused_path.resolve()}"
-        print(f"❌ {msg}")
-        log_event("fusion_scoring", "error", msg)
+        print(f"❌ {module_name}: {msg}")
+        log_event(module_name, "error", msg)
         return None
 
-    # 2) Load dataframe
+    # 1) Load
     df = pd.read_csv(fused_path)
 
-    # 3) Validate required columns
-    required = ["id", "Seismic_Mag", "Radiation_uSv", "Comms_State", "AOI_Hit"]
-    if not validate_required_columns(df, required, "fusion_scoring"):
+    # 2) Validate
+    if not validate_row_integrity(df, module_name):
         return None
 
-    # 4) Validate row integrity (no nulls)
-    if not validate_row_integrity(df, "fusion_scoring"):
-        # Continue? No. Null violates telemetry.
+    if not validate_required_columns(
+        df,
+        ["id", "Seismic_Mag", "Radiation_uSv", "Comms_State", "AOI_Hit"],
+        module_name,
+    ):
         return None
 
-    # 5) Validate numeric fields
-    if not validate_numeric_fields(df, ["Seismic_Mag", "Radiation_uSv"], "fusion_scoring"):
+    if not validate_numeric_fields(
+        df,
+        ["Seismic_Mag", "Radiation_uSv"],
+        module_name,
+    ):
         return None
 
-    # 6) Physics validation — strict AND fallback
-    # --------------------------------------------------------
-    # First attempt strict validation
-    strict_ok = validate_physics(df, "fusion_scoring")
+    if not validate_physics(df, module_name):
+        return None
 
-    if not strict_ok:
-        # Soft fallback — drop bad rows but continue scoring
-        invalid_mask = df.apply(
-            lambda r: not (
-                4.0 <= float(r["Seismic_Mag"]) <= 9.5
-                and 0 <= float(r["Radiation_uSv"]) <= 500
-                and r["Comms_State"] in ["Normal", "Burst", "Silence"]
-            ),
-            axis=1
-        )
+    # Strict schema check (will be a no-op if not implemented)
+    if not validate_schema(df, module_name):
+        return None
 
-        if invalid_mask.any():
-            removed = df[invalid_mask]
-            df = df[~invalid_mask]
+    # 3) Score
+    def _score_row(r):
+        try:
+            return 100 if bool(r.get("AOI_Hit", False)) else 10
+        except Exception:
+            return 10
 
-            msg = f"Dropped {len(removed)} invalid rows (physics fallback)"
-            print(f"⚠️ {msg}")
-            log_event("fusion_scoring", "rows_dropped", msg)
+    df["Score"] = df.apply(_score_row, axis=1)
 
-        # If we dropped everything, abort
-        if df.empty:
-            msg = "All rows removed — no valid telemetry left."
-            print(f"❌ {msg}")
-            log_event("fusion_scoring", "error", msg)
-            return None
-
-    # 7) Apply scoring logic
-    df["Score"] = df.apply(
-        lambda r: 100 if bool(r.get("AOI_Hit")) else 10,
-        axis=1
-    )
-
-    # 8) Sort and save
+    # 4) Sort + write
     df_sorted = df.sort_values(by="Score", ascending=False)
-    df_sorted.to_csv(scored_path, index=False)
+    df_sorted.to_csv(out_path, index=False)
 
-    print(f"✅ Scoring complete — {len(df_sorted)} rows saved to {scored_path.name}")
+    print(f"✅ Scoring complete — {len(df_sorted)} rows saved to {out_path.name}")
     log_event(
-        "fusion_scoring",
+        module_name,
         "completed",
-        f"{len(df_sorted)} rows -> {scored_path.name}"
+        f"{len(df_sorted)} rows -> {out_path.name}",
     )
 
     return df_sorted

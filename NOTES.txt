@@ -1175,7 +1175,68 @@ OVERALL DAY 46 ASSESSMENT
 • GLL continues to mature into an actual product, not a concept.  
 • Discipline remains high.  
 
+DAY 46 — NOTES (Thu, Nov 20, 2025)
+TECHNICAL WORK
+
+• Ran full module validation: scoring, extract, heatmap, alerts, report
+• Verified physics, numeric, row integrity, required columns
+• Log timestamps clean
+• Full fusion pipeline executed end-to-end
+
+Schema Work (Major Upgrade):
+• Created baseline_schema.csv
+• Built schema_loader.py
+• Added validate_schema() to validators
+• Integrated schema validation into fusion_scoring + commander_extract
+• Fixed .strip() bug in schema loader (used .str.strip() instead)
+• Pipeline now fully schema-driven, SIEM/ICADS-style
+
+DOCTRINE — AFDP 2-0 (ISR Synchronization)
+
+• ISR guidance must tie to commander intent
+• PED drives tempo
+• Fusion must reduce uncertainty
+
+8-year-old: “You help the boss decide faster.”
+
+NUCLEAR / EMS
+
+• Optical = first flash
+• Seismic = yield estimate
+• Radiation = type confirmation
+• EMS = anomaly detection
+• Cross-domain fusion prevents false alarms
+
+8-year-old: “We check every clue to be sure.”
+
+CHINA — SSF / Cognitive Warfare
+
+• SSF fuses cyber + space + EW under one command
+• Their strategy: delay, deceive, overload
+• Counter: validated ISR + layered sensors + calm cycles
+
+8-year-old: “They try to confuse your brain. You stay calm.”
+
+EOC STUDY — Target Development
+
+• Targets require validation
+• Intel continuously feeds target lists
+• Fusion scoring aids prioritization
 ────────────────────────────────────────
 END OF DAY 46 NOTES
 ────────────────────────────────────────
+
+
+vDAY 48 – AZURE EDGE STUB
+
+• Created azure_architecture.md to document GLL’s edge → cloud flow (seismic → fused_output.csv → Azure Blob ‘gll-telemetry’).
+• Added azure_upload_stub.py to check for data/fused_output.csv and print a stubbed Azure upload action (no real cloud calls yet).
+• Verified pipeline:
+    - build_fused_output_from_seismic → data/fused_output.csv
+    - fusion_scoring + commander_extract + heatmap_prep + fusion_alerts + daily_report
+    - qa_validator.py full stack PASS
+• Ran azure_upload_stub.py and confirmed GLL is now edge-first with a clean hand-off point to future Azure integration.
+
+8-year-old version:
+“The computer makes a special file with boom and radio clues, and now we have a pretend button that says, ‘This is ready to send to the big cloud computer later.’”
 

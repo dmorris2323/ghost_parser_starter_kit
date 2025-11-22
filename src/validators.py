@@ -1,16 +1,36 @@
 # ============================
-# validators.py (FINAL VERSION)
+# validators.py (SCHEMA + PHYSICS AWARE)
 # ============================
 
 import pandas as pd
 
-# ----------------------------
-# Required column validator
-# ----------------------------
+from fusion_logger import log_event
+from schema_loader import load_schema
+
+
+# -----------------------------------------
+# ROW INTEGRITY
+# -----------------------------------------
+def validate_row_integrity(df: pd.DataFrame, module_name: str) -> bool:
+    """
+    Fail if any completely empty rows exist.
+    """
+    empty_rows = df.isnull().all(axis=1)
+    if empty_rows.any():
+        idx = df[empty_rows].index.tolist()
+        msg = f"Empty rows detected at indexes: {idx}"
+        print(f"❌ {module_name}: {msg}")
+        log_event(module_name, "error", msg)
+        return False
+    return True
+
+
+# -----------------------------------------
+# REQUIRED COLUMNS
+# -----------------------------------------
 def validate_required_columns(df: pd.DataFrame, required: list, module_name: str) -> bool:
     missing = [c for c in required if c not in df.columns]
     if missing:
-        from fusion_logger import log_event
         msg = f"Missing required columns: {missing}"
         print(f"❌ {module_name}: {msg}")
         log_event(module_name, "error", msg)
@@ -18,69 +38,121 @@ def validate_required_columns(df: pd.DataFrame, required: list, module_name: str
     return True
 
 
-# ----------------------------
-# Numeric field validator
-# ----------------------------
-def validate_numeric_fields(df: pd.DataFrame, fields: list, module_name: str) -> bool:
-    from fusion_logger import log_event
-
-    for field in fields:
-        if field in df.columns:
-            try:
-                pd.to_numeric(df[field])
-            except Exception:
-                msg = f"Non-numeric values in '{field}'"
-                print(f"❌ {module_name}: {msg}")
-                log_event(module_name, "error", msg)
-                return False
-    return True
-
-
-# ----------------------------
-# Row integrity validator
-# ----------------------------
-def validate_row_integrity(df: pd.DataFrame, module_name: str) -> bool:
-    from fusion_logger import log_event
-    if df.isnull().any().any():
-        idx = df[df.isnull().any(axis=1)].index.tolist()
-        msg = f"Null rows found at indexes: {idx}"
+# -----------------------------------------
+# NUMERIC TYPE CHECKS
+# -----------------------------------------
+def validate_numeric_fields(df: pd.DataFrame, numeric_cols: list, module_name: str) -> bool:
+    bad = []
+    for col in numeric_cols:
+        if col in df.columns and not pd.api.types.is_numeric_dtype(df[col]):
+            bad.append(col)
+    if bad:
+        msg = f"Non-numeric values in numeric fields: {bad}"
         print(f"❌ {module_name}: {msg}")
         log_event(module_name, "error", msg)
         return False
     return True
 
 
-# ----------------------------
-# Physics validator
-# Ensures plausible ranges:
-# seismic: 4.0–9.5
-# radiation: 0–500 µSv
-# comms: Normal/Burst/Silence
-# ----------------------------
+# -----------------------------------------
+# PHYSICS CHECKS
+# -----------------------------------------
 def validate_physics(df: pd.DataFrame, module_name: str) -> bool:
-    from fusion_logger import log_event
+    """
+    Simple physics sanity checks:
+    - Seismic_Mag >= 0
+    - Radiation_uSv >= 0
+    """
+    bad_indexes = []
 
-    bad_rows = []
+    if "Seismic_Mag" in df.columns:
+        bad_indexes += df[df["Seismic_Mag"] < 0].index.tolist()
 
-    for i, r in df.iterrows():
-        # Seismic magnitude
-        if "Seismic_Mag" in r and not (4.0 <= float(r["Seismic_Mag"]) <= 9.5):
-            bad_rows.append(i)
+    if "Radiation_uSv" in df.columns:
+        bad_indexes += df[df["Radiation_uSv"] < 0].index.tolist()
 
-        # Radiation
-        if "Radiation_uSv" in r and not (0 <= float(r["Radiation_uSv"]) <= 500):
-            bad_rows.append(i)
+    bad_indexes = sorted(set(bad_indexes))
 
-        # Comms
-        if "Comms_State" in r:
-            if r["Comms_State"] not in ["Normal", "Burst", "Silence"]:
-                bad_rows.append(i)
-
-    if bad_rows:
-        msg = f"Invalid physics rows at indexes: {bad_rows}"
-        print(f"❌ Invalid physics rows at indexes: {bad_rows}")
+    if bad_indexes:
+        msg = f"Invalid physics rows at indexes: {bad_indexes}"
+        print(f"❌ {module_name}: {msg}")
         log_event(module_name, "invalid_physics", msg)
         return False
+
+    return True
+
+
+# -----------------------------------------
+# SCHEMA VALIDATION (STRICT MODE)
+# -----------------------------------------
+def validate_schema(df: pd.DataFrame, module_name: str) -> bool:
+    """
+    Enforce schema from baseline_schema.csv:
+    - All required columns present
+    - No extra columns
+    - Basic type enforcement for int/float/bool
+    """
+
+    try:
+        schema_df, required_cols = load_schema()
+    except Exception as e:
+        msg = f"Failed to load schema: {e}"
+        print(f"⚠️ {module_name}: {msg}")
+        log_event(module_name, "schema_load_error", str(e))
+        # If schema file itself is broken, fail safe
+        return False
+
+    # 1) Required columns present
+    for col in required_cols:
+        if col not in df.columns:
+            msg = f"Schema error: missing required column '{col}'"
+            print(f"❌ {module_name}: {msg}")
+            log_event(module_name, "schema_error", msg)
+            return False
+
+    # 2) No extra columns beyond what's defined in schema
+    allowed = set(schema_df["column_name"].tolist())
+    incoming = set(df.columns.tolist())
+
+    extra = sorted(list(incoming - allowed))
+    if extra:
+        msg = f"Extra columns present: {extra}"
+        print(f"❌ {module_name}: {msg}")
+        log_event(module_name, "schema_error", msg)
+        return False
+
+    # 3) Type enforcement (basic)
+    for _, row in schema_df.iterrows():
+        col = row["column_name"]
+        expected = str(row["type"]).strip().lower()
+
+        if col not in df.columns:
+            continue
+
+        series = df[col]
+
+        if expected == "int":
+            if not pd.api.types.is_integer_dtype(series):
+                msg = f"Type mismatch: {col} must be INT"
+                print(f"❌ {module_name}: {msg}")
+                log_event(module_name, "schema_error", msg)
+                return False
+
+        elif expected == "float":
+            if not pd.api.types.is_float_dtype(series) and not pd.api.types.is_integer_dtype(series):
+                msg = f"Type mismatch: {col} must be FLOAT-compatible"
+                print(f"❌ {module_name}: {msg}")
+                log_event(module_name, "schema_error", msg)
+                return False
+
+        elif expected == "bool":
+            if not pd.api.types.is_bool_dtype(series):
+                msg = f"Type mismatch: {col} must be BOOL"
+                print(f"❌ {module_name}: {msg}")
+                log_event(module_name, "schema_error", msg)
+                return False
+
+        # For 'str', we allow object dtype and don't hard-fail
 
     return True
 

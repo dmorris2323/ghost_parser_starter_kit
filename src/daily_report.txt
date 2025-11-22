@@ -1,6 +1,6 @@
 ========================================
 GLL DAILY REPORT — Day 45
-Generated (UTC): 2025-11-20T11:09:20.472823
+Generated (UTC): 2025-11-22T10:43:13.435898
 ========================================
 
 Commander Extract Summary
@@ -17,16 +17,16 @@ Ops Log Summary
 - Recent missing files: 0
 
 Last 10 Log Entries:
-2025-11-19T11:08:10.607271 | build_fused_output | completed | 5 rows -> fused_output.csv
-2025-11-19T11:08:11.288134 | fusion_scoring | completed | 5 rows -> scored_output.csv
-2025-11-19T11:08:11.968605 | commander_extract | completed | 5 events -> commander_extract.csv
-2025-11-19T11:08:12.638280 | heatmap_prep | completed | 5 records -> heatmap_data.csv
-2025-11-19T11:08:13.322333 | fusion_alerts | completed | 2 critical events -> critical_alerts.csv
-2025-11-19T11:08:13.993151 | daily_report | completed | Report -> daily_report.txt
-2025-11-20T11:06:43.363504 | fusion_scoring | completed | 5 rows -> scored_output.csv
-2025-11-20T11:07:22.196184 | commander_extract | completed | 5 events -> commander_extract.csv
-2025-11-20T11:08:10.276093 | heatmap_prep | completed | 5 records -> heatmap_data.csv
-2025-11-20T11:08:48.282236 | fusion_alerts | completed | 2 critical events -> critical_alerts.csv
+2025-11-21T09:23:01.784012 | daily_report | completed | Report -> daily_report.txt
+2025-11-21T09:23:01.784070 | qa_validator | pass | daily_report
+2025-11-22T10:43:13.427552 | fusion_scoring | completed | 5 rows -> scored_output.csv
+2025-11-22T10:43:13.428232 | qa_validator | pass | fusion_scoring
+2025-11-22T10:43:13.431474 | commander_extract | completed | 5 events -> commander_extract.csv
+2025-11-22T10:43:13.431541 | qa_validator | pass | commander_extract
+2025-11-22T10:43:13.433668 | heatmap_prep | completed | 5 records -> heatmap_data.csv
+2025-11-22T10:43:13.433728 | qa_validator | pass | heatmap_prep
+2025-11-22T10:43:13.435006 | fusion_alerts | completed | 2 critical events -> critical_alerts.csv
+2025-11-22T10:43:13.435060 | qa_validator | pass | fusion_alerts
 
 End of Report
 ========================================
