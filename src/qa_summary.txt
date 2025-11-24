@@ -1,0 +1,13 @@
+GLL QA VALIDATION SUMMARY
+==========================
+Timestamp (UTC): 2025-11-24T14:41:59.034729
+Total modules:   5
+Passed:          5
+Failed:          0
+
+Details:
+- fusion_scoring: PASS
+- commander_extract: PASS
+- heatmap_prep: PASS
+- fusion_alerts: PASS
+- daily_report: PASS
