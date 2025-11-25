@@ -10,7 +10,8 @@ from commander_extract import commander_extract
 from heatmap_prep import generate_heatmap_data
 from fusion_alerts import fusion_alerts
 from daily_report import build_daily_report
-
+from cloud.azure_blob_stub import simulate_azure_upload
+from spectral_owl.owl_brain import think
 
 def run_all():
     """
@@ -23,6 +24,8 @@ def run_all():
         ("heatmap_prep", generate_heatmap_data),
         ("fusion_alerts", fusion_alerts),
         ("daily_report", build_daily_report),
+	("azure_upload_stub", lambda: simulate_azure_upload()),
+	("spectral_owl", lambda: think("qa-check")),
     ]
 
     results: list[tuple[str, str, str]] = []
