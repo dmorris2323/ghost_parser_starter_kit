@@ -1,8 +1,8 @@
 GLL QA VALIDATION SUMMARY
 ==========================
-Timestamp (UTC): 2025-11-24T14:41:59.034729
-Total modules:   5
-Passed:          5
+Timestamp (UTC): 2025-11-26T11:10:40.415912
+Total modules:   7
+Passed:          7
 Failed:          0
 
 Details:
@@ -11,3 +11,5 @@ Details:
 - heatmap_prep: PASS
 - fusion_alerts: PASS
 - daily_report: PASS
+- azure_upload_stub: PASS
+- spectral_owl: PASS

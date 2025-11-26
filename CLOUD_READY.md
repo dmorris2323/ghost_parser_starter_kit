@@ -162,3 +162,84 @@ Long-term goal: send validation failures and physics anomalies as structured tel
 
 This document will evolve as GLL matures and as Azure is brought online in phases.
 
+---
+
+## Day 50 – Cloud Readiness Expansion
+
+### 1. Why GLL needs Azure
+
+Ghost Lantern Labs is being built to behave like a real-world, defense-grade system:
+
+- **Edge-first**: runs on a laptop or tactical machine, not just a big cloud server.
+- **Cloud-connected**: when connectivity exists, push fused data and alerts to Azure for:
+  - Long-term storage
+  - Advanced analytics
+  - Multi-user dashboards
+- **Resilient**: if the cloud dies, the edge still works. The cloud is a force multiplier, not a crutch.
+
+Azure is our primary platform because:
+
+- It’s already widely used in DoD and government.
+- It has strong logging, identity, and monitoring primitives.
+- It integrates cleanly with Python pipelines like GLL.
+
+---
+
+### 2. Current Day 50 Cloud-Ready Status
+
+**Already built:**
+
+- `fused_output.csv` pipeline (local edge fusion).
+- `scored_output.csv` (fusion scoring).
+- `commander_extract.csv` (commander summary).
+- `critical_alerts.csv` (filtered critical events).
+- `daily_report.txt` (human-readable summary).
+- `qa_validator.py` (full-pipeline smoke test).
+- `azure_upload_stub.py` (root-level stub that checks file presence).
+- `fusion_schema.md` + `baseline_schema.csv` (schema-driven validation).
+
+All of this runs locally *without* cloud dependency.
+
+---
+
+### 3. What we will send to Azure later
+
+On the first cloud-enabled version, GLL will upload:
+
+- `data/fused_output.csv` → raw fused telemetry
+- `src/scored_output.csv` → scored events
+- `src/commander_extract.csv` → commander-facing summary rows
+- `src/critical_alerts.csv` → only “Critical” alerts
+- Optionally: `src/daily_report.txt` → human-readable brief
+
+Each of these becomes either:
+
+- A **blob** in Azure Blob Storage, or
+- An **event source** for Azure Functions to process and fan out to dashboards.
+
+---
+
+### 4. Day 50 Checklist (Edge → Cloud)
+
+By Day 50, GLL has:
+
+- A stable, repeatable local fusion pipeline.
+- Schema checks and validators to prevent junk data from propagating.
+- A stubbed Azure upload path (`azure_upload_stub.py`).
+- A documented plan (`CLOUD_READY.md`, `azure_architecture.md`) that defines:
+  - What we send
+  - Where we send it
+  - What the cloud side will eventually do
+
+Next steps (later in the 100 days):
+
+- Implement a real Azure Blob client using the SDK.
+- Build an Azure Function that:
+  - Listens for new fusion files
+  - Re-scores / verifies / alerts
+  - Writes dashboard-ready outputs
+- Tie Spectral Owl AI into this flow for:
+  - Auto-briefs
+  - Alert explanations
+  - Pattern/cluster detection
+

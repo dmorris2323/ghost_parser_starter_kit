@@ -1,0 +1,6 @@
+DateTime,Station,Mag,Depth_km,Lat,Lon,Type,Flagged,Reasons
+2025-10-20T12:01:00Z,PS930,4,1.2,39.8,128.7,event,TRUE,nk_zone+shallow+mag_range
+2025-10-20T12:05:00Z,PS931,5.1,1,40.2,129.2,event,TRUE,nk_zone+shallow+mag_range
+2025-10-20T12:10:00Z,PS932,2.9,1.8,39.5,128.9,event,FALSE,
+2025-10-20T12:15:00Z,BAD01,0,0,0,0,error,FALSE,
+

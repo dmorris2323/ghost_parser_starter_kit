@@ -1,0 +1,27 @@
+"""
+test_ghost_cli_smoke.py — Day 51
+Simple smoke tests to ensure ghost_cli imports and the menu prints.
+"""
+
+import pathlib
+import sys
+
+
+# Make sure `src/` is on sys.path so we can import ghost_cli
+ROOT = pathlib.Path(__file__).resolve().parents[1]
+SRC = ROOT / "src"
+if str(SRC) not in sys.path:
+    sys.path.insert(0, str(SRC))
+
+
+def test_import_ghost_cli():
+    import ghost_cli  # noqa: F401
+
+
+def test_show_menu_prints_title(capsys):
+    import ghost_cli
+
+    ghost_cli.show_menu()
+    out, _ = capsys.readouterr()
+    assert "GLL OPERATOR CONSOLE" in out
+

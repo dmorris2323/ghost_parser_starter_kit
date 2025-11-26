@@ -1,5 +1,6 @@
 import pandas as pd
 from pathlib import Path
+from fusion_sanitizer import sanitize
 
 from fusion_logger import log_event
 from error_handler import safe_run
@@ -54,6 +55,16 @@ def score_fusion(
 
     # 1) Load
     df = pd.read_csv(fused_path)
+    from fusion_sanitizer import sanitize  
+    df = sanitize(df)
+    from anti_dos import detect_flood
+    from fusion_quarantine import quarantine
+
+    alert = detect_flood(df)
+    print(alert)
+
+    # quarantine impossible values (future logic expands)
+    quarantine(df, df["Radiation_uSv"] < 0)
 
     # 2) Validate
     if not validate_row_integrity(df, module_name):

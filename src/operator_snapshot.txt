@@ -1,0 +1,41 @@
+OPERATOR SNAPSHOT — 2025-11-26T09:19:40.054663
+==============================================
+
+[scored_output.csv] 5 rows
+[commander_extract.csv] 5 events
+[critical_alerts.csv] 2 critical alerts
+
+--- DAILY REPORT ---
+========================================
+GLL DAILY REPORT — Day 45
+Generated (UTC): 2025-11-26T09:19:40.054155
+========================================
+
+Commander Extract Summary
+- Total events: 5
+- Critical events: 2
+
+Top Events:
+- [Critical] Score 100: Seismic 5.2, Rad 1.62 µSv, Comms: Burst
+- [Critical] Score 100: Seismic 4.1, Rad 3.39 µSv, Comms: Normal
+- [Moderate] Score 10: Seismic 5.1, Rad 3.66 µSv, Comms: Normal
+
+Ops Log Summary
+- Recent errors: 0
+- Recent missing files: 0
+
+Last 10 Log Entries:
+2025-11-26T09:19:02.716689 | spectral_owl | anti_dos | No quarantine file found. No obvious data flood indicators.
+2025-11-26T09:19:40.038579 | fusion_sanitizer | sanitize | 5 rows remain after cleaning
+2025-11-26T09:19:40.046115 | fusion_scoring | completed | 5 rows -> scored_output.csv
+2025-11-26T09:19:40.046201 | ghost_cli | pipeline_step | fusion_scoring complete
+2025-11-26T09:19:40.049544 | commander_extract | completed | 5 events -> commander_extract.csv
+2025-11-26T09:19:40.049621 | ghost_cli | pipeline_step | commander_extract complete
+2025-11-26T09:19:40.051582 | heatmap_prep | completed | 5 records -> heatmap_data.csv
+2025-11-26T09:19:40.051645 | ghost_cli | pipeline_step | heatmap_prep complete
+2025-11-26T09:19:40.052825 | fusion_alerts | completed | 2 critical events -> critical_alerts.csv
+2025-11-26T09:19:40.052880 | ghost_cli | pipeline_step | fusion_alerts complete
+
+End of Report
+========================================
+

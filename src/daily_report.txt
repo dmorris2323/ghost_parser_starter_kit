@@ -1,6 +1,6 @@
 ========================================
 GLL DAILY REPORT — Day 45
-Generated (UTC): 2025-11-24T09:35:07.907478
+Generated (UTC): 2025-11-26T11:10:40.414993
 ========================================
 
 Commander Extract Summary
@@ -17,16 +17,16 @@ Ops Log Summary
 - Recent missing files: 0
 
 Last 10 Log Entries:
-2025-11-24T09:34:24.603423 | fusion_alerts | completed | 2 critical events -> critical_alerts.csv
-2025-11-24T09:34:25.277578 | daily_report | completed | Report -> daily_report.txt
-2025-11-24T09:35:07.900153 | fusion_scoring | completed | 5 rows -> scored_output.csv
-2025-11-24T09:35:07.900729 | qa_validator | pass | fusion_scoring
-2025-11-24T09:35:07.903431 | commander_extract | completed | 5 events -> commander_extract.csv
-2025-11-24T09:35:07.903498 | qa_validator | pass | commander_extract
-2025-11-24T09:35:07.905415 | heatmap_prep | completed | 5 records -> heatmap_data.csv
-2025-11-24T09:35:07.905473 | qa_validator | pass | heatmap_prep
-2025-11-24T09:35:07.906590 | fusion_alerts | completed | 2 critical events -> critical_alerts.csv
-2025-11-24T09:35:07.906650 | qa_validator | pass | fusion_alerts
+2025-11-26T11:10:40.395461 | fusion_sanitizer | sanitize | 5 rows in, 5 rows remain after cleaning
+2025-11-26T11:10:40.396242 | anti_dos | detect_flood | rows=5 -> normal (source=fusion_scoring)
+2025-11-26T11:10:40.405973 | fusion_scoring | completed | 5 rows -> scored_output.csv
+2025-11-26T11:10:40.406060 | qa_validator | pass | fusion_scoring
+2025-11-26T11:10:40.409860 | commander_extract | completed | 5 events -> commander_extract.csv
+2025-11-26T11:10:40.409933 | qa_validator | pass | commander_extract
+2025-11-26T11:10:40.412294 | heatmap_prep | completed | 5 records -> heatmap_data.csv
+2025-11-26T11:10:40.412368 | qa_validator | pass | heatmap_prep
+2025-11-26T11:10:40.413593 | fusion_alerts | completed | 2 critical events -> critical_alerts.csv
+2025-11-26T11:10:40.413658 | qa_validator | pass | fusion_alerts
 
 End of Report
 ========================================

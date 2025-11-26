@@ -1,0 +1,10 @@
+column_name,required,type,description
+id,yes,int,Primary identifier
+Seismic_Mag,yes,float,Seismic reading (magnitude)
+Radiation_uSv,yes,float,Gamma dose rate
+Comms_State,yes,str,Radio/comms description
+AOI_Hit,yes,bool,Area of Interest match
+Score,no,int,Fusion score
+Confidence_Level,no,str,Critical/High/Moderate
+Description,no,str,Fused readable description
+

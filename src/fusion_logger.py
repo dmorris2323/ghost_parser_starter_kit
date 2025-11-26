@@ -1,5 +1,7 @@
 import csv
 import os
+from pathlib import Path
+LOG_FILE = Path("fusion_ops_log.csv")
 from datetime import datetime
 from settings import OPS_LOG_FILE
 

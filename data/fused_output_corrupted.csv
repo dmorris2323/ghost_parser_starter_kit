@@ -1,0 +1,5 @@
+id,Seismic_Mag,Radiation_uSv,Comms_State,AOI_Hit
+1,4.0,0.0,Normal,True
+2,5.1,0.0,Normal,True
+3,2.9,0.0,Normal,False
+4,-9.0,0.0,Normal,False
