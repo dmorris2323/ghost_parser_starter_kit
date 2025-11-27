@@ -1,15 +1,19 @@
 """
 owl_brain.py — Spectral Owl reasoning engine
 
-Upgrades:
-- Analyze scored_output.csv for critical events
-- Use LLM adapter for simple "thinking" tasks, offline-safe.
+Consolidated version — Day 53
+
+Provides:
+- analyze_fusion: inspect scored_output.csv for critical events
+- think: use LLM adapter (dummy-local by default) for textual reasoning
+- threat_snapshot: combine fusion status with Anti-DoS traffic classification
 """
 
 import pandas as pd
 
 from fusion_logger import log_event
 from spectral_owl.llm_adapter import get_llm
+from anti_dos import classify_traffic
 
 
 def analyze_fusion(path: str = "scored_output.csv") -> str:
@@ -33,8 +37,8 @@ def analyze_fusion(path: str = "scored_output.csv") -> str:
 
     # Basic rule: anything with Score > 70 is "critical"
     if "Score" not in df.columns:
-        result = "Fusion file missing Score column — cannot analyze."
-        log_event("spectral_owl", "analysis_error", result)
+        result = "Score column missing in fusion output."
+        log_event("spectral_owl", "analysis", result)
         return result
 
     critical = df[df["Score"] > 70]
@@ -60,4 +64,28 @@ def think(task: str) -> str:
     response = engine.generate(prompt)
     log_event("spectral_owl", "think", task)
     return response
+
+
+def threat_snapshot() -> str:
+    """
+    Combine fusion status + Anti-DoS traffic classification into one line.
+
+    For now, traffic metrics are simple fixed values; later they can be
+    wired to real telemetry rates.
+    """
+    fusion_status = analyze_fusion()
+
+    # Example traffic metrics — can be replaced with real values later
+    events_per_minute = 350
+    avg_payload_kb = 8.0
+
+    traffic_label = classify_traffic(events_per_minute, avg_payload_kb).upper()
+
+    snapshot = (
+        f"Fusion: {fusion_status} | "
+        f"Traffic: {events_per_minute}/min @ {avg_payload_kb:.1f}KB -> {traffic_label}"
+    )
+
+    log_event("spectral_owl", "threat_snapshot", snapshot)
+    return snapshot
 

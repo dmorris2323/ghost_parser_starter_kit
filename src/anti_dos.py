@@ -1,90 +1,116 @@
 """
-anti_dos.py — Day 52
-Basic Anti-DoS classifier + flood detector for Ghost Lantern Labs.
+anti_dos.py — Day 53
+Simple traffic classifier + flood detector for Ghost Lantern Labs.
 
-Provides:
-- classify_traffic(events_per_minute, avg_payload_kb)
-- detect_flood(df, source="fusion_scoring")
-- quick_demo()
+- TrafficStats: small struct for volume + payload size
+- classify_traffic: rules for NORMAL / SUSPICIOUS / DOS_SUSPECTED
+- detect_flood: helper that works off a DataFrame
 """
 
-from datetime import datetime
-from typing import Literal
+from dataclasses import dataclass
+from typing import Optional, Union
+
+import pandas as pd
 
 from fusion_logger import log_event
 
-RiskLabel = Literal["no_traffic", "normal", "suspicious", "dos_suspected"]
+
+@dataclass
+class TrafficStats:
+    events_per_minute: int
+    avg_payload_kb: float
 
 
-def classify_traffic(events_per_minute: int, avg_payload_kb: float) -> RiskLabel:
+# Backwards compatibility alias for older modules
+TrafficMetrics = TrafficStats
+
+
+def _normalize_input(
+    stats_or_events: Union[TrafficStats, int],
+    avg_payload_kb: Optional[float] = None,
+) -> TrafficStats:
+    """
+    Accept either:
+      - TrafficStats / TrafficMetrics object
+      - or (events_per_minute: int, avg_payload_kb: float)
+
+    and always return a TrafficStats instance.
+    """
+    if isinstance(stats_or_events, TrafficStats):
+        return stats_or_events
+
+    events = int(stats_or_events)
+    payload = float(avg_payload_kb) if avg_payload_kb is not None else 0.0
+    return TrafficStats(events_per_minute=events, avg_payload_kb=payload)
+
+
+def classify_traffic(
+    stats_or_events: Union[TrafficStats, int],
+    avg_payload_kb: Optional[float] = None,
+) -> str:
     """
     Very simple heuristic classifier.
 
-    - no_traffic:   zero events
-    - normal:       low volume + small payloads
-    - suspicious:   medium/high volume OR big payloads
-    - dos_suspected: very high volume and/or very large payloads
+    Input can be:
+      - TrafficStats / TrafficMetrics
+      - or (events_per_minute, avg_payload_kb)
+
+    Returns one of:
+      - "no_traffic"
+      - "normal"
+      - "suspicious"
+      - "dos_suspected"
     """
+    stats = _normalize_input(stats_or_events, avg_payload_kb)
+    events_per_minute = stats.events_per_minute
+    payload = stats.avg_payload_kb
+
     if events_per_minute <= 0:
-        label: RiskLabel = "no_traffic"
-    elif events_per_minute < 200 and avg_payload_kb < 10:
+        label = "no_traffic"
+    elif events_per_minute < 200 and payload < 10:
         label = "normal"
-    elif events_per_minute < 1000 and avg_payload_kb < 50:
+    elif events_per_minute < 1000 and payload < 50:
         label = "suspicious"
     else:
         label = "dos_suspected"
 
-    msg = (
-        f"volume={events_per_minute}/min, "
-        f"payload={avg_payload_kb:.1f}KB -> {label}"
+    log_event(
+        "anti_dos",
+        "classify",
+        f"volume={events_per_minute}/min, payload={payload:.1f}KB -> {label}",
     )
-    print(f"[Anti-DoS] {msg}")
-    log_event("anti_dos", "classify", msg)
     return label
 
 
-def detect_flood(df, source: str = "fusion_scoring") -> RiskLabel:
+def estimate_metrics_from_df(df: pd.DataFrame) -> TrafficStats:
     """
-    Lightweight detector that looks at the current fused/scored DataFrame
-    and infers whether traffic looks normal or flood-like.
+    Rough stub: derive TrafficStats from a fusion DataFrame.
 
-    For now it just uses row count:
-      - 0 rows      -> no_traffic
-      - < 100       -> normal
-      - < 1000      -> suspicious
-      - >= 1000     -> dos_suspected
+    For now:
+      - events_per_minute = number of rows (pretend it's a 1-minute window)
+      - avg_payload_kb    = constant 1.0 (placeholder)
 
-    This is intentionally simple. Later we can upgrade to:
-      - ingest rate over time windows
-      - quarantine volume
-      - AOI_Hit ratios
-      - sensor diversity, etc.
+    Later we can wire this to real ingest timing + payload sizes.
     """
-    try:
-        row_count = len(df)
-    except Exception as e:
-        msg = f"detect_flood(): invalid df ({e})"
-        print(f"[Anti-DoS] {msg}")
-        log_event("anti_dos", "detect_flood_error", msg)
-        return "no_traffic"  # type: ignore[return-value]
+    events = len(df)
+    payload = 1.0  # placeholder
+    stats = TrafficStats(events_per_minute=events, avg_payload_kb=payload)
+    log_event("anti_dos", "metrics_from_df", f"rows={events} -> {stats}")
+    return stats
 
-    if row_count == 0:
-        label: RiskLabel = "no_traffic"
-    elif row_count < 100:
-        label = "normal"
-    elif row_count < 1000:
-        label = "suspicious"
-    else:
-        label = "dos_suspected"
 
-    msg = f"rows={row_count} -> {label} (source={source})"
-    print(f"[Anti-DoS] {msg}")
-    log_event("anti_dos", "detect_flood", msg)
+def detect_flood(df: pd.DataFrame) -> str:
+    """
+    Convenience helper: derive metrics from a DataFrame and classify.
+    """
+    stats = estimate_metrics_from_df(df)
+    label = classify_traffic(stats)
+    log_event("anti_dos", "detect_flood", f"label={label}")
     return label
 
 
 def quick_demo() -> None:
-    """Tiny demo you can run from CLI to sanity-check the classifier."""
+    """Tiny demo you can run standalone."""
     scenarios = [
         (50, 5.0),
         (350, 8.0),
@@ -93,7 +119,7 @@ def quick_demo() -> None:
     ]
     for v, p in scenarios:
         label = classify_traffic(v, p)
-        print(f"[Anti-DoS Demo] {v}/min @ {p:.1f}KB -> {label}")
+        print(f"[Anti-DoS] {v}/min @ {p:.1f}KB -> {label}")
 
 
 if __name__ == "__main__":
