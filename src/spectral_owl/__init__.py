@@ -1,4 +1,4 @@
 """
-Spectral Owl AI package for Ghost Lantern Labs.
+Spectral Owl package init.
 """
 

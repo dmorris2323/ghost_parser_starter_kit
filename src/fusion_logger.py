@@ -1,35 +1,45 @@
-import csv
-import os
-from pathlib import Path
-LOG_FILE = Path("fusion_ops_log.csv")
+"""
+fusion_logger.py
+Unified logging engine for Ghost Lantern Labs.
+
+Now includes:
+ - log_event()   → write structured logs
+ - tail_log()    → read last N lines for ghost_cli display
+"""
+
 from datetime import datetime
-from settings import OPS_LOG_FILE
+from pathlib import Path
 
-# Standard header for all ops logs
-HEADER = ["timestamp", "module", "status", "note"]
+LOG_FILE = Path("fusion_events.log")
 
-def log_event(module, status, note=""):
+
+# ============= WRITE LOG EVENTS ============= #
+
+def log_event(module: str, event: str, details: str) -> None:
     """
-    Append a clean operational log entry to the unified log file.
-    Uses OPS_LOG_FILE from settings.py for consistent architecture.
+    Write a structured log entry:
+       timestamp | module | event | details
     """
-
     timestamp = datetime.utcnow().isoformat()
-    file_exists = os.path.exists(OPS_LOG_FILE)
+    line = f"{timestamp} | {module} | {event} | {details}\n"
 
-    with open(OPS_LOG_FILE, "a", newline="") as f:
-        writer = csv.writer(f)
+    LOG_FILE.parent.mkdir(parents=True, exist_ok=True)
+    with open(LOG_FILE, "a") as f:
+        f.write(line)
 
-        # Write header only once (first run)
-        if not file_exists:
-            writer.writerow(HEADER)
 
-        # Write actual event
-        writer.writerow([timestamp, module, status, note])
+# ============= READ LAST N LOGS ============= #
 
-    # Console echo for debugging during development
-    print(f"📝 Logged: {module} | {status} | {note}")
+def tail_log(limit: int = 20):
+    """
+    Returns the last <limit> log entries as a list of strings.
+    Safe even with missing/empty log file.
+    """
+    if not LOG_FILE.exists():
+        return ["<no logs recorded>"]
 
-if __name__ == "__main__":
-    log_event("fusion_logger", "initialized", "Self-test")
+    with open(LOG_FILE, "r") as f:
+        lines = f.readlines()
+
+    return lines[-limit:]
 

@@ -1,14 +1,74 @@
-OPERATOR SNAPSHOT — 2025-11-26T09:19:40.054663
-==============================================
+======================================
+ GHOST LANTERN LABS — OPERATOR SNAPSHOT
+======================================
 
-[scored_output.csv] 5 rows
-[commander_extract.csv] 5 events
-[critical_alerts.csv] 2 critical alerts
+1) PIPELINE & QA STATUS
+--------------------------------------
+=== QA VALIDATION SUMMARY ===
+Total tests: 7
+Passed:      7
+Failed:      0
 
---- DAILY REPORT ---
+[PASS] fusion_scoring
+fusion_scoring PASSED.
+STDOUT:
+normal
+✅ Scoring complete — 5 rows saved to scored_output.csv
+
+----------------------------------------
+[PASS] commander_extract
+commander_extract PASSED.
+STDOUT:
+✅ Commander Extract complete — 5 events summarized to commander_extract.csv
+
+----------------------------------------
+[PASS] heatmap_prep
+heatmap_prep PASSED.
+STDOUT:
+🔥 Heatmap-ready data written to heatmap_data.csv
+
+----------------------------------------
+[PASS] fusion_alerts
+fusion_alerts PASSED.
+STDOUT:
+🚨 ALERT: Critical events detected!
+2 event(s) saved to critical_alerts.csv
+
+----------------------------------------
+[PASS] daily_report
+daily_report PASSED.
+STDOUT:
+🧾 Daily report written to daily_report.txt
+
+----------------------------------------
+[PASS] spectral_owl
+Spectral Owl module import OK.
+----------------------------------------
+[PASS] cloud_sync
+Cloud sync health check OK: {'status': 'ok', 'details': {'provider': 'azure', 'mode': 'simulation', 'sync_enabled': True}, 'files_in_archive': 1}
+----------------------------------------
+
+2) ALERT STATUS
+--------------------------------------
+Critical alerts in current run: 2
+
+3) SPECTRAL OWL ASSESSMENT
+--------------------------------------
+{'status': 'ok', 'risk': 'high', 'events': 5, 'message': 'Critical threat signatures detected.', 'score_column': 'Score'}
+
+4) THREAT MEMORY SUMMARY
+--------------------------------------
+25 events total. Top patterns: fusion_spike: 25
+
+5) CLOUD SYNC HEALTH
+--------------------------------------
+{'status': 'ok', 'details': {'provider': 'azure', 'mode': 'simulation', 'sync_enabled': True}, 'files_in_archive': 1}
+
+6) DAILY REPORT (LAST RUN)
+--------------------------------------
 ========================================
 GLL DAILY REPORT — Day 45
-Generated (UTC): 2025-11-26T09:19:40.054155
+Generated (UTC): 2025-11-29T08:57:25.624127
 ========================================
 
 Commander Extract Summary
@@ -25,17 +85,16 @@ Ops Log Summary
 - Recent missing files: 0
 
 Last 10 Log Entries:
-2025-11-26T09:19:02.716689 | spectral_owl | anti_dos | No quarantine file found. No obvious data flood indicators.
-2025-11-26T09:19:40.038579 | fusion_sanitizer | sanitize | 5 rows remain after cleaning
-2025-11-26T09:19:40.046115 | fusion_scoring | completed | 5 rows -> scored_output.csv
-2025-11-26T09:19:40.046201 | ghost_cli | pipeline_step | fusion_scoring complete
-2025-11-26T09:19:40.049544 | commander_extract | completed | 5 events -> commander_extract.csv
-2025-11-26T09:19:40.049621 | ghost_cli | pipeline_step | commander_extract complete
-2025-11-26T09:19:40.051582 | heatmap_prep | completed | 5 records -> heatmap_data.csv
-2025-11-26T09:19:40.051645 | ghost_cli | pipeline_step | heatmap_prep complete
-2025-11-26T09:19:40.052825 | fusion_alerts | completed | 2 critical events -> critical_alerts.csv
-2025-11-26T09:19:40.052880 | ghost_cli | pipeline_step | fusion_alerts complete
+2025-11-27T13:56:17.647440 | config_guard | ok | ✅ SRC directory present: /Users/dextermorris/ghost/parser_starter_kit/src | ✅ DATA directory present: /Users/dextermorris/ghost/parser_starter_kit/src/data | ✅ baseline_schema.csv present and header looks correct: /Users/dextermorris/ghost/parser_starter_kit/src/baseline_schema.csv | ✅ fused_output.csv found at: /Users/dextermorris/ghost/parser_starter_kit/fused_output.csv | ✅ Owl memory file OK: /Users/dextermorris/ghost/parser_starter_kit/owl_memory.txt | ✅ Log file present: /Users/dextermorris/ghost/parser_starter_kit/fusion_ops_log.csv
+2025-11-27T13:56:33.206533 | config_guard | ok | ✅ SRC directory present: /Users/dextermorris/ghost/parser_starter_kit/src | ✅ DATA directory present: /Users/dextermorris/ghost/parser_starter_kit/src/data | ✅ baseline_schema.csv present and header looks correct: /Users/dextermorris/ghost/parser_starter_kit/src/baseline_schema.csv | ✅ fused_output.csv found at: /Users/dextermorris/ghost/parser_starter_kit/fused_output.csv | ✅ Owl memory file OK: /Users/dextermorris/ghost/parser_starter_kit/owl_memory.txt | ✅ Log file present: /Users/dextermorris/ghost/parser_starter_kit/fusion_ops_log.csv
+2025-11-27T14:04:26.347466 | config_guard | ok | ✅ SRC directory present: /Users/dextermorris/ghost/parser_starter_kit/src | ✅ DATA directory present: /Users/dextermorris/ghost/parser_starter_kit/src/data | ✅ Spectral Owl directory present: /Users/dextermorris/ghost/parser_starter_kit/src/spectral_owl | ✅ Cloud directory present: /Users/dextermorris/ghost/parser_starter_kit/src/cloud | ✅ baseline_schema.csv present and header looks correct: /Users/dextermorris/ghost/parser_starter_kit/src/baseline_schema.csv | ✅ fused_output.csv found at: /Users/dextermorris/ghost/parser_starter_kit/fused_output.csv | ✅ ghost_cli.py: /Users/dextermorris/ghost/parser_starter_kit/src/ghost_cli.py | ✅ qa_validator.py: /Users/dextermorris/ghost/parser_starter_kit/src/qa_validator.py | ✅ anti_dos.py: /Users/dextermorris/ghost/parser_starter_kit/src/anti_dos.py | ✅ Spectral Owl component (__init__.py): /Users/dextermorris/ghost/parser_starter_kit/src/spectral_owl/__init__.py | ✅ Spectral Owl component (owl_brain.py): /Users/dextermorris/ghost/parser_starter_kit/src/spectral_owl/owl_brain.py | ✅ Spectral Owl component (owl_memory.py): /Users/dextermorris/ghost/parser_starter_kit/src/spectral_owl/owl_memory.py | ✅ Spectral Owl component (llm_adapter.py): /Users/dextermorris/ghost/parser_starter_kit/src/spectral_owl/llm_adapter.py | ✅ Cloud module file (__init__.py): /Users/dextermorris/ghost/parser_starter_kit/src/cloud/__init__.py | ✅ Cloud module file (azure_blob_stub.py): /Users/dextermorris/ghost/parser_starter_kit/src/cloud/azure_blob_stub.py | ✅ Cloud module file (azure_function_flow.md): /Users/dextermorris/ghost/parser_starter_kit/src/cloud/azure_function_flow.md | ✅ Cloud module file (README.md): /Users/dextermorris/ghost/parser_starter_kit/src/cloud/README.md | ✅ Cloud doc (CLOUD_READY.md): /Users/dextermorris/ghost/parser_starter_kit/CLOUD_READY.md | ✅ Cloud doc (azure_architecture.md): /Users/dextermorris/ghost/parser_starter_kit/azure_architecture.md | ✅ Owl memory file OK: /Users/dextermorris/ghost/parser_starter_kit/owl_memory.txt | ✅ Log file present: /Users/dextermorris/ghost/parser_starter_kit/fusion_ops_log.csv | ⚠️ bad_data_quarantine.csv not found (will appear when sanitizer quarantines rows). | ⚠️ bad_data_heatmap.csv not found (will appear when heatmap prep runs).
+2025-11-27T14:07:04.588196 | anti_dos | classify | volume=50/min, payload=5.0KB -> normal
+2025-11-27T14:07:04.589011 | anti_dos | classify | volume=350/min, payload=8.0KB -> suspicious
+2025-11-27T14:07:04.589072 | anti_dos | classify | volume=2000/min, payload=1.0KB -> dos_suspected
+2025-11-27T14:07:04.590642 | config_guard | ok | ✅ SRC directory present: /Users/dextermorris/ghost/parser_starter_kit/src | ✅ DATA directory present: /Users/dextermorris/ghost/parser_starter_kit/src/data | ✅ Spectral Owl directory present: /Users/dextermorris/ghost/parser_starter_kit/src/spectral_owl | ✅ Cloud directory present: /Users/dextermorris/ghost/parser_starter_kit/src/cloud | ✅ baseline_schema.csv present and header looks correct: /Users/dextermorris/ghost/parser_starter_kit/src/baseline_schema.csv | ✅ fused_output.csv found at: /Users/dextermorris/ghost/parser_starter_kit/fused_output.csv | ✅ ghost_cli.py: /Users/dextermorris/ghost/parser_starter_kit/src/ghost_cli.py | ✅ qa_validator.py: /Users/dextermorris/ghost/parser_starter_kit/src/qa_validator.py | ✅ anti_dos.py: /Users/dextermorris/ghost/parser_starter_kit/src/anti_dos.py | ✅ Spectral Owl component (__init__.py): /Users/dextermorris/ghost/parser_starter_kit/src/spectral_owl/__init__.py | ✅ Spectral Owl component (owl_brain.py): /Users/dextermorris/ghost/parser_starter_kit/src/spectral_owl/owl_brain.py | ✅ Spectral Owl component (owl_memory.py): /Users/dextermorris/ghost/parser_starter_kit/src/spectral_owl/owl_memory.py | ✅ Spectral Owl component (llm_adapter.py): /Users/dextermorris/ghost/parser_starter_kit/src/spectral_owl/llm_adapter.py | ✅ Cloud module file (__init__.py): /Users/dextermorris/ghost/parser_starter_kit/src/cloud/__init__.py | ✅ Cloud module file (azure_blob_stub.py): /Users/dextermorris/ghost/parser_starter_kit/src/cloud/azure_blob_stub.py | ✅ Cloud module file (azure_function_flow.md): /Users/dextermorris/ghost/parser_starter_kit/src/cloud/azure_function_flow.md | ✅ Cloud module file (README.md): /Users/dextermorris/ghost/parser_starter_kit/src/cloud/README.md | ✅ Cloud doc (CLOUD_READY.md): /Users/dextermorris/ghost/parser_starter_kit/CLOUD_READY.md | ✅ Cloud doc (azure_architecture.md): /Users/dextermorris/ghost/parser_starter_kit/azure_architecture.md | ✅ Owl memory file OK: /Users/dextermorris/ghost/parser_starter_kit/owl_memory.txt | ✅ Log file present: /Users/dextermorris/ghost/parser_starter_kit/fusion_ops_log.csv | ⚠️ bad_data_quarantine.csv not found (will appear when sanitizer quarantines rows). | ⚠️ bad_data_heatmap.csv not found (will appear when heatmap prep runs).
+2025-11-27T14:07:04.593296 | bad_data_quarantine | quarantine | 1 row(s) quarantined for reason='negative_Seismic_Mag'
+2025-11-27T14:07:04.594038 | bad_data_quarantine | quarantine | 1 row(s) quarantined for reason='negative_Radiation_uSv'
+2025-11-27T14:07:04.594199 | fusion_sanitizer | sanitize | 3 rows in, 3 rows remain after cleaning
 
 End of Report
 ========================================
-

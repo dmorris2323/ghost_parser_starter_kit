@@ -1,0 +1,6 @@
+id,Description,Score,Confidence_Level
+2,"Seismic 5.2, Rad 1.62 µSv, Comms: Burst",100,Critical
+5,"Seismic 4.1, Rad 3.39 µSv, Comms: Normal",100,Critical
+1,"Seismic 5.1, Rad 3.66 µSv, Comms: Normal",10,Moderate
+3,"Seismic 5.0, Rad 3.17 µSv, Comms: Normal",10,Moderate
+4,"Seismic 4.4, Rad 0.19 µSv, Comms: Silence",10,Moderate

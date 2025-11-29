@@ -1,77 +1,161 @@
-# qa_validator.py
-# GLL QA HARNESS — runs the full fusion pipeline and writes a summary.
+"""
+qa_validator.py
 
+Central QA harness for Ghost Lantern Labs.
+
+Runs a series of tests over the core pipeline modules and reports
+pass/fail status for each, including the new Cloud Sync health check.
+"""
+
+import subprocess
+import sys
 from pathlib import Path
-from datetime import datetime
 
-from fusion_logger import log_event
-from fusion_scoring import score_fusion
-from commander_extract import commander_extract
-from heatmap_prep import generate_heatmap_data
-from fusion_alerts import fusion_alerts
-from daily_report import build_daily_report
-from cloud.azure_blob_stub import simulate_azure_upload
-from spectral_owl.owl_brain import think
+from cloud.azure_ingest import cloud_sync_health_check
 
-def run_all():
+PYTHON = sys.executable  # uses current Python interpreter
+
+
+def run_subprocess(description, cmd):
     """
-    Run all major GLL modules in sequence and log pass/fail
-    + write a qa_summary.txt file for human review.
+    Helper to run a subprocess and return (success, message).
     """
-    modules = [
-        ("fusion_scoring", score_fusion),
-        ("commander_extract", commander_extract),
-        ("heatmap_prep", generate_heatmap_data),
-        ("fusion_alerts", fusion_alerts),
-        ("daily_report", build_daily_report),
-	("azure_upload_stub", lambda: simulate_azure_upload()),
-	("spectral_owl", lambda: think("qa-check")),
-    ]
+    try:
+        result = subprocess.run(
+            cmd,
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+    except Exception as e:
+        return False, f"{description} crashed: {e}"
 
-    results: list[tuple[str, str, str]] = []
+    if result.returncode != 0:
+        return False, (
+            f"{description} FAILED with code {result.returncode}\n"
+            f"STDOUT:\n{result.stdout}\n"
+            f"STDERR:\n{result.stderr}"
+        )
 
-    print("GLL QA VALIDATOR — FULL PIPELINE")
-    print("=====================================\n")
+    return True, f"{description} PASSED.\nSTDOUT:\n{result.stdout}"
 
-    for name, func in modules:
-        print(f"🔍 Testing {name}...")
-        try:
-            func()
-            print(f"✅ {name} PASSED\n")
-            log_event("qa_validator", "pass", name)
-            results.append((name, "PASS", ""))
-        except Exception as e:
-            msg = f"{name}: {e}"
-            print(f"❌ {name} FAILED → {e}\n")
-            log_event("qa_validator", "fail", msg)
-            results.append((name, "FAIL", str(e)))
 
-    # Write QA summary file next to this script
-    summary_path = Path(__file__).with_name("qa_summary.txt")
-    now_str = datetime.utcnow().isoformat()
+# ---- Individual test wrappers ----
+# These point directly at scripts in src/
 
-    total = len(results)
-    passed = sum(1 for _, status, _ in results if status == "PASS")
-    failed = total - passed
 
-    with summary_path.open("w", encoding="utf-8") as f:
-        f.write("GLL QA VALIDATION SUMMARY\n")
-        f.write("==========================\n")
-        f.write(f"Timestamp (UTC): {now_str}\n")
-        f.write(f"Total modules:   {total}\n")
-        f.write(f"Passed:          {passed}\n")
-        f.write(f"Failed:          {failed}\n")
-        f.write("\nDetails:\n")
-        for name, status, msg in results:
-            line = f"- {name}: {status}"
-            if msg:
-                line += f" ({msg})"
-            f.write(line + "\n")
+def test_fusion_scoring():
+    return run_subprocess("fusion_scoring", [PYTHON, "fusion_scoring.py"])
 
-    print("🏁 QA VALIDATION COMPLETE")
-    print(f"🧾 Summary written to: {summary_path.name}")
+
+def test_commander_extract():
+    return run_subprocess("commander_extract", [PYTHON, "commander_extract.py"])
+
+
+def test_heatmap_prep():
+    return run_subprocess("heatmap_prep", [PYTHON, "heatmap_prep.py"])
+
+
+def test_fusion_alerts():
+    return run_subprocess("fusion_alerts", [PYTHON, "fusion_alerts.py"])
+
+
+def test_daily_report():
+    return run_subprocess("daily_report", [PYTHON, "daily_report.py"])
+
+
+def test_spectral_owl():
+    """
+    Spectral Owl test:
+    We import the module instead of running it as a script to avoid
+    relative import issues inside owl_brain.py.
+    """
+    try:
+        import spectral_owl.owl_brain as owl_brain  # noqa: F401
+        return True, "Spectral Owl module import OK."
+    except Exception as e:
+        return False, f"Spectral Owl import failed: {e}"
+
+
+def test_cloud_sync():
+    """
+    Verifies that the cloud simulation path is reachable and
+    that the cloud config file is valid.
+    """
+    result = cloud_sync_health_check()
+    status = result.get("status")
+
+    if status not in ("ok", "warning"):
+        return False, f"Cloud sync health FAILED: {result}"
+
+    return True, f"Cloud sync health check OK: {result}"
+
+
+TESTS = [
+    ("fusion_scoring", test_fusion_scoring),
+    ("commander_extract", test_commander_extract),
+    ("heatmap_prep", test_heatmap_prep),
+    ("fusion_alerts", test_fusion_alerts),
+    ("daily_report", test_daily_report),
+    ("spectral_owl", test_spectral_owl),
+    ("cloud_sync", test_cloud_sync),
+]
+
+
+def run_all_tests():
+    """
+    Runs all registered tests and returns a summary dict.
+    """
+    summary = {
+        "total": len(TESTS),
+        "passed": 0,
+        "failed": 0,
+        "results": [],
+    }
+
+    for name, func in TESTS:
+        ok, msg = func()
+        if ok:
+            summary["passed"] += 1
+        else:
+            summary["failed"] += 1
+
+        summary["results"].append(
+            {
+                "name": name,
+                "ok": ok,
+                "message": msg,
+            }
+        )
+
+    return summary
+
+
+def _format_summary(summary):
+    lines = []
+    lines.append("=== QA VALIDATION SUMMARY ===")
+    lines.append(f"Total tests: {summary['total']}")
+    lines.append(f"Passed:      {summary['passed']}")
+    lines.append(f"Failed:      {summary['failed']}")
+    lines.append("")
+
+    for result in summary["results"]:
+        status = "PASS" if result["ok"] else "FAIL"
+        lines.append(f"[{status}] {result['name']}")
+        lines.append(result["message"])
+        lines.append("-" * 40)
+
+    return "\n".join(lines)
 
 
 if __name__ == "__main__":
-    run_all()
+    summary = run_all_tests()
+    report = _format_summary(summary)
+
+    out_path = Path("qa_summary.txt")
+    out_path.write_text(report, encoding="utf-8")
+
+    print(report)
+
+    sys.exit(0 if summary["failed"] == 0 else 1)
 

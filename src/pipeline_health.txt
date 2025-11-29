@@ -1,0 +1,12 @@
+======================================
+ GLL PIPELINE HEALTH SUMMARY
+======================================
+Overall Health Score: 90/100
+Status: GREEN
+
+QA Passed: 7
+QA Failed: 0
+Critical Alerts: 2
+
+Notes:
+All tests passed. 2 critical alert(s) present — reduced health score.

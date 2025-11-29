@@ -1,0 +1,8 @@
+{
+  "provider": "azure",
+  "sync_enabled": true,
+  "simulation_mode": true,
+  "container_name": "gll-fusion-out",
+  "local_sim_path": "cloud_sim/fusion_archive",
+  "last_sync_timestamp": "2025-11-29T08:57:58.744303Z"
+}

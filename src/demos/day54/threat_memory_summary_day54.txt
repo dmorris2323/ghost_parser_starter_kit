@@ -1,0 +1,60 @@
+===== THREAT MEMORY SUMMARY =====
+Total recorded anomalies: 60
+
+Top recurring threat types:
+  • fusion_spike: 55 occurrences
+  • stress_cycle: 5 occurrences
+
+Most recent 50 events:
+  [CRITICAL] fusion_spike — Score ≥ 0.80 detected
+  [CRITICAL] fusion_spike — Score ≥ 0.80 detected
+  [CRITICAL] fusion_spike — Score ≥ 0.80 detected
+  [CRITICAL] fusion_spike — Score ≥ 0.80 detected
+  [CRITICAL] fusion_spike — Score ≥ 0.80 detected
+  [CRITICAL] fusion_spike — Score ≥ 0.80 detected
+  [CRITICAL] fusion_spike — Score ≥ 0.80 detected
+  [CRITICAL] fusion_spike — Score ≥ 0.80 detected
+  [CRITICAL] fusion_spike — Score ≥ 0.80 detected
+  [CRITICAL] fusion_spike — Score ≥ 0.80 detected
+  [CRITICAL] fusion_spike — Score ≥ 0.80 detected
+  [CRITICAL] fusion_spike — Score ≥ 0.80 detected
+  [CRITICAL] fusion_spike — Score ≥ 0.80 detected
+  [CRITICAL] fusion_spike — Score ≥ 0.80 detected
+  [CRITICAL] fusion_spike — Score ≥ 0.80 detected
+  [CRITICAL] fusion_spike — Score ≥ 0.80 detected
+  [CRITICAL] fusion_spike — Score ≥ 0.80 detected
+  [CRITICAL] fusion_spike — Score ≥ 0.80 detected
+  [CRITICAL] fusion_spike — Score ≥ 0.80 detected
+  [CRITICAL] fusion_spike — Score ≥ 0.80 detected
+  [HIGH] stress_cycle — Stress cycle 1: status=ok, risk=HIGH
+  [CRITICAL] fusion_spike — Score ≥ 0.80 detected
+  [CRITICAL] fusion_spike — Score ≥ 0.80 detected
+  [CRITICAL] fusion_spike — Score ≥ 0.80 detected
+  [CRITICAL] fusion_spike — Score ≥ 0.80 detected
+  [CRITICAL] fusion_spike — Score ≥ 0.80 detected
+  [HIGH] stress_cycle — Stress cycle 2: status=ok, risk=HIGH
+  [CRITICAL] fusion_spike — Score ≥ 0.80 detected
+  [CRITICAL] fusion_spike — Score ≥ 0.80 detected
+  [CRITICAL] fusion_spike — Score ≥ 0.80 detected
+  [CRITICAL] fusion_spike — Score ≥ 0.80 detected
+  [CRITICAL] fusion_spike — Score ≥ 0.80 detected
+  [HIGH] stress_cycle — Stress cycle 3: status=ok, risk=HIGH
+  [CRITICAL] fusion_spike — Score ≥ 0.80 detected
+  [CRITICAL] fusion_spike — Score ≥ 0.80 detected
+  [CRITICAL] fusion_spike — Score ≥ 0.80 detected
+  [CRITICAL] fusion_spike — Score ≥ 0.80 detected
+  [CRITICAL] fusion_spike — Score ≥ 0.80 detected
+  [HIGH] stress_cycle — Stress cycle 4: status=ok, risk=HIGH
+  [CRITICAL] fusion_spike — Score ≥ 0.80 detected
+  [CRITICAL] fusion_spike — Score ≥ 0.80 detected
+  [CRITICAL] fusion_spike — Score ≥ 0.80 detected
+  [CRITICAL] fusion_spike — Score ≥ 0.80 detected
+  [CRITICAL] fusion_spike — Score ≥ 0.80 detected
+  [HIGH] stress_cycle — Stress cycle 5: status=ok, risk=HIGH
+  [CRITICAL] fusion_spike — Score ≥ 0.80 detected
+  [CRITICAL] fusion_spike — Score ≥ 0.80 detected
+  [CRITICAL] fusion_spike — Score ≥ 0.80 detected
+  [CRITICAL] fusion_spike — Score ≥ 0.80 detected
+  [CRITICAL] fusion_spike — Score ≥ 0.80 detected
+
+Summary complete.

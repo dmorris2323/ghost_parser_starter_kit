@@ -1,0 +1,61 @@
+timestamp,severity,event_type,details
+2025-11-28T10:42:56.031032,CRITICAL,fusion_spike,Score ≥ 0.80 detected
+2025-11-28T10:42:56.031396,CRITICAL,fusion_spike,Score ≥ 0.80 detected
+2025-11-28T10:42:56.031440,CRITICAL,fusion_spike,Score ≥ 0.80 detected
+2025-11-28T10:42:56.031476,CRITICAL,fusion_spike,Score ≥ 0.80 detected
+2025-11-28T10:42:56.031509,CRITICAL,fusion_spike,Score ≥ 0.80 detected
+2025-11-29T03:34:26.559144,CRITICAL,fusion_spike,Score ≥ 0.80 detected
+2025-11-29T03:34:26.559520,CRITICAL,fusion_spike,Score ≥ 0.80 detected
+2025-11-29T03:34:26.559560,CRITICAL,fusion_spike,Score ≥ 0.80 detected
+2025-11-29T03:34:26.559596,CRITICAL,fusion_spike,Score ≥ 0.80 detected
+2025-11-29T03:34:26.559628,CRITICAL,fusion_spike,Score ≥ 0.80 detected
+2025-11-29T03:34:57.446735,CRITICAL,fusion_spike,Score ≥ 0.80 detected
+2025-11-29T03:34:57.447604,CRITICAL,fusion_spike,Score ≥ 0.80 detected
+2025-11-29T03:34:57.447708,CRITICAL,fusion_spike,Score ≥ 0.80 detected
+2025-11-29T03:34:57.447796,CRITICAL,fusion_spike,Score ≥ 0.80 detected
+2025-11-29T03:34:57.447876,CRITICAL,fusion_spike,Score ≥ 0.80 detected
+2025-11-29T08:55:19.541070,CRITICAL,fusion_spike,Score ≥ 0.80 detected
+2025-11-29T08:55:19.541583,CRITICAL,fusion_spike,Score ≥ 0.80 detected
+2025-11-29T08:55:19.541625,CRITICAL,fusion_spike,Score ≥ 0.80 detected
+2025-11-29T08:55:19.541660,CRITICAL,fusion_spike,Score ≥ 0.80 detected
+2025-11-29T08:55:19.541694,CRITICAL,fusion_spike,Score ≥ 0.80 detected
+2025-11-29T08:57:40.687491,CRITICAL,fusion_spike,Score ≥ 0.80 detected
+2025-11-29T08:57:40.688508,CRITICAL,fusion_spike,Score ≥ 0.80 detected
+2025-11-29T08:57:40.688617,CRITICAL,fusion_spike,Score ≥ 0.80 detected
+2025-11-29T08:57:40.688708,CRITICAL,fusion_spike,Score ≥ 0.80 detected
+2025-11-29T08:57:40.688790,CRITICAL,fusion_spike,Score ≥ 0.80 detected
+2025-11-29T09:05:34.604572,CRITICAL,fusion_spike,Score ≥ 0.80 detected
+2025-11-29T09:05:34.605010,CRITICAL,fusion_spike,Score ≥ 0.80 detected
+2025-11-29T09:05:34.605053,CRITICAL,fusion_spike,Score ≥ 0.80 detected
+2025-11-29T09:05:34.605091,CRITICAL,fusion_spike,Score ≥ 0.80 detected
+2025-11-29T09:05:34.605124,CRITICAL,fusion_spike,Score ≥ 0.80 detected
+2025-11-29T09:05:34.605431,HIGH,stress_cycle,"Stress cycle 1: status=ok, risk=HIGH"
+2025-11-29T09:05:37.662408,CRITICAL,fusion_spike,Score ≥ 0.80 detected
+2025-11-29T09:05:37.662517,CRITICAL,fusion_spike,Score ≥ 0.80 detected
+2025-11-29T09:05:37.662558,CRITICAL,fusion_spike,Score ≥ 0.80 detected
+2025-11-29T09:05:37.662604,CRITICAL,fusion_spike,Score ≥ 0.80 detected
+2025-11-29T09:05:37.662646,CRITICAL,fusion_spike,Score ≥ 0.80 detected
+2025-11-29T09:05:37.662879,HIGH,stress_cycle,"Stress cycle 2: status=ok, risk=HIGH"
+2025-11-29T09:05:40.928324,CRITICAL,fusion_spike,Score ≥ 0.80 detected
+2025-11-29T09:05:40.928462,CRITICAL,fusion_spike,Score ≥ 0.80 detected
+2025-11-29T09:05:40.928507,CRITICAL,fusion_spike,Score ≥ 0.80 detected
+2025-11-29T09:05:40.928545,CRITICAL,fusion_spike,Score ≥ 0.80 detected
+2025-11-29T09:05:40.928583,CRITICAL,fusion_spike,Score ≥ 0.80 detected
+2025-11-29T09:05:40.928840,HIGH,stress_cycle,"Stress cycle 3: status=ok, risk=HIGH"
+2025-11-29T09:05:44.486281,CRITICAL,fusion_spike,Score ≥ 0.80 detected
+2025-11-29T09:05:44.486388,CRITICAL,fusion_spike,Score ≥ 0.80 detected
+2025-11-29T09:05:44.486485,CRITICAL,fusion_spike,Score ≥ 0.80 detected
+2025-11-29T09:05:44.486536,CRITICAL,fusion_spike,Score ≥ 0.80 detected
+2025-11-29T09:05:44.486577,CRITICAL,fusion_spike,Score ≥ 0.80 detected
+2025-11-29T09:05:44.486868,HIGH,stress_cycle,"Stress cycle 4: status=ok, risk=HIGH"
+2025-11-29T09:05:47.660416,CRITICAL,fusion_spike,Score ≥ 0.80 detected
+2025-11-29T09:05:47.660531,CRITICAL,fusion_spike,Score ≥ 0.80 detected
+2025-11-29T09:05:47.660572,CRITICAL,fusion_spike,Score ≥ 0.80 detected
+2025-11-29T09:05:47.660654,CRITICAL,fusion_spike,Score ≥ 0.80 detected
+2025-11-29T09:05:47.660705,CRITICAL,fusion_spike,Score ≥ 0.80 detected
+2025-11-29T09:05:47.660960,HIGH,stress_cycle,"Stress cycle 5: status=ok, risk=HIGH"
+2025-11-29T09:06:48.037747,CRITICAL,fusion_spike,Score ≥ 0.80 detected
+2025-11-29T09:06:48.038125,CRITICAL,fusion_spike,Score ≥ 0.80 detected
+2025-11-29T09:06:48.038172,CRITICAL,fusion_spike,Score ≥ 0.80 detected
+2025-11-29T09:06:48.038209,CRITICAL,fusion_spike,Score ≥ 0.80 detected
+2025-11-29T09:06:48.038244,CRITICAL,fusion_spike,Score ≥ 0.80 detected

@@ -1,61 +1,116 @@
 """
-operator_snapshot.py — Day 51
-Generates the operator_snapshot.txt file.
+operator_snapshot.py
+
+Builds a single text snapshot of GLL's current operational state.
+
+Pulls from:
+  - qa_summary.txt
+  - critical_alerts.csv
+  - daily_report.txt
+  - Spectral Owl analysis
+  - Cloud sync health
+  - Threat memory stats
+
+Outputs:
+  - operator_snapshot.txt   (human-readable, commander-facing)
 """
 
-from datetime import datetime
 from pathlib import Path
-import pandas as pd
-from fusion_logger import log_event
+import csv
 
-def build_operator_snapshot(out_path: str = "operator_snapshot.txt") -> None:
+from spectral_owl.owl_brain import analyze_fusion
+from spectral_owl.threat_memory import count_by_type, load_events
+from cloud.azure_ingest import cloud_sync_health_check
+
+SNAPSHOT_FILE = Path("operator_snapshot.txt")
+
+
+def _read_file_text(path: Path, default: str = "N/A") -> str:
+    if not path.exists():
+        return default
+    content = path.read_text(encoding="utf-8").strip()
+    return content if content else default
+
+
+def _count_critical_alerts() -> int:
+    path = Path("critical_alerts.csv")
+    if not path.exists():
+        return 0
+
+    with path.open("r", encoding="utf-8") as f:
+        reader = csv.DictReader(f)
+        return sum(1 for _ in reader)
+
+
+def _summarize_threat_memory() -> str:
+    events = load_events()
+    freq = count_by_type()
+    total = len(events)
+    if total == 0:
+        return "No threat memory events recorded."
+
+    parts = [f"{event}: {count}" for event, count in sorted(freq.items(), key=lambda x: x[1], reverse=True)]
+    return f"{total} events total. Top patterns: " + "; ".join(parts)
+
+
+def build_operator_snapshot() -> str:
     """
-    Collects key GLL outputs into a single operator snapshot file.
+    Build and write the operator snapshot, return the text.
     """
+    # QA summary
+    qa_text = _read_file_text(Path("qa_summary.txt"), default="No QA summary found.")
 
-    snapshot = []
+    # Daily report
+    daily_text = _read_file_text(Path("daily_report.txt"), default="No daily report found.")
 
-    # Timestamp
-    snapshot.append(f"OPERATOR SNAPSHOT — {datetime.utcnow().isoformat()}\n")
-    snapshot.append("==============================================\n\n")
+    # Critical alerts count
+    critical_count = _count_critical_alerts()
 
-    # scored_output.csv
-    scored = Path("scored_output.csv")
-    if scored.exists():
-        df = pd.read_csv(scored)
-        snapshot.append(f"[scored_output.csv] {len(df)} rows\n")
-    else:
-        snapshot.append("[scored_output.csv] MISSING\n")
+    # Owl analysis
+    owl_result = analyze_fusion("scored_output.csv")
 
-    # commander_extract.csv
-    cmd = Path("commander_extract.csv")
-    if cmd.exists():
-        df = pd.read_csv(cmd)
-        snapshot.append(f"[commander_extract.csv] {len(df)} events\n")
-    else:
-        snapshot.append("[commander_extract.csv] MISSING\n")
+    # Threat memory overview
+    threat_memory_summary = _summarize_threat_memory()
 
-    # critical_alerts.csv
-    crit = Path("critical_alerts.csv")
-    if crit.exists():
-        df = pd.read_csv(crit)
-        snapshot.append(f"[critical_alerts.csv] {len(df)} critical alerts\n")
-    else:
-        snapshot.append("[critical_alerts.csv] MISSING\n")
+    # Cloud sync health
+    cloud_health = cloud_sync_health_check()
 
-    # daily_report.txt
-    report = Path("daily_report.txt")
-    if report.exists():
-        text = report.read_text().strip()
-        snapshot.append("\n--- DAILY REPORT ---\n")
-        snapshot.append(text + "\n\n")
-    else:
-        snapshot.append("\n--- DAILY REPORT ---\nMISSING\n")
+    lines = []
+    lines.append("======================================")
+    lines.append(" GHOST LANTERN LABS — OPERATOR SNAPSHOT")
+    lines.append("======================================\n")
 
-    # Write snapshot file
-    with open(out_path, "w") as f:
-        f.writelines(snapshot)
+    lines.append("1) PIPELINE & QA STATUS")
+    lines.append("--------------------------------------")
+    lines.append(qa_text)
+    lines.append("")
 
-    log_event("operator_snapshot", "completed", out_path)
-    print(f"✅ Operator snapshot written to {out_path}")
+    lines.append("2) ALERT STATUS")
+    lines.append("--------------------------------------")
+    lines.append(f"Critical alerts in current run: {critical_count}")
+    lines.append("")
+
+    lines.append("3) SPECTRAL OWL ASSESSMENT")
+    lines.append("--------------------------------------")
+    lines.append(str(owl_result))
+    lines.append("")
+
+    lines.append("4) THREAT MEMORY SUMMARY")
+    lines.append("--------------------------------------")
+    lines.append(threat_memory_summary)
+    lines.append("")
+
+    lines.append("5) CLOUD SYNC HEALTH")
+    lines.append("--------------------------------------")
+    lines.append(str(cloud_health))
+    lines.append("")
+
+    lines.append("6) DAILY REPORT (LAST RUN)")
+    lines.append("--------------------------------------")
+    lines.append(daily_text)
+    lines.append("")
+
+    snapshot_text = "\n".join(lines)
+    SNAPSHOT_FILE.write_text(snapshot_text, encoding="utf-8")
+    return snapshot_text
 

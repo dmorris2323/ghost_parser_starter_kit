@@ -1,0 +1,6 @@
+id,Seismic_Mag,Radiation_uSv,Comms_State,AOI_Hit,Score
+2,5.2,1.62,Burst,True,100
+5,4.1,3.39,Normal,True,100
+1,5.1,3.66,Normal,False,10
+3,5.0,3.17,Normal,False,10
+4,4.4,0.19,Silence,False,10

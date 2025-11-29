@@ -1,0 +1,20 @@
+
+===========================================
+           GHOST LANTERN LABS CLI           
+===========================================
+ 1) Run QA Validation
+ 2) Show Latest Logs
+ 3) Generate Operator Snapshot
+ 4) Run Full Fusion Pipeline
+ 5) View Spectral Owl Memory
+ 6) Run Spectral Owl Analysis
+ 7) Pipeline Health Check
+ 8) Mission Brief
+ 9) Exit
+10) Anti-DoS Scan
+11) Cloud Sync Check
+12) Threat Memory Summary
+===========================================
+
+Select option: 
+Exiting Ghost CLI.
