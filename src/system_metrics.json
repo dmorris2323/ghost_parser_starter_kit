@@ -1,0 +1,36 @@
+{
+  "qa": {
+    "passed": 7,
+    "failed": 0
+  },
+  "pipeline_health": {
+    "score": 90,
+    "status": "GREEN",
+    "qa_passed": 7,
+    "qa_failed": 0,
+    "critical_alerts": 2
+  },
+  "threat_memory": {
+    "total_events": 110
+  },
+  "bad_data": {
+    "quarantined_rows": 18
+  },
+  "alerts": {
+    "critical_alerts": 2
+  },
+  "cloud": {
+    "health": {
+      "status": "ok",
+      "details": {
+        "provider": "azure",
+        "mode": "simulation",
+        "sync_enabled": true
+      },
+      "files_in_archive": 2
+    }
+  },
+  "stress_test": {
+    "last_run": "Stress test completed at 2025-11-30T04:10:06.256079"
+  }
+}

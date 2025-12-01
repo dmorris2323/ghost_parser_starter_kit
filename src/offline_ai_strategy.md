@@ -54,3 +54,7 @@ cloud access
 network connectivity
 
 GLL must not die when the internet dies.
+
+- Daily Visual Pack: One-command generation (via CLI) of operator snapshot,
+  system metrics, threat memory summary, and a bad-data heatmap for offline demos.
+

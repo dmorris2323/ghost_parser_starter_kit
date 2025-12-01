@@ -1,0 +1,52 @@
+DAY 56 — EVENING SITREP (20× Technical Work)
+===========================================
+
+Date: Sunday, November 30, 2025
+Phase: Pre-BMT 100-Day Sprint
+Block: Evening 20× Technical Sprint
+
+1. Profiles & Threat Memory
+---------------------------
+- Implemented gll_profile.py to centralize GLL_ACTIVE_PROFILE.
+- Expanded config_profiles.py with clearer domain, threat-type, and severity labels.
+- Rebuilt spectral_owl/threat_memory.py so every threat event is tagged with the active profile.
+- Built profile_status.py and wired it into the CLI (option 14) for quick operator awareness.
+
+2. Legal Demo (Shari) — Family Law Pipeline
+-------------------------------------------
+- Created sample dataset: data/family_law_cases_sample.csv.
+- Built legal_ingest_family_law.py to normalize legal case data.
+- Built family_law_scoring.py to compute gll_score and gll_severity for each case.
+- Built family_law_brief.py to produce a human-readable "Top urgent cases" brief.
+- Updated ghost_cli.py with option 15 ("Run Family Law Demo (Shari)").
+
+3. Threat Intel & Visuals
+-------------------------
+- Built threat_memory_stats.py to summarize threat memory by severity and profile.
+- Built alerts_trend_plot.py to visualize alert growth over time (alerts_trend.png).
+- Integrated these into generate_daily_visual_pack.py so daily demo packs include:
+  - Threat memory stats.
+  - Alerts trend plot.
+  - Baseline drift report.
+
+4. Resilience & Baseline
+------------------------
+- Built baseline_drift_check.py to track mean score drift in scored_output.csv.
+- Built auto_retry_runner.py to re-run qa_validator.py once on failures.
+- Confirmed GLL can self-check for:
+  - Schema/score drift.
+  - QA reliability over multiple runs.
+
+5. Demo Packaging
+-----------------
+- Built legal_demo_pack.py to assemble a full Family Law demo under demos/family_law_demo/.
+- Created docs/family_law_demo_readme.md to document the scenario and flow.
+
+Impact:
+- GLL is now profile-aware, legal-demo-ready, and more self-diagnostic.
+- You can demonstrate value to:
+  - A nuclear/ISR commander (aftac_nuclear profile).
+  - A law firm (law_firm profile + family law demo).
+- This session materially advanced GLL from "ISR engine" toward
+  "multi-domain, multi-client, demo-ready product."
+

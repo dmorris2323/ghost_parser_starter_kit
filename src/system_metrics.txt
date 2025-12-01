@@ -1,0 +1,12 @@
+======================================
+ GHOST LANTERN LABS — SYSTEM METRICS
+======================================
+
+QA: 7 passed, 0 failed
+Pipeline Health: 90/100 (GREEN)
+Critical Alerts (current): 2
+Threat Memory Events (total): 110
+Bad Data Quarantined Rows: 18
+
+Cloud Health: {'status': 'ok', 'details': {'provider': 'azure', 'mode': 'simulation', 'sync_enabled': True}, 'files_in_archive': 2}
+Last Stress Test Run: Stress test completed at 2025-11-30T04:10:06.256079

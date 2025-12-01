@@ -59,3 +59,58 @@ timestamp,severity,event_type,details
 2025-11-29T09:06:48.038172,CRITICAL,fusion_spike,Score ≥ 0.80 detected
 2025-11-29T09:06:48.038209,CRITICAL,fusion_spike,Score ≥ 0.80 detected
 2025-11-29T09:06:48.038244,CRITICAL,fusion_spike,Score ≥ 0.80 detected
+2025-11-30T08:50:54.758360,CRITICAL,fusion_spike,Score ≥ 0.80 detected
+2025-11-30T08:50:54.758776,CRITICAL,fusion_spike,Score ≥ 0.80 detected
+2025-11-30T08:50:54.758853,CRITICAL,fusion_spike,Score ≥ 0.80 detected
+2025-11-30T08:50:54.758904,CRITICAL,fusion_spike,Score ≥ 0.80 detected
+2025-11-30T08:50:54.758951,CRITICAL,fusion_spike,Score ≥ 0.80 detected
+2025-11-30T08:52:14.877182,CRITICAL,fusion_spike,Score ≥ 0.80 detected
+2025-11-30T08:52:14.877548,CRITICAL,fusion_spike,Score ≥ 0.80 detected
+2025-11-30T08:52:14.877594,CRITICAL,fusion_spike,Score ≥ 0.80 detected
+2025-11-30T08:52:14.877632,CRITICAL,fusion_spike,Score ≥ 0.80 detected
+2025-11-30T08:52:14.877667,CRITICAL,fusion_spike,Score ≥ 0.80 detected
+2025-11-30T08:58:00.596765,CRITICAL,fusion_spike,Score ≥ 0.80 detected
+2025-11-30T08:58:00.597546,CRITICAL,fusion_spike,Score ≥ 0.80 detected
+2025-11-30T08:58:00.597632,CRITICAL,fusion_spike,Score ≥ 0.80 detected
+2025-11-30T08:58:00.597705,CRITICAL,fusion_spike,Score ≥ 0.80 detected
+2025-11-30T08:58:00.597774,CRITICAL,fusion_spike,Score ≥ 0.80 detected
+2025-11-30T09:09:49.813792,CRITICAL,fusion_spike,Score ≥ 0.80 detected
+2025-11-30T09:09:49.814380,CRITICAL,fusion_spike,Score ≥ 0.80 detected
+2025-11-30T09:09:49.814431,CRITICAL,fusion_spike,Score ≥ 0.80 detected
+2025-11-30T09:09:49.814474,CRITICAL,fusion_spike,Score ≥ 0.80 detected
+2025-11-30T09:09:49.814514,CRITICAL,fusion_spike,Score ≥ 0.80 detected
+2025-11-30T09:09:49.814879,HIGH,stress_cycle,"Stress cycle 1: status=ok, risk=HIGH"
+2025-11-30T09:09:52.922034,CRITICAL,fusion_spike,Score ≥ 0.80 detected
+2025-11-30T09:09:52.922166,CRITICAL,fusion_spike,Score ≥ 0.80 detected
+2025-11-30T09:09:52.922209,CRITICAL,fusion_spike,Score ≥ 0.80 detected
+2025-11-30T09:09:52.922259,CRITICAL,fusion_spike,Score ≥ 0.80 detected
+2025-11-30T09:09:52.922305,CRITICAL,fusion_spike,Score ≥ 0.80 detected
+2025-11-30T09:09:52.922530,HIGH,stress_cycle,"Stress cycle 2: status=ok, risk=HIGH"
+2025-11-30T09:09:56.035995,CRITICAL,fusion_spike,Score ≥ 0.80 detected
+2025-11-30T09:09:56.036101,CRITICAL,fusion_spike,Score ≥ 0.80 detected
+2025-11-30T09:09:56.036184,CRITICAL,fusion_spike,Score ≥ 0.80 detected
+2025-11-30T09:09:56.036237,CRITICAL,fusion_spike,Score ≥ 0.80 detected
+2025-11-30T09:09:56.036281,CRITICAL,fusion_spike,Score ≥ 0.80 detected
+2025-11-30T09:09:56.036527,HIGH,stress_cycle,"Stress cycle 3: status=ok, risk=HIGH"
+2025-11-30T09:09:59.131284,CRITICAL,fusion_spike,Score ≥ 0.80 detected
+2025-11-30T09:09:59.131398,CRITICAL,fusion_spike,Score ≥ 0.80 detected
+2025-11-30T09:09:59.131495,CRITICAL,fusion_spike,Score ≥ 0.80 detected
+2025-11-30T09:09:59.131548,CRITICAL,fusion_spike,Score ≥ 0.80 detected
+2025-11-30T09:09:59.131601,CRITICAL,fusion_spike,Score ≥ 0.80 detected
+2025-11-30T09:09:59.131846,HIGH,stress_cycle,"Stress cycle 4: status=ok, risk=HIGH"
+2025-11-30T09:10:02.186836,CRITICAL,fusion_spike,Score ≥ 0.80 detected
+2025-11-30T09:10:02.186968,CRITICAL,fusion_spike,Score ≥ 0.80 detected
+2025-11-30T09:10:02.187016,CRITICAL,fusion_spike,Score ≥ 0.80 detected
+2025-11-30T09:10:02.187105,CRITICAL,fusion_spike,Score ≥ 0.80 detected
+2025-11-30T09:10:02.187160,CRITICAL,fusion_spike,Score ≥ 0.80 detected
+2025-11-30T09:10:02.187459,HIGH,stress_cycle,"Stress cycle 5: status=ok, risk=HIGH"
+2025-11-30T09:10:07.033314,CRITICAL,fusion_spike,Score ≥ 0.80 detected
+2025-11-30T09:10:07.033580,CRITICAL,fusion_spike,Score ≥ 0.80 detected
+2025-11-30T09:10:07.033622,CRITICAL,fusion_spike,Score ≥ 0.80 detected
+2025-11-30T09:10:07.033690,CRITICAL,fusion_spike,Score ≥ 0.80 detected
+2025-11-30T09:10:07.033783,CRITICAL,fusion_spike,Score ≥ 0.80 detected
+2025-12-01T02:03:20.529335,CRITICAL,fusion_spike,Score ≥ 0.80 detected,aftac_nuclear
+2025-12-01T02:03:20.529796,CRITICAL,fusion_spike,Score ≥ 0.80 detected,aftac_nuclear
+2025-12-01T02:03:20.529852,CRITICAL,fusion_spike,Score ≥ 0.80 detected,aftac_nuclear
+2025-12-01T02:03:20.529907,CRITICAL,fusion_spike,Score ≥ 0.80 detected,aftac_nuclear
+2025-12-01T02:03:20.530001,CRITICAL,fusion_spike,Score ≥ 0.80 detected,aftac_nuclear

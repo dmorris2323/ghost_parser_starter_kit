@@ -1,3 +1,34 @@
+Ghost Lantern Labs — System Status Dashboard
+============================================
+Generated: 2025-12-01T09:10:55.471047 UTC
+
+=== ACTIVE PROFILE ===
+Active profile: aftac_nuclear
+Description: Nuclear / EMS / seismic fusion focus for AFTAC-style missions.
+Domains: nuclear, ems, seismic, space
+Default threat types: launch_prep, sensor_spoof, jamming
+Offline priority: True
+Severity labels:
+  - HIGH: Immediate commander attention
+  - MODERATE: Monitor closely / watchlist
+  - LOW: Routine background noise
+
+=== PIPELINE HEALTH ===
+======================================
+ GLL PIPELINE HEALTH SUMMARY
+======================================
+Overall Health Score: 90/100
+Status: GREEN
+
+QA Passed: 7
+QA Failed: 0
+Critical Alerts: 2
+
+Notes:
+All tests passed. 2 critical alert(s) present — reduced health score.
+
+
+=== OPERATOR SNAPSHOT ===
 ======================================
  GHOST LANTERN LABS — OPERATOR SNAPSHOT
 ======================================
@@ -98,3 +129,27 @@ Last 10 Log Entries:
 
 End of Report
 ========================================
+
+
+=== THREAT STATS ===
+GLL Threat Memory Stats
+=======================
+
+By Severity:
+  - CRITICAL: 105
+  - HIGH: 10
+
+By Profile:
+  - UNKNOWN: 115
+
+=== DOCTRINE SUMMARY ===
+GLL Threat Memory Doctrine Report
+================================
+
+By Doctrine Tag:
+  - general_threat_awareness: 105
+  - timeliness_and_decision_risk: 10
+
+By Doctrine Tag + Severity:
+  - general_threat_awareness / CRITICAL: 105
+  - timeliness_and_decision_risk / HIGH: 10

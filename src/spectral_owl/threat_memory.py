@@ -1,67 +1,61 @@
 """
-threat_memory.py
+threat_memory.py — Spectral Owl / GLL
+-------------------------------------
+Persistent threat memory store.
 
-Spectral Owl persistent threat memory system.
-Stores anomalies over time so the AI can learn repeating patterns,
-track DoS frequency, and produce intelligence summaries.
-
-Data is saved as CSV so even without AI, humans can analyze patterns.
+CSV fields:
+  timestamp, severity, source, note, profile
 """
 
-from pathlib import Path
 import csv
+from pathlib import Path
 from datetime import datetime
+from typing import List, Dict
 
-MEMORY_FILE = Path("data/threat_memory.csv")
+from gll_profile import get_active_profile_name
+
+MEMORY_PATH = Path("data/threat_memory.csv")
 
 
-def _ensure_file():
-    if not MEMORY_FILE.exists():
-        MEMORY_FILE.parent.mkdir(parents=True, exist_ok=True)
-        with MEMORY_FILE.open("w", newline="") as f:
+def ensure_header():
+    if not MEMORY_PATH.exists():
+        MEMORY_PATH.parent.mkdir(parents=True, exist_ok=True)
+        with MEMORY_PATH.open("w", encoding="utf-8", newline="") as f:
             writer = csv.writer(f)
-            writer.writerow(["timestamp", "severity", "event_type", "details"])
+            writer.writerow(["timestamp", "severity", "source", "note", "profile"])
 
 
-def append_event(severity: str, event_type: str, details: str = ""):
+def append_event(severity: str, source: str, note: str) -> None:
     """
-    Add a threat record into persistent memory.
+    Append a threat memory event with the active profile tagged.
     """
-    _ensure_file()
-    with MEMORY_FILE.open("a", newline="") as f:
+    ensure_header()
+    ts = datetime.utcnow().isoformat()
+    profile = get_active_profile_name()
+    with MEMORY_PATH.open("a", encoding="utf-8", newline="") as f:
         writer = csv.writer(f)
-        writer.writerow([datetime.utcnow().isoformat(), severity, event_type, details])
+        writer.writerow([ts, severity, source, note, profile])
 
 
-def load_events():
+def load_events() -> List[Dict[str, str]]:
     """
-    Return full threat event history as list[dict]
+    Load all threat memory events as dicts.
     """
-    _ensure_file()
-    rows = []
-    with MEMORY_FILE.open("r") as f:
+    if not MEMORY_PATH.exists():
+        return []
+
+    with MEMORY_PATH.open("r", encoding="utf-8") as f:
         reader = csv.DictReader(f)
-        for r in reader:
-            rows.append(r)
-    return rows
+        return list(reader)
 
 
-def count_by_type():
-    """
-    Return count of how many times each event type occurred.
-    """
+def main():
     events = load_events()
-    freq = {}
-    for e in events:
-        t = e["event_type"]
-        freq[t] = freq.get(t, 0) + 1
-    return freq
+    print(f"Loaded {len(events)} threat memory event(s).")
+    for row in events[-10:]:
+        print(row)
 
 
-def recent_events(n=20):
-    """
-    Return the last N events recorded.
-    """
-    events = load_events()
-    return events[-n:]
+if __name__ == "__main__":
+    main()
 

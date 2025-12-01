@@ -1,0 +1,12 @@
+GLL Family Law Prioritization Brief
+===================================
+
+Total cases: 5
+
+Top urgent cases:
+
+- FAM-003 | Brown v Brown | custody | Score=1.036 | Severity=HIGH | Days until hearing=3
+- FAM-001 | Smith v Smith | custody | Score=0.912 | Severity=HIGH | Days until hearing=7
+- FAM-004 | Davis v Davis | visitation | Score=0.443 | Severity=LOW | Days until hearing=14
+
+Recommendation: Address HIGH severity and near-term hearings first.

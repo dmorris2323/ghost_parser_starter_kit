@@ -1,0 +1,7 @@
+case_id,client_name,case_type,days_until_hearing,domestic_violence_flag,prior_contempts,child_risk_score,payment_status
+FAM-001,Smith v Smith,custody,7,1,2,0.85,behind
+FAM-002,Jones v Jones,support,30,0,0,0.30,on_time
+FAM-003,Brown v Brown,custody,3,1,3,0.92,behind
+FAM-004,Davis v Davis,visitation,14,0,1,0.60,partial
+FAM-005,Wilson v Wilson,custody,21,0,0,0.40,behind
+

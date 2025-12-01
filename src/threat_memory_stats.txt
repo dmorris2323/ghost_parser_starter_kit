@@ -1,0 +1,9 @@
+GLL Threat Memory Stats
+=======================
+
+By Severity:
+  - CRITICAL: 105
+  - HIGH: 10
+
+By Profile:
+  - UNKNOWN: 115

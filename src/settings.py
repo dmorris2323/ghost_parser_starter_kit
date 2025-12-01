@@ -18,3 +18,9 @@ OPS_LOG_FILE = BASE_DIR / "fusion_ops_log.csv"
 # Daily report file
 DAILY_REPORT_FILE = BASE_DIR / "daily_report.txt"
 
+GLL_ACTIVE_PROFILE = "aftac_nuclear"  # default for now
+
+# Active configuration profile for GLL
+# Options for now: "aftac_nuclear", "sports_team", "law_firm", "commercial_soc"
+GLL_ACTIVE_PROFILE = "aftac_nuclear"
+
