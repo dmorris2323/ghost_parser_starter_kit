@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>GLL Daily Mission Brief</title>
+  <meta charset="UTF-8" />
+  <title>Ghost Lantern Labs — Daily Mission Brief</title>
   <style>
     body {
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       background-color: #0b0c10;
       color: #e5e5e5;
       margin: 0;
@@ -14,111 +14,101 @@
     .container {
       max-width: 960px;
       margin: 0 auto;
-      background: #151720;
-      border-radius: 12px;
-      padding: 24px 28px;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
-      border: 1px solid #272a3a;
+      background: #161821;
+      border-radius: 16px;
+      padding: 24px 32px;
+      box-shadow: 0 0 24px rgba(0,0,0,0.6);
     }
     h1 {
-      font-size: 1.6rem;
-      margin: 0 0 8px 0;
-      display: flex;
-      align-items: center;
-      gap: 10px;
+      margin-top: 0;
+      font-size: 28px;
+      color: #ffffff;
     }
-    .badge {
-      display: inline-block;
-      padding: 4px 10px;
-      border-radius: 999px;
-      font-size: 0.8rem;
-      background: #243b53;
-      color: #d9e2ec;
-      border: 1px solid #486581;
-    }
-    .subheader {
-      font-size: 0.9rem;
-      color: #9fb3c8;
+    .subtitle {
+      color: #9ca3af;
       margin-bottom: 16px;
     }
-    .grid {
-      display: grid;
-      grid-template-columns: 2fr 1fr;
-      gap: 16px;
-    }
-    .panel {
-      background: #0f1117;
-      padding: 16px 18px;
-      border-radius: 8px;
-      border: 1px solid #202337;
-    }
-    .panel h2 {
-      font-size: 1rem;
-      margin-top: 0;
+    .profile-pill {
+      display: inline-block;
+      padding: 6px 12px;
+      border-radius: 999px;
+      background: #1f2937;
+      color: #e5e7eb;
+      font-size: 13px;
       margin-bottom: 8px;
-      color: #d9e2ec;
+    }
+    .section-title {
+      margin-top: 24px;
+      margin-bottom: 8px;
+      font-size: 16px;
+      color: #f9fafb;
     }
     pre {
-      margin: 0;
-      font-size: 0.84rem;
-      line-height: 1.4;
-      overflow-x: auto;
-      white-space: pre;
+      background: #111827;
+      padding: 12px 16px;
+      border-radius: 8px;
+      white-space: pre-wrap;
+      word-wrap: break-word;
+      font-size: 13px;
+      line-height: 1.5;
     }
-    @media (max-width: 800px) {
-      .grid {
-        grid-template-columns: 1fr;
-      }
+    .minimap {
+      margin-top: 8px;
+      margin-bottom: 16px;
     }
   </style>
 </head>
 <body>
   <div class="container">
-    <h1>
-      Ghost Lantern Labs — Daily Mission Brief
-      <span class="badge">Profile: Profile(key=&#x27;sports_team&#x27;, display_name=&#x27;Sports Team Operations&#x27;, mission_context=&#x27;Analytics and operations picture for a professional or college sports team: performance health, workload, and risk of failure in upcoming contests.&#x27;, data_focus=&#x27;Metrics from wearables, practice intensity, travel fatigue, and opponent scouting summarized into a game-readiness snapshot.&#x27;, risk_language=&#x27;Threat levels translate to game risk: LOW for routine conditions, MEDIUM when fatigue or key-player flags rise, HIGH when multiple stressors converge.&#x27;)</span>
-    </h1>
-    <div class="subheader">
+    <h1>Ghost Lantern Labs — Daily Mission Brief</h1>
+    <div class="profile-pill">Profile: Sports Team Operations (sports_team)</div>
+    <div class="subtitle">
       Operator view — fused system, sensor readiness, AOI mini-map, and profile context.
     </div>
 
-    <div class="grid">
-      <div class="panel">
-        <h2>Core Mission Brief</h2>
-        <pre>=== GHOST LANTERN LABS — DAILY MISSION BRIEF ===
-Generated (UTC): 2025-12-02T13:26:45.277849
+    <div class="section">
+      <div class="section-title">Fusion Mini-Map (AOI Overview)</div>
+      <pre class="minimap">=== SENSOR FUSION MINI-MAP ===
+
+[UNKNOWN]   ✔️  C:0  W:0  S:4</pre>
+    </div>
+
+    <div class="section">
+      <div class="section-title">Daily Mission Brief</div>
+      <pre>=== GHOST LANTERN LABS — DAILY MISSION BRIEF ===
+Generated (UTC): 2025-12-02T14:08:21.847278
 
 === CORE MISSION STATUS ===
 === GLL MISSION BRIEF ===
-Generated (UTC): 2025-12-02T13:26:45.278347
+Generated (UTC): 2025-12-02T14:08:21.849079
 
-&gt;&gt;&gt; PIPELINE HEALTH
+>>> PIPELINE HEALTH
 Pipeline status: GREEN
 Missing outputs: none
 
-&gt;&gt;&gt; FUSION / SPECTRAL OWL STATUS
+>>> FUSION / SPECTRAL OWL STATUS
 Fusion status: critical
 Total fused rows: 2
 Critical events: 1
 Recommendation: 1 critical event(s). Recommend operator review.
 
-&gt;&gt;&gt; THREAT SNAPSHOT (OWL MEMORY)
+>>> THREAT SNAPSHOT (OWL MEMORY)
 === THREAT SNAPSHOT (OWL) ===
-Total logged threat events: 121
+Total logged threat events: 123
 
 Counts by type:
-  - UNKNOWN: 121
+  - UNKNOWN: 123
 
 Last 3 event(s):
-  [2025-12-02T11:55:02.036712] UNKNOWN (sev=owl_brain) — 
-  [2025-12-02T11:57:02.604302] UNKNOWN (sev=owl_brain) — 
   [2025-12-02T13:26:45.279558] UNKNOWN (sev=owl_brain) — 
+  [2025-12-02T13:58:58.500875] UNKNOWN (sev=owl_brain) — 
+  [2025-12-02T14:08:21.852019] UNKNOWN (sev=owl_brain) — 
 
 
 === SENSOR READINESS OVERVIEW ===
 === SENSOR READINESS BRIEF ===
 Total sensors: 5
-Enabled: [&#x27;optical&#x27;, &#x27;seismic&#x27;, &#x27;ems&#x27;, &#x27;radiation&#x27;, &#x27;generic_metrics&#x27;]
+Enabled: ['optical', 'seismic', 'ems', 'radiation', 'generic_metrics']
 Disabled: []
 
 [OPTICAL]
@@ -157,13 +147,6 @@ Severity labels:
   - MODERATE: Monitor closely / watchlist
   - LOW: Routine background noise
 </pre>
-      </div>
-      <div class="panel">
-        <h2>Fusion Mini-Map</h2>
-        <pre>=== SENSOR FUSION MINI-MAP ===
-
-[UNKNOWN]   ✔️  C:0  W:0  S:4</pre>
-      </div>
     </div>
   </div>
 </body>

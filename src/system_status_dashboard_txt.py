@@ -1,74 +1,127 @@
 """
-system_status_dashboard_txt.py — Ghost Lantern Labs
----------------------------------------------------
-Builds a single text dashboard with:
+system_status_dashboard_txt.py
+------------------------------
 
-  - Active profile status
-  - Pipeline health (if available)
-  - Operator snapshot (if available)
-  - Threat memory stats (if available)
-  - Doctrine threat summary (if available)
+Builds a consolidated text dashboard for Ghost Lantern Labs:
+
+ - Pipeline health summary
+ - Sensor readiness brief
+ - Fusion mini-map snapshot
+ - Active profile status
+ - Golden Dome alignment tier
 
 Output:
   docs/system_status_dashboard.txt
 """
 
+from __future__ import annotations
+
 from pathlib import Path
-from datetime import datetime
+from typing import List
 
+from pipeline_health import evaluate_pipeline_health
+from sensor_readiness_brief import build_readiness_brief
+from fusion_minimap import build_minimap
 from profile_status import build_profile_status
-
-PIPELINE_HEALTH = Path("pipeline_health.txt")
-OPERATOR_SNAPSHOT = Path("operator_snapshot.txt")
-THREAT_STATS = Path("threat_memory_stats.txt")
-DOCTRINE_REPORT = Path("docs/threat_memory_doctrine_report.txt")
-OUTPUT = Path("docs/system_status_dashboard.txt")
+from golden_dome_alignment_report import build_golden_dome_report, write_golden_dome_report
 
 
-def read_if_exists(path: Path, fallback: str) -> str:
+BASE = Path(__file__).parent
+DOCS_DIR = BASE / "docs"
+DASHBOARD_PATH = DOCS_DIR / "system_status_dashboard.txt"
+MINIMAP_TXT = BASE / "minimap.txt"
+
+
+def _safe_read(path: Path, fallback: str) -> str:
     if not path.exists():
         return fallback
-    return path.read_text(encoding="utf-8")
+    try:
+        return path.read_text(encoding="utf-8")
+    except Exception as e:
+        return f"{fallback}\n[ERROR reading {path.name}: {e}]"
 
 
-def main():
-    lines = []
-    lines.append("Ghost Lantern Labs — System Status Dashboard")
-    lines.append("============================================")
-    lines.append(f"Generated: {datetime.utcnow().isoformat()} UTC")
+def build_system_status_dashboard() -> str:
+    """
+    Assemble the full system status dashboard as a text string.
+    """
+
+    lines: List[str] = []
+    lines.append("=== GHOST LANTERN LABS — SYSTEM STATUS DASHBOARD ===")
     lines.append("")
 
-    # Profile
-    lines.append("=== ACTIVE PROFILE ===")
-    lines.append(build_profile_status())
+    # 1) Pipeline health
+    lines.append(">>> PIPELINE HEALTH")
+    try:
+        health_report = evaluate_pipeline_health()
+        lines.append(str(health_report))
+    except Exception as e:
+        lines.append(f"[ERROR] pipeline_health: {e}")
     lines.append("")
 
-    # Pipeline health
-    lines.append("=== PIPELINE HEALTH ===")
-    lines.append(read_if_exists(PIPELINE_HEALTH, "No pipeline_health.txt found."))
+    # 2) Sensor readiness
+    lines.append(">>> SENSOR READINESS BRIEF")
+    try:
+        sensor_brief = build_readiness_brief()
+        lines.append(str(sensor_brief))
+    except Exception as e:
+        lines.append(f"[ERROR] sensor_readiness_brief: {e}")
     lines.append("")
 
-    # Operator snapshot
-    lines.append("=== OPERATOR SNAPSHOT ===")
-    lines.append(read_if_exists(OPERATOR_SNAPSHOT, "No operator_snapshot.txt found."))
-    lines.append("")
-
-    # Threat stats
-    lines.append("=== THREAT STATS ===")
-    lines.append(read_if_exists(THREAT_STATS, "No threat_memory_stats.txt found yet."))
-    lines.append("")
-
-    # Doctrine report
-    lines.append("=== DOCTRINE SUMMARY ===")
-    lines.append(
-        read_if_exists(
-            DOCTRINE_REPORT,
-            "No threat_memory_doctrine_report.txt found yet.",
+    # 3) Fusion mini-map
+    lines.append(">>> FUSION MINI-MAP (AOI SNAPSHOT)")
+    try:
+        mm_result = build_minimap()
+        # Always try to show the text file if present
+        minimap_text = _safe_read(
+            MINIMAP_TXT,
+            fallback="[Mini-map not available — minimap.txt missing.]",
         )
-    )
+        lines.append(minimap_text)
+        lines.append(f"[minimap_status] {mm_result}")
+    except Exception as e:
+        lines.append(f"[ERROR] fusion_minimap: {e}")
+    lines.append("")
 
-    OUTPUT.write_text("\n".join(lines), encoding="utf-8")
-    print(f"[OK] Wrote dashboard → {OUTPUT}")
+    # 4) Active profile status
+    lines.append(">>> ACTIVE PROFILE STATUS")
+    try:
+        prof_status = build_profile_status()
+        lines.append(str(prof_status))
+    except Exception as e:
+        lines.append(f"[ERROR] profile_status: {e}")
+    lines.append("")
+
+    # 5) Golden Dome alignment
+    lines.append(">>> GOLDEN DOME ALIGNMENT")
+    try:
+        gd = build_golden_dome_report()
+        lines.append(f"Tier: {gd.get('tier')}  |  Score: {gd.get('score')}%")
+        lines.append("")
+        for c in gd.get("checks", []):
+            status = "OK " if getattr(c, "ok", False) else "MISS"
+            lines.append(f" - [{status}] {c.name}: {c.detail}")
+        # Also ensure the standalone report is written/updated
+        write_golden_dome_report()
+    except Exception as e:
+        lines.append(f"[ERROR] golden_dome_alignment: {e}")
+    lines.append("")
+
+    lines.append("=== END OF SYSTEM STATUS DASHBOARD ===")
+
+    return "\n".join(lines)
+
+
+def write_system_status_dashboard() -> Path:
+    DOCS_DIR.mkdir(parents=True, exist_ok=True)
+    text = build_system_status_dashboard()
+    DASHBOARD_PATH.write_text(text, encoding="utf-8")
+    return DASHBOARD_PATH
+
+
+def main() -> None:
+    path = write_system_status_dashboard()
+    print(f"[OK] System status dashboard written -> {path}")
 
 
 if __name__ == "__main__":

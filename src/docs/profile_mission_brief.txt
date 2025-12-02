@@ -18,11 +18,11 @@ FUSION MINI-MAP:
 DAILY MISSION BRIEF:
 ----------------------------------------------
 === GHOST LANTERN LABS — DAILY MISSION BRIEF ===
-Generated (UTC): 2025-12-02T13:26:45.277849
+Generated (UTC): 2025-12-02T14:08:21.847278
 
 === CORE MISSION STATUS ===
 === GLL MISSION BRIEF ===
-Generated (UTC): 2025-12-02T13:26:45.278347
+Generated (UTC): 2025-12-02T14:08:21.849079
 
 >>> PIPELINE HEALTH
 Pipeline status: GREEN
@@ -36,15 +36,15 @@ Recommendation: 1 critical event(s). Recommend operator review.
 
 >>> THREAT SNAPSHOT (OWL MEMORY)
 === THREAT SNAPSHOT (OWL) ===
-Total logged threat events: 121
+Total logged threat events: 123
 
 Counts by type:
-  - UNKNOWN: 121
+  - UNKNOWN: 123
 
 Last 3 event(s):
-  [2025-12-02T11:55:02.036712] UNKNOWN (sev=owl_brain) — 
-  [2025-12-02T11:57:02.604302] UNKNOWN (sev=owl_brain) — 
   [2025-12-02T13:26:45.279558] UNKNOWN (sev=owl_brain) — 
+  [2025-12-02T13:58:58.500875] UNKNOWN (sev=owl_brain) — 
+  [2025-12-02T14:08:21.852019] UNKNOWN (sev=owl_brain) — 
 
 
 === SENSOR READINESS OVERVIEW ===

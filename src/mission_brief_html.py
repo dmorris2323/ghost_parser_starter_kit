@@ -2,114 +2,136 @@
 mission_brief_html.py
 ---------------------
 
-Converts the daily mission brief text into a simple HTML report.
+Builds an HTML version of the Daily Mission Brief with:
 
- - Reads:  docs/daily_mission_brief.txt  (builds it if missing)
- - Builds/reads: minimap.txt via fusion_minimap.build_minimap()
- - Writes: docs/daily_mission_brief.html
- - Adds a profile badge based on active profile from profile_config
+ - Clean profile badge (no raw Python object repr)
+ - Daily mission brief text
+ - Fusion Mini-Map (text) section
 
-Intended for:
- - Browser viewing
- - Simple demos
+Outputs:
+    docs/daily_mission_brief.html
 """
 
 from __future__ import annotations
 
 from pathlib import Path
-import html
 
 from profile_config import get_active_profile
 from daily_mission_brief import write_daily_brief
 from fusion_minimap import build_minimap
 
-# Paths (relative to src/)
-TXT_PATH = Path("docs/daily_mission_brief.txt")
-HTML_PATH = Path("docs/daily_mission_brief.html")
-MINIMAP_PATH = Path("minimap.txt")
+BASE = Path(__file__).parent
+DOCS_DIR = BASE / "docs"
+TXT_BRIEF_PATH = DOCS_DIR / "daily_mission_brief.txt"
+HTML_BRIEF_PATH = DOCS_DIR / "daily_mission_brief.html"
+MINIMAP_TXT = BASE / "minimap.txt"
 
 
-def _get_profile_display_name() -> str:
+# ------------------------------------------------------------
+# Helpers
+# ------------------------------------------------------------
+
+def _safe_profile_info() -> dict:
     """
-    Safely derive a human-readable profile name from profile_config.get_active_profile().
-    Supports both dict-style and simple-string returns.
+    Normalize the active profile into a simple dict so we don't dump a raw
+    Python object repr into the HTML.
     """
     try:
-        profile = get_active_profile()
+        raw = get_active_profile()
     except Exception:
-        return "Unknown"
+        return {
+            "display_name": "Unknown Profile",
+            "key": "unknown",
+            "mission_context": "Profile loader encountered an error.",
+        }
 
-    # If it is a dict-like object
+    # Case 1: already a dict
+    if isinstance(raw, dict):
+        return {
+            "display_name": (
+                raw.get("display_name")
+                or raw.get("name")
+                or raw.get("key")
+                or "Unknown Profile"
+            ),
+            "key": raw.get("key", "unknown"),
+            "mission_context": raw.get("mission_context", ""),
+        }
+
+    # Case 2: custom object (dataclass, namedtuple, etc.)
+    display = (
+        getattr(raw, "display_name", None)
+        or getattr(raw, "name", None)
+        or getattr(raw, "key", None)
+        or str(raw)
+    )
+
+    key = getattr(raw, "key", None)
+    if not key:
+        key = str(display).lower().replace(" ", "_")
+
+    mission_context = getattr(raw, "mission_context", "")
+
+    return {
+        "display_name": str(display),
+        "key": str(key),
+        "mission_context": str(mission_context),
+    }
+
+
+def _get_daily_brief_text() -> str:
+    """
+    Ensure the text daily mission brief exists, then load it.
+    """
+    if not TXT_BRIEF_PATH.exists():
+        write_daily_brief()
+
     try:
-        if isinstance(profile, dict):
-            return (
-                profile.get("display_name")
-                or profile.get("name")
-                or profile.get("key")
-                or "Unknown"
-            )
-    except Exception:
-        pass
-
-    # Fallback: just stringify whatever it is
-    try:
-        return str(profile)
-    except Exception:
-        return "Unknown"
+        return TXT_BRIEF_PATH.read_text(encoding="utf-8")
+    except Exception as e:
+        return f"[ERROR reading daily brief] {e}"
 
 
-def _load_or_build_text_brief() -> str:
+def _get_minimap_text() -> str:
     """
-    Load the daily mission brief from TXT, or build it if missing.
-    """
-    if TXT_PATH.exists():
-        return TXT_PATH.read_text(encoding="utf-8")
-
-    # Build one via daily_mission_brief
-    write_daily_brief()
-    return TXT_PATH.read_text(encoding="utf-8")
-
-
-def _build_and_load_minimap() -> str:
-    """
-    Build the fusion mini-map (writes minimap.txt) and return its text.
-    If anything fails, return a human-readable error string instead of crashing.
+    Ensure minimap.txt exists (build if needed), then load it.
     """
     try:
         build_minimap()
     except Exception as e:
-        return f"Mini-map build error: {e}"
+        return f"[Mini-map build error] {e}"
 
-    if not MINIMAP_PATH.exists():
-        return "Mini-map not available (minimap.txt not found)."
+    if not MINIMAP_TXT.exists():
+        return "[Mini-map missing] minimap.txt not found."
 
     try:
-        return MINIMAP_PATH.read_text(encoding="utf-8")
+        return MINIMAP_TXT.read_text(encoding="utf-8")
     except Exception as e:
-        return f"Mini-map read error: {e}"
+        return f"[Mini-map load error] {e}"
 
+
+# ------------------------------------------------------------
+# HTML Builder
+# ------------------------------------------------------------
 
 def build_html_brief() -> str:
     """
-    Construct the HTML document string.
+    Construct the full HTML for the daily mission brief.
     """
+    profile = _safe_profile_info()
+    brief_text = _get_daily_brief_text()
+    minimap_text = _get_minimap_text()
 
-    text_brief = _load_or_build_text_brief()
-    minimap_text = _build_and_load_minimap()
-    profile_name = _get_profile_display_name()
+    profile_badge = f"{profile['display_name']} ({profile['key']})"
 
-    # Escape text for safe <pre>
-    escaped_text = html.escape(text_brief)
-    escaped_minimap = html.escape(minimap_text)
-
-    html_doc = f"""<!DOCTYPE html>
+    html = f"""<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>GLL Daily Mission Brief</title>
+  <meta charset="UTF-8" />
+  <title>Ghost Lantern Labs — Daily Mission Brief</title>
   <style>
     body {{
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       background-color: #0b0c10;
       color: #e5e5e5;
       margin: 0;
@@ -118,99 +140,82 @@ def build_html_brief() -> str:
     .container {{
       max-width: 960px;
       margin: 0 auto;
-      background: #151720;
-      border-radius: 12px;
-      padding: 24px 28px;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
-      border: 1px solid #272a3a;
+      background: #161821;
+      border-radius: 16px;
+      padding: 24px 32px;
+      box-shadow: 0 0 24px rgba(0,0,0,0.6);
     }}
     h1 {{
-      font-size: 1.6rem;
-      margin: 0 0 8px 0;
-      display: flex;
-      align-items: center;
-      gap: 10px;
+      margin-top: 0;
+      font-size: 28px;
+      color: #ffffff;
     }}
-    .badge {{
-      display: inline-block;
-      padding: 4px 10px;
-      border-radius: 999px;
-      font-size: 0.8rem;
-      background: #243b53;
-      color: #d9e2ec;
-      border: 1px solid #486581;
-    }}
-    .subheader {{
-      font-size: 0.9rem;
-      color: #9fb3c8;
+    .subtitle {{
+      color: #9ca3af;
       margin-bottom: 16px;
     }}
-    .grid {{
-      display: grid;
-      grid-template-columns: 2fr 1fr;
-      gap: 16px;
-    }}
-    .panel {{
-      background: #0f1117;
-      padding: 16px 18px;
-      border-radius: 8px;
-      border: 1px solid #202337;
-    }}
-    .panel h2 {{
-      font-size: 1rem;
-      margin-top: 0;
+    .profile-pill {{
+      display: inline-block;
+      padding: 6px 12px;
+      border-radius: 999px;
+      background: #1f2937;
+      color: #e5e7eb;
+      font-size: 13px;
       margin-bottom: 8px;
-      color: #d9e2ec;
+    }}
+    .section-title {{
+      margin-top: 24px;
+      margin-bottom: 8px;
+      font-size: 16px;
+      color: #f9fafb;
     }}
     pre {{
-      margin: 0;
-      font-size: 0.84rem;
-      line-height: 1.4;
-      overflow-x: auto;
-      white-space: pre;
+      background: #111827;
+      padding: 12px 16px;
+      border-radius: 8px;
+      white-space: pre-wrap;
+      word-wrap: break-word;
+      font-size: 13px;
+      line-height: 1.5;
     }}
-    @media (max-width: 800px) {{
-      .grid {{
-        grid-template-columns: 1fr;
-      }}
+    .minimap {{
+      margin-top: 8px;
+      margin-bottom: 16px;
     }}
   </style>
 </head>
 <body>
   <div class="container">
-    <h1>
-      Ghost Lantern Labs — Daily Mission Brief
-      <span class="badge">Profile: {html.escape(profile_name)}</span>
-    </h1>
-    <div class="subheader">
+    <h1>Ghost Lantern Labs — Daily Mission Brief</h1>
+    <div class="profile-pill">Profile: {profile_badge}</div>
+    <div class="subtitle">
       Operator view — fused system, sensor readiness, AOI mini-map, and profile context.
     </div>
 
-    <div class="grid">
-      <div class="panel">
-        <h2>Core Mission Brief</h2>
-        <pre>{escaped_text}</pre>
-      </div>
-      <div class="panel">
-        <h2>Fusion Mini-Map</h2>
-        <pre>{escaped_minimap}</pre>
-      </div>
+    <div class="section">
+      <div class="section-title">Fusion Mini-Map (AOI Overview)</div>
+      <pre class="minimap">{minimap_text}</pre>
+    </div>
+
+    <div class="section">
+      <div class="section-title">Daily Mission Brief</div>
+      <pre>{brief_text}</pre>
     </div>
   </div>
 </body>
 </html>
 """
-    return html_doc
+    return html
 
 
 def write_html_brief() -> None:
     """
-    Build and save the HTML mission brief.
+    Write the HTML brief to docs/daily_mission_brief.html
     """
-    HTML_PATH.parent.mkdir(parents=True, exist_ok=True)
-    html_doc = build_html_brief()
-    HTML_PATH.write_text(html_doc, encoding="utf-8")
-    print(f"[OK] HTML mission brief written → {HTML_PATH}")
+    DOCS_DIR.mkdir(parents=True, exist_ok=True)
+    html = build_html_brief()
+    HTML_BRIEF_PATH.write_text(html, encoding="utf-8")
+    print(f"[OK] HTML mission brief -> {HTML_BRIEF_PATH}")
 
 
 def main():
