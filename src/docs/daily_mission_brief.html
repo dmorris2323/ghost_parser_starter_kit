@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>GLL Daily Mission Brief</title>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background-color: #050810;
+      color: #f5f7ff;
+      margin: 0;
+      padding: 24px;
+    }
+    .container {
+      max-width: 960px;
+      margin: 0 auto;
+      background: #0b1020;
+      border-radius: 12px;
+      padding: 24px 28px;
+      box-shadow: 0 0 24px rgba(0, 0, 0, 0.5);
+      border: 1px solid #1f2940;
+    }
+    h1 {
+      margin-top: 0;
+      font-size: 1.8rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #7dd3fc;
+    }
+    h2 {
+      font-size: 1.1rem;
+      margin-top: 1.5rem;
+      color: #a5b4fc;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+    }
+    pre {
+      background: #050816;
+      padding: 8px 10px;
+      border-radius: 6px;
+      overflow-x: auto;
+      font-size: 0.9rem;
+      line-height: 1.4;
+      border: 1px solid #1f2937;
+      margin-bottom: 8px;
+      white-space: pre-wrap;
+    }
+    .badge {
+      display: inline-block;
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      padding: 3px 8px;
+      border-radius: 999px;
+      background: #111827;
+      color: #e5e7eb;
+      border: 1px solid #374151;
+      margin-left: 8px;
+    }
+    .meta {
+      font-size: 0.75rem;
+      color: #9ca3af;
+      margin-bottom: 16px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>
+      Ghost Lantern Labs
+      <span class="badge">Daily Mission Brief</span>
+    </h1>
+    <div class="meta">
+      Rendered from pipeline outputs (run_history, threat_levels, sensor health, analyst notes).
+    </div>
+    <pre><strong>===== GLL DAILY MISSION BRIEF =====</strong></pre>
+<pre><strong>&gt;&gt; SENSOR LAYER SUMMARY
+=== GLL Sensor Layer Daily Brief ===
+Total logged runs: 62
+Average MAX threat hint: 0.000
+Average AVG threat hint: 0.000</strong></pre>
+<pre>Fallback reasons (frequency):
+  unknown: 62 run(s)</pre>
+<pre><strong>&gt;&gt; THREAT TIMELINE OVERVIEW
+=== GLL Threat Timeline Brief ===
+Total logged runs: 62
+Threat breakdown: HIGH=0, MEDIUM=0, LOW=62</strong></pre>
+<pre>Most recent run:
+  Timestamp (UTC): 2025-12-02T01:28:18.930443
+  Run ID:          
+  Threat level:    LOW
+  Max threat hint: 0.000
+  Avg threat hint: 0.000
+  Valid sensors:   
+  Fallback reason: </pre>
+<pre><strong>&gt;&gt; SENSOR HEALTH SNAPSHOT
+Sensor Health Report — 2025-12-02T01:28:18.988183 UTC
+============================================================</strong></pre>
+<pre>Sensor: optical_sensor_mock (optical)
+  Iterations:   10
+  Successes:    10
+  Failures:     0
+  Availability: 1.000
+  ValidityRate: 1.000</pre>
+<pre>Sensor: seismic_sensor_mock (seismic)
+  Iterations:   10
+  Successes:    10
+  Failures:     0
+  Availability: 1.000
+  ValidityRate: 1.000</pre>
+<pre>Sensor: ems_sensor_mock (ems)
+  Iterations:   10
+  Successes:    10
+  Failures:     0
+  Availability: 1.000
+  ValidityRate: 1.000</pre>
+<pre>Sensor: radiation_sensor_mock (radiation)
+  Iterations:   10
+  Successes:    10
+  Failures:     0
+  Availability: 1.000
+  ValidityRate: 1.000</pre>
+<pre>Sensor: generic_metrics_sensor_mock (generic)
+  Iterations:   10
+  Successes:    10
+  Failures:     0
+  Availability: 1.000
+  ValidityRate: 1.000</pre>
+<pre><strong>&gt;&gt; ANALYST NOTES
+• Threat trend summary:
+  - All logged runs are LOW-level; environment appears calm so far.
+  - Latest classified threat level: LOW.
+  - Average max threat hint across runs: 0.000.
+  - Average baseline (avg threat hint): 0.000.
+• Recommended posture: ROUTINE. No immediate indicators of critical instability, but continue normal surveillance.
+• Data note: All 62 runs report normal fallback status; no obvious sensor-layer gaps detected.</strong></pre>
+  </div>
+</body>
+</html>
