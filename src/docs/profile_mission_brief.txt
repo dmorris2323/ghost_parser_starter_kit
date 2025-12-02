@@ -1,0 +1,89 @@
+===== GLL PROFILED MISSION BRIEF =====
+Active profile: AFTAC / Nuclear ISR [aftac_nuclear]
+
+Mission context:
+  Fusion platform supporting nuclear monitoring, anomaly detection, and pre-launch / post-event assessment for strategic decision-makers.
+
+Data focus:
+  Multi-sensor telemetry (optical, seismic, EMS, radiation) plus supporting cyber indicators and intel notes.
+
+Risk language:
+  Threat levels emphasize elevated nuclear indicators, sensor anomalies near known facilities, and fusion confidence.
+
+Note: Under the hood, this is the same GLL fusion engine.
+      Only the framing and interpretation are adjusted per profile.
+
+===== GLL DAILY MISSION BRIEF =====
+
+>> SENSOR LAYER SUMMARY
+=== GLL Sensor Layer Daily Brief ===
+Total logged runs: 72
+Average MAX threat hint: 0.000
+Average AVG threat hint: 0.000
+
+Fallback reasons (frequency):
+  unknown: 72 run(s)
+
+>> THREAT TIMELINE OVERVIEW
+=== GLL Threat Timeline Brief ===
+Total logged runs: 72
+Threat breakdown: HIGH=0, MEDIUM=0, LOW=72
+
+Most recent run:
+  Timestamp (UTC): 2025-12-02T01:32:37.157321
+  Run ID:          
+  Threat level:    LOW
+  Max threat hint: 0.000
+  Avg threat hint: 0.000
+  Valid sensors:   
+  Fallback reason: 
+
+>> SENSOR HEALTH SNAPSHOT
+Sensor Health Report — 2025-12-02T01:32:37.214163 UTC
+============================================================
+
+Sensor: optical_sensor_mock (optical)
+  Iterations:   10
+  Successes:    10
+  Failures:     0
+  Availability: 1.000
+  ValidityRate: 1.000
+
+Sensor: seismic_sensor_mock (seismic)
+  Iterations:   10
+  Successes:    10
+  Failures:     0
+  Availability: 1.000
+  ValidityRate: 1.000
+
+Sensor: ems_sensor_mock (ems)
+  Iterations:   10
+  Successes:    10
+  Failures:     0
+  Availability: 1.000
+  ValidityRate: 1.000
+
+Sensor: radiation_sensor_mock (radiation)
+  Iterations:   10
+  Successes:    10
+  Failures:     0
+  Availability: 1.000
+  ValidityRate: 1.000
+
+Sensor: generic_metrics_sensor_mock (generic)
+  Iterations:   10
+  Successes:    10
+  Failures:     0
+  Availability: 1.000
+  ValidityRate: 1.000
+
+
+
+>> ANALYST NOTES
+• Threat trend summary:
+  - All logged runs are LOW-level; environment appears calm so far.
+  - Latest classified threat level: LOW.
+  - Average max threat hint across runs: 0.000.
+  - Average baseline (avg threat hint): 0.000.
+• Recommended posture: ROUTINE. No immediate indicators of critical instability, but continue normal surveillance.
+• Data note: All 72 runs report normal fallback status; no obvious sensor-layer gaps detected.
