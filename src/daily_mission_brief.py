@@ -13,20 +13,21 @@ Inputs (if present):
 Reuses:
 - daily_sensor_brief.build_brief()
 - threat_timeline_brief.build_brief()
+- analyst_notes.build_notes()
 
 Output:
 - docs/daily_mission_brief.txt   (human-readable text brief)
 
-This is your first end-to-end "ISR-style" brief artifact.
+This is an ISR-style brief artifact suitable for demos.
 """
 
 from __future__ import annotations
 
 from pathlib import Path
-from typing import Optional
 
 from daily_sensor_brief import load_run_history, build_brief as build_sensor_brief
 from threat_timeline_brief import load_threat_levels, build_brief as build_threat_brief
+from analyst_notes import build_notes as build_analyst_notes
 
 
 BASE_DIR = Path(__file__).parent
@@ -38,13 +39,13 @@ SENSOR_HEALTH_PATH = BASE_DIR / "sensor_health_report.txt"
 MISSION_BRIEF_PATH = DOCS_DIR / "daily_mission_brief.txt"
 
 
-def read_sensor_health() -> Optional[str]:
+def read_sensor_health() -> str:
     """
     Return the contents of sensor_health_report.txt if it exists,
-    otherwise None.
+    otherwise a simple note.
     """
     if not SENSOR_HEALTH_PATH.exists():
-        return None
+        return "No sensor health report available. Run sensor_health.py to generate one."
     return SENSOR_HEALTH_PATH.read_text(encoding="utf-8")
 
 
@@ -73,16 +74,13 @@ def build_mission_brief() -> str:
     # 3. Sensor Health Snapshot (from sensor_health_report.txt)
     health_text = read_sensor_health()
     lines.append(">> SENSOR HEALTH SNAPSHOT")
-    if health_text:
-        lines.append(health_text)
-    else:
-        lines.append("No sensor health report available. Run sensor_health.py to generate one.")
+    lines.append(health_text)
     lines.append("")
 
-    # 4. Notes / Analyst Remarks (placeholder)
+    # 4. Analyst Notes (rule-based)
     lines.append(">> ANALYST NOTES")
-    lines.append("• This section can be expanded with manual notes or Spectral Owl commentary.")
-    lines.append("• For now, it serves as a placeholder for operator insight.")
+    notes = build_analyst_notes()
+    lines.append(notes)
     lines.append("")
 
     return "\n".join(lines)
