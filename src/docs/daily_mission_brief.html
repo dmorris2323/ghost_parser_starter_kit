@@ -5,135 +5,166 @@
   <title>GLL Daily Mission Brief</title>
   <style>
     body {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      background-color: #050810;
-      color: #f5f7ff;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background-color: #0b0c10;
+      color: #e5e5e5;
       margin: 0;
-      padding: 24px;
+      padding: 20px;
     }
     .container {
       max-width: 960px;
       margin: 0 auto;
-      background: #0b1020;
+      background: #151720;
       border-radius: 12px;
       padding: 24px 28px;
-      box-shadow: 0 0 24px rgba(0, 0, 0, 0.5);
-      border: 1px solid #1f2940;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+      border: 1px solid #272a3a;
     }
     h1 {
-      margin-top: 0;
-      font-size: 1.8rem;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      color: #7dd3fc;
-    }
-    h2 {
-      font-size: 1.1rem;
-      margin-top: 1.5rem;
-      color: #a5b4fc;
-      text-transform: uppercase;
-      letter-spacing: 0.12em;
-    }
-    pre {
-      background: #050816;
-      padding: 8px 10px;
-      border-radius: 6px;
-      overflow-x: auto;
-      font-size: 0.9rem;
-      line-height: 1.4;
-      border: 1px solid #1f2937;
-      margin-bottom: 8px;
-      white-space: pre-wrap;
+      font-size: 1.6rem;
+      margin: 0 0 8px 0;
+      display: flex;
+      align-items: center;
+      gap: 10px;
     }
     .badge {
       display: inline-block;
-      font-size: 0.7rem;
-      text-transform: uppercase;
-      letter-spacing: 0.16em;
-      padding: 3px 8px;
+      padding: 4px 10px;
       border-radius: 999px;
-      background: #111827;
-      color: #e5e7eb;
-      border: 1px solid #374151;
-      margin-left: 8px;
+      font-size: 0.8rem;
+      background: #243b53;
+      color: #d9e2ec;
+      border: 1px solid #486581;
     }
-    .meta {
-      font-size: 0.75rem;
-      color: #9ca3af;
+    .subheader {
+      font-size: 0.9rem;
+      color: #9fb3c8;
       margin-bottom: 16px;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 16px;
+    }
+    .panel {
+      background: #0f1117;
+      padding: 16px 18px;
+      border-radius: 8px;
+      border: 1px solid #202337;
+    }
+    .panel h2 {
+      font-size: 1rem;
+      margin-top: 0;
+      margin-bottom: 8px;
+      color: #d9e2ec;
+    }
+    pre {
+      margin: 0;
+      font-size: 0.84rem;
+      line-height: 1.4;
+      overflow-x: auto;
+      white-space: pre;
+    }
+    @media (max-width: 800px) {
+      .grid {
+        grid-template-columns: 1fr;
+      }
     }
   </style>
 </head>
 <body>
   <div class="container">
     <h1>
-      Ghost Lantern Labs
-      <span class="badge">Daily Mission Brief</span>
+      Ghost Lantern Labs — Daily Mission Brief
+      <span class="badge">Profile: Profile(key=&#x27;sports_team&#x27;, display_name=&#x27;Sports Team Operations&#x27;, mission_context=&#x27;Analytics and operations picture for a professional or college sports team: performance health, workload, and risk of failure in upcoming contests.&#x27;, data_focus=&#x27;Metrics from wearables, practice intensity, travel fatigue, and opponent scouting summarized into a game-readiness snapshot.&#x27;, risk_language=&#x27;Threat levels translate to game risk: LOW for routine conditions, MEDIUM when fatigue or key-player flags rise, HIGH when multiple stressors converge.&#x27;)</span>
     </h1>
-    <div class="meta">
-      Rendered from pipeline outputs (run_history, threat_levels, sensor health, analyst notes).
+    <div class="subheader">
+      Operator view — fused system, sensor readiness, AOI mini-map, and profile context.
     </div>
-    <pre><strong>===== GLL DAILY MISSION BRIEF =====</strong></pre>
-<pre><strong>&gt;&gt; SENSOR LAYER SUMMARY
-=== GLL Sensor Layer Daily Brief ===
-Total logged runs: 62
-Average MAX threat hint: 0.000
-Average AVG threat hint: 0.000</strong></pre>
-<pre>Fallback reasons (frequency):
-  unknown: 62 run(s)</pre>
-<pre><strong>&gt;&gt; THREAT TIMELINE OVERVIEW
-=== GLL Threat Timeline Brief ===
-Total logged runs: 62
-Threat breakdown: HIGH=0, MEDIUM=0, LOW=62</strong></pre>
-<pre>Most recent run:
-  Timestamp (UTC): 2025-12-02T01:28:18.930443
-  Run ID:          
-  Threat level:    LOW
-  Max threat hint: 0.000
-  Avg threat hint: 0.000
-  Valid sensors:   
-  Fallback reason: </pre>
-<pre><strong>&gt;&gt; SENSOR HEALTH SNAPSHOT
-Sensor Health Report — 2025-12-02T01:28:18.988183 UTC
-============================================================</strong></pre>
-<pre>Sensor: optical_sensor_mock (optical)
-  Iterations:   10
-  Successes:    10
-  Failures:     0
-  Availability: 1.000
-  ValidityRate: 1.000</pre>
-<pre>Sensor: seismic_sensor_mock (seismic)
-  Iterations:   10
-  Successes:    10
-  Failures:     0
-  Availability: 1.000
-  ValidityRate: 1.000</pre>
-<pre>Sensor: ems_sensor_mock (ems)
-  Iterations:   10
-  Successes:    10
-  Failures:     0
-  Availability: 1.000
-  ValidityRate: 1.000</pre>
-<pre>Sensor: radiation_sensor_mock (radiation)
-  Iterations:   10
-  Successes:    10
-  Failures:     0
-  Availability: 1.000
-  ValidityRate: 1.000</pre>
-<pre>Sensor: generic_metrics_sensor_mock (generic)
-  Iterations:   10
-  Successes:    10
-  Failures:     0
-  Availability: 1.000
-  ValidityRate: 1.000</pre>
-<pre><strong>&gt;&gt; ANALYST NOTES
-• Threat trend summary:
-  - All logged runs are LOW-level; environment appears calm so far.
-  - Latest classified threat level: LOW.
-  - Average max threat hint across runs: 0.000.
-  - Average baseline (avg threat hint): 0.000.
-• Recommended posture: ROUTINE. No immediate indicators of critical instability, but continue normal surveillance.
-• Data note: All 62 runs report normal fallback status; no obvious sensor-layer gaps detected.</strong></pre>
+
+    <div class="grid">
+      <div class="panel">
+        <h2>Core Mission Brief</h2>
+        <pre>=== GHOST LANTERN LABS — DAILY MISSION BRIEF ===
+Generated (UTC): 2025-12-02T13:26:45.277849
+
+=== CORE MISSION STATUS ===
+=== GLL MISSION BRIEF ===
+Generated (UTC): 2025-12-02T13:26:45.278347
+
+&gt;&gt;&gt; PIPELINE HEALTH
+Pipeline status: GREEN
+Missing outputs: none
+
+&gt;&gt;&gt; FUSION / SPECTRAL OWL STATUS
+Fusion status: critical
+Total fused rows: 2
+Critical events: 1
+Recommendation: 1 critical event(s). Recommend operator review.
+
+&gt;&gt;&gt; THREAT SNAPSHOT (OWL MEMORY)
+=== THREAT SNAPSHOT (OWL) ===
+Total logged threat events: 121
+
+Counts by type:
+  - UNKNOWN: 121
+
+Last 3 event(s):
+  [2025-12-02T11:55:02.036712] UNKNOWN (sev=owl_brain) — 
+  [2025-12-02T11:57:02.604302] UNKNOWN (sev=owl_brain) — 
+  [2025-12-02T13:26:45.279558] UNKNOWN (sev=owl_brain) — 
+
+
+=== SENSOR READINESS OVERVIEW ===
+=== SENSOR READINESS BRIEF ===
+Total sensors: 5
+Enabled: [&#x27;optical&#x27;, &#x27;seismic&#x27;, &#x27;ems&#x27;, &#x27;radiation&#x27;, &#x27;generic_metrics&#x27;]
+Disabled: []
+
+[OPTICAL]
+  Description: Optical plume and flash detection; detects bright anomalies used in launch detection.
+  Warning threshold: 0.55
+  Critical threshold: 0.85
+  Notes: First sensor to react to missile launch events (flash, plume).
+
+[SEISMIC]
+  No profile found.
+
+[EMS]
+  Description: Electromagnetic spectrum detection for jamming, interference, and spoof attempts.
+  Warning threshold: 0.6
+  Critical threshold: 0.9
+  Notes: Detects EW interference attempts and data-denial attacks.
+
+[RADIATION]
+  Description: Gamma and neutron radiation detection for nuclear event confirmation.
+  Warning threshold: 0.7
+  Critical threshold: 0.95
+  Notes: Final confirmation sensor for nuclear launch and post-detonation analysis.
+
+[GENERIC_METRICS]
+  No profile found.
+
+
+=== ACTIVE PROFILE STATUS ===
+Active profile: aftac_nuclear
+Description: Nuclear / EMS / seismic fusion focus for AFTAC-style missions.
+Domains: nuclear, ems, seismic, space
+Default threat types: launch_prep, sensor_spoof, jamming
+Offline priority: True
+Severity labels:
+  - HIGH: Immediate commander attention
+  - MODERATE: Monitor closely / watchlist
+  - LOW: Routine background noise
+</pre>
+      </div>
+      <div class="panel">
+        <h2>Fusion Mini-Map</h2>
+        <pre>=== SENSOR FUSION MINI-MAP ===
+
+[UNKNOWN]   ✔️  C:0  W:0  S:4</pre>
+      </div>
+    </div>
   </div>
 </body>
 </html>

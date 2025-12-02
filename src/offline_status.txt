@@ -1,0 +1,3 @@
+TIMESTAMP_UTC: 2025-12-01T23:58:51.041939
+STATUS: OFFLINE_OR_DEGRADED
+REASON: local_rules in use; treating this as offline/degraded analysis path.

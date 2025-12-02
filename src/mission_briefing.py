@@ -1,31 +1,112 @@
 """
-mission_briefing.py — prevents CLI crash
-Day 53 Patch File
+mission_briefing.py
+-------------------
 
-Provides basic mission brief response.
-Later versions will pull real fused intel + Owl assessment.
+Builds a compact text mission brief combining:
+
+ - Pipeline health status
+ - Fusion / threat status from Spectral Owl
+ - Short threat snapshot for context
+
+Used by:
+ - ghost_cli.py (Option 8: Mission briefing)
+ - daily_mission_brief.py (as CORE MISSION STATUS)
 """
 
-from fusion_logger import log_event
+from datetime import datetime
+from typing import Dict, Any
+
+from pipeline_health import evaluate_pipeline_health
 from spectral_owl.owl_brain import analyze_fusion, threat_snapshot
 
 
-def mission_brief() -> str:
+def _format_pipeline_health(health: Dict[str, Any]) -> str:
+    lines = []
+    status = health.get("status", "unknown")
+    lines.append(f"Pipeline status: {status}")
+
+    missing = health.get("missing_outputs") or []
+    if missing:
+        lines.append(f"Missing outputs: {', '.join(missing)}")
+    else:
+        lines.append("Missing outputs: none")
+
+    warnings = health.get("warnings") or []
+    if warnings:
+        lines.append("Warnings:")
+        for w in warnings:
+            lines.append(f"  - {w}")
+
+    return "\n".join(lines)
+
+
+def _format_fusion_status(fusion: Dict[str, Any]) -> str:
+    lines = []
+    status = fusion.get("status", "unknown")
+    total = fusion.get("total_rows", 0)
+    crit = fusion.get("critical_events", 0)
+    rec = fusion.get("recommendation", "")
+
+    lines.append(f"Fusion status: {status}")
+    lines.append(f"Total fused rows: {total}")
+    lines.append(f"Critical events: {crit}")
+    if rec:
+        lines.append(f"Recommendation: {rec}")
+
+    msg = fusion.get("message")
+    if msg:
+        lines.append(f"Note: {msg}")
+
+    return "\n".join(lines)
+
+
+def build_mission_briefing() -> str:
     """
-    Returns a concise mission brief for operators.
-    Version 1.0 — placeholder to keep CLI functioning.
+    Returns a multi-line mission brief string.
     """
 
-    fusion_status = analyze_fusion()
-    owl_status = threat_snapshot()
+    lines = []
+    lines.append("=== GLL MISSION BRIEF ===")
+    lines.append(f"Generated (UTC): {datetime.utcnow().isoformat()}")
+    lines.append("")
 
-    brief = (
-        "=== GLL MISSION BRIEF ===\n"
-        f"Fusion Output Status → {fusion_status}\n"
-        f"Owl Threat Read → {owl_status}\n\n"
-        "Mission: Maintain uptime • Monitor anomalies • Standby for escalation."
-    )
+    # Pipeline health
+    try:
+        health = evaluate_pipeline_health()
+        lines.append(">>> PIPELINE HEALTH")
+        lines.append(_format_pipeline_health(health))
+    except Exception as e:
+        lines.append(">>> PIPELINE HEALTH")
+        lines.append(f"Error evaluating pipeline health: {e}")
+    lines.append("")
 
-    log_event("mission_brief", "run", "delivered")
-    return brief
+    # Fusion / Spectral Owl
+    try:
+        fusion = analyze_fusion()
+        lines.append(">>> FUSION / SPECTRAL OWL STATUS")
+        lines.append(_format_fusion_status(fusion))
+    except Exception as e:
+        lines.append(">>> FUSION / SPECTRAL OWL STATUS")
+        lines.append(f"Error analyzing fusion scores: {e}")
+    lines.append("")
+
+    # Threat snapshot (short form)
+    try:
+        lines.append(">>> THREAT SNAPSHOT (OWL MEMORY)")
+        lines.append(threat_snapshot(max_events=3))
+    except Exception as e:
+        lines.append(">>> THREAT SNAPSHOT (OWL MEMORY)")
+        lines.append(f"Error building threat snapshot: {e}")
+    lines.append("")
+
+    return "\n".join(lines)
+
+
+def main():
+    brief = build_mission_briefing()
+    print(brief)
+
+
+if __name__ == "__main__":
+    main()
 

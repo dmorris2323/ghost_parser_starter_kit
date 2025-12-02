@@ -114,3 +114,9 @@ timestamp,severity,event_type,details
 2025-12-01T02:03:20.529852,CRITICAL,fusion_spike,Score ≥ 0.80 detected,aftac_nuclear
 2025-12-01T02:03:20.529907,CRITICAL,fusion_spike,Score ≥ 0.80 detected,aftac_nuclear
 2025-12-01T02:03:20.530001,CRITICAL,fusion_spike,Score ≥ 0.80 detected,aftac_nuclear
+2025-12-02T11:39:32.294409,owl_brain,fusion_critical,high,Fusion_Ops,1 critical event(s). Recommend operator review.
+2025-12-02T11:42:17.412673,owl_brain,fusion_critical,high,Fusion_Ops,1 critical event(s). Recommend operator review.
+2025-12-02T11:42:45.103967,owl_brain,fusion_critical,high,Fusion_Ops,1 critical event(s). Recommend operator review.
+2025-12-02T11:55:02.036712,owl_brain,fusion_critical,high,Fusion_Ops,1 critical event(s). Recommend operator review.
+2025-12-02T11:57:02.604302,owl_brain,fusion_critical,high,Fusion_Ops,1 critical event(s). Recommend operator review.
+2025-12-02T13:26:45.279558,owl_brain,fusion_critical,high,Fusion_Ops,1 critical event(s). Recommend operator review.

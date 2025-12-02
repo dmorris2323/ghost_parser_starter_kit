@@ -16,6 +16,7 @@ Outputs:
 from __future__ import annotations
 
 from pathlib import Path
+import html
 
 from profile_config import get_active_profile
 from daily_mission_brief import write_daily_brief

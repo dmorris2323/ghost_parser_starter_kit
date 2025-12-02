@@ -17,3 +17,5 @@ timestamp,source,reason,count,severity,sensor_type,aoi
 2025-11-27T12:45:00.104083,unknown_edge_node,suspicious_volume,50,high,network,GLOBAL
 2025-11-27T12:46:00.104083,unknown_edge_node,suspicious_volume,50,high,network,GLOBAL
 2025-11-27T12:47:00.104083,unknown_edge_node,suspicious_volume,50,high,network,GLOBAL
+2025-11-27T14:07:04.592153,fusion_sanitizer,negative_Seismic_Mag,-1.0,-3.0,UNKNOWN,False
+2025-11-27T14:07:04.593799,fusion_sanitizer,negative_Radiation_uSv,0.0,-3.0,UNKNOWN,False

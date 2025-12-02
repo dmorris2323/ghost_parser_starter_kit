@@ -1,0 +1,8 @@
+{
+  "optical": true,
+  "seismic": true,
+  "ems": true,
+  "radiation": true,
+  "generic_metrics": true
+}
+
