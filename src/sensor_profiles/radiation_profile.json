@@ -1,0 +1,8 @@
+{
+  "sensor_name": "radiation",
+  "description": "Gamma and neutron radiation detection for nuclear event confirmation.",
+  "critical_threshold": 0.95,
+  "warning_threshold": 0.70,
+  "notes": "Final confirmation sensor for nuclear launch and post-detonation analysis."
+}
+

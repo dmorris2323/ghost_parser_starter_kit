@@ -1,0 +1,8 @@
+{
+  "sensor_name": "ems",
+  "description": "Electromagnetic spectrum detection for jamming, interference, and spoof attempts.",
+  "critical_threshold": 0.90,
+  "warning_threshold": 0.60,
+  "notes": "Detects EW interference attempts and data-denial attacks."
+}
+

@@ -1,0 +1,8 @@
+{
+  "sensor_name": "seismic",
+  "description": "Ground vibration and seismic anomaly detection.",
+  "critical_threshold": 0.75,
+  "warning_threshold": 0.45,
+  "notes": "Provides yield estimation and confirmation of physical ground events."
+}
+

@@ -1,0 +1,8 @@
+{
+  "sensor_name": "optical",
+  "description": "Optical plume and flash detection; detects bright anomalies used in launch detection.",
+  "critical_threshold": 0.85,
+  "warning_threshold": 0.55,
+  "notes": "First sensor to react to missile launch events (flash, plume)."
+}
+
