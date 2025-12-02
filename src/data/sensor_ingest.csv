@@ -1,0 +1,2 @@
+timestamp_utc,fusion_id,optical_flash,optical_intensity,seismic_threat,ems_threat,radiation_spike,generic_load,generic_error_rate,fallback_reason,valid_sensor_count
+2025-12-02T00:17:57.552059,20251202T001757.552059,False,0.898,0.068,0.495,False,0.433,0.11,ok,5
