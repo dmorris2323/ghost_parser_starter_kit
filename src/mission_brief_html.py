@@ -1,157 +1,167 @@
 """
-mission_brief_html.py — Ghost Lantern Labs
-------------------------------------------
+mission_brief_html.py
+---------------------
 
-Takes the text mission brief from daily_mission_brief.build_mission_brief()
-and exports a simple, styled HTML version for demos and future GUI work.
+Converts the daily mission brief text into a simple HTML report.
 
-Output:
-- docs/daily_mission_brief.html
+ - Reads:  docs/daily_mission_brief.txt
+ - Writes: docs/daily_mission_brief.html
+ - Adds a profile badge based on active profile from profile_config
+
+Intended for:
+ - Browser viewing
+ - Simple demos
 """
 
 from __future__ import annotations
 
 from pathlib import Path
-from html import escape
+import html
 
-from daily_mission_brief import build_mission_brief
+from profile_config import get_active_profile
+from daily_mission_brief import build_daily_brief, write_daily_brief
 
-
-BASE_DIR = Path(__file__).parent
-DOCS_DIR = BASE_DIR / "docs"
-DOCS_DIR.mkdir(exist_ok=True, parents=True)
-
-HTML_PATH = DOCS_DIR / "daily_mission_brief.html"
+# Paths (relative to src/)
+TXT_PATH = Path("docs/daily_mission_brief.txt")
+HTML_PATH = Path("docs/daily_mission_brief.html")
 
 
-def text_to_html_paragraphs(text: str) -> str:
+def _get_profile_display_name() -> str:
     """
-    Convert newline-based sections into <p> and <pre>-style blocks.
-    Very simple formatting: blank lines separate paragraphs.
+    Safely derive a human-readable profile name from profile_config.get_active_profile().
+    Supports both dict-style and simple-string returns.
     """
-    lines = text.splitlines()
-    blocks = []
-    current_block: list[str] = []
+    try:
+        profile = get_active_profile()
+    except Exception:
+        return "Unknown"
 
-    for line in lines:
-        if line.strip() == "":
-            if current_block:
-                blocks.append("\n".join(current_block))
-                current_block = []
-        else:
-            current_block.append(line)
+    # If it is a dict-like object
+    try:
+        if isinstance(profile, dict):
+            return (
+                profile.get("display_name")
+                or profile.get("name")
+                or profile.get("key")
+                or "Unknown"
+            )
+    except Exception:
+        pass
 
-    if current_block:
-        blocks.append("\n".join(current_block))
-
-    html_parts = []
-    for blk in blocks:
-        # Escape HTML special chars
-        safe = escape(blk)
-        # If it's clearly a header-style block, render bold
-        if blk.startswith("===") or blk.startswith(">> "):
-            html_parts.append(f"<pre><strong>{safe}</strong></pre>")
-        else:
-            html_parts.append(f"<pre>{safe}</pre>")
-
-    return "\n".join(html_parts)
+    # Fallback: just stringify whatever it is
+    try:
+        return str(profile)
+    except Exception:
+        return "Unknown"
 
 
-def build_html() -> str:
+def _load_or_build_text_brief() -> str:
     """
-    Build the complete HTML for the mission brief.
+    Load the daily mission brief from TXT, or build it if missing.
     """
-    brief_text = build_mission_brief()
-    brief_body = text_to_html_paragraphs(brief_text)
+    if TXT_PATH.exists():
+        return TXT_PATH.read_text(encoding="utf-8")
 
-    html = f"""<!DOCTYPE html>
+    # If no TXT yet, build one via daily_mission_brief
+    # This also writes out TXT_PATH via write_daily_brief().
+    write_daily_brief()
+    return TXT_PATH.read_text(encoding="utf-8")
+
+
+def build_html_brief() -> str:
+    """
+    Construct the HTML document string.
+    """
+
+    text_brief = _load_or_build_text_brief()
+    profile_name = _get_profile_display_name()
+
+    # Escape text for safe <pre>
+    escaped_text = html.escape(text_brief)
+
+    html_doc = f"""<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <title>GLL Daily Mission Brief</title>
   <style>
     body {{
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      background-color: #050810;
-      color: #f5f7ff;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background-color: #0b0c10;
+      color: #e5e5e5;
       margin: 0;
-      padding: 24px;
+      padding: 20px;
     }}
     .container {{
       max-width: 960px;
       margin: 0 auto;
-      background: #0b1020;
+      background: #151720;
       border-radius: 12px;
       padding: 24px 28px;
-      box-shadow: 0 0 24px rgba(0, 0, 0, 0.5);
-      border: 1px solid #1f2940;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+      border: 1px solid #272a3a;
     }}
     h1 {{
-      margin-top: 0;
-      font-size: 1.8rem;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      color: #7dd3fc;
-    }}
-    h2 {{
-      font-size: 1.1rem;
-      margin-top: 1.5rem;
-      color: #a5b4fc;
-      text-transform: uppercase;
-      letter-spacing: 0.12em;
-    }}
-    pre {{
-      background: #050816;
-      padding: 8px 10px;
-      border-radius: 6px;
-      overflow-x: auto;
-      font-size: 0.9rem;
-      line-height: 1.4;
-      border: 1px solid #1f2937;
-      margin-bottom: 8px;
-      white-space: pre-wrap;
+      font-size: 1.6rem;
+      margin: 0 0 8px 0;
+      display: flex;
+      align-items: center;
+      gap: 10px;
     }}
     .badge {{
       display: inline-block;
-      font-size: 0.7rem;
-      text-transform: uppercase;
-      letter-spacing: 0.16em;
-      padding: 3px 8px;
+      padding: 4px 10px;
       border-radius: 999px;
-      background: #111827;
-      color: #e5e7eb;
-      border: 1px solid #374151;
-      margin-left: 8px;
+      font-size: 0.8rem;
+      background: #243b53;
+      color: #d9e2ec;
+      border: 1px solid #486581;
     }}
-    .meta {{
-      font-size: 0.75rem;
-      color: #9ca3af;
+    .subheader {{
+      font-size: 0.9rem;
+      color: #9fb3c8;
       margin-bottom: 16px;
+    }}
+    pre {{
+      background: #0f1117;
+      padding: 16px 18px;
+      border-radius: 8px;
+      overflow-x: auto;
+      font-size: 0.84rem;
+      line-height: 1.4;
+      border: 1px solid #202337;
     }}
   </style>
 </head>
 <body>
   <div class="container">
     <h1>
-      Ghost Lantern Labs
-      <span class="badge">Daily Mission Brief</span>
+      Ghost Lantern Labs — Daily Mission Brief
+      <span class="badge">Profile: {html.escape(profile_name)}</span>
     </h1>
-    <div class="meta">
-      Rendered from pipeline outputs (run_history, threat_levels, sensor health, analyst notes).
+    <div class="subheader">
+      Operator view — fused system, sensor readiness, and profile context.
     </div>
-    {brief_body}
+    <pre>{escaped_text}</pre>
   </div>
 </body>
 </html>
 """
-    return html
+    return html_doc
 
 
-def main() -> None:
-    html = build_html()
-    HTML_PATH.write_text(html, encoding="utf-8")
-    print("✅ HTML mission brief generated.")
-    print(f"   Path: {HTML_PATH}")
+def write_html_brief() -> None:
+    """
+    Build and save the HTML mission brief.
+    """
+    HTML_PATH.parent.mkdir(parents=True, exist_ok=True)
+    html_doc = build_html_brief()
+    HTML_PATH.write_text(html_doc, encoding="utf-8")
+    print(f"[OK] HTML mission brief written → {HTML_PATH}")
+
+
+def main():
+    write_html_brief()
 
 
 if __name__ == "__main__":

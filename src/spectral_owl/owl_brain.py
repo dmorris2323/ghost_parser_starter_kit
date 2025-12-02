@@ -1,117 +1,161 @@
 """
-owl_brain.py — Spectral Owl v3
+spectral_owl.owl_brain
+----------------------
 
-Analyzes fused scores and writes results into threat memory.
-Now auto-detects the score column instead of assuming a fixed name.
+Core offline brain for Spectral Owl.
 
-Run via:
-    python -m spectral_owl.owl_brain
-from the src directory, or call analyze_fusion() from other modules.
+Responsibilities:
+ - Analyze fused scores in data/scored_output.csv
+ - Decide if the situation is stable or critical
+ - Log threat memory events
+ - Provide a compact threat_snapshot() for mission briefings
 """
 
+from __future__ import annotations
+
 from pathlib import Path
-import pandas as pd
+import csv
+from typing import Dict, List
 
-from .threat_memory import append_event
+from spectral_owl.threat_memory import append_event, load_events, count_by_type
 
 
-def _detect_score_column(df: pd.DataFrame) -> str | None:
+FUSION_PATH = Path("data/scored_output.csv")
+
+
+def analyze_fusion(path: Path | str = FUSION_PATH, critical_threshold: float = 0.8) -> Dict:
     """
-    Try to find which column represents the fusion score.
+    Read scored_output.csv, look at 'score' column, and classify the situation.
 
-    Priority:
-      1) Column literally named "score"
-      2) Any column whose name contains "score" (case-insensitive)
-      3) If at least 2 columns exist, assume the second column is the score
-
-    Returns the column name or None if no reasonable guess can be made.
+    Returns a dict like:
+      {
+        "status": "no_data" | "bad_schema" | "ok" | "critical",
+        "total_rows": int,
+        "critical_events": int,
+        "recommendation": str,
+      }
     """
-    cols = list(df.columns)
+    p = Path(path)
 
-    # 1) Exact match
-    if "score" in cols:
-        return "score"
-
-    # 2) Case-insensitive contains "score"
-    lower_map = {c.lower(): c for c in cols}
-    for lc, original in lower_map.items():
-        if "score" in lc:
-            return original
-
-    # 3) Fallback: second column (common pattern: id, score)
-    if len(cols) >= 2:
-        return cols[1]
-
-    return None
-
-
-def analyze_fusion(file_path: str = "scored_output.csv"):
-    """
-    Reads scored fusion output and decides if critical events exist.
-    Writes results to threat memory for long-term learning.
-
-    Returns a dict with:
-      - status
-      - risk (low/moderate/high if status ok)
-      - events (int)
-      - message
-      - score_column (which column was used)
-    """
-
-    src = Path(file_path)
-    if not src.exists():
-        return {"status": "no_file", "message": f"{file_path} not found"}
-
-    df = pd.read_csv(src)
-
-    score_col = _detect_score_column(df)
-    if score_col is None:
+    if not p.exists():
+        msg = f"{p} not found."
         return {
-            "status": "bad_schema",
-            "message": f"No usable score column detected in {file_path}. Columns: {list(df.columns)}",
+            "status": "no_data",
+            "total_rows": 0,
+            "critical_events": 0,
+            "recommendation": "No fusion scores available.",
+            "message": msg,
         }
 
-    scores = df[score_col]
+    with p.open("r", newline="", encoding="utf-8") as f:
+        reader = csv.DictReader(f)
+        fieldnames = reader.fieldnames or []
 
-    critical = df[scores >= 0.80]
-    high = df[(scores >= 0.60) & (scores < 0.80)]
+        if "score" not in fieldnames:
+            return {
+                "status": "bad_schema",
+                "total_rows": 0,
+                "critical_events": 0,
+                "recommendation": "Fix scored_output schema: missing 'score' column.",
+                "message": "score column missing in scored_output.csv",
+            }
 
-    # Log to threat memory
-    for _ in critical.to_dict(orient="records"):
-        append_event("CRITICAL", "fusion_spike", f"{score_col} ≥ 0.80 detected")
+        total = 0
+        critical_count = 0
 
-    for _ in high.to_dict(orient="records"):
-        append_event("HIGH", "elevated", f"{score_col} between 0.60–0.79")
+        for row in reader:
+            total += 1
+            try:
+                score = float(row.get("score", 0.0))
+            except ValueError:
+                score = 0.0
 
-    if len(critical) > 0:
+            if score >= critical_threshold:
+                critical_count += 1
+
+    if total == 0:
         return {
-            "status": "ok",
-            "risk": "high",
-            "events": len(critical),
-            "message": "Critical threat signatures detected.",
-            "score_column": score_col,
+            "status": "no_data",
+            "total_rows": 0,
+            "critical_events": 0,
+            "recommendation": "No rows in scored_output.csv.",
+            "message": "Empty scored_output.csv",
         }
-    elif len(high) > 0:
-        append_event("MEDIUM", "elevated_state", f"{score_col} elevated but sub-critical")
-        return {
-            "status": "ok",
-            "risk": "moderate",
-            "events": len(high),
-            "message": "Elevated threat activity.",
-            "score_column": score_col,
-        }
+
+    if critical_count == 0:
+        status = "ok"
+        rec = "Situation stable — no high risk events."
+        # Log a low-severity event to threat memory
+        append_event(
+            event_type="fusion_status",
+            severity="low",
+            doctrine_tag="Fusion_Ops",
+            note="No critical fused events detected.",
+            source="owl_brain",
+        )
     else:
-        append_event("LOW", "normal_state", f"{score_col}: environment stable")
-        return {
-            "status": "ok",
-            "risk": "low",
-            "events": 0,
-            "message": "Environment stable.",
-            "score_column": score_col,
-        }
+        status = "critical"
+        rec = f"{critical_count} critical event(s). Recommend operator review."
+        append_event(
+            event_type="fusion_critical",
+            severity="high",
+            doctrine_tag="Fusion_Ops",
+            note=rec,
+            source="owl_brain",
+        )
+
+    return {
+        "status": status,
+        "total_rows": total,
+        "critical_events": critical_count,
+        "recommendation": rec,
+    }
+
+
+def threat_snapshot(max_events: int = 5) -> str:
+    """
+    Compact summary string for mission briefings.
+
+    Includes:
+      - Total events
+      - Counts by type
+      - Last few events (up to max_events)
+    """
+    events = load_events()
+    total = len(events)
+    counts = count_by_type(events)
+
+    lines: List[str] = []
+    lines.append("=== THREAT SNAPSHOT (OWL) ===")
+    lines.append(f"Total logged threat events: {total}")
+    lines.append("")
+
+    if not events:
+        lines.append("No threat memory events logged yet.")
+        return "\n".join(lines)
+
+    lines.append("Counts by type:")
+    for t, c in sorted(counts.items(), key=lambda x: x[0]):
+        lines.append(f"  - {t}: {c}")
+    lines.append("")
+
+    lines.append(f"Last {min(max_events, total)} event(s):")
+    for ev in events[-max_events:]:
+        ts = ev.get("timestamp", "unknown_time")
+        etype = ev.get("type", "UNKNOWN")
+        sev = ev.get("severity", "unknown")
+        note = ev.get("note", "")
+        lines.append(f"  [{ts}] {etype} (sev={sev}) — {note}")
+
+    return "\n".join(lines)
 
 
 if __name__ == "__main__":
-    result = analyze_fusion("scored_output.csv")
+    # Simple standalone test
+    print("=== OWL BRAIN FUSION ANALYSIS TEST ===")
+    result = analyze_fusion()
     print(result)
+    print()
+
+    print(threat_snapshot())
 

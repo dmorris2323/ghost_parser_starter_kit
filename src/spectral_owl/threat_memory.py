@@ -1,61 +1,149 @@
 """
-threat_memory.py — Spectral Owl / GLL
--------------------------------------
-Persistent threat memory store.
+spectral_owl.threat_memory
+--------------------------
 
-CSV fields:
-  timestamp, severity, source, note, profile
+Central store for Spectral Owl's threat memory.
+
+Responsibilities:
+ - Append new threat events to a CSV log
+ - Load all threat events into Python dicts
+ - Provide basic stats such as counts per type
 """
 
-import csv
+from __future__ import annotations
+
 from pathlib import Path
 from datetime import datetime
-from typing import List, Dict
+import csv
+from typing import List, Dict, Optional
 
-from gll_profile import get_active_profile_name
-
-MEMORY_PATH = Path("data/threat_memory.csv")
-
-
-def ensure_header():
-    if not MEMORY_PATH.exists():
-        MEMORY_PATH.parent.mkdir(parents=True, exist_ok=True)
-        with MEMORY_PATH.open("w", encoding="utf-8", newline="") as f:
-            writer = csv.writer(f)
-            writer.writerow(["timestamp", "severity", "source", "note", "profile"])
+# Where we store threat memory events
+DATA_PATH = Path("data/threat_memory.csv")
 
 
-def append_event(severity: str, source: str, note: str) -> None:
+def _ensure_parent():
+    """Make sure the data directory exists."""
+    DATA_PATH.parent.mkdir(parents=True, exist_ok=True)
+
+
+def append_event(
+    event_type: str,
+    severity: str = "info",
+    doctrine_tag: Optional[str] = None,
+    note: str = "",
+    source: str = "owl_brain",
+) -> None:
     """
-    Append a threat memory event with the active profile tagged.
+    Append a single threat event to the CSV log.
+
+    Fields:
+      - timestamp (UTC ISO8601)
+      - source        (e.g., 'owl_brain', 'anti_dos', 'family_law_demo')
+      - type          (e.g., 'DoS', 'anomaly', 'legal_case')
+      - severity      (e.g., 'low', 'medium', 'high', 'critical')
+      - doctrine_tag  (optional: 'AFDP2-0', 'PLA_SSF', 'Nuclear_EMS', etc.)
+      - note          (free-text description)
     """
-    ensure_header()
-    ts = datetime.utcnow().isoformat()
-    profile = get_active_profile_name()
-    with MEMORY_PATH.open("a", encoding="utf-8", newline="") as f:
-        writer = csv.writer(f)
-        writer.writerow([ts, severity, source, note, profile])
+    _ensure_parent()
+
+    fieldnames = [
+        "timestamp",
+        "source",
+        "type",
+        "severity",
+        "doctrine_tag",
+        "note",
+    ]
+
+    write_header = not DATA_PATH.exists()
+
+    with DATA_PATH.open("a", newline="", encoding="utf-8") as f:
+        writer = csv.DictWriter(f, fieldnames=fieldnames)
+        if write_header:
+            writer.writeheader()
+
+        writer.writerow(
+            {
+                "timestamp": datetime.utcnow().isoformat(),
+                "source": source,
+                "type": event_type,
+                "severity": severity,
+                "doctrine_tag": doctrine_tag or "",
+                "note": note,
+            }
+        )
 
 
 def load_events() -> List[Dict[str, str]]:
     """
-    Load all threat memory events as dicts.
+    Load all threat events from CSV.
+
+    Returns:
+      A list of dicts. If file doesn't exist, returns [].
     """
-    if not MEMORY_PATH.exists():
+    if not DATA_PATH.exists():
         return []
 
-    with MEMORY_PATH.open("r", encoding="utf-8") as f:
+    events: List[Dict[str, str]] = []
+    with DATA_PATH.open("r", newline="", encoding="utf-8") as f:
         reader = csv.DictReader(f)
-        return list(reader)
+        for row in reader:
+            events.append(dict(row))
+    return events
 
 
-def main():
-    events = load_events()
-    print(f"Loaded {len(events)} threat memory event(s).")
-    for row in events[-10:]:
-        print(row)
+def count_by_type(events: Optional[List[Dict[str, str]]] = None) -> Dict[str, int]:
+    """
+    Count events grouped by 'type' field.
+
+    If events is None, this function will call load_events().
+    """
+    if events is None:
+        events = load_events()
+
+    counts: Dict[str, int] = {}
+
+    for ev in events:
+        # Be defensive: support different possible keys
+        t = (
+            ev.get("type")
+            or ev.get("threat_type")
+            or ev.get("category")
+            or "UNKNOWN"
+        )
+        counts[t] = counts.get(t, 0) + 1
+
+    return counts
+
+
+# Optional helper: count by severity (could be useful for stats)
+def count_by_severity(events: Optional[List[Dict[str, str]]] = None) -> Dict[str, int]:
+    """
+    Count events grouped by severity ('low', 'medium', 'high', 'critical').
+    """
+    if events is None:
+        events = load_events()
+
+    counts: Dict[str, int] = {}
+
+    for ev in events:
+        sev = ev.get("severity") or "unknown"
+        counts[sev] = counts.get(sev, 0) + 1
+
+    return counts
 
 
 if __name__ == "__main__":
-    main()
+    # Simple self-test
+    print("=== THREAT MEMORY SELF-TEST ===")
+    print(f"Data path: {DATA_PATH}")
+
+    events = load_events()
+    print(f"Loaded {len(events)} event(s).")
+
+    print("\nCounts by type:")
+    print(count_by_type(events))
+
+    print("\nCounts by severity:")
+    print(count_by_severity(events))
 
