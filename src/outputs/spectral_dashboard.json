@@ -1,0 +1,70 @@
+{
+  "timestamp": "2025-12-02T20:05:44.269004+00:00",
+  "active_profile": {
+    "key": "sports_team",
+    "display": "Sports Team Operations",
+    "sector": "unknown"
+  },
+  "sensor_manifest": {
+    "status": "ok",
+    "total": 5,
+    "disabled": [],
+    "enabled": [
+      "optical",
+      "seismic",
+      "ems",
+      "radiation",
+      "generic_metrics"
+    ]
+  },
+  "fusion_minimap": {
+    "status": "ok",
+    "map": {
+      "UNKNOWN": {
+        "critical": 0,
+        "warning": 0,
+        "stable": 4
+      }
+    },
+    "file": "minimap.txt"
+  },
+  "pipeline_health": {
+    "score": 90,
+    "qa_passed": 7,
+    "qa_failed": 0,
+    "critical_alerts": 2,
+    "status": "GREEN",
+    "notes": "All tests passed. 2 critical alert(s) present \u2014 reduced health score."
+  },
+  "threat_memory_summary": "===== THREAT MEMORY SUMMARY =====\nTotal recorded anomalies: 123\n\nTop recurring threat types:\n  \u2022 UNKNOWN: 123 occurrences\n\nMost recent 50 events:\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [HIGH] stress_cycle \u2014 Stress cycle 1: status=ok, risk=HIGH\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [HIGH] stress_cycle \u2014 Stress cycle 2: status=ok, risk=HIGH\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [HIGH] stress_cycle \u2014 Stress cycle 3: status=ok, risk=HIGH\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [HIGH] stress_cycle \u2014 Stress cycle 4: status=ok, risk=HIGH\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [HIGH] stress_cycle \u2014 Stress cycle 5: status=ok, risk=HIGH\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [owl_brain] fusion_critical \u2014 high\n  [owl_brain] fusion_critical \u2014 high\n  [owl_brain] fusion_critical \u2014 high\n  [owl_brain] fusion_critical \u2014 high\n  [owl_brain] fusion_critical \u2014 high\n  [owl_brain] fusion_critical \u2014 high\n  [owl_brain] fusion_critical \u2014 high\n  [owl_brain] fusion_critical \u2014 high\n\nSummary complete.\n",
+  "critical_alerts": [
+    {
+      "id": "2",
+      "Description": "Seismic 5.2, Rad 1.62 \u00b5Sv, Comms: Burst",
+      "Score": "100",
+      "Confidence_Level": "Critical"
+    },
+    {
+      "id": "5",
+      "Description": "Seismic 4.1, Rad 3.39 \u00b5Sv, Comms: Normal",
+      "Score": "100",
+      "Confidence_Level": "Critical"
+    }
+  ],
+  "cloud_status": {
+    "enabled": false,
+    "status": "missing_config"
+  },
+  "operator_notes_last10": [
+    "   - ISR brief generation,",
+    "   - AI-backed analysis,",
+    "   - cloud pathways,",
+    "   - GUI-ready artifacts.",
+    "",
+    "This is a **massive milestone** and is an inflection point in capability growth.",
+    "",
+    "========================================",
+    "END DAY 58 NOTES ENTRY",
+    "========================================"
+  ]
+}

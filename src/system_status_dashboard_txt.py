@@ -1,127 +1,165 @@
-"""
-system_status_dashboard_txt.py
-------------------------------
-
-Builds a consolidated text dashboard for Ghost Lantern Labs:
-
- - Pipeline health summary
- - Sensor readiness brief
- - Fusion mini-map snapshot
- - Active profile status
- - Golden Dome alignment tier
-
-Output:
-  docs/system_status_dashboard.txt
-"""
-
-from __future__ import annotations
-
 from pathlib import Path
-from typing import List
+import csv
+from datetime import datetime
 
-from pipeline_health import evaluate_pipeline_health
-from sensor_readiness_brief import build_readiness_brief
-from fusion_minimap import build_minimap
-from profile_status import build_profile_status
-from golden_dome_alignment_report import build_golden_dome_report, write_golden_dome_report
-
-
-BASE = Path(__file__).parent
-DOCS_DIR = BASE / "docs"
-DASHBOARD_PATH = DOCS_DIR / "system_status_dashboard.txt"
-MINIMAP_TXT = BASE / "minimap.txt"
+# Paths
+ROOT = Path(__file__).resolve().parent.parent
+SRC = ROOT / "src"
+DOCS = SRC / "docs"
 
 
-def _safe_read(path: Path, fallback: str) -> str:
+def read_text_safe(path: Path, max_chars: int = 2000) -> str:
+    """
+    Safely read a text file. If it's large, truncate.
+    If missing, return a simple N/A message instead of crashing.
+    """
     if not path.exists():
-        return fallback
+        return f"N/A (file not found: {path.name})"
     try:
-        return path.read_text(encoding="utf-8")
+        txt = path.read_text(encoding="utf-8", errors="ignore")
+        if len(txt) > max_chars:
+            return txt[:max_chars] + "\n...[truncated]..."
+        return txt
     except Exception as e:
-        return f"{fallback}\n[ERROR reading {path.name}: {e}]"
+        return f"Error reading {path.name}: {e}"
 
 
-def build_system_status_dashboard() -> str:
+def read_last_line(path: Path) -> str:
     """
-    Assemble the full system status dashboard as a text string.
+    Return the last non-empty line from a file (e.g., logs).
     """
-
-    lines: List[str] = []
-    lines.append("=== GHOST LANTERN LABS — SYSTEM STATUS DASHBOARD ===")
-    lines.append("")
-
-    # 1) Pipeline health
-    lines.append(">>> PIPELINE HEALTH")
+    if not path.exists():
+        return f"N/A (no file: {path.name})"
     try:
-        health_report = evaluate_pipeline_health()
-        lines.append(str(health_report))
+        with path.open("r", encoding="utf-8", errors="ignore") as f:
+            lines = [ln.strip() for ln in f.readlines() if ln.strip()]
+        if not lines:
+            return f"N/A (empty file: {path.name})"
+        return lines[-1]
     except Exception as e:
-        lines.append(f"[ERROR] pipeline_health: {e}")
-    lines.append("")
+        return f"Error reading last line from {path.name}: {e}"
 
-    # 2) Sensor readiness
-    lines.append(">>> SENSOR READINESS BRIEF")
+
+def summarize_csv_rows(path: Path, label: str) -> str:
+    """
+    Simple row-count summary for CSV files.
+    """
+    if not path.exists():
+        return f"{label}: N/A (file not found: {path.name})"
     try:
-        sensor_brief = build_readiness_brief()
-        lines.append(str(sensor_brief))
+        with path.open("r", encoding="utf-8", errors="ignore") as f:
+            row_count = sum(1 for _ in f)
+        # subtract header if present
+        if row_count > 0:
+            row_count -= 1
+        return f"{label}: {row_count} row(s)"
     except Exception as e:
-        lines.append(f"[ERROR] sensor_readiness_brief: {e}")
-    lines.append("")
+        return f"{label}: error reading csv ({path.name}): {e}"
 
-    # 3) Fusion mini-map
-    lines.append(">>> FUSION MINI-MAP (AOI SNAPSHOT)")
-    try:
-        mm_result = build_minimap()
-        # Always try to show the text file if present
-        minimap_text = _safe_read(
-            MINIMAP_TXT,
-            fallback="[Mini-map not available — minimap.txt missing.]",
+
+def summarize_threat_memory(threat_stats_path: Path, threat_csv_path: Path) -> str:
+    """
+    Build a compact block describing threat memory state.
+    """
+    lines = []
+
+    if threat_stats_path.exists():
+        lines.append("Threat Memory Stats (from threat_memory_stats.txt):")
+        lines.append(read_text_safe(threat_stats_path, max_chars=1000))
+    else:
+        lines.append("Threat Memory Stats: N/A (no stats file yet)")
+
+    lines.append("")
+    lines.append(
+        summarize_csv_rows(
+            threat_csv_path,
+            "Total threat memory events logged"
         )
-        lines.append(minimap_text)
-        lines.append(f"[minimap_status] {mm_result}")
-    except Exception as e:
-        lines.append(f"[ERROR] fusion_minimap: {e}")
-    lines.append("")
-
-    # 4) Active profile status
-    lines.append(">>> ACTIVE PROFILE STATUS")
-    try:
-        prof_status = build_profile_status()
-        lines.append(str(prof_status))
-    except Exception as e:
-        lines.append(f"[ERROR] profile_status: {e}")
-    lines.append("")
-
-    # 5) Golden Dome alignment
-    lines.append(">>> GOLDEN DOME ALIGNMENT")
-    try:
-        gd = build_golden_dome_report()
-        lines.append(f"Tier: {gd.get('tier')}  |  Score: {gd.get('score')}%")
-        lines.append("")
-        for c in gd.get("checks", []):
-            status = "OK " if getattr(c, "ok", False) else "MISS"
-            lines.append(f" - [{status}] {c.name}: {c.detail}")
-        # Also ensure the standalone report is written/updated
-        write_golden_dome_report()
-    except Exception as e:
-        lines.append(f"[ERROR] golden_dome_alignment: {e}")
-    lines.append("")
-
-    lines.append("=== END OF SYSTEM STATUS DASHBOARD ===")
+    )
 
     return "\n".join(lines)
 
 
-def write_system_status_dashboard() -> Path:
-    DOCS_DIR.mkdir(parents=True, exist_ok=True)
-    text = build_system_status_dashboard()
-    DASHBOARD_PATH.write_text(text, encoding="utf-8")
-    return DASHBOARD_PATH
+def build_dashboard() -> str:
+    """
+    Build a full system status HUD using existing files only.
+    No fragile imports — file-based only for resilience.
+    """
+    now = datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S UTC")
+
+    # Operator / profile context
+    profile_txt = read_text_safe(ROOT / "PROFILE.txt", max_chars=500)
+
+    # Offline / AI-independence status (if present)
+    offline_status = read_text_safe(SRC / "offline_status.txt", max_chars=300)
+
+    # Golden Dome alignment status
+    golden_dome_status = read_text_safe(DOCS / "golden_dome_status.txt", max_chars=500)
+
+    # Pipeline and sensor health summaries
+    pipeline_health_txt = read_text_safe(SRC / "pipeline_health.txt", max_chars=1000)
+    sensor_health_txt = read_text_safe(SRC / "sensor_health_report.txt", max_chars=1000)
+
+    # Log tails
+    fusion_log_last = read_last_line(SRC / "fusion_ops_log.csv")
+    run_history_last = read_last_line(SRC / "data" / "run_history.csv")
+
+    # Threat memory block
+    threat_block = summarize_threat_memory(
+        SRC / "threat_memory_stats.txt",
+        SRC / "data" / "threat_memory.csv",
+    )
+
+    # Fusion minimap snapshot (if built)
+    minimap_txt = read_text_safe(SRC / "minimap.txt", max_chars=1000)
+
+    # Assemble HUD
+    lines = []
+    lines.append("========================================")
+    lines.append(" GHOST LANTERN LABS — SYSTEM STATUS HUD ")
+    lines.append("========================================")
+    lines.append(f"Generated: {now}")
+    lines.append("")
+    lines.append("=== ACTIVE PROFILE / OPERATOR CONTEXT ===")
+    lines.append(profile_txt)
+    lines.append("")
+    lines.append("=== OFFLINE / AI-INDEPENDENCE STATUS ===")
+    lines.append(offline_status)
+    lines.append("")
+    lines.append("=== GOLDEN DOME ALIGNMENT ===")
+    lines.append(golden_dome_status)
+    lines.append("")
+    lines.append("=== PIPELINE HEALTH SUMMARY ===")
+    lines.append(pipeline_health_txt)
+    lines.append("")
+    lines.append("=== SENSOR HEALTH SUMMARY ===")
+    lines.append(sensor_health_txt)
+    lines.append("")
+    lines.append("=== LATEST FUSION OPS LOG ENTRY ===")
+    lines.append(fusion_log_last)
+    lines.append("")
+    lines.append("=== LATEST RUN HISTORY ENTRY ===")
+    lines.append(run_history_last)
+    lines.append("")
+    lines.append("=== THREAT MEMORY OVERVIEW ===")
+    lines.append(threat_block)
+    lines.append("")
+    lines.append("=== FUSION MINI-MAP SNAPSHOT ===")
+    lines.append(minimap_txt)
+    lines.append("")
+    lines.append("End of System Status Dashboard.")
+    return "\n".join(lines)
 
 
 def main() -> None:
-    path = write_system_status_dashboard()
-    print(f"[OK] System status dashboard written -> {path}")
+    """
+    Entry point: build and write the dashboard into src/docs/.
+    """
+    DOCS.mkdir(parents=True, exist_ok=True)
+    dashboard = build_dashboard()
+    out_path = DOCS / "system_status_dashboard.txt"
+    out_path.write_text(dashboard, encoding="utf-8")
+    print(f"[OK] System Status Dashboard written → {out_path}")
 
 
 if __name__ == "__main__":

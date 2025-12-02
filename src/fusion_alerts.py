@@ -1,67 +1,91 @@
-import pandas as pd
+"""
+fusion_alerts.py — Ghost Lantern Labs
+-------------------------------------
+Alert builder, critical alert loader, and scoring helpers.
+"""
+
+import csv
 from pathlib import Path
 
-from fusion_logger import log_event
-from settings import COMMANDER_FILE
-from validators import (
-    validate_required_columns,
-    validate_row_integrity,
-)
-from error_handler import safe_run
+ALERT_FILE = Path(__file__).parent / "critical_alerts.csv"
 
 
-def fusion_alerts(
-    commander_file: Path | str = COMMANDER_FILE,
-):
+def build_alerts(fused_csv="fused_output.csv"):
     """
-    Scan commander_extract.csv for Critical events.
-    If found, write critical_alerts.csv and print an alert.
-
-    Output:
-      - critical_alerts.csv (if any Critical present)
+    Create alert records from fused_output.csv.
+    Critical = any sensor > 0.85
+    Warning = any sensor > 0.55
     """
+    fused_path = Path(__file__).parent / fused_csv
+    if not fused_path.exists():
+        return {"status": "fail", "reason": "missing fused_output"}
 
-    path = Path(commander_file)
+    rows = fused_path.read_text().splitlines()
+    if len(rows) <= 1:
+        return {"status": "fail", "reason": "no usable rows"}
 
-    # 1) Check commander file exists
-    if not path.exists():
-        msg = f"Commander file not found: {path.resolve()}"
-        print(f"❌ {msg}")
-        log_event("fusion_alerts", "error", msg)
-        return 0
+    reader = csv.DictReader(rows)
 
-    # 2) Load data
-    df = pd.read_csv(path)
+    alerts = []
+    for row in reader:
+        crit = []
+        warn = []
 
-    # 3) Validate structure (no nulls)
-    if not validate_row_integrity(df, "fusion_alerts"):
-        return 0
+        for k, v in row.items():
+            if k.lower() in ["timestamp", "sensor", "id"]:
+                continue
+            try:
+                value = float(v)
+            except:
+                continue
 
-    # 4) Ensure Confidence_Level is present
-    if not validate_required_columns(df, ["Confidence_Level"], "fusion_alerts"):
-        return 0
+            if value >= 0.85:
+                crit.append(k)
+            elif value >= 0.55:
+                warn.append(k)
 
-    # 5) Filter Critical events
-    crit_mask = df["Confidence_Level"].astype(str).str.lower() == "critical"
-    critical_events = df[crit_mask].copy()
+        alerts.append({
+            "timestamp": row.get("timestamp", "N/A"),
+            "critical_sensors": ";".join(crit),
+            "warning_sensors": ";".join(warn),
+        })
 
-    if len(critical_events) > 0:
-        out_path = path.with_name("critical_alerts.csv")
-        critical_events.to_csv(out_path, index=False)
-        print("🚨 ALERT: Critical events detected!")
-        print(f"{len(critical_events)} event(s) saved to {out_path.name}")
-        log_event(
-            "fusion_alerts",
-            "completed",
-            f"{len(critical_events)} critical events -> {out_path.name}",
-        )
-    else:
-        print("✅ No critical events today — system nominal.")
-        log_event("fusion_alerts", "completed", "No critical events")
+    # write critical alerts
+    with ALERT_FILE.open("w", newline="") as f:
+        writer = csv.DictWriter(f, fieldnames=["timestamp", "critical_sensors", "warning_sensors"])
+        writer.writeheader()
+        for a in alerts:
+            writer.writerow(a)
 
-    return len(critical_events)
+    return {"status": "ok", "alerts_written": len(alerts), "file": str(ALERT_FILE)}
 
 
-if __name__ == "__main__":
-    safe_run("fusion_alerts", fusion_alerts)
+def load_critical_alerts():
+    """
+    REQUIRED BY spectral_dashboard_api.py
+
+    Returns list of dicts:
+    [
+        {"timestamp": "...", "critical_sensors": "...", "warning_sensors": "..."},
+        ...
+    ]
+    """
+    if not ALERT_FILE.exists():
+        return []
+
+    with ALERT_FILE.open() as f:
+        reader = csv.DictReader(f)
+        return [row for row in reader]
+
+
+def score_alerts():
+    """
+    Optional scoring helper.
+    """
+    alerts = load_critical_alerts()
+    if not alerts:
+        return {"status": "ok", "score": 0}
+
+    score = sum(1 for a in alerts if a.get("critical_sensors"))
+    return {"status": "ok", "score": score}
 

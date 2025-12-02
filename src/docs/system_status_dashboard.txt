@@ -1,69 +1,126 @@
-=== GHOST LANTERN LABS — SYSTEM STATUS DASHBOARD ===
+========================================
+ GHOST LANTERN LABS — SYSTEM STATUS HUD 
+========================================
+Generated: 2025-12-02 19:31:19 UTC
 
->>> PIPELINE HEALTH
-{'score': 90, 'qa_passed': 7, 'qa_failed': 0, 'critical_alerts': 2, 'status': 'GREEN', 'notes': 'All tests passed. 2 critical alert(s) present — reduced health score.'}
+=== ACTIVE PROFILE / OPERATOR CONTEXT ===
+Mission Profile – Parser v1.1 (Day 1)
 
->>> SENSOR READINESS BRIEF
-=== SENSOR READINESS BRIEF ===
-Total sensors: 5
-Enabled: ['optical', 'seismic', 'ems', 'radiation', 'generic_metrics']
-Disabled: []
+1) Problem Statement:
+   Monitor AOI for shallow, mid-mag events and surface only those matching operational interest.
 
-[OPTICAL]
-  Description: Optical plume and flash detection; detects bright anomalies used in launch detection.
-  Warning threshold: 0.55
-  Critical threshold: 0.85
-  Notes: First sensor to react to missile launch events (flash, plume).
+2) Customer / Decisionmaker:
+   Flight leadership/NCOIC; supports commander SA.
 
-[SEISMIC]
-  No profile found.
+3) AOI:
+   NK_TEST_ZONE (Lat 39–41 / Lon 128–130); MINING_REGION for alternate signature.
 
-[EMS]
-  Description: Electromagnetic spectrum detection for jamming, interference, and spoof attempts.
-  Warning threshold: 0.6
-  Critical threshold: 0.9
-  Notes: Detects EW interference attempts and data-denial attacks.
+4) EEIs:
+   Time, lat/lon, depth, magnitude, AOI membership, flag reason.
 
-[RADIATION]
-  Description: Gamma and neutron radiation detection for nuclear event confirmation.
-  Warning threshold: 0.7
-  Critical threshold: 0.95
-  Notes: Final confirmation sensor for nuclear launch and post-detonation analysis.
+5) Assumptions:
+   AOI bounds correct; thresholds reflect current TTPs.
 
-[GENERIC_METRICS]
-  No profile found.
+6) Constraints:
+   Sy
+...[truncated]...
+
+=== OFFLINE / AI-INDEPENDENCE STATUS ===
+TIMESTAMP_UTC: 2025-12-01T23:58:51.041939
+STATUS: OFFLINE_OR_DEGRADED
+REASON: local_rules in use; treating this as offline/degraded analysis path.
 
 
->>> FUSION MINI-MAP (AOI SNAPSHOT)
-=== SENSOR FUSION MINI-MAP ===
+=== GOLDEN DOME ALIGNMENT ===
+=== GOLDEN DOME ALIGNMENT REPORT ===
+Score: 10/11 checks passed (91%)
+Tier:  GOLD
 
-[UNKNOWN]   ✔️  C:0  W:0  S:4
-[minimap_status] {'status': 'ok', 'map': defaultdict(<function build_minimap.<locals>.<lambda> at 0x110946660>, {'UNKNOWN': {'critical': 0, 'warning': 0, 'stable': 4}}), 'file': 'minimap.txt'}
-
->>> ACTIVE PROFILE STATUS
-Active profile: aftac_nuclear
-Description: Nuclear / EMS / seismic fusion focus for AFTAC-style missions.
-Domains: nuclear, ems, seismic, space
-Default threat types: launch_prep, sensor_spoof, jamming
-Offline priority: True
-Severity labels:
-  - HIGH: Immediate commander attention
-  - MODERATE: Monitor closely / watchlist
-  - LOW: Routine background noise
-
->>> GOLDEN DOME ALIGNMENT
-Tier: GOLD  |  Score: 91%
-
+Detail:
  - [OK ] AI_Plan: AI-Independence doctrine documented (FOUND @ /Users/dextermorris/ghost/parser_starter_kit/src/docs/AI_Independence_Plan.md)
  - [OK ] AI_Phase2: Phase 2 design captured (FOUND @ /Users/dextermorris/ghost/parser_starter_kit/src/docs/AI_Independence_Phase2.md)
  - [OK ] AI_Phase3: Phase 3 design captured (FOUND @ /Users/dextermorris/ghost/parser_starter_kit/src/docs/AI_Independence_Phase3.md)
- - [OK ] Offline_Flag: Offline mode code present (FOUND @ /Users/dextermorris/ghost/parser_starter_kit/src/offline_mode_flag.py)
- - [OK ] Offline_Status: Offline status log available (FOUND @ /Users/dextermorris/ghost/parser_starter_kit/src/offline_status.txt)
- - [OK ] Profile_Config: Multi-profile config present (FOUND @ /Users/dextermorris/ghost/parser_starter_kit/src/profile_config.py)
- - [OK ] Profile_Mission_Brief: Profile-aware mission brief present (FOUND @ /Users/dextermorris/ghost/parser_starter_kit/src/docs/profile_mission_brief.txt)
- - [OK ] Threat_Memory: Threat memory CSV present (FOUND @ /Users/dextermorris/ghost/parser_starter_kit/src/data/threat_memory.csv)
- - [OK ] Threat_Doctrine_Report: Threat doctrine report present (FOUND @ /Users/dextermorris/ghost/parser_starter_kit/src/docs/threat_memory_doctrine_report.txt)
- - [MISS] Cloud_Ready_Doc: Cloud deployment notes present (MISSING @ /Users/dextermorris/ghost/parser_starter_kit/src/CLOUD_READY.md)
- - [OK ] Cloud_Archive: Cloud archive (sim) populated (FILES PRESENT @ /Users/dextermorris/ghost/parser_starter_kit/src/cloud_sim/fusion_archive)
+...[truncated]...
 
-=== END OF SYSTEM STATUS DASHBOARD ===
+=== PIPELINE HEALTH SUMMARY ===
+======================================
+ GLL PIPELINE HEALTH SUMMARY
+======================================
+Overall Health Score: 90/100
+Status: GREEN
+
+QA Passed: 7
+QA Failed: 0
+Critical Alerts: 2
+
+Notes:
+All tests passed. 2 critical alert(s) present — reduced health score.
+
+
+=== SENSOR HEALTH SUMMARY ===
+Sensor Health Report — 2025-12-02T01:32:37.214163 UTC
+============================================================
+
+Sensor: optical_sensor_mock (optical)
+  Iterations:   10
+  Successes:    10
+  Failures:     0
+  Availability: 1.000
+  ValidityRate: 1.000
+
+Sensor: seismic_sensor_mock (seismic)
+  Iterations:   10
+  Successes:    10
+  Failures:     0
+  Availability: 1.000
+  ValidityRate: 1.000
+
+Sensor: ems_sensor_mock (ems)
+  Iterations:   10
+  Successes:    10
+  Failures:     0
+  Availability: 1.000
+  ValidityRate: 1.000
+
+Sensor: radiation_sensor_mock (radiation)
+  Iterations:   10
+  Successes:    10
+  Failures:     0
+  Availability: 1.000
+  ValidityRate: 1.000
+
+Sensor: generic_metrics_sensor_mock (generic)
+  Iterations:   10
+  Successes:    10
+  Failures:     0
+  Availability: 1.000
+  ValidityRate: 1.000
+
+
+
+=== LATEST FUSION OPS LOG ENTRY ===
+2025-11-27T14:07:04.594199,fusion_sanitizer,sanitize,"3 rows in, 3 rows remain after cleaning"
+
+=== LATEST RUN HISTORY ENTRY ===
+2025-12-02T01:32:37.157321,10,5,ok,0.4,0.263
+
+=== THREAT MEMORY OVERVIEW ===
+Threat Memory Stats (from threat_memory_stats.txt):
+GLL Threat Memory Stats
+=======================
+
+By Severity:
+  - CRITICAL: 105
+  - HIGH: 10
+
+By Profile:
+  - UNKNOWN: 115
+
+Total threat memory events logged: 123 row(s)
+
+=== FUSION MINI-MAP SNAPSHOT ===
+=== SENSOR FUSION MINI-MAP ===
+
+[UNKNOWN]   ✔️  C:0  W:0  S:4
+
+End of System Status Dashboard.
