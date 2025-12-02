@@ -1,0 +1,72 @@
+{
+  "timestamp": "2025-12-02T20:48:42.800406Z",
+  "active_profile": {
+    "key": "sports_team",
+    "display_name": "Sports Team Operations"
+  },
+  "ai_engine": {
+    "provider": "unknown"
+  },
+  "threat_memory_summary": "===== THREAT MEMORY SUMMARY =====\nTotal recorded anomalies: 0\n\nTop recurring threat types:\n\nMost recent 0 events:\n\nSummary complete.\n",
+  "critical_alerts": [
+    {
+      "id": "2",
+      "Description": "Seismic 5.2, Rad 1.62 \u00b5Sv, Comms: Burst",
+      "Score": "100",
+      "Confidence_Level": "Critical"
+    },
+    {
+      "id": "5",
+      "Description": "Seismic 4.1, Rad 3.39 \u00b5Sv, Comms: Normal",
+      "Score": "100",
+      "Confidence_Level": "Critical"
+    }
+  ],
+  "top_scores": [
+    {
+      "id": "2",
+      "Seismic_Mag": "5.2",
+      "Radiation_uSv": "1.62",
+      "Comms_State": "Burst",
+      "AOI_Hit": "True",
+      "Score": "100",
+      "score": 0.0
+    },
+    {
+      "id": "5",
+      "Seismic_Mag": "4.1",
+      "Radiation_uSv": "3.39",
+      "Comms_State": "Normal",
+      "AOI_Hit": "True",
+      "Score": "100",
+      "score": 0.0
+    },
+    {
+      "id": "1",
+      "Seismic_Mag": "5.1",
+      "Radiation_uSv": "3.66",
+      "Comms_State": "Normal",
+      "AOI_Hit": "False",
+      "Score": "10",
+      "score": 0.0
+    },
+    {
+      "id": "3",
+      "Seismic_Mag": "5.0",
+      "Radiation_uSv": "3.17",
+      "Comms_State": "Normal",
+      "AOI_Hit": "False",
+      "Score": "10",
+      "score": 0.0
+    },
+    {
+      "id": "4",
+      "Seismic_Mag": "4.4",
+      "Radiation_uSv": "0.19",
+      "Comms_State": "Silence",
+      "AOI_Hit": "False",
+      "Score": "10",
+      "score": 0.0
+    }
+  ]
+}
