@@ -1,0 +1,27 @@
+=== GLL SPECTRAL RESILIENCE SCORE ===
+
+Overall Resilience: 78/100
+[███████████████░░░░░] 78%
+
+[qa_health]
+  Score: 100/100  [████████████████████] 100%
+  Notes: 7/7 tests passed → QA health ratio 1.00
+
+[sensor_health]
+  Score: 78/100  [███████████████░░░░░] 78%
+  Notes: Sensor health report present; no clear critical issues detected.
+
+[reliability]
+  Score: 80/100  [████████████████░░░░] 80%
+  Notes: Reliability report present; could not parse explicit score, using safe default.
+
+[cross_sensor_validation]
+  Score: 68/100  [█████████████░░░░░░░] 68%
+  Notes: Cross-sensor report missing; assuming early-stage deployment.
+
+[ai_independence]
+  Score: 67/100  [█████████████░░░░░░░] 67%
+  Notes: Offline / AI-Independence status parsed from offline_status.txt (base=67).
+
+Interpretation:
+  → System is functional with some risk areas; prioritize hardening before high-stakes demos.
