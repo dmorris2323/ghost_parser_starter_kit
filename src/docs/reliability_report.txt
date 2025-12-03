@@ -1,0 +1,9 @@
+=== SENSOR RELIABILITY REPORT ===
+Ghost Lantern Labs – Day 59 module
+
+SENSOR     BAR                     REL   WINDOW       LAST_SEEN
+----------------------------------------------------------------------
+EMS        [███████████████░]    95.0%   stable     n/a
+OPTICAL    [███████████████░]    92.0%   stable     n/a
+RADIATION  [████████████████]    97.0%   stable     n/a
+SEISMIC    [██████████████░░]    88.0%   watch      n/a

@@ -1,71 +1,211 @@
-=== GHOST LANTERN LABS — DAILY MISSION BRIEF ===
-Generated (UTC): 2025-12-02T14:08:21.847278
+Ghost Lantern Labs – Daily Mission Brief
+Generated: 2025-12-03 04:10:47
 
-=== CORE MISSION STATUS ===
-=== GLL MISSION BRIEF ===
-Generated (UTC): 2025-12-02T14:08:21.849079
+=== SYSTEM OVERVIEW ===
+GLL is running as an offline-capable fusion + AI ISR platform.
 
->>> PIPELINE HEALTH
-Pipeline status: GREEN
-Missing outputs: none
+=== PIPELINE HEALTH ===
+{'score': 90, 'qa_passed': 7, 'qa_failed': 0, 'critical_alerts': 2, 'status': 'GREEN', 'notes': 'All tests passed. 2 critical alert(s) present — reduced health score.'}
 
->>> FUSION / SPECTRAL OWL STATUS
-Fusion status: critical
-Total fused rows: 2
-Critical events: 1
-Recommendation: 1 critical event(s). Recommend operator review.
+=== OPERATOR SNAPSHOT ===
+======================================
+ GHOST LANTERN LABS — OPERATOR SNAPSHOT
+======================================
 
->>> THREAT SNAPSHOT (OWL MEMORY)
-=== THREAT SNAPSHOT (OWL) ===
-Total logged threat events: 123
+1) PIPELINE & QA STATUS
+--------------------------------------
+=== QA VALIDATION SUMMARY ===
+Total tests: 7
+Passed:      7
+Failed:      0
 
-Counts by type:
-  - UNKNOWN: 123
+[PASS] fusion_scoring
+fusion_scoring PASSED.
+STDOUT:
+normal
+✅ Scoring complete — 5 rows saved to scored_output.csv
 
-Last 3 event(s):
-  [2025-12-02T13:26:45.279558] UNKNOWN (sev=owl_brain) — 
-  [2025-12-02T13:58:58.500875] UNKNOWN (sev=owl_brain) — 
-  [2025-12-02T14:08:21.852019] UNKNOWN (sev=owl_brain) — 
+----------------------------------------
+[PASS] commander_extract
+commander_extract PASSED.
+STDOUT:
+✅ Commander Extract complete — 5 events summarized to commander_extract.csv
+
+----------------------------------------
+[PASS] heatmap_prep
+heatmap_prep PASSED.
+STDOUT:
+🔥 Heatmap-ready data written to heatmap_data.csv
+
+----------------------------------------
+[PASS] fusion_alerts
+fusion_alerts PASSED.
+STDOUT:
+
+----------------------------------------
+[PASS] daily_report
+daily_report PASSED.
+STDOUT:
+🧾 Daily report written to daily_report.txt
+
+----------------------------------------
+[PASS] spectral_owl
+Spectral Owl module import OK.
+----------------------------------------
+[PASS] cloud_sync
+Cloud sync health check OK: {'status': 'ok', 'details': {'provider': 'azure', 'mode': 'simulation', 'sync_enabled': True}, 'files_in_archive': 2}
+----------------------------------------
+
+2) ALERT STATUS
+--------------------------------------
+Critical alerts in current run: 2
+
+3) SPECTRAL OWL ASSESSMENT
+--------------------------------------
+{'status': 'bad_schema', 'total_rows': 0, 'critical_events': 0, 'recommendation': "Fix scored_output schema: missing 'score' column.", 'message': 'score column missing in scored_output.csv'}
+
+4) THREAT MEMORY SUMMARY
+--------------------------------------
+124 events total. Top patterns: UNKNOWN: 124
+
+5) CLOUD SYNC HEALTH
+--------------------------------------
+{'status': 'ok', 'details': {'provider': 'azure', 'mode': 'simulation', 'sync_enabled': True}, 'files_in_archive': 2}
+
+6) DAILY REPORT (LAST RUN)
+--------------------------------------
+========================================
+GLL DAILY REPORT — Day 45
+Generated (UTC): 2025-12-03T03:32:46.262951
+========================================
+
+Commander Extract Summary
+- Total events: 5
+- Critical events: 2
+
+Top Events:
+- [Critical] Score 100: Seismic 5.2, Rad 1.62 µSv, Comms: Burst
+- [Critical] Score 100: Seismic 4.1, Rad 3.39 µSv, Comms: Normal
+- [Moderate] Score 10: Seismic 5.1, Rad 3.66 µSv, Comms: Normal
+
+Ops Log Summary
+- Recent errors: 0
+- Recent missing files: 0
+
+Last 10 Log Entries:
+2025-11-27T13:56:17.647440 | config_guard | ok | ✅ SRC directory present: /Users/dextermorris/ghost/parser_starter_kit/src | ✅ DATA directory present: /Users/dextermorris/ghost/parser_starter_kit/src/data | ✅ baseline_schema.csv present and header looks correct: /Users/dextermorris/ghost/parser_starter_kit/src/baseline_schema.csv | ✅ fused_output.csv found at: /Users/dextermorris/ghost/parser_starter_kit/fused_output.csv | ✅ Owl memory file OK: /Users/dextermorris/ghost/parser_starter_kit/owl_memory.txt | ✅ Log file present: /Users/dextermorris/ghost/parser_starter_kit/fusion_ops_log.csv
+2025-11-27T13:56:33.206533 | config_guard | ok | ✅ SRC directory present: /Users/dextermorris/ghost/parser_starter_kit/src | ✅ DATA directory present: /Users/dextermorris/ghost/parser_starter_kit/src/data | ✅ baseline_schema.csv present and header looks correct: /Users/dextermorris/ghost/parser_starter_kit/src/baseline_schema.csv | ✅ fused_output.csv found at: /Users/dextermorris/ghost/parser_starter_kit/fused_output.csv | ✅ Owl memory file OK: /Users/dextermorris/ghost/parser_starter_kit/owl_memory.txt | ✅ Log file present: /Users/dextermorris/ghost/parser_starter_kit/fusion_ops_log.csv
+2025-11-27T14:04:26.347466 | config_guard | ok | ✅ SRC directory present: /Users/dextermorris/ghost/parser_starter_kit/src | ✅ DATA directory present: /Users/dextermorris/ghost/parser_starter_kit/src/data | ✅ Spectral Owl directory present: /Users/dextermorris/ghost/parser_starter_kit/src/spectral_owl | ✅ Cloud directory present: /Users/dextermorris/ghost/parser_starter_kit/src/cloud | ✅ baseline_schema.csv present and header looks correct: /Users/dextermorris/ghost/parser_starter_kit/src/baseline_schema.csv | ✅ fused_output.csv found at: /Users/dextermorris/ghost/parser_starter_kit/fused_output.csv | ✅ ghost_cli.py: /Users/dextermorris/ghost/parser_starter_kit/src/ghost_cli.py | ✅ qa_validator.py: /Users/dextermorris/ghost/parser_starter_kit/src/qa_validator.py | ✅ anti_dos.py: /Users/dextermorris/ghost/parser_starter_kit/src/anti_dos.py | ✅ Spectral Owl component (__init__.py): /Users/dextermorris/ghost/parser_starter_kit/src/spectral_owl/__init__.py | ✅ Spectral Owl component (owl_brain.py): /Users/dextermorris/ghost/parser_starter_kit/src/spectral_owl/owl_brain.py | ✅ Spectral Owl component (owl_memory.py): /Users/dextermorris/ghost/parser_starter_kit/src/spectral_owl/owl_memory.py | ✅ Spectral Owl component (llm_adapter.py): /Users/dextermorris/ghost/parser_starter_kit/src/spectral_owl/llm_adapter.py | ✅ Cloud module file (__init__.py): /Users/dextermorris/ghost/parser_starter_kit/src/cloud/__init__.py | ✅ Cloud module file (azure_blob_stub.py): /Users/dextermorris/ghost/parser_starter_kit/src/cloud/azure_blob_stub.py | ✅ Cloud module file (azure_function_flow.md): /Users/dextermorris/ghost/parser_starter_kit/src/cloud/azure_function_flow.md | ✅ Cloud module file (README.md): /Users/dextermorris/ghost/parser_starter_kit/src/cloud/README.md | ✅ Cloud doc (CLOUD_READY.md): /Users/dextermorris/ghost/parser_starter_kit/CLOUD_READY.md | ✅ Cloud doc (azure_architecture.md): /Users/dextermorris/ghost/parser_starter_kit/azure_architecture.md | ✅ Owl memory file OK: /Users/dextermorris/ghost/parser_starter_kit/owl_memory.txt | ✅ Log file present: /Users/dextermorris/ghost/parser_starter_kit/fusion_ops_log.csv | ⚠️ bad_data_quarantine.csv not found (will appear when sanitizer quarantines rows). | ⚠️ bad_data_heatmap.csv not found (will appear when heatmap prep runs).
+2025-11-27T14:07:04.588196 | anti_dos | classify | volume=50/min, payload=5.0KB -> normal
+2025-11-27T14:07:04.589011 | anti_dos | classify | volume=350/min, payload=8.0KB -> suspicious
+2025-11-27T14:07:04.589072 | anti_dos | classify | volume=2000/min, payload=1.0KB -> dos_suspected
+2025-11-27T14:07:04.590642 | config_guard | ok | ✅ SRC directory present: /Users/dextermorris/ghost/parser_starter_kit/src | ✅ DATA directory present: /Users/dextermorris/ghost/parser_starter_kit/src/data | ✅ Spectral Owl directory present: /Users/dextermorris/ghost/parser_starter_kit/src/spectral_owl | ✅ Cloud directory present: /Users/dextermorris/ghost/parser_starter_kit/src/cloud | ✅ baseline_schema.csv present and header looks correct: /Users/dextermorris/ghost/parser_starter_kit/src/baseline_schema.csv | ✅ fused_output.csv found at: /Users/dextermorris/ghost/parser_starter_kit/fused_output.csv | ✅ ghost_cli.py: /Users/dextermorris/ghost/parser_starter_kit/src/ghost_cli.py | ✅ qa_validator.py: /Users/dextermorris/ghost/parser_starter_kit/src/qa_validator.py | ✅ anti_dos.py: /Users/dextermorris/ghost/parser_starter_kit/src/anti_dos.py | ✅ Spectral Owl component (__init__.py): /Users/dextermorris/ghost/parser_starter_kit/src/spectral_owl/__init__.py | ✅ Spectral Owl component (owl_brain.py): /Users/dextermorris/ghost/parser_starter_kit/src/spectral_owl/owl_brain.py | ✅ Spectral Owl component (owl_memory.py): /Users/dextermorris/ghost/parser_starter_kit/src/spectral_owl/owl_memory.py | ✅ Spectral Owl component (llm_adapter.py): /Users/dextermorris/ghost/parser_starter_kit/src/spectral_owl/llm_adapter.py | ✅ Cloud module file (__init__.py): /Users/dextermorris/ghost/parser_starter_kit/src/cloud/__init__.py | ✅ Cloud module file (azure_blob_stub.py): /Users/dextermorris/ghost/parser_starter_kit/src/cloud/azure_blob_stub.py | ✅ Cloud module file (azure_function_flow.md): /Users/dextermorris/ghost/parser_starter_kit/src/cloud/azure_function_flow.md | ✅ Cloud module file (README.md): /Users/dextermorris/ghost/parser_starter_kit/src/cloud/README.md | ✅ Cloud doc (CLOUD_READY.md): /Users/dextermorris/ghost/parser_starter_kit/CLOUD_READY.md | ✅ Cloud doc (azure_architecture.md): /Users/dextermorris/ghost/parser_starter_kit/azure_architecture.md | ✅ Owl memory file OK: /Users/dextermorris/ghost/parser_starter_kit/owl_memory.txt | ✅ Log file present: /Users/dextermorris/ghost/parser_starter_kit/fusion_ops_log.csv | ⚠️ bad_data_quarantine.csv not found (will appear when sanitizer quarantines rows). | ⚠️ bad_data_heatmap.csv not found (will appear when heatmap prep runs).
+2025-11-27T14:07:04.593296 | bad_data_quarantine | quarantine | 1 row(s) quarantined for reason='negative_Seismic_Mag'
+2025-11-27T14:07:04.594038 | bad_data_quarantine | quarantine | 1 row(s) quarantined for reason='negative_Radiation_uSv'
+2025-11-27T14:07:04.594199 | fusion_sanitizer | sanitize | 3 rows in, 3 rows remain after cleaning
+
+End of Report
+========================================
 
 
+=== SENSOR READINESS & RELIABILITY ===
 === SENSOR READINESS OVERVIEW ===
-=== SENSOR READINESS BRIEF ===
-Total sensors: 5
-Enabled: ['optical', 'seismic', 'ems', 'radiation', 'generic_metrics']
-Disabled: []
-
-[OPTICAL]
-  Description: Optical plume and flash detection; detects bright anomalies used in launch detection.
-  Warning threshold: 0.55
-  Critical threshold: 0.85
-  Notes: First sensor to react to missile launch events (flash, plume).
-
-[SEISMIC]
-  No profile found.
+Total sensors in manifest: 5
+Enabled: 5
+Disabled: 0
 
 [EMS]
-  Description: Electromagnetic spectrum detection for jamming, interference, and spoof attempts.
-  Warning threshold: 0.6
-  Critical threshold: 0.9
-  Notes: Detects EW interference attempts and data-denial attacks.
-
-[RADIATION]
-  Description: Gamma and neutron radiation detection for nuclear event confirmation.
-  Warning threshold: 0.7
-  Critical threshold: 0.95
-  Notes: Final confirmation sensor for nuclear launch and post-detonation analysis.
+  Desc: Electromagnetic spectrum detection for jamming, interference, and spoof attempts.
+  Warn: 0.6  Critical: 0.9
+  Reliability: [███████████████░]   95.0%  (stable)
 
 [GENERIC_METRICS]
-  No profile found.
+  Reliability: [no data]
+
+[OPTICAL]
+  Desc: Optical plume and flash detection; detects bright anomalies used in launch detection.
+  Warn: 0.55  Critical: 0.85
+  Reliability: [███████████████░]   92.0%  (stable)
+
+[RADIATION]
+  Desc: Gamma and neutron radiation detection for nuclear event confirmation.
+  Warn: 0.7  Critical: 0.95
+  Reliability: [████████████████]   97.0%  (stable)
+
+[SEISMIC]
+  Reliability: [██████████████░░]   88.0%  (watch)
 
 
-=== ACTIVE PROFILE STATUS ===
-Active profile: aftac_nuclear
-Description: Nuclear / EMS / seismic fusion focus for AFTAC-style missions.
-Domains: nuclear, ems, seismic, space
-Default threat types: launch_prep, sensor_spoof, jamming
-Offline priority: True
-Severity labels:
-  - HIGH: Immediate commander attention
-  - MODERATE: Monitor closely / watchlist
-  - LOW: Routine background noise
+=== SENSOR RELIABILITY DETAIL ===
+=== SENSOR RELIABILITY REPORT ===
+Ghost Lantern Labs – Day 59 module
+
+SENSOR     BAR                     REL   WINDOW       LAST_SEEN
+----------------------------------------------------------------------
+EMS        [███████████████░]    95.0%   stable     n/a
+OPTICAL    [███████████████░]    92.0%   stable     n/a
+RADIATION  [████████████████]    97.0%   stable     n/a
+SEISMIC    [██████████████░░]    88.0%   watch      n/a
+
+
+=== THREAT MEMORY SNAPSHOT ===
+===== THREAT MEMORY SUMMARY =====
+Total recorded anomalies: 124
+
+Top recurring threat types:
+  • UNKNOWN: 124 occurrences
+
+Most recent 50 events:
+  [CRITICAL] fusion_spike — Score ≥ 0.80 detected
+  [CRITICAL] fusion_spike — Score ≥ 0.80 detected
+  [CRITICAL] fusion_spike — Score ≥ 0.80 detected
+  [CRITICAL] fusion_spike — Score ≥ 0.80 detected
+  [CRITICAL] fusion_spike — Score ≥ 0.80 detected
+  [CRITICAL] fusion_spike — Score ≥ 0.80 detected
+  [HIGH] stress_cycle — Stress cycle 1: status=ok, risk=HIGH
+  [CRITICAL] fusion_spike — Score ≥ 0.80 detected
+  [CRITICAL] fusion_spike — Score ≥ 0.80 detected
+  [CRITICAL] fusion_spike — Score ≥ 0.80 detected
+  [CRITICAL] fusion_spike — Score ≥ 0.80 detected
+  [CRITICAL] fusion_spike — Score ≥ 0.80 detected
+  [HIGH] stress_cycle — Stress cycle 2: status=ok, risk=HIGH
+  [CRITICAL] fusion_spike — Score ≥ 0.80 detected
+  [CRITICAL] fusion_spike — Score ≥ 0.80 detected
+  [CRITICAL] fusion_spike — Score ≥ 0.80 detected
+  [CRITICAL] fusion_spike — Score ≥ 0.80 detected
+  [CRITICAL] fusion_spike — Score ≥ 0.80 detected
+  [HIGH] stress_cycle — Stress cycle 3: status=ok, risk=HIGH
+  [CRITICAL] fusion_spike — Score ≥ 0.80 detected
+  [CRITICAL] fusion_spike — Score ≥ 0.80 detected
+  [CRITICAL] fusion_spike — Score ≥ 0.80 detected
+  [CRITICAL] fusion_spike — Score ≥ 0.80 detected
+  [CRITICAL] fusion_spike — Score ≥ 0.80 detected
+  [HIGH] stress_cycle — Stress cycle 4: status=ok, risk=HIGH
+  [CRITICAL] fusion_spike — Score ≥ 0.80 detected
+  [CRITICAL] fusion_spike — Score ≥ 0.80 detected
+  [CRITICAL] fusion_spike — Score ≥ 0.80 detected
+  [CRITICAL] fusion_spike — Score ≥ 0.80 detected
+  [CRITICAL] fusion_spike — Score ≥ 0.80 detected
+  [HIGH] stress_cycle — Stress cycle 5: status=ok, risk=HIGH
+  [CRITICAL] fusion_spike — Score ≥ 0.80 detected
+  [CRITICAL] fusion_spike — Score ≥ 0.80 detected
+  [CRITICAL] fusion_spike — Score ≥ 0.80 detected
+  [CRITICAL] fusion_spike — Score ≥ 0.80 detected
+  [CRITICAL] fusion_spike — Score ≥ 0.80 detected
+  [CRITICAL] fusion_spike — Score ≥ 0.80 detected
+  [CRITICAL] fusion_spike — Score ≥ 0.80 detected
+  [CRITICAL] fusion_spike — Score ≥ 0.80 detected
+  [CRITICAL] fusion_spike — Score ≥ 0.80 detected
+  [CRITICAL] fusion_spike — Score ≥ 0.80 detected
+  [owl_brain] fusion_critical — high
+  [owl_brain] fusion_critical — high
+  [owl_brain] fusion_critical — high
+  [owl_brain] fusion_critical — high
+  [owl_brain] fusion_critical — high
+  [owl_brain] fusion_critical — high
+  [owl_brain] fusion_critical — high
+  [owl_brain] fusion_critical — high
+  [owl_brain] fusion_critical — high
+
+Summary complete.
+
