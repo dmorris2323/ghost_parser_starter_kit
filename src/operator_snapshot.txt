@@ -31,8 +31,6 @@ STDOUT:
 [PASS] fusion_alerts
 fusion_alerts PASSED.
 STDOUT:
-🚨 ALERT: Critical events detected!
-2 event(s) saved to critical_alerts.csv
 
 ----------------------------------------
 [PASS] daily_report
@@ -54,11 +52,11 @@ Critical alerts in current run: 2
 
 3) SPECTRAL OWL ASSESSMENT
 --------------------------------------
-{'status': 'ok', 'risk': 'high', 'events': 5, 'message': 'Critical threat signatures detected.', 'score_column': 'Score'}
+{'status': 'bad_schema', 'total_rows': 0, 'critical_events': 0, 'recommendation': "Fix scored_output schema: missing 'score' column.", 'message': 'score column missing in scored_output.csv'}
 
 4) THREAT MEMORY SUMMARY
 --------------------------------------
-110 events total. Top patterns: fusion_spike: 100; stress_cycle: 10
+124 events total. Top patterns: UNKNOWN: 124
 
 5) CLOUD SYNC HEALTH
 --------------------------------------
@@ -68,7 +66,7 @@ Critical alerts in current run: 2
 --------------------------------------
 ========================================
 GLL DAILY REPORT — Day 45
-Generated (UTC): 2025-11-30T09:10:05.766695
+Generated (UTC): 2025-12-03T03:32:46.262951
 ========================================
 
 Commander Extract Summary

@@ -1,9 +1,7 @@
 === SENSOR RELIABILITY REPORT ===
-Ghost Lantern Labs – Day 59 module
+Generated: 2025-12-03T09:43:26.957052Z
 
-SENSOR     BAR                     REL   WINDOW       LAST_SEEN
-----------------------------------------------------------------------
-EMS        [███████████████░]    95.0%   stable     n/a
-OPTICAL    [███████████████░]    92.0%   stable     n/a
-RADIATION  [████████████████]    97.0%   stable     n/a
-SEISMIC    [██████████████░░]    88.0%   watch      n/a
+OPTICAL    [██████████████████░░] 90.4%
+SEISMIC    [█████████████████░░░] 85.8%
+EMS        [██████████████░░░░░░] 72.7%
+RADIATION  [███████████████████░] 99.1%
