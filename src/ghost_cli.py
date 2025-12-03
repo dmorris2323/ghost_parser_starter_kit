@@ -24,6 +24,7 @@ Menu options:
  19) Export GUI Minimap Overlay
  20) Export SOS Overlay
  21) Run-History Intelligence Timeline
+ 22) Export Spectral Snapshot Bundle
 """
 
 import sys
@@ -55,6 +56,7 @@ from cloud.azure_ingest import (
 )
 from spectral_dashboard_api import build_dashboard_bundle
 from fusion_minimap_overlay import export_gui_minimap
+from spectral_snapshot_bundle import build_snapshot_bundle
 
 # 🔧 SAFE IMPORT FOR SOS OVERLAY
 try:
@@ -112,6 +114,7 @@ def show_menu():
     print("19) Export GUI Minimap Overlay")
     print("20) Export SOS Overlay")
     print("21) Run-History Intelligence Timeline")
+    print("22) Export Spectral Snapshot Bundle")
     print("=============================================")
 
 
@@ -297,6 +300,15 @@ def main():
                 print(result)
             except Exception as e:
                 print(f"Error running run-history intelligence: {e}")
+
+        elif choice == "22":
+            print("\n[Export Spectral Snapshot Bundle]\n")
+            try:
+                bundle = build_snapshot_bundle()
+                out_file = BASE_DIR / "docs" / "spectral_snapshot_bundle.json"
+                print(f"Spectral snapshot bundle written to: {out_file}")
+            except Exception as e:
+                print(f"Error building spectral snapshot bundle: {e}")
 
         else:
             print("Invalid choice. Try again.")
