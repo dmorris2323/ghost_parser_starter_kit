@@ -1,0 +1,95 @@
+==============================================
+      GLL — PROFILE AWARE OPERATOR BRIEF
+==============================================
+
+Active Profile     : Profile(key='sports_team', display_name='Sports Team Operations', mission_context='Analytics and operations picture for a professional or college sports team: performance health, workload, and risk of failure in upcoming contests.', data_focus='Metrics from wearables, practice intensity, travel fatigue, and opponent scouting summarized into a game-readiness snapshot.', risk_language='Threat levels translate to game risk: LOW for routine conditions, MEDIUM when fatigue or key-player flags rise, HIGH when multiple stressors converge.')
+Profile Key        : profile(key='sports_team',_display_name='sports_team_operations',_mission_context='analytics_and_operations_picture_for_a_professional_or_college_sports_team:_performance_health,_workload,_and_risk_of_failure_in_upcoming_contests.',_data_focus='metrics_from_wearables,_practice_intensity,_travel_fatigue,_and_opponent_scouting_summarized_into_a_game-readiness_snapshot.',_risk_language='threat_levels_translate_to_game_risk:_low_for_routine_conditions,_medium_when_fatigue_or_key-player_flags_rise,_high_when_multiple_stressors_converge.')
+
+PROFILE NOTES:
+----------------------------------------------
+Profile returned as simple string. No metadata available.
+
+FUSION MINI-MAP:
+----------------------------------------------
+=== SENSOR FUSION MINI-MAP ===
+
+[UNKNOWN]   ✔️  C:0  W:0  S:4
+
+DAILY MISSION BRIEF:
+----------------------------------------------
+=== GHOST LANTERN LABS — DAILY MISSION BRIEF ===
+Generated (UTC): 2025-12-02T14:08:21.847278
+
+=== CORE MISSION STATUS ===
+=== GLL MISSION BRIEF ===
+Generated (UTC): 2025-12-02T14:08:21.849079
+
+>>> PIPELINE HEALTH
+Pipeline status: GREEN
+Missing outputs: none
+
+>>> FUSION / SPECTRAL OWL STATUS
+Fusion status: critical
+Total fused rows: 2
+Critical events: 1
+Recommendation: 1 critical event(s). Recommend operator review.
+
+>>> THREAT SNAPSHOT (OWL MEMORY)
+=== THREAT SNAPSHOT (OWL) ===
+Total logged threat events: 123
+
+Counts by type:
+  - UNKNOWN: 123
+
+Last 3 event(s):
+  [2025-12-02T13:26:45.279558] UNKNOWN (sev=owl_brain) — 
+  [2025-12-02T13:58:58.500875] UNKNOWN (sev=owl_brain) — 
+  [2025-12-02T14:08:21.852019] UNKNOWN (sev=owl_brain) — 
+
+
+=== SENSOR READINESS OVERVIEW ===
+=== SENSOR READINESS BRIEF ===
+Total sensors: 5
+Enabled: ['optical', 'seismic', 'ems', 'radiation', 'generic_metrics']
+Disabled: []
+
+[OPTICAL]
+  Description: Optical plume and flash detection; detects bright anomalies used in launch detection.
+  Warning threshold: 0.55
+  Critical threshold: 0.85
+  Notes: First sensor to react to missile launch events (flash, plume).
+
+[SEISMIC]
+  No profile found.
+
+[EMS]
+  Description: Electromagnetic spectrum detection for jamming, interference, and spoof attempts.
+  Warning threshold: 0.6
+  Critical threshold: 0.9
+  Notes: Detects EW interference attempts and data-denial attacks.
+
+[RADIATION]
+  Description: Gamma and neutron radiation detection for nuclear event confirmation.
+  Warning threshold: 0.7
+  Critical threshold: 0.95
+  Notes: Final confirmation sensor for nuclear launch and post-detonation analysis.
+
+[GENERIC_METRICS]
+  No profile found.
+
+
+=== ACTIVE PROFILE STATUS ===
+Active profile: aftac_nuclear
+Description: Nuclear / EMS / seismic fusion focus for AFTAC-style missions.
+Domains: nuclear, ems, seismic, space
+Default threat types: launch_prep, sensor_spoof, jamming
+Offline priority: True
+Severity labels:
+  - HIGH: Immediate commander attention
+  - MODERATE: Monitor closely / watchlist
+  - LOW: Routine background noise
+
+
+==============================================
+END OF PROFILE MISSION BRIEF
+==============================================

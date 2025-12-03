@@ -1,0 +1,94 @@
+GHOST LANTERN LABS — EXERCISE READINESS BRIEF
+------------------------------------------------
+Generated: 2025-12-03T11:53:44
+
+=== ACTIVE PROFILE CONTEXT ===
+Active profile: aftac_nuclear
+Description: Nuclear / EMS / seismic fusion focus for AFTAC-style missions.
+Domains: nuclear, ems, seismic, space
+Default threat types: launch_prep, sensor_spoof, jamming
+Offline priority: True
+Severity labels:
+  - HIGH: Immediate commander attention
+  - MODERATE: Monitor closely / watchlist
+  - LOW: Routine background noise
+
+=== SENSOR RELIABILITY SUMMARY ===
+=== SENSOR RELIABILITY REPORT ===
+Generated: 2025-12-03T16:53:44.638456Z
+
+OPTICAL    [████████████░░░░░░░░] 61.5%
+SEISMIC    [████████████████░░░░] 83.8%
+EMS        [████████████████░░░░] 84.7%
+RADIATION  [███████████████░░░░░] 76.1%
+
+=== CROSS-SENSOR VALIDATION ===
+No cross-sensor report yet. Run Option 25 in ghost_cli.
+
+=== RUN-HISTORY INTELLIGENCE ===
+Run-history intelligence brief written to /Users/dextermorris/ghost/parser_starter_kit/src/run_history_intel_brief.txt
+
+=== GOLDEN DOME ALIGNMENT ===
+GOLDEN DOME ALIGNMENT SNAPSHOT — GHOST LANTERN LABS
+----------------------------------------------------------------
+Generated: 2025-12-03T09:44:46.129854Z
+
+MISSION CONTEXT
+• The 'Golden Dome' idea = a layered shield against missile,
+  nuclear, and high-end strategic threats.
+• Real-world versions mix early warning, tracking, interception,
+  and damage-limitation — across multiple sensors and domains.
+• GLL's job is NOT to fire interceptors; it is to see, fuse, and
+  brief the picture so commanders can act in time.
+
+HOW GLL SUPPORTS A GOLDEN DOME-STYLE SHIELD (V1)
+• Multi-sensor fusion pipeline already in place:
+    - Optical (launch flash / plume simulations)
+    - Seismic (ground event simulations)
+    - EMS (jamming / interference simulations)
+    - Radiation (confirmation / nuclear context simulations)
+• Bad-data quarantine + sanitization:
+    - Corrupted or adversarial telemetry is quarantined, not trusted.
+• Anti-DoS and stress-testing modules:
+    - Environment checks and stress_tester keep the pipeline alive
+      under noisy or hostile conditions.
+• Spectral Owl AI:
+    - Reads fused scores, highlights critical events, logs threat memory.
+    - Runs through a vendor-agnostic adapter for AI-independence.
+
+AI-INDEPENDENCE STATUS (SUMMARY)
+• Phase 1: DONE — all LLM calls routed through an adapter layer.
+• Phase 2: IN PROGRESS — multi-provider adapter + local rules path.
+• Design intent: GLL must still brief commanders even if cloud AI
+  is degraded or unavailable.
+
+LOCAL SYSTEM ARTIFACTS
+• system_metrics.json: FOUND (keys = alerts, bad_data, cloud, pipeline_health, qa, stress_test, threat_memory)
+• pipeline_health.txt: FOUND
+• sensor_health_report.txt: FOUND
+
+COMMANDER-FACING SUMMARY (V1)
+• GLL currently behaves as a prototype Golden Dome intel node:
+    - Fuses multiple sensor streams into a single score.
+    - Flags critical events and writes daily mission briefs.
+    - Survives bad data, noise, and simulated DoS conditions.
+• Next steps on the path to a serious Golden Dome role:
+    1) Tie real (or lab) sensors into the ingest layer.
+    2) Expand reliability scoring and drift detection.
+    3) Build dedicated Golden Dome dashboards / overlays
+       (sector view, shot doctrine, escalation thresholds).
+    4) Formalize AI-Independence Phase 3–4 for offline ops.
+
+NOTE FOR FUTURE DEMOS
+• This report should be refreshed before any briefing to:
+    - AFTAC / ICADS-style audiences
+    - Missile defense / Golden Dome concept teams
+    - SBIR / defense innovation panels
+• It proves that GLL is already thinking in Golden Dome terms —
+  layered detection, resilient fusion, and offline-capable AI.
+
+=== EXERCISE NOTES / NEXT STEPS ===
+- Use this brief as the core handout for large-scale exercise AARs.
+- Attach GUI screenshots, reliability plots, and minimap graphics.
+- Update profile to match the exercise domain (nuclear / legal / sports / SOC).
+- Run Options 21–25 in ghost_cli before generating this to get freshest data.

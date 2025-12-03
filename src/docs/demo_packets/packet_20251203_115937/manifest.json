@@ -1,0 +1,73 @@
+{
+  "packet_id": "20251203_115937",
+  "created_at": "2025-12-03T11:59:37",
+  "base_dir": "/Users/dextermorris/ghost/parser_starter_kit/src/docs/demo_packets/packet_20251203_115937",
+  "files": [
+    {
+      "label": "Daily Mission Brief (txt)",
+      "source": "/Users/dextermorris/ghost/parser_starter_kit/src/docs/daily_mission_brief.txt",
+      "copied_to": "/Users/dextermorris/ghost/parser_starter_kit/src/docs/demo_packets/packet_20251203_115937/daily_mission_brief.txt",
+      "exists": true
+    },
+    {
+      "label": "Daily Mission Brief (html)",
+      "source": "/Users/dextermorris/ghost/parser_starter_kit/src/docs/daily_mission_brief.html",
+      "copied_to": "/Users/dextermorris/ghost/parser_starter_kit/src/docs/demo_packets/packet_20251203_115937/daily_mission_brief.html",
+      "exists": true
+    },
+    {
+      "label": "Profile Mission Brief",
+      "source": "/Users/dextermorris/ghost/parser_starter_kit/src/docs/profile_mission_brief.txt",
+      "copied_to": "/Users/dextermorris/ghost/parser_starter_kit/src/docs/demo_packets/packet_20251203_115937/profile_mission_brief.txt",
+      "exists": true
+    },
+    {
+      "label": "Reliability Report",
+      "source": "/Users/dextermorris/ghost/parser_starter_kit/src/docs/reliability_report.txt",
+      "copied_to": "/Users/dextermorris/ghost/parser_starter_kit/src/docs/demo_packets/packet_20251203_115937/reliability_report.txt",
+      "exists": true
+    },
+    {
+      "label": "Cross-Sensor Report",
+      "source": "/Users/dextermorris/ghost/parser_starter_kit/src/docs/cross_sensor_report.txt",
+      "copied_to": null,
+      "exists": false
+    },
+    {
+      "label": "Exercise Readiness Brief (Pacific)",
+      "source": "/Users/dextermorris/ghost/parser_starter_kit/src/docs/exercise_brief_pacific.txt",
+      "copied_to": "/Users/dextermorris/ghost/parser_starter_kit/src/docs/demo_packets/packet_20251203_115937/exercise_brief_pacific.txt",
+      "exists": true
+    },
+    {
+      "label": "SBIR Readiness Assessment",
+      "source": "/Users/dextermorris/ghost/parser_starter_kit/src/docs/sbir_readiness_assessment.txt",
+      "copied_to": "/Users/dextermorris/ghost/parser_starter_kit/src/docs/demo_packets/packet_20251203_115937/sbir_readiness_assessment.txt",
+      "exists": true
+    },
+    {
+      "label": "SBIR Score JSON",
+      "source": "/Users/dextermorris/ghost/parser_starter_kit/src/docs/sbir_readiness_score.json",
+      "copied_to": "/Users/dextermorris/ghost/parser_starter_kit/src/docs/demo_packets/packet_20251203_115937/sbir_readiness_score.json",
+      "exists": true
+    },
+    {
+      "label": "Demo Deck Manifest",
+      "source": "/Users/dextermorris/ghost/parser_starter_kit/src/docs/demo_deck_manifest_day58.json",
+      "copied_to": "/Users/dextermorris/ghost/parser_starter_kit/src/docs/demo_packets/packet_20251203_115937/demo_deck_manifest_day58.json",
+      "exists": true
+    },
+    {
+      "label": "Spectral Snapshot Bundle",
+      "source": "/Users/dextermorris/ghost/parser_starter_kit/src/docs/spectral_snapshot_bundle.json",
+      "copied_to": "/Users/dextermorris/ghost/parser_starter_kit/src/docs/demo_packets/packet_20251203_115937/spectral_snapshot_bundle.json",
+      "exists": true
+    },
+    {
+      "label": "Spectral Dashboard Bundle",
+      "source": "/Users/dextermorris/ghost/parser_starter_kit/src/docs/spectral_dashboard.json",
+      "copied_to": null,
+      "exists": false
+    }
+  ]
+}

@@ -1,0 +1,91 @@
+{
+  "meta": {
+    "description": "Ghost Lantern Labs \u2014 Spectral Snapshot Bundle",
+    "version": "1.0"
+  },
+  "dashboard_bundle": null,
+  "minimap_overlay": {
+    "timestamp": "2025-12-03T03:33:00.171331Z",
+    "map": {
+      "UNKNOWN": {
+        "critical": 0,
+        "warning": 0,
+        "stable": 4
+      }
+    }
+  },
+  "sos_overlay": {
+    "timestamp": "2025-12-02T20:48:42.800406Z",
+    "active_profile": {
+      "key": "sports_team",
+      "display_name": "Sports Team Operations"
+    },
+    "ai_engine": {
+      "provider": "unknown"
+    },
+    "threat_memory_summary": "===== THREAT MEMORY SUMMARY =====\nTotal recorded anomalies: 0\n\nTop recurring threat types:\n\nMost recent 0 events:\n\nSummary complete.\n",
+    "critical_alerts": [
+      {
+        "id": "2",
+        "Description": "Seismic 5.2, Rad 1.62 \u00b5Sv, Comms: Burst",
+        "Score": "100",
+        "Confidence_Level": "Critical"
+      },
+      {
+        "id": "5",
+        "Description": "Seismic 4.1, Rad 3.39 \u00b5Sv, Comms: Normal",
+        "Score": "100",
+        "Confidence_Level": "Critical"
+      }
+    ],
+    "top_scores": [
+      {
+        "id": "2",
+        "Seismic_Mag": "5.2",
+        "Radiation_uSv": "1.62",
+        "Comms_State": "Burst",
+        "AOI_Hit": "True",
+        "Score": "100",
+        "score": 0.0
+      },
+      {
+        "id": "5",
+        "Seismic_Mag": "4.1",
+        "Radiation_uSv": "3.39",
+        "Comms_State": "Normal",
+        "AOI_Hit": "True",
+        "Score": "100",
+        "score": 0.0
+      },
+      {
+        "id": "1",
+        "Seismic_Mag": "5.1",
+        "Radiation_uSv": "3.66",
+        "Comms_State": "Normal",
+        "AOI_Hit": "False",
+        "Score": "10",
+        "score": 0.0
+      },
+      {
+        "id": "3",
+        "Seismic_Mag": "5.0",
+        "Radiation_uSv": "3.17",
+        "Comms_State": "Normal",
+        "AOI_Hit": "False",
+        "Score": "10",
+        "score": 0.0
+      },
+      {
+        "id": "4",
+        "Seismic_Mag": "4.4",
+        "Radiation_uSv": "0.19",
+        "Comms_State": "Silence",
+        "AOI_Hit": "False",
+        "Score": "10",
+        "score": 0.0
+      }
+    ]
+  },
+  "run_history_brief": "=== RUN HISTORY INTELLIGENCE BRIEF ===\n\nTotal runs logged: 72\n  Pass:    0\n  Fail:    0\n  Unknown: 72\nSuccess rate (known only): 0.0%\n\nCurrent streak: 1 \u00d7 UNKNOWN\n\nLast run:\n  Label:     run\n  Status:    unknown\n  Timestamp: unknown\n\nRecent timeline (last 10):\n- unknown | run | unknown\n- unknown | run | unknown\n- unknown | run | unknown\n- unknown | run | unknown\n- unknown | run | unknown\n- unknown | run | unknown\n- unknown | run | unknown\n- unknown | run | unknown\n- unknown | run | unknown\n- unknown | run | unknown",
+  "mission_brief": "==============================================\n      GLL \u2014 PROFILE AWARE OPERATOR BRIEF\n==============================================\n\nActive Profile     : Profile(key='sports_team', display_name='Sports Team Operations', mission_context='Analytics and operations picture for a professional or college sports team: performance health, workload, and risk of failure in upcoming contests.', data_focus='Metrics from wearables, practice intensity, travel fatigue, and opponent scouting summarized into a game-readiness snapshot.', risk_language='Threat levels translate to game risk: LOW for routine conditions, MEDIUM when fatigue or key-player flags rise, HIGH when multiple stressors converge.')\nProfile Key        : profile(key='sports_team',_display_name='sports_team_operations',_mission_context='analytics_and_operations_picture_for_a_professional_or_college_sports_team:_performance_health,_workload,_and_risk_of_failure_in_upcoming_contests.',_data_focus='metrics_from_wearables,_practice_intensity,_travel_fatigue,_and_opponent_scouting_summarized_into_a_game-readiness_snapshot.',_risk_language='threat_levels_translate_to_game_risk:_low_for_routine_conditions,_medium_when_fatigue_or_key-player_flags_rise,_high_when_multiple_stressors_converge.')\n\nPROFILE NOTES:\n----------------------------------------------\nProfile returned as simple string. No metadata available.\n\nFUSION MINI-MAP:\n----------------------------------------------\n=== SENSOR FUSION MINI-MAP ===\n\n[UNKNOWN]   \u2714\ufe0f  C:0  W:0  S:4\n\nDAILY MISSION BRIEF:\n----------------------------------------------\n=== GHOST LANTERN LABS \u2014 DAILY MISSION BRIEF ===\nGenerated (UTC): 2025-12-02T14:08:21.847278\n\n=== CORE MISSION STATUS ===\n=== GLL MISSION BRIEF ===\nGenerated (UTC): 2025-12-02T14:08:21.849079\n\n>>> PIPELINE HEALTH\nPipeline status: GREEN\nMissing outputs: none\n\n>>> FUSION / SPECTRAL OWL STATUS\nFusion status: critical\nTotal fused rows: 2\nCritical events: 1\nRecommendation: 1 critical event(s). Recommend operator review.\n\n>>> THREAT SNAPSHOT (OWL MEMORY)\n=== THREAT SNAPSHOT (OWL) ===\nTotal logged threat events: 123\n\nCounts by type:\n  - UNKNOWN: 123\n\nLast 3 event(s):\n  [2025-12-02T13:26:45.279558] UNKNOWN (sev=owl_brain) \u2014 \n  [2025-12-02T13:58:58.500875] UNKNOWN (sev=owl_brain) \u2014 \n  [2025-12-02T14:08:21.852019] UNKNOWN (sev=owl_brain) \u2014 \n\n\n=== SENSOR READINESS OVERVIEW ===\n=== SENSOR READINESS BRIEF ===\nTotal sensors: 5\nEnabled: ['optical', 'seismic', 'ems', 'radiation', 'generic_metrics']\nDisabled: []\n\n[OPTICAL]\n  Description: Optical plume and flash detection; detects bright anomalies used in launch detection.\n  Warning threshold: 0.55\n  Critical threshold: 0.85\n  Notes: First sensor to react to missile launch events (flash, plume).\n\n[SEISMIC]\n  No profile found.\n\n[EMS]\n  Description: Electromagnetic spectrum detection for jamming, interference, and spoof attempts.\n  Warning threshold: 0.6\n  Critical threshold: 0.9\n  Notes: Detects EW interference attempts and data-denial attacks.\n\n[RADIATION]\n  Description: Gamma and neutron radiation detection for nuclear event confirmation.\n  Warning threshold: 0.7\n  Critical threshold: 0.95\n  Notes: Final confirmation sensor for nuclear launch and post-detonation analysis.\n\n[GENERIC_METRICS]\n  No profile found.\n\n\n=== ACTIVE PROFILE STATUS ===\nActive profile: aftac_nuclear\nDescription: Nuclear / EMS / seismic fusion focus for AFTAC-style missions.\nDomains: nuclear, ems, seismic, space\nDefault threat types: launch_prep, sensor_spoof, jamming\nOffline priority: True\nSeverity labels:\n  - HIGH: Immediate commander attention\n  - MODERATE: Monitor closely / watchlist\n  - LOW: Routine background noise\n\n\n==============================================\nEND OF PROFILE MISSION BRIEF\n=============================================="
+}

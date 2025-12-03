@@ -1,0 +1,38 @@
+{
+  "timestamp": "2025-12-03T11:58:58",
+  "total_score": 25,
+  "max_score": 25,
+  "categories": [
+    {
+      "name": "Technical Maturity",
+      "score": 5,
+      "max_score": 5,
+      "rationale": "Full fusion stack, QA, and dashboards present."
+    },
+    {
+      "name": "AI-Independence & Offline Readiness",
+      "score": 5,
+      "max_score": 5,
+      "rationale": "Multi-phase AI-independence docs and adapter code in place."
+    },
+    {
+      "name": "Operational / Doctrine Fit",
+      "score": 5,
+      "max_score": 5,
+      "rationale": "Strong mapping between GLL, Golden Dome, and mission briefs."
+    },
+    {
+      "name": "Productization & UX",
+      "score": 5,
+      "max_score": 5,
+      "rationale": "GUI, visual packs, overlays, and demo manifest all present."
+    },
+    {
+      "name": "Business / SBIR Readiness",
+      "score": 5,
+      "max_score": 5,
+      "rationale": "Legal framing, billing, and roadmap show strong business posture."
+    }
+  ],
+  "notes": "GLL is behaving like a near-SBIR-ready prototype."
+}
