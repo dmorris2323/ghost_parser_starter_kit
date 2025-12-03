@@ -1,0 +1,26 @@
+=== RUN HISTORY INTELLIGENCE BRIEF ===
+
+Total runs logged: 72
+  Pass:    0
+  Fail:    0
+  Unknown: 72
+Success rate (known only): 0.0%
+
+Current streak: 1 × UNKNOWN
+
+Last run:
+  Label:     run
+  Status:    unknown
+  Timestamp: unknown
+
+Recent timeline (last 10):
+- unknown | run | unknown
+- unknown | run | unknown
+- unknown | run | unknown
+- unknown | run | unknown
+- unknown | run | unknown
+- unknown | run | unknown
+- unknown | run | unknown
+- unknown | run | unknown
+- unknown | run | unknown
+- unknown | run | unknown

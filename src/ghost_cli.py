@@ -1,4 +1,4 @@
-k"""
+"""
 ghost_cli.py — Ghost Lantern Labs Operator Console
 --------------------------------------------------
 
@@ -10,214 +10,296 @@ Menu options:
   5) Spectral Owl memory viewer
   6) Spectral Owl analysis (fusion scoring check)
   7) Pipeline health check
-  8) Mission briefing (text)
+  8) Mission briefing (profile-aware)
   9) Exit
  10) Anti-DoS environment scan
  11) Cloud Sync Check
  12) Threat Memory Summary
- 13) Sensor Manifest Health Check
- 14) Sensor Readiness Brief
- 15) Switch Profile (Quick Select)
- 16) Export Profile Mission Brief (text)
- 17) Build Spectral Dashboard API Bundle
- 18) Export HTML Mission Brief
+ 13) Build Daily Visual Pack
+ 14) Show Active Profile Status
+ 15) Run Family Law Demo (Shari)
+ 16) Owl Memory Diagnostics
+ 17) Spectral Dashboard Export
+ 18) Mission Brief HTML Generator
  19) Export GUI Minimap Overlay
- 20) Export SOS Overlay (Situation Summary)
+ 20) Export SOS Overlay
+ 21) Run-History Intelligence Timeline
 """
 
-import subprocess
 import sys
+import subprocess
 from pathlib import Path
 
-from qa_validator import run_all as run_qa
+# Core system pieces
 from operator_snapshot import build_operator_snapshot
 from pipeline_health import evaluate_pipeline_health
 from mission_briefing import build_mission_briefing
+from profile_mission_brief import main as run_profile_mission_brief
+
+# Spectral Owl
+from spectral_owl.owl_brain import analyze_fusion
+from spectral_owl.owl_memory import load_memory_log
 from spectral_owl.threat_memory_summary import build_summary as build_threat_summary
-from generate_daily_visual_pack import main as build_daily_pack  # currently unused but available
-from profile_status import build_profile_status                    # currently unused but available
-from legal_ingest_family_law import main as ingest_family_law      # currently unused but available
-from family_law_scoring import main as score_family_law            # currently unused but available
-from family_law_brief import main as brief_family_law              # currently unused but available
-from manifest_health import run_manifest_health
-from sensor_readiness_brief import build_readiness_brief
-from profile_auto_switch import auto_switch
-from profile_mission_brief import build_profile_mission_brief
+
+# Visual/demo packs
+from generate_daily_visual_pack import main as build_daily_pack
+from profile_status import build_profile_status
+from legal_demo_pack import main as run_family_law_demo
+
+# Cloud + overlays + dashboard
+from cloud.azure_ingest import (
+    upload_fusion_output,
+    list_fusion_blobs,
+    download_latest_fusion_archive,
+    cloud_sync_health_check,
+)
 from spectral_dashboard_api import build_dashboard_bundle
-from mission_brief_html import build_html_brief
 from fusion_minimap_overlay import export_gui_minimap
-from spectral_sos_overlay import build_sos_overlay
 
-MENU = """
-============================================
-🔱 Ghost Lantern Labs — Operator Console
-============================================
+# 🔧 SAFE IMPORT FOR SOS OVERLAY
+try:
+    from spectral_sos_overlay import export_gui_sos_overlay
+except ImportError:
+    def export_gui_sos_overlay():
+        return "SOS overlay exporter not available (spectral_sos_overlay.export_gui_sos_overlay missing)."
 
-  1) Run QA validation
-  2) Show latest 20 log events
-  3) Build operator snapshot
-  4) Run full fusion pipeline + snapshot
-  5) Spectral Owl memory viewer
-  6) Spectral Owl analysis (fusion scoring check)
-  7) Pipeline health check
-  8) Mission briefing (text)
-  9) Exit
- 10) Anti-DoS environment scan
- 11) Cloud Sync Check
- 12) Threat Memory Summary
- 13) Sensor Manifest Health Check
- 14) Sensor Readiness Brief
- 15) Switch Profile (Quick Select)
- 16) Export Profile Mission Brief (text)
- 17) Build Spectral Dashboard API Bundle
- 18) Export HTML Mission Brief
- 19) Export GUI Minimap Overlay
- 20) Export SOS Overlay (Situation Summary)
-"""
+# Run-history intel
+from run_history_intel import main as run_history_intel
 
-LOGFILE = Path("fusion_ops_log.csv")
+# HTML brief
+from mission_brief_html import main as build_mission_brief_html
 
 
-def show_latest_logs():
-    """
-    Show the last 20 lines from fusion_ops_log.csv if present.
-    """
-    if not LOGFILE.exists():
-        return "[NO LOG FILE FOUND]"
-    lines = LOGFILE.read_text().splitlines()
-    return "\n".join(lines[-20:])
+BASE_DIR = Path(__file__).parent
+LOG_FILE = BASE_DIR / "fusion_ops_log.csv"
 
 
-def run_pipeline():
-    """
-    Run a basic fusion pipeline pass:
-      - fusion_ingest.py
-      - fusion_scoring.py
-      - fusion_sanitizer.py
-    Then build an operator snapshot.
-    """
-    cmds = [
-        ["python", "fusion_ingest.py"],
-        ["python", "fusion_scoring.py"],
-        ["python", "fusion_sanitizer.py"],
-    ]
-    for cmd in cmds:
-        subprocess.run(cmd)
-    snap = build_operator_snapshot()
-    return {"status": "pipeline_complete", "snapshot": snap}
+def run_cmd(cmd, cwd=None):
+    """Small helper to run a subprocess and print its output."""
+    result = subprocess.run(
+        [sys.executable] + cmd,
+        cwd=cwd or BASE_DIR,
+        capture_output=True,
+        text=True,
+    )
+    if result.stdout:
+        print(result.stdout.strip())
+    if result.stderr:
+        print(result.stderr.strip())
+    return result.returncode
 
 
-def show_memory():
-    """
-    View Spectral Owl memory log (via owl_memory).
-    """
-    from spectral_owl.owl_memory import load_memory_log
-
-    mem = load_memory_log()
-    return "\n".join(mem) if mem else "[NO MEMORY LOG]"
-
-
-def full_spectral_analysis():
-    """
-    Run Spectral Owl fusion analysis.
-    """
-    from spectral_owl.owl_brain import analyze_fusion
-
-    out = analyze_fusion()
-    return out
+def show_menu():
+    print("\n=== Ghost Lantern Labs — Operator Console ===")
+    print(" 1) Run QA validation")
+    print(" 2) Show latest 20 log events")
+    print(" 3) Build operator snapshot")
+    print(" 4) Run full fusion pipeline + snapshot")
+    print(" 5) Spectral Owl memory viewer")
+    print(" 6) Spectral Owl analysis (fusion scoring check)")
+    print(" 7) Pipeline health check")
+    print(" 8) Mission briefing (profile-aware)")
+    print(" 9) Exit")
+    print("10) Anti-DoS environment scan")
+    print("11) Cloud Sync Check")
+    print("12) Threat Memory Summary")
+    print("13) Build Daily Visual Pack")
+    print("14) Show Active Profile Status")
+    print("15) Run Family Law Demo (Shari)")
+    print("16) Owl Memory Diagnostics")
+    print("17) Spectral Dashboard Export")
+    print("18) Mission Brief HTML Generator")
+    print("19) Export GUI Minimap Overlay")
+    print("20) Export SOS Overlay")
+    print("21) Run-History Intelligence Timeline")
+    print("=============================================")
 
 
 def main():
     while True:
-        print(MENU)
+        show_menu()
         choice = input("Select an option: ").strip()
 
         if choice == "1":
-            # QA validation
-            print(run_qa())
+            print("\n[QA Validation]\n")
+            run_cmd(["qa_validator.py"])
 
         elif choice == "2":
-            # Latest log events
-            print(show_latest_logs())
+            print("\n[Latest Log Events]\n")
+            if not LOG_FILE.exists():
+                print("No fusion_ops_log.csv found yet.")
+            else:
+                lines = LOG_FILE.read_text().strip().splitlines()
+                for line in lines[-20:]:
+                    print(line)
 
         elif choice == "3":
-            # Operator snapshot
-            print(build_operator_snapshot())
+            print("\n[Operator Snapshot]\n")
+            path = build_operator_snapshot()
+            print(f"Snapshot written → {path}")
 
         elif choice == "4":
-            # Full pipeline + snapshot
-            print(run_pipeline())
+            print("\n[Full Fusion Pipeline + Snapshot]\n")
+            run_cmd(["fusion_run.py"])
+            path = build_operator_snapshot()
+            print(f"Snapshot written → {path}")
 
         elif choice == "5":
-            # Owl memory viewer
-            print(show_memory())
+            print("\n[Spectral Owl Memory Viewer]\n")
+            try:
+                events = load_memory_log()
+            except Exception as e:
+                print(f"Error loading Owl memory: {e}")
+                events = []
+
+            if not events:
+                print("No Owl memory events yet.")
+            else:
+                print("Last 20 events:")
+                for e in events[-20:]:
+                    print(f"- {e}")
 
         elif choice == "6":
-            # Owl analysis
-            print(full_spectral_analysis())
+            print("\n[Spectral Owl Analysis]\n")
+            try:
+                result = analyze_fusion()
+                print(result)
+            except Exception as e:
+                print(f"Error running Spectral Owl analysis: {e}")
 
         elif choice == "7":
-            # Pipeline health check
-            print(evaluate_pipeline_health())
+            print("\n[Pipeline Health Check]\n")
+            try:
+                health = evaluate_pipeline_health()
+                print(health)
+            except Exception as e:
+                print(f"Error evaluating pipeline health: {e}")
 
         elif choice == "8":
-            # Mission briefing (text)
-            print(build_mission_briefing())
+            print("\n[Mission Briefing — Profile-Aware]\n")
+            try:
+                run_profile_mission_brief()
+            except Exception as e:
+                print(f"Error building mission brief: {e}")
 
         elif choice == "9":
-            # Exit
-            print("Exiting...")
-            sys.exit(0)
+            print("Exiting Ghost CLI. Stay lethal.")
+            break
 
         elif choice == "10":
-            # Anti-DoS scan
-            from anti_dos import run_anti_dos_scan
-            print(run_anti_dos_scan())
+            print("\n[Anti-DoS Environment Scan]\n")
+            code = run_cmd(["anti_dos.py"])
+            if code != 0:
+                print("Anti-DoS scan encountered an error.")
 
         elif choice == "11":
-            # Cloud Sync Check (scored_output upload)
-            from cloud.azure_ingest import upload_fusion_output
-            print(upload_fusion_output())
+            print("\n[Cloud Sync Check]\n")
+            try:
+                health = cloud_sync_health_check()
+                print(f"Health: {health}")
+            except Exception as e:
+                print(f"Cloud health check failed: {e}")
+
+            scored = BASE_DIR / "data" / "scored_output.csv"
+            if scored.exists():
+                try:
+                    upload_result = upload_fusion_output(str(scored))
+                    print(f"\nUpload result: {upload_result}")
+                except Exception as e:
+                    print(f"Upload failed: {e}")
+            else:
+                print("\nNo data/scored_output.csv found. Skipping upload test.")
+
+            try:
+                listing = list_fusion_blobs()
+                print(f"\nCloud archive listing: {listing}")
+            except Exception as e:
+                print(f"Listing archive failed: {e}")
 
         elif choice == "12":
-            # Threat Memory Summary
-            print(build_threat_summary())
+            print("\n[Threat Memory Summary]\n")
+            try:
+                summary = build_threat_summary()
+                print(summary)
+            except Exception as e:
+                print(f"Error building threat memory summary: {e}")
 
         elif choice == "13":
-            # Sensor Manifest Health Check
-            print(run_manifest_health())
+            print("\n[Build Daily Visual Pack]\n")
+            try:
+                result = build_daily_pack()
+                print(result)
+            except Exception as e:
+                print(f"Error building daily visual pack: {e}")
 
         elif choice == "14":
-            # Sensor Readiness Brief
-            print(build_readiness_brief())
+            print("\n[Active Profile Status]\n")
+            try:
+                status = build_profile_status()
+                print(status)
+            except Exception as e:
+                print(f"Error getting profile status: {e}")
 
         elif choice == "15":
-            # Switch Profile (Quick Select)
-            domain = input("Enter domain (nuclear/sports/legal/soc): ").strip()
-            print(auto_switch(domain))
+            print("\n[Family Law Demo — Shari]\n")
+            try:
+                result = run_family_law_demo()
+                print(result)
+            except Exception as e:
+                print(f"Error running family law demo: {e}")
 
         elif choice == "16":
-            # Export Profile Mission Brief (text)
-            print(build_profile_mission_brief())
+            print("\n[Owl Memory Diagnostics]\n")
+            code = run_cmd(["threat_memory_stats.py"])
+            if code != 0:
+                print("Owl memory diagnostics encountered an error.")
 
         elif choice == "17":
-            # Build Spectral Dashboard API Bundle
-            print(build_dashboard_bundle())
+            print("\n[Spectral Dashboard Export]\n")
+            try:
+                bundle = build_dashboard_bundle()
+                out_file = BASE_DIR / "docs" / "spectral_dashboard_bundle.json"
+                out_file.parent.mkdir(exist_ok=True, parents=True)
+                import json
+                out_file.write_text(json.dumps(bundle, indent=2))
+                print(f"Spectral dashboard bundle written to: {out_file}")
+            except Exception as e:
+                print(f"Error building dashboard bundle: {e}")
 
         elif choice == "18":
-            # Export HTML Mission Brief
-            print(build_html_brief())
+            print("\n[Mission Brief HTML Generator]\n")
+            try:
+                result = build_mission_brief_html()
+                print(result)
+            except Exception as e:
+                print(f"Error building HTML mission brief: {e}")
 
         elif choice == "19":
-            # Export GUI Minimap Overlay
-            print(export_gui_minimap())
+            print("\n[Export GUI Minimap Overlay]\n")
+            try:
+                result = export_gui_minimap()
+                print(result)
+            except Exception as e:
+                print(f"Error exporting GUI minimap overlay: {e}")
 
         elif choice == "20":
-            # Export Spectral Owl SOS Overlay (Situation Summary)
-            print(build_sos_overlay())
+            print("\n[Export SOS Overlay]\n")
+            try:
+                result = export_gui_sos_overlay()
+                print(result)
+            except Exception as e:
+                print(f"Error exporting SOS overlay: {e}")
+
+        elif choice == "21":
+            print("\n[Run-History Intelligence Timeline]\n")
+            try:
+                result = run_history_intel()
+                print(result)
+            except Exception as e:
+                print(f"Error running run-history intelligence: {e}")
 
         else:
-            print("Invalid selection. Try again.")
+            print("Invalid choice. Try again.")
 
 
 if __name__ == "__main__":
