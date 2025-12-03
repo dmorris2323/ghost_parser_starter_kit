@@ -25,11 +25,13 @@ Menu options:
  20) Export SOS Overlay
  21) Run-History Intelligence Timeline
  22) Export Spectral Snapshot Bundle
+ 23) Build Demo Deck Manifest
 """
 
 import sys
 import subprocess
 from pathlib import Path
+import json
 
 # Core system pieces
 from operator_snapshot import build_operator_snapshot
@@ -58,7 +60,7 @@ from spectral_dashboard_api import build_dashboard_bundle
 from fusion_minimap_overlay import export_gui_minimap
 from spectral_snapshot_bundle import build_snapshot_bundle
 
-# 🔧 SAFE IMPORT FOR SOS OVERLAY
+# SOS overlay (defensive import)
 try:
     from spectral_sos_overlay import export_gui_sos_overlay
 except ImportError:
@@ -70,6 +72,9 @@ from run_history_intel import main as run_history_intel
 
 # HTML brief
 from mission_brief_html import main as build_mission_brief_html
+
+# Demo deck manifest
+from demo_deck_manifest import build_demo_deck_manifest
 
 
 BASE_DIR = Path(__file__).parent
@@ -115,6 +120,7 @@ def show_menu():
     print("20) Export SOS Overlay")
     print("21) Run-History Intelligence Timeline")
     print("22) Export Spectral Snapshot Bundle")
+    print("23) Build Demo Deck Manifest")
     print("=============================================")
 
 
@@ -263,7 +269,6 @@ def main():
                 bundle = build_dashboard_bundle()
                 out_file = BASE_DIR / "docs" / "spectral_dashboard_bundle.json"
                 out_file.parent.mkdir(exist_ok=True, parents=True)
-                import json
                 out_file.write_text(json.dumps(bundle, indent=2))
                 print(f"Spectral dashboard bundle written to: {out_file}")
             except Exception as e:
@@ -309,6 +314,15 @@ def main():
                 print(f"Spectral snapshot bundle written to: {out_file}")
             except Exception as e:
                 print(f"Error building spectral snapshot bundle: {e}")
+
+        elif choice == "23":
+            print("\n[Build Demo Deck Manifest]\n")
+            try:
+                manifest = build_demo_deck_manifest()
+                out_file = BASE_DIR / "docs" / "demo_deck_manifest_day58.json"
+                print(f"Demo deck manifest written to: {out_file}")
+            except Exception as e:
+                print(f"Error building demo deck manifest: {e}")
 
         else:
             print("Invalid choice. Try again.")

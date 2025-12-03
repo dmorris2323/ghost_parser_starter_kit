@@ -1,0 +1,52 @@
+{
+    "generated_at": "2025-12-03T03:57:11.024344Z",
+    "system": {
+        "fusion_outputs": [
+            "/Users/dextermorris/ghost/parser_starter_kit/src/fused_output.csv",
+            "/Users/dextermorris/ghost/parser_starter_kit/src/data/fused_output.csv"
+        ],
+        "scored_outputs": [
+            "/Users/dextermorris/ghost/parser_starter_kit/src/scored_output.csv",
+            "/Users/dextermorris/ghost/parser_starter_kit/src/data/scored_output.csv"
+        ],
+        "sensor_ingest": [
+            "/Users/dextermorris/ghost/parser_starter_kit/src/data/sensor_ingest.csv"
+        ],
+        "operator_snapshot": [
+            "/Users/dextermorris/ghost/parser_starter_kit/src/operator_snapshot.txt",
+            "/Users/dextermorris/ghost/parser_starter_kit/src/demos/day56/operator_snapshot_day56.txt"
+        ],
+        "minimap": [
+            "/Users/dextermorris/ghost/parser_starter_kit/src/gui_minimap.json"
+        ],
+        "sos_overlay": [
+            "/Users/dextermorris/ghost/parser_starter_kit/src/gui_sos_overlay.json"
+        ],
+        "threat_memory": [
+            "/Users/dextermorris/ghost/parser_starter_kit/src/spectral_owl/threat_memory.py",
+            "/Users/dextermorris/ghost/parser_starter_kit/src/data/threat_memory.csv"
+        ],
+        "mission_briefs": [
+            "/Users/dextermorris/ghost/parser_starter_kit/src/docs/daily_mission_brief.html",
+            "/Users/dextermorris/ghost/parser_starter_kit/src/docs/daily_mission_brief.txt",
+            "/Users/dextermorris/ghost/parser_starter_kit/src/docs/profile_mission_brief.txt"
+        ],
+        "stress_test": [
+            "/Users/dextermorris/ghost/parser_starter_kit/src/stress_test.py",
+            "/Users/dextermorris/ghost/parser_starter_kit/src/data/stress_test_last_run.txt"
+        ],
+        "fusion_health": [
+            "/Users/dextermorris/ghost/parser_starter_kit/src/pipeline_health.txt",
+            "/Users/dextermorris/ghost/parser_starter_kit/src/sensor_health.py"
+        ]
+    },
+    "demos": {
+        "day54_demo": "/Users/dextermorris/ghost/parser_starter_kit/src/demos/day54",
+        "day56_demo": "/Users/dextermorris/ghost/parser_starter_kit/src/demos/day56",
+        "family_law_demo": "/Users/dextermorris/ghost/parser_starter_kit/src/demos/family_law_demo"
+    },
+    "profiles": {
+        "active_profile": "/Users/dextermorris/ghost/parser_starter_kit/src/config/profile.txt",
+        "profiles_folder": "/Users/dextermorris/ghost/parser_starter_kit/src/config_profiles.py"
+    }
+}
