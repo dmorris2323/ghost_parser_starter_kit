@@ -1,0 +1,126 @@
+========================================
+ GHOST LANTERN LABS — SYSTEM STATUS HUD 
+========================================
+Generated: 2025-12-02 19:31:19 UTC
+
+=== ACTIVE PROFILE / OPERATOR CONTEXT ===
+Mission Profile – Parser v1.1 (Day 1)
+
+1) Problem Statement:
+   Monitor AOI for shallow, mid-mag events and surface only those matching operational interest.
+
+2) Customer / Decisionmaker:
+   Flight leadership/NCOIC; supports commander SA.
+
+3) AOI:
+   NK_TEST_ZONE (Lat 39–41 / Lon 128–130); MINING_REGION for alternate signature.
+
+4) EEIs:
+   Time, lat/lon, depth, magnitude, AOI membership, flag reason.
+
+5) Assumptions:
+   AOI bounds correct; thresholds reflect current TTPs.
+
+6) Constraints:
+   Sy
+...[truncated]...
+
+=== OFFLINE / AI-INDEPENDENCE STATUS ===
+TIMESTAMP_UTC: 2025-12-01T23:58:51.041939
+STATUS: OFFLINE_OR_DEGRADED
+REASON: local_rules in use; treating this as offline/degraded analysis path.
+
+
+=== GOLDEN DOME ALIGNMENT ===
+=== GOLDEN DOME ALIGNMENT REPORT ===
+Score: 10/11 checks passed (91%)
+Tier:  GOLD
+
+Detail:
+ - [OK ] AI_Plan: AI-Independence doctrine documented (FOUND @ /Users/dextermorris/ghost/parser_starter_kit/src/docs/AI_Independence_Plan.md)
+ - [OK ] AI_Phase2: Phase 2 design captured (FOUND @ /Users/dextermorris/ghost/parser_starter_kit/src/docs/AI_Independence_Phase2.md)
+ - [OK ] AI_Phase3: Phase 3 design captured (FOUND @ /Users/dextermorris/ghost/parser_starter_kit/src/docs/AI_Independence_Phase3.md)
+...[truncated]...
+
+=== PIPELINE HEALTH SUMMARY ===
+======================================
+ GLL PIPELINE HEALTH SUMMARY
+======================================
+Overall Health Score: 90/100
+Status: GREEN
+
+QA Passed: 7
+QA Failed: 0
+Critical Alerts: 2
+
+Notes:
+All tests passed. 2 critical alert(s) present — reduced health score.
+
+
+=== SENSOR HEALTH SUMMARY ===
+Sensor Health Report — 2025-12-02T01:32:37.214163 UTC
+============================================================
+
+Sensor: optical_sensor_mock (optical)
+  Iterations:   10
+  Successes:    10
+  Failures:     0
+  Availability: 1.000
+  ValidityRate: 1.000
+
+Sensor: seismic_sensor_mock (seismic)
+  Iterations:   10
+  Successes:    10
+  Failures:     0
+  Availability: 1.000
+  ValidityRate: 1.000
+
+Sensor: ems_sensor_mock (ems)
+  Iterations:   10
+  Successes:    10
+  Failures:     0
+  Availability: 1.000
+  ValidityRate: 1.000
+
+Sensor: radiation_sensor_mock (radiation)
+  Iterations:   10
+  Successes:    10
+  Failures:     0
+  Availability: 1.000
+  ValidityRate: 1.000
+
+Sensor: generic_metrics_sensor_mock (generic)
+  Iterations:   10
+  Successes:    10
+  Failures:     0
+  Availability: 1.000
+  ValidityRate: 1.000
+
+
+
+=== LATEST FUSION OPS LOG ENTRY ===
+2025-11-27T14:07:04.594199,fusion_sanitizer,sanitize,"3 rows in, 3 rows remain after cleaning"
+
+=== LATEST RUN HISTORY ENTRY ===
+2025-12-02T01:32:37.157321,10,5,ok,0.4,0.263
+
+=== THREAT MEMORY OVERVIEW ===
+Threat Memory Stats (from threat_memory_stats.txt):
+GLL Threat Memory Stats
+=======================
+
+By Severity:
+  - CRITICAL: 105
+  - HIGH: 10
+
+By Profile:
+  - UNKNOWN: 115
+
+Total threat memory events logged: 123 row(s)
+
+=== FUSION MINI-MAP SNAPSHOT ===
+=== SENSOR FUSION MINI-MAP ===
+
+[UNKNOWN]   ✔️  C:0  W:0  S:4
+
+End of System Status Dashboard.

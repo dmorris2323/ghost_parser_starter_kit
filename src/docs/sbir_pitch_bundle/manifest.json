@@ -1,0 +1,105 @@
+{
+  "bundle_name": "GLL_Spectral_SBIR_Pitch_Bundle",
+  "generated_at": "2025-12-03T16:25:18.813277Z",
+  "base_dir": "/Users/dextermorris/ghost/parser_starter_kit/src/docs/sbir_pitch_bundle",
+  "included": [
+    {
+      "label": "Daily Mission Brief (text)",
+      "src": "/Users/dextermorris/ghost/parser_starter_kit/src/docs/daily_mission_brief.txt",
+      "dst": "/Users/dextermorris/ghost/parser_starter_kit/src/docs/sbir_pitch_bundle/daily_mission_brief.txt",
+      "size_bytes": 2129,
+      "modified": "2025-12-03T07:26:42.823195"
+    },
+    {
+      "label": "Daily Mission Brief (HTML)",
+      "src": "/Users/dextermorris/ghost/parser_starter_kit/src/docs/daily_mission_brief.html",
+      "dst": "/Users/dextermorris/ghost/parser_starter_kit/src/docs/sbir_pitch_bundle/daily_mission_brief.html",
+      "size_bytes": 3626,
+      "modified": "2025-12-03T07:26:42.823399"
+    },
+    {
+      "label": "QA Summary",
+      "src": "/Users/dextermorris/ghost/parser_starter_kit/src/qa_summary.txt",
+      "dst": "/Users/dextermorris/ghost/parser_starter_kit/src/docs/sbir_pitch_bundle/qa_summary.txt",
+      "size_bytes": 1087,
+      "modified": "2025-12-03T04:22:59.605164"
+    },
+    {
+      "label": "Sensor Health Report",
+      "src": "/Users/dextermorris/ghost/parser_starter_kit/src/sensor_health_report.txt",
+      "dst": "/Users/dextermorris/ghost/parser_starter_kit/src/docs/sbir_pitch_bundle/sensor_health_report.txt",
+      "size_bytes": 817,
+      "modified": "2025-12-01T20:32:37.214902"
+    },
+    {
+      "label": "Sensor Reliability Report",
+      "src": "/Users/dextermorris/ghost/parser_starter_kit/src/docs/reliability_report.txt",
+      "dst": "/Users/dextermorris/ghost/parser_starter_kit/src/docs/sbir_pitch_bundle/reliability_report.txt",
+      "size_bytes": 393,
+      "modified": "2025-12-03T04:43:26.958156"
+    },
+    {
+      "label": "Spectral Resilience Score",
+      "src": "/Users/dextermorris/ghost/parser_starter_kit/src/docs/spectral_resilience_score.txt",
+      "dst": "/Users/dextermorris/ghost/parser_starter_kit/src/docs/sbir_pitch_bundle/spectral_resilience_score.txt",
+      "size_bytes": 1127,
+      "modified": "2025-12-03T10:02:58.851673"
+    },
+    {
+      "label": "Spectral Resilience Badge (text)",
+      "src": "/Users/dextermorris/ghost/parser_starter_kit/src/docs/spectral_resilience_badge.txt",
+      "dst": "/Users/dextermorris/ghost/parser_starter_kit/src/docs/sbir_pitch_bundle/spectral_resilience_badge.txt",
+      "size_bytes": 64,
+      "modified": "2025-12-03T10:02:58.851915"
+    },
+    {
+      "label": "Spectral Resilience Badge (JSON)",
+      "src": "/Users/dextermorris/ghost/parser_starter_kit/src/docs/spectral_resilience_badge.json",
+      "dst": "/Users/dextermorris/ghost/parser_starter_kit/src/docs/sbir_pitch_bundle/spectral_resilience_badge.json",
+      "size_bytes": 919,
+      "modified": "2025-12-03T10:02:58.852034"
+    },
+    {
+      "label": "Threat Memory Doctrine Report",
+      "src": "/Users/dextermorris/ghost/parser_starter_kit/src/docs/threat_memory_doctrine_report.txt",
+      "dst": "/Users/dextermorris/ghost/parser_starter_kit/src/docs/sbir_pitch_bundle/threat_memory_doctrine_report.txt",
+      "size_bytes": 273,
+      "modified": "2025-12-01T04:10:13.889813"
+    },
+    {
+      "label": "System Status Dashboard (text)",
+      "src": "/Users/dextermorris/ghost/parser_starter_kit/src/docs/system_status_dashboard.txt",
+      "dst": "/Users/dextermorris/ghost/parser_starter_kit/src/docs/sbir_pitch_bundle/system_status_dashboard.txt",
+      "size_bytes": 3224,
+      "modified": "2025-12-02T14:31:19.694242"
+    },
+    {
+      "label": "Day 100 Demo Roadmap",
+      "src": "/Users/dextermorris/ghost/parser_starter_kit/src/docs/demo_roadmap_day100.md",
+      "dst": "/Users/dextermorris/ghost/parser_starter_kit/src/docs/sbir_pitch_bundle/demo_roadmap_day100.md",
+      "size_bytes": 2574,
+      "modified": "2025-11-30T21:10:36.974136"
+    },
+    {
+      "label": "Golden Dome Status",
+      "src": "/Users/dextermorris/ghost/parser_starter_kit/src/docs/golden_dome_status.txt",
+      "dst": "/Users/dextermorris/ghost/parser_starter_kit/src/docs/sbir_pitch_bundle/golden_dome_status.txt",
+      "size_bytes": 2690,
+      "modified": "2025-12-03T04:44:46.130942"
+    },
+    {
+      "label": "Demo Deck Manifest (Day 58)",
+      "src": "/Users/dextermorris/ghost/parser_starter_kit/src/docs/demo_deck_manifest_day58.json",
+      "dst": "/Users/dextermorris/ghost/parser_starter_kit/src/docs/sbir_pitch_bundle/demo_deck_manifest_day58.json",
+      "size_bytes": 2535,
+      "modified": "2025-12-02T23:03:40.702556"
+    }
+  ],
+  "missing": [
+    {
+      "label": "Cross-Sensor Report",
+      "src": "/Users/dextermorris/ghost/parser_starter_kit/src/docs/cross_sensor_report.txt",
+      "reason": "missing"
+    }
+  ]
+}

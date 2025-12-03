@@ -1,0 +1,41 @@
+=== QA VALIDATION SUMMARY ===
+Total tests: 7
+Passed:      7
+Failed:      0
+
+[PASS] fusion_scoring
+fusion_scoring PASSED.
+STDOUT:
+normal
+✅ Scoring complete — 5 rows saved to scored_output.csv
+
+----------------------------------------
+[PASS] commander_extract
+commander_extract PASSED.
+STDOUT:
+✅ Commander Extract complete — 5 events summarized to commander_extract.csv
+
+----------------------------------------
+[PASS] heatmap_prep
+heatmap_prep PASSED.
+STDOUT:
+🔥 Heatmap-ready data written to heatmap_data.csv
+
+----------------------------------------
+[PASS] fusion_alerts
+fusion_alerts PASSED.
+STDOUT:
+
+----------------------------------------
+[PASS] daily_report
+daily_report PASSED.
+STDOUT:
+🧾 Daily report written to daily_report.txt
+
+----------------------------------------
+[PASS] spectral_owl
+Spectral Owl module import OK.
+----------------------------------------
+[PASS] cloud_sync
+Cloud sync health check OK: {'status': 'ok', 'details': {'provider': 'azure', 'mode': 'simulation', 'sync_enabled': True}, 'files_in_archive': 2}
+----------------------------------------
