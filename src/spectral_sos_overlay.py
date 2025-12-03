@@ -1,135 +1,157 @@
 """
-spectral_sos_overlay.py — Spectral Owl Situation Overlay (S.O.S.)
+spectral_sos_overlay.py
+-----------------------
 
-Creates a unified operational overlay for GUI use:
-- Threat memory snapshot
-- Critical alerts summary
-- Top fusion scores
-- Active profile metadata
-- AI engine (Phase-2 provider) metadata
+Builds a Spectral SOS overlay bundle for the GUI and CLI.
+
+Outputs:
+  - In-memory dict (build_sos_overlay)
+  - JSON file at src/gui_sos_overlay.json (export_sos_overlay)
 """
 
-import json
-import os
 from pathlib import Path
-import csv
-from datetime import datetime
+from datetime import datetime, timezone
+import json
 
-from spectral_owl.threat_memory_summary import build_summary as threat_summary
+# Local imports – all exist in your src/ tree
 from profile_config import get_active_profile
+from spectral_owl.threat_memory import load_events
+from spectral_owl.threat_memory_summary import build_summary as build_threat_summary
 
-BASE = Path(__file__).resolve().parent
-OUTFILE = BASE / "gui_sos_overlay.json"
+# Try to learn which AI provider is active, but fail gracefully
+def _get_ai_provider_info():
+    # Default
+    info = {
+        "provider": "unknown",
+        "mode": "unknown",
+    }
 
-
-# -------------------------------------------------------------------
-# Provider Resolution (Phase 2 – robust, no-crash)
-# -------------------------------------------------------------------
-
-def _fallback_provider() -> str:
-    """
-    Fallback provider resolution:
-    - Try environment variable GLL_LLM_PROVIDER
-    - Otherwise return 'unknown'
-    """
-    return os.environ.get("GLL_LLM_PROVIDER", "unknown")
-
-
-try:
-    # Try to import from your Phase-2 adapter if it exposes this helper.
-    from llm_phase2_adapter import get_active_provider as _adapter_get_active_provider  # type: ignore
-
-    def get_active_provider() -> str:
+    # Try llm_phase2_adapter (Phase 2 AI-Independence)
+    try:
+        from llm_phase2_adapter import get_active_provider_key  # type: ignore[attr-defined]
         try:
-            return _adapter_get_active_provider()
-        except Exception:
-            return _fallback_provider()
+            key = get_active_provider_key()
+        except TypeError:
+            # If implementation takes no args vs args, still handle
+            key = get_active_provider_key  # pragma: no cover
+        info["provider"] = str(key)
+        info["mode"] = "phase2_adapter"
+        return info
+    except Exception:
+        pass
 
-except ImportError:
-    # Adapter does not expose get_active_provider; use fallback only.
-    def get_active_provider() -> str:
-        return _fallback_provider()
+    # Try llm_config fallback
+    try:
+        from llm_config import get_active_provider  # type: ignore[attr-defined]
+        key = get_active_provider()
+        info["provider"] = str(key)
+        info["mode"] = "llm_config"
+        return info
+    except Exception:
+        pass
 
-
-# -------------------------------------------------------------------
-# Load critical alerts
-# -------------------------------------------------------------------
-
-def load_critical_alerts():
-    p = BASE / "critical_alerts.csv"
-    if not p.exists():
-        return []
-    rows = []
-    with p.open() as f:
-        r = csv.DictReader(f)
-        for row in r:
-            rows.append(row)
-    # Only top 5 for the overlay
-    return rows[:5]
+    return info
 
 
-# -------------------------------------------------------------------
-# Load top fusion scores
-# -------------------------------------------------------------------
+def _load_critical_alerts():
+    """
+    Load basic alert stats from critical_alerts.csv if present.
+    Returns a dict with count and a few recent alerts.
+    """
+    path = Path(__file__).parent / "critical_alerts.csv"
+    if not path.exists():
+        return {"count": 0, "recent": []}
 
-def load_top_scores():
-    p = BASE / "scored_output.csv"
-    if not p.exists():
-        return []
-    rows = []
-    with p.open() as f:
-        r = csv.DictReader(f)
-        for row in r:
-            try:
-                row["score"] = float(row.get("score", 0))
-                rows.append(row)
-            except Exception:
-                # Skip rows with invalid score
-                continue
+    lines = path.read_text().strip().split("\n")
+    if len(lines) <= 1:
+        return {"count": 0, "recent": []}
 
-    rows = sorted(rows, key=lambda x: x["score"], reverse=True)
-    return rows[:5]
+    header = lines[0].split(",")
+    rows = [dict(zip(header, row.split(","))) for row in lines[1:] if row.strip()]
+
+    # Last 5 alerts
+    recent = rows[-5:]
+    return {
+        "count": len(rows),
+        "recent": recent,
+    }
 
 
-# -------------------------------------------------------------------
-# Build S.O.S. Overlay
-# -------------------------------------------------------------------
+def _load_threat_memory_stats():
+    """
+    Summarize threat_memory.csv into simple stats for the overlay.
+    """
+    data_dir = Path(__file__).parent / "data"
+    path = data_dir / "threat_memory.csv"
+    if not path.exists():
+        return {
+            "total_events": 0,
+            "recent_sample": [],
+        }
+
+    lines = path.read_text().strip().split("\n")
+    if len(lines) <= 1:
+        return {
+            "total_events": 0,
+            "recent_sample": [],
+        }
+
+    header = lines[0].split(",")
+    rows = [dict(zip(header, row.split(","))) for row in lines[1:] if row.strip()]
+
+    return {
+        "total_events": len(rows),
+        "recent_sample": rows[-5:],
+    }
+
 
 def build_sos_overlay():
     """
-    Build the Spectral Owl Situation Overlay and write it to gui_sos_overlay.json.
-    Structure:
-
-    {
-      "timestamp": "...Z",
-      "active_profile": { "key": "...", "display_name": "..." },
-      "ai_engine": { "provider": "..." },
-      "threat_memory_summary": "...",
-      "critical_alerts": [...],
-      "top_scores": [...]
-    }
+    Build the full SOS overlay bundle as a dict.
+    This is what the GUI will show in the SOS panel.
     """
     profile = get_active_profile()
-    provider = get_active_provider()
+    ai_info = _get_ai_provider_info()
+    alerts = _load_critical_alerts()
+    threat_mem = _load_threat_memory_stats()
+    threat_text = build_threat_summary()
 
-    out = {
-        "timestamp": datetime.utcnow().isoformat() + "Z",
-        "active_profile": {
-            "key": getattr(profile, "key", "unknown"),
+    bundle = {
+        "status": "ok",
+        "timestamp": datetime.now(timezone.utc).isoformat(),
+        "profile": {
+            "key": getattr(profile, "key", getattr(profile, "name", "unknown")),
             "display_name": getattr(profile, "display_name", "Unknown Profile"),
+            "description": getattr(profile, "description", ""),
         },
-        "ai_engine": {
-            "provider": provider
-        },
-        "threat_memory_summary": threat_summary(),
-        "critical_alerts": load_critical_alerts(),
-        "top_scores": load_top_scores(),
+        "ai_engine": ai_info,
+        "alerts": alerts,
+        "threat_memory": threat_mem,
+        "threat_summary_text": threat_text,
     }
 
-    OUTFILE.write_text(json.dumps(out, indent=2))
-    return {"status": "ok", "file": str(OUTFILE)}
+    return bundle
+
+
+def export_sos_overlay():
+    """
+    Build the SOS overlay bundle and write it to gui_sos_overlay.json
+    so the GUI can load it.
+
+    Returns a small status dict for CLI display.
+    """
+    bundle = build_sos_overlay()
+    out_path = Path(__file__).parent / "gui_sos_overlay.json"
+    out_path.write_text(json.dumps(bundle, indent=2))
+
+    return {
+        "status": "written",
+        "file": str(out_path),
+        "timestamp": bundle["timestamp"],
+    }
 
 
 if __name__ == "__main__":
-    print(build_sos_overlay())
+    result = export_sos_overlay()
+    print(result)
 

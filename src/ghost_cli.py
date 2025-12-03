@@ -31,301 +31,191 @@ Menu options:
 import sys
 import subprocess
 from pathlib import Path
-import json
 
-# Core system pieces
+# === CORE IMPORTS (modules you already have in src/) ===
 from operator_snapshot import build_operator_snapshot
 from pipeline_health import evaluate_pipeline_health
 from mission_briefing import build_mission_briefing
-from profile_mission_brief import main as run_profile_mission_brief
-
-# Spectral Owl
-from spectral_owl.owl_brain import analyze_fusion
-from spectral_owl.owl_memory import load_memory_log
 from spectral_owl.threat_memory_summary import build_summary as build_threat_summary
-
-# Visual/demo packs
-from generate_daily_visual_pack import main as build_daily_pack
+from generate_daily_visual_pack import main as build_daily_visual_pack
 from profile_status import build_profile_status
-from legal_demo_pack import main as run_family_law_demo
-
-# Cloud + overlays + dashboard
-from cloud.azure_ingest import (
-    upload_fusion_output,
-    list_fusion_blobs,
-    download_latest_fusion_archive,
-    cloud_sync_health_check,
-)
-from spectral_dashboard_api import build_dashboard_bundle
+from profile_mission_brief import build_profile_mission_brief
+from cloud.azure_ingest import cloud_sync_health_check, upload_fusion_output
 from fusion_minimap_overlay import export_gui_minimap
-from spectral_snapshot_bundle import build_snapshot_bundle
-
-# SOS overlay (defensive import)
-try:
-    from spectral_sos_overlay import export_gui_sos_overlay
-except ImportError:
-    def export_gui_sos_overlay():
-        return "SOS overlay exporter not available (spectral_sos_overlay.export_gui_sos_overlay missing)."
-
-# Run-history intel
+from spectral_sos_overlay import export_sos_overlay
 from run_history_intel import main as run_history_intel
-
-# HTML brief
-from mission_brief_html import main as build_mission_brief_html
-
-# Demo deck manifest
 from demo_deck_manifest import build_demo_deck_manifest
+from gui_screenshot_export import export_screenshots
+from spectral_dashboard_api import build_dashboard_bundle
+from legal_ingest_family_law import main as ingest_family_law
+from family_law_scoring import main as score_family_law
+from family_law_brief import main as brief_family_law
 
 
-BASE_DIR = Path(__file__).parent
-LOG_FILE = BASE_DIR / "fusion_ops_log.csv"
-
-
-def run_cmd(cmd, cwd=None):
-    """Small helper to run a subprocess and print its output."""
-    result = subprocess.run(
-        [sys.executable] + cmd,
-        cwd=cwd or BASE_DIR,
-        capture_output=True,
-        text=True,
-    )
-    if result.stdout:
-        print(result.stdout.strip())
-    if result.stderr:
-        print(result.stderr.strip())
-    return result.returncode
-
-
-def show_menu():
-    print("\n=== Ghost Lantern Labs — Operator Console ===")
-    print(" 1) Run QA validation")
-    print(" 2) Show latest 20 log events")
-    print(" 3) Build operator snapshot")
-    print(" 4) Run full fusion pipeline + snapshot")
-    print(" 5) Spectral Owl memory viewer")
-    print(" 6) Spectral Owl analysis (fusion scoring check)")
-    print(" 7) Pipeline health check")
-    print(" 8) Mission briefing (profile-aware)")
-    print(" 9) Exit")
-    print("10) Anti-DoS environment scan")
-    print("11) Cloud Sync Check")
-    print("12) Threat Memory Summary")
-    print("13) Build Daily Visual Pack")
-    print("14) Show Active Profile Status")
-    print("15) Run Family Law Demo (Shari)")
-    print("16) Owl Memory Diagnostics")
-    print("17) Spectral Dashboard Export")
-    print("18) Mission Brief HTML Generator")
-    print("19) Export GUI Minimap Overlay")
-    print("20) Export SOS Overlay")
-    print("21) Run-History Intelligence Timeline")
-    print("22) Export Spectral Snapshot Bundle")
-    print("23) Build Demo Deck Manifest")
-    print("=============================================")
+def print_menu():
+    print("\n=== GHOST LANTERN LABS — OPERATOR CONSOLE ===")
+    print("  1) Run QA validation")
+    print("  2) Show latest 20 log events")
+    print("  3) Build operator snapshot")
+    print("  4) Run full fusion pipeline + snapshot")
+    print("  5) Spectral Owl memory viewer")
+    print("  6) Spectral Owl analysis (fusion scoring check)")
+    print("  7) Pipeline health check")
+    print("  8) Mission briefing (profile-aware)")
+    print("  9) Exit")
+    print(" 10) Anti-DoS environment scan")
+    print(" 11) Cloud Sync Check")
+    print(" 12) Threat Memory Summary")
+    print(" 13) Build Daily Visual Pack")
+    print(" 14) Show Active Profile Status")
+    print(" 15) Run Family Law Demo (Shari)")
+    print(" 16) Owl Memory Diagnostics")
+    print(" 17) Spectral Dashboard Export")
+    print(" 18) Mission Brief HTML Generator")
+    print(" 19) Export GUI Minimap Overlay")
+    print(" 20) Export SOS Overlay")
+    print(" 21) Run-History Intelligence Timeline")
+    print(" 22) Export Spectral Snapshot Bundle")
+    print(" 23) Build Demo Deck Manifest")
+    print("==============================================")
 
 
 def main():
     while True:
-        show_menu()
-        choice = input("Select an option: ").strip()
+        print_menu()
+        choice = input("\nSelect an option: ").strip()
 
-        if choice == "1":
-            print("\n[QA Validation]\n")
-            run_cmd(["qa_validator.py"])
+        # 9) Exit
+        if choice == "9":
+            print("Exiting Ghost Lantern Console...")
+            sys.exit(0)
 
+        # 1) Run QA validation
+        elif choice == "1":
+            subprocess.run([sys.executable, "qa_validator.py"])
+
+        # 2) Show latest 20 log events
         elif choice == "2":
-            print("\n[Latest Log Events]\n")
-            if not LOG_FILE.exists():
-                print("No fusion_ops_log.csv found yet.")
+            log = Path("fusion_ops_log.csv")
+            if not log.exists():
+                print("[WARN] fusion_ops_log.csv not found.")
             else:
-                lines = LOG_FILE.read_text().strip().splitlines()
-                for line in lines[-20:]:
-                    print(line)
+                lines = log.read_text().strip().split("\n")
+                print("\n".join(lines[-20:]))
 
+        # 3) Build operator snapshot
         elif choice == "3":
-            print("\n[Operator Snapshot]\n")
-            path = build_operator_snapshot()
-            print(f"Snapshot written → {path}")
+            print(build_operator_snapshot())
 
+        # 4) Run full fusion pipeline + snapshot
         elif choice == "4":
-            print("\n[Full Fusion Pipeline + Snapshot]\n")
-            run_cmd(["fusion_run.py"])
-            path = build_operator_snapshot()
-            print(f"Snapshot written → {path}")
+            print("[RUN] Fusion pipeline...")
+            subprocess.run([sys.executable, "fusion_run.py"])
+            print("[RUN] Building operator snapshot...")
+            print(build_operator_snapshot())
 
+        # 5) Spectral Owl memory viewer
         elif choice == "5":
-            print("\n[Spectral Owl Memory Viewer]\n")
-            try:
-                events = load_memory_log()
-            except Exception as e:
-                print(f"Error loading Owl memory: {e}")
-                events = []
+            from spectral_owl.owl_memory import load_memory_log
+            print(load_memory_log())
 
-            if not events:
-                print("No Owl memory events yet.")
-            else:
-                print("Last 20 events:")
-                for e in events[-20:]:
-                    print(f"- {e}")
-
+        # 6) Spectral Owl analysis (fusion scoring check)
         elif choice == "6":
-            print("\n[Spectral Owl Analysis]\n")
-            try:
-                result = analyze_fusion()
-                print(result)
-            except Exception as e:
-                print(f"Error running Spectral Owl analysis: {e}")
+            from spectral_owl.owl_brain_phase2 import analyze_fusion
+            print(analyze_fusion())
 
+        # 7) Pipeline health check
         elif choice == "7":
-            print("\n[Pipeline Health Check]\n")
-            try:
-                health = evaluate_pipeline_health()
-                print(health)
-            except Exception as e:
-                print(f"Error evaluating pipeline health: {e}")
+            print(evaluate_pipeline_health())
 
+        # 8) Mission briefing (profile-aware)
         elif choice == "8":
-            print("\n[Mission Briefing — Profile-Aware]\n")
-            try:
-                run_profile_mission_brief()
-            except Exception as e:
-                print(f"Error building mission brief: {e}")
+            # Uses profile-aware mission brief wrapper
+            print(build_profile_mission_brief())
 
-        elif choice == "9":
-            print("Exiting Ghost CLI. Stay lethal.")
-            break
-
+        # 10) Anti-DoS environment scan
         elif choice == "10":
-            print("\n[Anti-DoS Environment Scan]\n")
-            code = run_cmd(["anti_dos.py"])
-            if code != 0:
-                print("Anti-DoS scan encountered an error.")
+            subprocess.run([sys.executable, "anti_dos.py"])
 
+        # 11) Cloud Sync Check
         elif choice == "11":
-            print("\n[Cloud Sync Check]\n")
-            try:
-                health = cloud_sync_health_check()
-                print(f"Health: {health}")
-            except Exception as e:
-                print(f"Cloud health check failed: {e}")
+            health = cloud_sync_health_check()
+            print(f"[Cloud Health] {health}")
 
-            scored = BASE_DIR / "data" / "scored_output.csv"
+            # Optional: simulate upload of scored_output if present
+            scored = Path("data/scored_output.csv")
             if scored.exists():
-                try:
-                    upload_result = upload_fusion_output(str(scored))
-                    print(f"\nUpload result: {upload_result}")
-                except Exception as e:
-                    print(f"Upload failed: {e}")
+                print("[Cloud] Found data/scored_output.csv — attempting simulated upload...")
+                print(upload_fusion_output(str(scored)))
             else:
-                print("\nNo data/scored_output.csv found. Skipping upload test.")
+                print("[Cloud] No scored_output.csv found; skipping upload.")
 
-            try:
-                listing = list_fusion_blobs()
-                print(f"\nCloud archive listing: {listing}")
-            except Exception as e:
-                print(f"Listing archive failed: {e}")
-
+        # 12) Threat Memory Summary
         elif choice == "12":
-            print("\n[Threat Memory Summary]\n")
-            try:
-                summary = build_threat_summary()
-                print(summary)
-            except Exception as e:
-                print(f"Error building threat memory summary: {e}")
+            print(build_threat_summary())
 
+        # 13) Build Daily Visual Pack
         elif choice == "13":
-            print("\n[Build Daily Visual Pack]\n")
-            try:
-                result = build_daily_pack()
-                print(result)
-            except Exception as e:
-                print(f"Error building daily visual pack: {e}")
+            print(build_daily_visual_pack())
 
+        # 14) Show Active Profile Status
         elif choice == "14":
-            print("\n[Active Profile Status]\n")
-            try:
-                status = build_profile_status()
-                print(status)
-            except Exception as e:
-                print(f"Error getting profile status: {e}")
+            print(build_profile_status())
 
+        # 15) Run Family Law Demo (Shari)
         elif choice == "15":
-            print("\n[Family Law Demo — Shari]\n")
-            try:
-                result = run_family_law_demo()
-                print(result)
-            except Exception as e:
-                print(f"Error running family law demo: {e}")
+            print("[Family Law Demo] Ingesting case sample...")
+            ingest_family_law()
+            print("[Family Law Demo] Scoring outcomes...")
+            score_family_law()
+            print("[Family Law Demo] Building brief...")
+            brief_family_law()
+            print("[Family Law Demo] Complete — check family_law_demo pack in /src/demos/family_law_demo")
 
+        # 16) Owl Memory Diagnostics
         elif choice == "16":
-            print("\n[Owl Memory Diagnostics]\n")
-            code = run_cmd(["threat_memory_stats.py"])
-            if code != 0:
-                print("Owl memory diagnostics encountered an error.")
+            from spectral_owl.owl_memory import load_memory_log
+            mem = load_memory_log()
+            if not mem:
+                print("[Owl Memory] No entries found.")
+            else:
+                lines = mem.strip().split("\n")
+                print(f"[Owl Memory] Total entries: {len(lines)}")
+                print("Last 5 entries:")
+                print("\n".join(lines[-5:]))
 
+        # 17) Spectral Dashboard Export
         elif choice == "17":
-            print("\n[Spectral Dashboard Export]\n")
-            try:
-                bundle = build_dashboard_bundle()
-                out_file = BASE_DIR / "docs" / "spectral_dashboard_bundle.json"
-                out_file.parent.mkdir(exist_ok=True, parents=True)
-                out_file.write_text(json.dumps(bundle, indent=2))
-                print(f"Spectral dashboard bundle written to: {out_file}")
-            except Exception as e:
-                print(f"Error building dashboard bundle: {e}")
+            bundle = build_dashboard_bundle()
+            print(bundle)
 
+        # 18) Mission Brief HTML Generator
         elif choice == "18":
-            print("\n[Mission Brief HTML Generator]\n")
-            try:
-                result = build_mission_brief_html()
-                print(result)
-            except Exception as e:
-                print(f"Error building HTML mission brief: {e}")
+            # This will generate /src/docs/daily_mission_brief.html
+            subprocess.run([sys.executable, "mission_brief_html.py"])
 
+        # 19) Export GUI Minimap Overlay
         elif choice == "19":
-            print("\n[Export GUI Minimap Overlay]\n")
-            try:
-                result = export_gui_minimap()
-                print(result)
-            except Exception as e:
-                print(f"Error exporting GUI minimap overlay: {e}")
+            print(export_gui_minimap())
 
+        # 20) Export SOS Overlay
         elif choice == "20":
-            print("\n[Export SOS Overlay]\n")
-            try:
-                result = export_gui_sos_overlay()
-                print(result)
-            except Exception as e:
-                print(f"Error exporting SOS overlay: {e}")
+            print(export_sos_overlay())
 
+        # 21) Run-History Intelligence Timeline
         elif choice == "21":
-            print("\n[Run-History Intelligence Timeline]\n")
-            try:
-                result = run_history_intel()
-                print(result)
-            except Exception as e:
-                print(f"Error running run-history intelligence: {e}")
+            print(run_history_intel())
 
+        # 22) Export Spectral Snapshot Bundle
         elif choice == "22":
-            print("\n[Export Spectral Snapshot Bundle]\n")
-            try:
-                bundle = build_snapshot_bundle()
-                out_file = BASE_DIR / "docs" / "spectral_snapshot_bundle.json"
-                print(f"Spectral snapshot bundle written to: {out_file}")
-            except Exception as e:
-                print(f"Error building spectral snapshot bundle: {e}")
+            print(export_screenshots())
 
+        # 23) Build Demo Deck Manifest
         elif choice == "23":
-            print("\n[Build Demo Deck Manifest]\n")
-            try:
-                manifest = build_demo_deck_manifest()
-                out_file = BASE_DIR / "docs" / "demo_deck_manifest_day58.json"
-                print(f"Demo deck manifest written to: {out_file}")
-            except Exception as e:
-                print(f"Error building demo deck manifest: {e}")
+            print(build_demo_deck_manifest())
 
         else:
-            print("Invalid choice. Try again.")
+            print("[ERR] Invalid option.")
 
 
 if __name__ == "__main__":
