@@ -27,67 +27,48 @@ Menu options:
  22) Export Spectral Snapshot Bundle
  23) Build Demo Deck Manifest
  24) Export Sensor Reliability Report
+ 25) Cross-Sensor Validation + Report
+ 26) Generate SBIR Phase I One-Pager
 """
 
 import sys
 import subprocess
 from pathlib import Path
 
-# Base directory for running scripts
-BASE_DIR = Path(__file__).parent
-
-# Import only the modules we absolutely need as Python calls
-# (everything else we hit via subprocess to avoid fragile imports)
-try:
-    from cloud.azure_ingest import cloud_sync_health_check
-except Exception:
-    cloud_sync_health_check = None  # type: ignore
-
-try:
-    from sensor_reliability import export_reliability_report
-except Exception:
-    export_reliability_report = None  # type: ignore
-
-
-def run_script(script_name: str, args=None) -> int:
-    """
-    Run a Python script in this src directory via subprocess,
-    show its stdout/stderr, and return the exit code.
-    """
-    if args is None:
-        args = []
-
-    script_path = BASE_DIR / script_name
-    if not script_path.exists():
-        print(f"[ERROR] Script not found: {script_path}")
-        return 1
-
-    print(f"[RUN] {script_path.name} {' '.join(args)}")
-    proc = subprocess.run(
-        [sys.executable, str(script_path), *args],
-        cwd=str(BASE_DIR),
-        capture_output=True,
-        text=True,
-    )
-
-    if proc.stdout:
-        print(proc.stdout.strip())
-    if proc.stderr:
-        print(proc.stderr.strip())
-
-    if proc.returncode == 0:
-        print(f"[OK] {script_path.name} completed.")
-    else:
-        print(f"[FAIL] {script_path.name} exited with code {proc.returncode}.")
-
-    return proc.returncode
+# === CORE IMPORTS =================================
+from operator_snapshot import build_operator_snapshot
+from pipeline_health import evaluate_pipeline_health
+from mission_briefing import build_mission_briefing
+from profile_status import build_profile_status
+from generate_daily_visual_pack import main as build_daily_pack
+from spectral_owl.threat_memory_summary import build_summary as build_threat_summary
+from cloud.azure_ingest import upload_fusion_output
+from fusion_minimap_overlay import export_gui_minimap
+from spectral_sos_overlay import export_sos_overlay
+from run_history_intel import main as run_history_timeline
+from demo_deck_manifest import build_demo_deck_manifest
+from sensor_reliability import export_reliability_report
+from cross_sensor_validator import run_cross_validation
+from cross_sensor_report import build_report
+from sbir_onepager import write_onepager
 
 
-def print_menu() -> None:
+LOG_FILE = Path("fusion_ops_log.csv")
+
+
+# ==================================================
+def show_logs():
+    if not LOG_FILE.exists():
+        return "[No fusion_ops_log.csv file present]"
+    lines = LOG_FILE.read_text().strip().split("\n")
+    last = lines[-20:]
+    return "\n".join(last)
+
+
+def menu():
     print("")
-    print("Ghost Lantern Labs — Operator Console")
-    print("-------------------------------------")
-    print("Menu options:")
+    print("=== GHOST LANTERN LABS — OPERATOR CONSOLE ===")
+    print("---------------------------------------------")
     print("  1) Run QA validation")
     print("  2) Show latest 20 log events")
     print("  3) Build operator snapshot")
@@ -112,297 +93,143 @@ def print_menu() -> None:
     print(" 22) Export Spectral Snapshot Bundle")
     print(" 23) Build Demo Deck Manifest")
     print(" 24) Export Sensor Reliability Report")
+    print(" 25) Cross-Sensor Validation + Report")
+    print(" 26) Generate SBIR Phase I One-Pager")
     print("")
 
 
-def show_latest_log_events() -> None:
-    """
-    Show the latest 20 lines from fusion_ops_log.csv if it exists.
-    """
-    log_path = BASE_DIR / "fusion_ops_log.csv"
-    if not log_path.exists():
-        print("[INFO] fusion_ops_log.csv not found.")
-        return
-
-    lines = log_path.read_text(encoding="utf-8").splitlines()
-    tail = lines[-20:] if len(lines) > 20 else lines
-    print("=== Latest Fusion Ops Log Events (tail) ===")
-    for line in tail:
-        print(line)
-
-
-def show_spectral_owl_memory() -> None:
-    """
-    Show a quick view of Owl / threat memory.
-    Tries threat_memory.csv, then owl_memory.txt, if present.
-    """
-    candidates = [
-        BASE_DIR / "data" / "threat_memory.csv",
-        BASE_DIR / "data" / "threat_memory_doctrine.csv",
-        BASE_DIR / "owl_memory.txt",
-        BASE_DIR / "threat_memory.txt",
-    ]
-
-    printed_any = False
-    for path in candidates:
-        if path.exists():
-            print(f"\n=== Memory View: {path.name} (tail) ===")
-            lines = path.read_text(encoding="utf-8").splitlines()
-            tail = lines[-20:] if len(lines) > 20 else lines
-            for line in tail:
-                print(line)
-            printed_any = True
-
-    if not printed_any:
-        print("[INFO] No threat/Owl memory files found yet.")
-
-
-def show_owl_memory_diagnostics() -> None:
-    """
-    Run threat_memory_stats.py if present; otherwise fallback to the basic memory view.
-    """
-    stats_script = BASE_DIR / "threat_memory_stats.py"
-    if stats_script.exists():
-        run_script("threat_memory_stats.py")
-    else:
-        print("[WARN] threat_memory_stats.py not found, falling back to basic memory viewer.")
-        show_spectral_owl_memory()
-
-
-def run_mission_brief_profile_aware() -> None:
-    """
-    Prefer profile_mission_brief.py, fall back to mission_briefing.py
-    or daily_mission_brief.py if needed.
-    """
-    if (BASE_DIR / "profile_mission_brief.py").exists():
-        run_script("profile_mission_brief.py")
-    elif (BASE_DIR / "mission_briefing.py").exists():
-        run_script("mission_briefing.py")
-    else:
-        print("[WARN] profile_mission_brief/mission_briefing not found, using daily_mission_brief.")
-        run_script("daily_mission_brief.py")
-
-
-def run_family_law_demo() -> None:
-    """
-    Run the family law demo (Shari) end to end:
-    - legal_ingest_family_law.py
-    - family_law_scoring.py
-    - family_law_brief.py
-    """
-    print("[INFO] Running Family Law Demo (Shari)...")
-    run_script("legal_ingest_family_law.py")
-    run_script("family_law_scoring.py")
-    run_script("family_law_brief.py")
-
-    demo_dir = BASE_DIR / "demos" / "family_law_demo"
-    if demo_dir.exists():
-        print(f"[OK] Family law demo artifacts available in: {demo_dir}")
-    else:
-        print("[INFO] Demo directory not found yet; check family_law_*.csv/txt in src/data or src/.")
-
-
-def cloud_sync_check_cli() -> None:
-    """
-    Use cloud.azure_ingest.cloud_sync_health_check if available.
-    """
-    if cloud_sync_health_check is None:
-        print("[ERROR] cloud_sync_health_check not available (import failed).")
-        return
-
-    try:
-        result = cloud_sync_health_check()
-        print("[Cloud Sync Health]")
-        print(result)
-    except Exception as e:
-        print(f"[ERROR] Cloud sync health check failed: {e}")
-
-
-def spectral_dashboard_export_cli() -> None:
-    """
-    Run spectral_dashboard_api.py to export the dashboard bundle.
-    """
-    run_script("spectral_dashboard_api.py")
-
-
-def minimap_export_cli() -> None:
-    """
-    Export GUI minimap overlay via fusion_minimap_overlay.py
-    """
-    run_script("fusion_minimap_overlay.py")
-
-
-def sos_overlay_export_cli() -> None:
-    """
-    Export SOS overlay via spectral_sos_overlay.py
-    """
-    run_script("spectral_sos_overlay.py")
-
-
-def run_history_intel_cli() -> None:
-    """
-    Run run_history_intel.py to generate the run-history intelligence brief.
-    """
-    run_script("run_history_intel.py")
-    brief_path = BASE_DIR / "run_history_intel_brief.txt"
-    if brief_path.exists():
-        print(f"[OK] Run-history intel brief → {brief_path}")
-
-
-def spectral_snapshot_export_cli() -> None:
-    """
-    Export spectral snapshot bundle via spectral_snapshot_export.py
-    """
-    run_script("spectral_snapshot_export.py")
-
-
-def demo_deck_manifest_cli() -> None:
-    """
-    Build demo deck manifest via demo_deck_manifest.py
-    """
-    run_script("demo_deck_manifest.py")
-
-
-def mission_brief_html_cli() -> None:
-    """
-    Generate daily_mission_brief.html via mission_brief_html.py
-    """
-    run_script("mission_brief_html.py")
-    html_path = BASE_DIR / "docs" / "daily_mission_brief.html"
-    if html_path.exists():
-        print(f"[OK] HTML mission brief → {html_path}")
-
-
-def sensor_reliability_export_cli() -> None:
-    """
-    Export sensor reliability report using sensor_reliability.export_reliability_report()
-    """
-    if export_reliability_report is None:
-        print("[ERROR] export_reliability_report not available (import failed).")
-        return
-
-    try:
-        result = export_reliability_report()
-        print(result)
-    except Exception as e:
-        print(f"[ERROR] Failed to export sensor reliability report: {e}")
-
-
-def main() -> None:
+def main():
     while True:
-        print_menu()
+        menu()
         choice = input("Select an option: ").strip()
 
-        if choice == "1":
-            # Run QA validation
-            run_script("qa_validator.py")
+        # === EXIT ==========================================
+        if choice == "9":
+            print("Exiting GLL Operator Console.")
+            sys.exit(0)
 
+        # === 1) QA VALIDATION ==============================
+        elif choice == "1":
+            from qa_validator import run_all_checks
+            print(run_all_checks())
+
+        # === 2) SHOW LOGS ==================================
         elif choice == "2":
-            # Show latest 20 log events
-            show_latest_log_events()
+            print(show_logs())
 
+        # === 3) SNAPSHOT ===================================
         elif choice == "3":
-            # Build operator snapshot
-            run_script("operator_snapshot.py")
-            snap_path = BASE_DIR / "operator_snapshot.txt"
-            if snap_path.exists():
-                print(f"[OK] Operator snapshot written → {snap_path}")
+            out = build_operator_snapshot()
+            print(f"Snapshot built: {out}")
 
+        # === 4) FULL PIPELINE ==============================
         elif choice == "4":
-            # Run full fusion pipeline + snapshot
-            run_script("fusion_run.py")
-            run_script("operator_snapshot.py")
+            subprocess.run(["python", "fusion_ingest.py"])
+            out = build_operator_snapshot()
+            print(f"Full pipeline + snapshot complete: {out}")
 
+        # === 5) OWL MEMORY VIEWER ==========================
         elif choice == "5":
-            # Spectral Owl memory viewer
-            show_spectral_owl_memory()
+            from spectral_owl.owl_memory import load_memory_log
+            mem = load_memory_log()
+            print(mem)
 
+        # === 6) OWL ANALYSIS ===============================
         elif choice == "6":
-            # Spectral Owl analysis (fusion scoring check)
-            # Prefer owl_brain_phase2; fall back to owl_brain
-            if (BASE_DIR / "spectral_owl" / "owl_brain_phase2.py").exists():
-                run_script("spectral_owl/owl_brain_phase2.py")
-            else:
-                run_script("spectral_owl/owl_brain.py")
+            from spectral_owl.owl_brain import analyze_fusion
+            out = analyze_fusion()
+            print(out)
 
+        # === 7) PIPELINE HEALTH ============================
         elif choice == "7":
-            # Pipeline health check
-            run_script("pipeline_health.py")
+            print(evaluate_pipeline_health())
 
+        # === 8) MISSION BRIEF ==============================
         elif choice == "8":
-            # Mission briefing (profile-aware)
-            run_mission_brief_profile_aware()
+            print(build_mission_briefing())
 
-        elif choice == "9":
-            print("Exiting Ghost CLI.")
-            break
-
+        # === 10) ANTI-DOS SCAN =============================
         elif choice == "10":
-            # Anti-DoS environment scan
-            run_script("anti_dos.py")
+            from anti_dos import run_anti_dos_scan
+            print(run_anti_dos_scan())
 
+        # === 11) CLOUD SYNC ================================
         elif choice == "11":
-            # Cloud Sync Check
-            cloud_sync_check_cli()
+            print(upload_fusion_output())
 
+        # === 12) THREAT MEMORY SUMMARY =====================
         elif choice == "12":
-            # Threat Memory Summary (high-level)
-            if (BASE_DIR / "spectral_owl" / "threat_memory_summary.py").exists():
-                run_script("spectral_owl/threat_memory_summary.py")
-            else:
-                print("[WARN] threat_memory_summary.py not found; falling back to memory viewer.")
-                show_spectral_owl_memory()
+            print(build_threat_summary())
 
+        # === 13) DAILY VISUAL PACK =========================
         elif choice == "13":
-            # Build Daily Visual Pack
-            run_script("generate_daily_visual_pack.py")
+            print(build_daily_pack())
 
+        # === 14) PROFILE STATUS ============================
         elif choice == "14":
-            # Show Active Profile Status
-            run_script("profile_status.py")
+            print(build_profile_status())
 
+        # === 15) FAMILY LAW DEMO ===========================
         elif choice == "15":
-            # Run Family Law Demo (Shari)
-            run_family_law_demo()
+            from legal_ingest_family_law import main as ingest
+            from family_law_scoring import main as score
+            from family_law_brief import main as brief
+            ingest()
+            score()
+            brief()
+            print("Family law demo complete.")
 
+        # === 16) OWL MEMORY DIAGNOSTICS ====================
         elif choice == "16":
-            # Owl Memory Diagnostics
-            show_owl_memory_diagnostics()
+            from spectral_owl.owl_memory import diagnostics
+            print(diagnostics())
 
+        # === 17) DASHBOARD EXPORT ==========================
         elif choice == "17":
-            # Spectral Dashboard Export
-            spectral_dashboard_export_cli()
+            from spectral_dashboard_api import build_dashboard_bundle
+            print(build_dashboard_bundle())
 
+        # === 18) HTML BRIEF ================================
         elif choice == "18":
-            # Mission Brief HTML Generator
-            mission_brief_html_cli()
+            subprocess.run(["python", "mission_brief_html.py"])
 
+        # === 19) MINIMAP EXPORT =============================
         elif choice == "19":
-            # Export GUI Minimap Overlay
-            minimap_export_cli()
+            print(export_gui_minimap())
 
+        # === 20) SOS OVERLAY ================================
         elif choice == "20":
-            # Export SOS Overlay
-            sos_overlay_export_cli()
+            print(export_sos_overlay())
 
+        # === 21) RUN-HISTORY TIMELINE =======================
         elif choice == "21":
-            # Run-History Intelligence Timeline
-            run_history_intel_cli()
+            print(run_history_timeline())
 
+        # === 22) SPECTRAL SNAPSHOT BUNDLE ===================
         elif choice == "22":
-            # Export Spectral Snapshot Bundle
-            spectral_snapshot_export_cli()
+            from spectral_snapshot_bundle import export_snapshot_bundle
+            print(export_snapshot_bundle())
 
+        # === 23) DEMO DECK MANIFEST =========================
         elif choice == "23":
-            # Build Demo Deck Manifest
-            demo_deck_manifest_cli()
+            print(build_demo_deck_manifest())
 
+        # === 24) RELIABILITY REPORT =========================
         elif choice == "24":
-            # Export Sensor Reliability Report
-            sensor_reliability_export_cli()
+            print(export_reliability_report())
+
+        # === 25) CROSS-SENSOR VALIDATION ====================
+        elif choice == "25":
+            print(run_cross_validation())
+            print(build_report())
+
+        # === 26) SBIR ONE-PAGER =============================
+        elif choice == "26":
+            out = write_onepager()
+            print(f"SBIR One-Pager written to: {out}")
 
         else:
-            print(f"[WARN] Unknown option: {choice}")
+            print("Invalid selection. Try again.")
 
 
 if __name__ == "__main__":

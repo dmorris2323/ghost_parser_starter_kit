@@ -348,14 +348,58 @@ def write_resilience_report() -> Path:
     return OUTPUT_FILE
 
 
+def get_resilience_snapshot() -> Dict[str, Any]:
+    """
+    Lightweight helper for other modules (CLI, GUI, HTML) to grab
+    the current resilience score + components without touching files.
+    """
+    data = compute_resilience_score()
+    return data
+
+
+def export_resilience_badge() -> Dict[str, Any]:
+    """
+    Export a very small JSON + text badge to docs/ for GUI / HTML use.
+
+    - docs/spectral_resilience_badge.txt   (ASCII one-liner)
+    - docs/spectral_resilience_badge.json  (machine-friendly)
+    """
+    DOCS_DIR.mkdir(parents=True, exist_ok=True)
+    snap = compute_resilience_score()
+    overall = snap["overall_score"]
+    badge_text = f"SPECTRAL RESILIENCE: {overall}/100 {build_ascii_bar(overall, width=10)}"
+
+    badge_txt_path = DOCS_DIR / "spectral_resilience_badge.txt"
+    badge_json_path = DOCS_DIR / "spectral_resilience_badge.json"
+
+    badge_txt_path.write_text(badge_text)
+
+    badge_payload = {
+        "overall": overall,
+        "components": snap["components"],
+        "badge": badge_text,
+    }
+    badge_json_path.write_text(json.dumps(badge_payload, indent=2))
+
+    return {
+        "status": "ok",
+        "txt": str(badge_txt_path),
+        "json": str(badge_json_path),
+        "overall": overall,
+    }
+
+
 def main() -> Dict[str, Any]:
     """
     Entry point for CLI usage.
     """
     out_path = write_resilience_report()
+    badge_info = export_resilience_badge()
     summary = compute_resilience_score()
     summary["output_file"] = str(out_path)
+    summary["badge"] = badge_info
     print(f"[OK] Spectral Resilience Score written → {out_path}")
+    print(f"[OK] Spectral Resilience Badge written → {badge_info['txt']}")
     print(f"Overall resilience: {summary['overall_score']}/100")
     return summary
 

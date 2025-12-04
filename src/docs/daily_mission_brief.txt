@@ -1,22 +1,82 @@
-=== DAILY MISSION BRIEF ===
-Generated: 2025-12-03T09:43:27.007528Z
+GHOST LANTERN LABS — DAILY MISSION BRIEF
+----------------------------------------
+Generated: 2025-12-04T04:42:37
 
-Active Profile: Sports Team Operations
+Active Profile: Sports Team Operations  (domain: unknown-domain)
+
+[SYSTEM STATUS] No data available.
+=== PIPELINE HEALTH ===
+======================================
+ GLL PIPELINE HEALTH SUMMARY
+======================================
+Overall Health Score: 90/100
+Status: GREEN
+
+QA Passed: 7
+QA Failed: 0
+Critical Alerts: 2
+
+Notes:
+All tests passed. 2 critical alert(s) present — reduced health score.
+
+=== SENSOR HEALTH ===
+Sensor Health Report — 2025-12-02T01:32:37.214163 UTC
+============================================================
+
+Sensor: optical_sensor_mock (optical)
+  Iterations:   10
+  Successes:    10
+  Failures:     0
+  Availability: 1.000
+  ValidityRate: 1.000
+
+Sensor: seismic_sensor_mock (seismic)
+  Iterations:   10
+  Successes:    10
+  Failures:     0
+  Availability: 1.000
+  ValidityRate: 1.000
+
+Sensor: ems_sensor_mock (ems)
+  Iterations:   10
+  Successes:    10
+  Failures:     0
+  Availability: 1.000
+  ValidityRate: 1.000
+
+Sensor: radiation_sensor_mock (radiation)
+  Iterations:   10
+  Successes:    10
+  Failures:     0
+  Availability: 1.000
+  ValidityRate: 1.000
+
+Sensor: generic_metrics_sensor_mock (generic)
+  Iterations:   10
+  Successes:    10
+  Failures:     0
+  Availability: 1.000
+  ValidityRate: 1.000
+
+=== THREAT MEMORY SNAPSHOT ===
+GLL Threat Memory Doctrine Report
+================================
+
+By Doctrine Tag:
+  - general_threat_awareness: 105
+  - timeliness_and_decision_risk: 10
+
+By Doctrine Tag + Severity:
+  - general_threat_awareness / CRITICAL: 105
+  - timeliness_and_decision_risk / HIGH: 10
 
 === SENSOR RELIABILITY ===
-OPTICAL    92.87% (OK)
-SEISMIC    80.56% (OK)
-EMS        100.0% (OK)
-RADIATION  86.77% (OK)
+=== SENSOR RELIABILITY REPORT ===
+Generated: 2025-12-04T09:33:16.911889Z
 
-=== SENSOR READINESS BRIEF ===
+OPTICAL    [███████████████░░░░░] 76.8%
+SEISMIC    [███████████████████░] 96.7%
+EMS        [███████████████░░░░░] 78.3%
+RADIATION  [█████████████████░░░] 87.2%
 
-Total sensors: 5
-Enabled: ['optical', 'seismic', 'ems', 'radiation', 'generic_metrics']
-Disabled: []
-
-=== RELIABILITY ===
-OPTICAL    85.15%  (OK)
-SEISMIC    95.76%  (OK)
-EMS        93.34%  (OK)
-RADIATION  85.36%  (OK)
+[CROSS-SENSOR VALIDATION] No data available.

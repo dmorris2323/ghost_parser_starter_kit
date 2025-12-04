@@ -1,0 +1,31 @@
+{
+  "overall": 78,
+  "components": [
+    {
+      "component": "qa_health",
+      "score": 100,
+      "details": "7/7 tests passed \u2192 QA health ratio 1.00"
+    },
+    {
+      "component": "sensor_health",
+      "score": 78,
+      "details": "Sensor health report present; no clear critical issues detected."
+    },
+    {
+      "component": "reliability",
+      "score": 80,
+      "details": "Reliability report present; could not parse explicit score, using safe default."
+    },
+    {
+      "component": "cross_sensor_validation",
+      "score": 68,
+      "details": "Cross-sensor report missing; assuming early-stage deployment."
+    },
+    {
+      "component": "ai_independence",
+      "score": 67,
+      "details": "Offline / AI-Independence status parsed from offline_status.txt (base=67)."
+    }
+  ],
+  "badge": "SPECTRAL RESILIENCE: 78/100 [\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2591\u2591\u2591] 78%"
+}

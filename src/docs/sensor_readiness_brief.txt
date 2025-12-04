@@ -1,0 +1,40 @@
+=== SENSOR READINESS BRIEF ===
+
+Total sensors in manifest : 5
+Enabled                    : 5
+Disabled                   : 0
+
+=== ENABLED SENSOR DETAILS ===
+[OPTICAL]
+  Description : Optical plume and flash detection; detects bright anomalies used in launch detection.
+  Thresholds  : warning=0.55  critical=0.85
+  Drift       : no data
+
+[SEISMIC]
+  Description : No profile description.
+  Thresholds  : warning=n/a  critical=n/a
+  Drift       : no data
+
+[EMS]
+  Description : Electromagnetic spectrum detection for jamming, interference, and spoof attempts.
+  Thresholds  : warning=0.6  critical=0.9
+  Drift       : no data
+
+[RADIATION]
+  Description : Gamma and neutron radiation detection for nuclear event confirmation.
+  Thresholds  : warning=0.7  critical=0.95
+  Drift       : no data
+
+[GENERIC_METRICS]
+  Description : No profile description.
+  Thresholds  : warning=n/a  critical=n/a
+  Drift       : no data
+
+=== SENSOR RELIABILITY (SUMMARY) ===
+=== SENSOR RELIABILITY REPORT ===
+Generated: 2025-12-04T09:33:16.911889Z
+
+OPTICAL    [███████████████░░░░░] 76.8%
+SEISMIC    [███████████████████░] 96.7%
+EMS        [███████████████░░░░░] 78.3%
+RADIATION  [█████████████████░░░] 87.2%

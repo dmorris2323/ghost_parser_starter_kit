@@ -1,0 +1,7 @@
+=== SENSOR DRIFT PREDICTION REPORT ===
+
+Total sensors with drift data: 1
+
+Sensor           Status     Drift    Horizon      Visual
+--------------- ---------- ------- ----------- -------------------------
+UNKNOWN         stable       0%  24h+         [░░░░░░░░░░░░░░░░░░░░]
