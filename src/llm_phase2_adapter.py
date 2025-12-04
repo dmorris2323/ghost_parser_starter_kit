@@ -1,135 +1,189 @@
 """
-llm_phase2_adapter.py — Ghost Lantern Labs (Phase 2 AI-Independence)
---------------------------------------------------------------------
+llm_phase2_adapter.py
 
-This is the Phase 2 multi-provider adapter.
+Phase 2 AI-Independence adapter for Spectral Owl.
 
-Responsibilities:
-- Read active provider and fallback chain from llm_config.
-- Build appropriate engine(s) from llm_provider_pool.
-- Route a prompt through the chain until one "succeeds".
-- Tag results with which provider actually answered.
-- Provide a demo proving provider swap works.
+Goals:
+- Single place where ALL LLM calls flow through.
+- Support multiple providers via env/config.
+- Provide a robust run_llm_with_fallback() that never kills GLL.
+- Always preserve an offline-safe local_rules path.
 
-NEW (Module 1):
-- Integrates offline_mode_flag to mark when we are in
-  a degraded/offline-like state (e.g., using local_rules or
-  not using the primary provider).
-
-This does NOT change the public return structure of
-run_llm_with_fallback(...) so existing callers remain valid:
-    {
-        "provider_tried": [...],
-        "final_provider": <name>,
-        "result": <engine_result_dict>,
-    }
+Exports:
+- get_active_provider() -> str
+- call_llm(provider: str, prompt: str) -> dict
+- run_llm_with_fallback(prompt: str) -> dict
 """
 
 from __future__ import annotations
 
-from typing import Dict, Any, List
-
-from llm_config import get_fallback_chain, describe_llm_config
-from llm_provider_pool import build_engine
-from offline_mode_flag import set_offline_mode, set_online_mode
+import os
+from typing import Any, Dict
 
 
-def run_llm_with_fallback(prompt: str, **kwargs: Any) -> Dict[str, Any]:
+# ---------------------------------------------------------------------------
+# Provider selection
+# ---------------------------------------------------------------------------
+
+AVAILABLE_PROVIDERS = ("provider_a", "provider_b", "local_rules")
+
+
+def get_active_provider() -> str:
     """
-    Execute LLM call with fallback.
-
-    Returns:
-        {
-            "provider_tried": [list of provider names],
-            "final_provider": <name>,
-            "result": <engine_result_dict>,
-        }
-
-    Side effect (Module 1):
-        - Writes offline_status.txt via offline_mode_flag:
-          * NORMAL_OPERATION if primary provider was used successfully.
-          * OFFLINE_OR_DEGRADED if we fell back to another provider or
-            ended up on local_rules.
+    Returns the currently selected provider based on env var GLL_LLM_PROVIDER.
+    Defaults to 'local_rules' if unset or invalid.
     """
-    cfg = get_fallback_chain()
-    tried: List[str] = []
-    last_result: Dict[str, Any] | None = None
-    final_provider: str | None = None
+    env_val = os.getenv("GLL_LLM_PROVIDER", "").strip().lower()
+    if env_val in AVAILABLE_PROVIDERS:
+        return env_val
+    return "local_rules"
 
-    for provider_name in cfg.fallback_chain:
-        engine = build_engine(provider_name)
-        tried.append(provider_name)
-        try:
-            result = engine.generate(prompt, **kwargs)
-            last_result = result
-            final_provider = provider_name
-            break
-        except Exception as e:  # noqa: BLE001
-            # Log last error-like result locally; we still continue to next provider.
-            last_result = {
-                "provider": provider_name,
-                "mode": "error",
-                "prompt": prompt,
-                "response": f"Engine error: {e!r}",
-            }
-            final_provider = provider_name
-            continue
 
-    if last_result is None:
-        # Nothing succeeded and no result recorded.
-        final_provider = None
-        last_result = {
-            "provider": None,
-            "mode": "error",
-            "prompt": prompt,
-            "response": "No providers available or all failed without result.",
-        }
+# ---------------------------------------------------------------------------
+# Core call function for each provider
+# ---------------------------------------------------------------------------
 
-    # Decide offline/degraded mode.
-    primary = cfg.fallback_chain[0] if cfg.fallback_chain else None
+def _call_provider_stub(name: str, prompt: str) -> Dict[str, Any]:
+    """
+    Stub implementation for remote providers.
 
-    if final_provider == "local_rules":
-        # Strong signal that we're in a local-only / offline-like path.
-        set_offline_mode(
-            "local_rules in use; treating this as offline/degraded analysis path."
-        )
-    elif primary is not None and final_provider != primary:
-        # We did not use the primary provider even though it's in the chain.
-        set_offline_mode(
-            f"Primary provider '{primary}' not used; fell back to '{final_provider}'."
-        )
-    else:
-        # We used the primary provider or there is no clear primary.
-        set_online_mode()
+    In a future phase, this is where you plug in:
+      - Azure OpenAI
+      - Other cloud vendors
+      - On-prem APIs
 
+    For now, it just simulates a structured response.
+    """
     return {
-        "provider_tried": tried,
-        "final_provider": final_provider,
-        "result": last_result,
+        "provider": name,
+        "completion": f"[{name} simulated completion] {prompt[:160]}",
+        "mode": "simulated",
     }
 
 
-def demo_provider_swap() -> None:
+def _call_local_rules(prompt: str) -> Dict[str, Any]:
     """
-    Run a small demo that:
-    - Prints current config
-    - Runs prompt through the fallback chain
-    - Shows which provider answered
+    Offline / local 'small brain' implementation.
+
+    Uses spectral_owl.local_rules_engine if available.
+    Never throws — always returns a best-effort completion.
     """
-    print("=== Phase 2 AI-Independence Demo ===")
-    print(describe_llm_config())
-    print("")
+    try:
+        from spectral_owl.local_rules_engine import run_local_rules
+        text = run_local_rules(prompt)
+    except Exception:
+        text = f"[local_rules fallback] {prompt[:160]}"
 
-    prompt = "Summarize why data denial and jamming matter for ISR."
+    return {
+        "provider": "local_rules",
+        "completion": text,
+        "mode": "local",
+    }
 
-    result = run_llm_with_fallback(prompt, max_tokens=64, temperature=0.1)
 
-    print("Providers tried:", ", ".join(result["provider_tried"]))
-    print("Final provider:", result["final_provider"])
-    print("Engine result dict:")
-    print(result["result"])
+def call_llm(provider: str, prompt: str) -> Dict[str, Any]:
+    """
+    Unified call interface for all providers.
+    """
+    provider = (provider or "").lower()
+
+    if provider in ("provider_a", "provider_b"):
+        return _call_provider_stub(provider, prompt)
+
+    # default + explicit local
+    return _call_local_rules(prompt)
+
+
+# ---------------------------------------------------------------------------
+# Fallback chain
+# ---------------------------------------------------------------------------
+
+def run_llm_with_fallback(prompt: str) -> Dict[str, Any]:
+    """
+    Main entry point for Spectral Owl.
+
+    Behavior:
+    - Try active provider (based on env / config).
+    - If it fails or returns missing completion, walk a fallback chain:
+        1) provider_a
+        2) provider_b
+        3) local_rules
+    - Never raises: always returns a dict with at least:
+        { "provider": str, "completion": str, "mode": str, ... }
+    """
+    primary = get_active_provider()
+
+    # 1) Try primary
+    result = None
+    try:
+        result = call_llm(primary, prompt)
+    except Exception:
+        result = None
+
+    if _is_valid_result(result):
+        result.setdefault("primary_provider", primary)
+        return result
+
+    # 2) Fallback chain, skipping the already-tried primary
+    chain = [p for p in AVAILABLE_PROVIDERS if p != primary]
+
+    for provider in chain:
+        try:
+            candidate = call_llm(provider, prompt)
+        except Exception:
+            candidate = None
+
+        if _is_valid_result(candidate):
+            candidate.setdefault("primary_provider", primary)
+            candidate.setdefault("fallback_from", primary)
+            candidate.setdefault("fallback_chain", chain)
+            return candidate
+
+    # 3) Last-resort emergency fallback
+    return {
+        "provider": "local_rules",
+        "completion": f"[emergency fallback] {prompt[:200]}",
+        "mode": "emergency",
+        "primary_provider": primary,
+        "fallback_chain": list(chain),
+    }
+
+
+def _is_valid_result(obj: Any) -> bool:
+    """
+    Accepts a result if it's a dict with a non-empty 'completion' string.
+    """
+    if not isinstance(obj, dict):
+        return False
+    comp = obj.get("completion")
+    return isinstance(comp, str) and len(comp.strip()) > 0
+
+
+# ---------------------------------------------------------------------------
+# Simple probe for CLI/QA usage
+# ---------------------------------------------------------------------------
+
+def phase2_probe(summary: str) -> Dict[str, Any]:
+    """
+    Utility used by llm_phase2_probe.py or other diagnostics.
+
+    Returns a small dict describing:
+      - active provider
+      - completion preview
+      - mode
+    """
+    res = run_llm_with_fallback(summary)
+    preview = res.get("completion", "")[:120]
+    return {
+        "active_provider": get_active_provider(),
+        "used_provider": res.get("provider"),
+        "mode": res.get("mode"),
+        "preview": preview,
+    }
 
 
 if __name__ == "__main__":
-    demo_provider_swap()
+    # Lightweight self-test
+    test = phase2_probe("Test summary: 0 critical, 2 warnings, avg reliability 93%.")
+    print(test)
 

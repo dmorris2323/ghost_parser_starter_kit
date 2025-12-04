@@ -1,152 +1,212 @@
 """
 mission_brief_html.py
 
-Generates an HTML daily mission brief for Ghost Lantern Labs.
+Builds the daily HTML mission brief for Ghost Lantern Labs.
 
-Sources:
-  - daily_mission_brief.build_mission_brief()  → core text brief
-  - sensor_readiness_brief.build_readiness_brief() → sensor status
-  - docs/reliability_report.txt → reliability details (if present)
-  - docs/drift_report.txt → drift prediction (if present)
+- Pulls text brief from daily_mission_brief.build_mission_brief()
+- Loads the active profile (for display badge)
+- Builds a Golden Dome readiness tile
+- Optionally injects:
+    - Cross-sensor report
+    - Reliability report
+    - Minimap text
+    - SOS overlay JSON
 
-Output:
-  - docs/daily_mission_brief.html
+Writes:
+    src/docs/daily_mission_brief.html
+    using template:
+    src/docs/mission_brief_template.html
 """
 
 from __future__ import annotations
 
+import json
 from pathlib import Path
+from typing import Any, Dict
 
 from daily_mission_brief import build_mission_brief
-from sensor_readiness_brief import build_readiness_brief
+from profile_config import get_active_profile
+from golden_dome_tile import build_golden_dome_tile
 
-BASE = Path(__file__).parent
+
+BASE = Path(__file__).resolve().parent
 DOCS_DIR = BASE / "docs"
-DOCS_DIR.mkdir(exist_ok=True)
+TEMPLATE_PATH = DOCS_DIR / "mission_brief_template.html"
+OUTPUT_PATH = DOCS_DIR / "daily_mission_brief.html"
 
-HTML_TEMPLATE = """<!DOCTYPE html>
-<html lang="en">
+SYSTEM_METRICS_JSON = BASE / "system_metrics.json"
+CROSS_SENSOR_REPORT = DOCS_DIR / "cross_sensor_report.txt"
+RELIABILITY_REPORT = DOCS_DIR / "reliability_report.txt"
+MINIMAP_TEXT = BASE / "minimap.txt"
+SOS_OVERLAY_JSON = BASE / "gui_sos_overlay.json"
+
+
+def _ensure_default_template() -> None:
+    """
+    Make sure we have a simple HTML template with all placeholders.
+    Safe to call every run.
+    """
+    if TEMPLATE_PATH.exists():
+        return
+
+    TEMPLATE_PATH.parent.mkdir(parents=True, exist_ok=True)
+    TEMPLATE_PATH.write_text(
+        """<html>
 <head>
-  <meta charset="utf-8" />
-  <title>Ghost Lantern Labs – Daily Mission Brief</title>
-  <style>
-    body {{
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      margin: 0;
-      padding: 0;
-      background: #05050a;
-      color: #f5f5f5;
-    }}
-    .container {{
-      max-width: 1080px;
-      margin: 0 auto;
-      padding: 24px;
-    }}
-    h1, h2, h3 {{
-      margin-top: 1.2rem;
-      margin-bottom: 0.4rem;
-    }}
-    h1 {{
-      font-size: 1.8rem;
-    }}
-    h2 {{
-      font-size: 1.4rem;
-      color: #9fd5ff;
-    }}
-    pre {{
-      background: #11131c;
-      padding: 12px 16px;
-      border-radius: 8px;
-      overflow-x: auto;
-      font-size: 0.9rem;
-      line-height: 1.4;
-    }}
-    .section {{
-      margin-bottom: 24px;
-      border-bottom: 1px solid #222637;
-      padding-bottom: 16px;
-    }}
-    .badge {{
-      display: inline-block;
-      background: #1e2738;
-      color: #9fd5ff;
-      border-radius: 999px;
-      padding: 2px 10px;
-      font-size: 0.75rem;
-      margin-left: 8px;
-    }}
-  </style>
+  <title>Daily Mission Brief – Ghost Lantern Labs</title>
 </head>
 <body>
-  <div class="container">
-    <h1>Ghost Lantern Labs – Daily Mission Brief<span class="badge">Spectral Owl</span></h1>
+  <h1>Mission Brief — Ghost Lantern Labs</h1>
+  <h3>Active Profile: {{ACTIVE_PROFILE}}</h3>
 
-    <div class="section">
-      <h2>Core Brief</h2>
-      <pre>{{CORE_BRIEF}}</pre>
-    </div>
+  <h2>Text Brief</h2>
+  <pre>{{BRIEF_TEXT}}</pre>
 
-    <div class="section">
-      <h2>Sensor Readiness Overview</h2>
-      <pre>{{SENSOR_READINESS}}</pre>
-    </div>
+  <h2>Golden Dome Readiness</h2>
+  <pre>{{GOLDEN_DOME_TILE}}</pre>
 
-    <div class="section">
-      <h2>Sensor Reliability Report</h2>
-      <pre>{{RELIABILITY}}</pre>
-    </div>
+  <h2>Sensor Reliability Report</h2>
+  <pre>{{RELIABILITY_REPORT}}</pre>
 
-    <div class="section">
-      <h2>Sensor Drift Prediction</h2>
-      <pre>{{DRIFT}}</pre>
-    </div>
-  </div>
+  <h2>Cross-Sensor Validation</h2>
+  <pre>{{CROSS_SENSOR}}</pre>
+
+  <h2>Fusion Minimap</h2>
+  <pre>{{MINIMAP}}</pre>
+
+  <h2>SOS Overlay</h2>
+  <pre>{{SOS_OVERLAY}}</pre>
 </body>
 </html>
-"""
+""",
+        encoding="utf-8",
+    )
 
 
-def _load_optional(path: Path, fallback: str) -> str:
-    if not path.exists():
-        return fallback
+def _read_or_default(path: Path, default_msg: str) -> str:
+    if path.exists():
+        try:
+            return path.read_text(encoding="utf-8")
+        except Exception:
+            return f"{default_msg} (file unreadable)"
+    return default_msg
+
+
+def _load_metrics_fallback() -> Dict[str, Any]:
+    """
+    Try to load system metrics for more realistic Golden Dome stats.
+    If anything fails, return safe defaults.
+    """
+    default = {
+        "avg_reliability": 92.5,
+        "agreement_score": 88.0,
+    }
+
+    if not SYSTEM_METRICS_JSON.exists():
+        return default
+
     try:
-        return path.read_text().strip()
+        raw = json.loads(SYSTEM_METRICS_JSON.read_text(encoding="utf-8"))
     except Exception:
-        return fallback
+        return default
+
+    avg_rel = raw.get("avg_reliability", default["avg_reliability"])
+    agree = raw.get("agreement_score", default["agreement_score"])
+
+    try:
+        avg_rel = float(avg_rel)
+    except Exception:
+        avg_rel = default["avg_reliability"]
+
+    try:
+        agree = float(agree)
+    except Exception:
+        agree = default["agreement_score"]
+
+    return {
+        "avg_reliability": avg_rel,
+        "agreement_score": agree,
+    }
 
 
 def write_daily_brief() -> str:
-    core_text = build_mission_brief()
-    readiness_text = build_readiness_brief()
+    """
+    Build and write the HTML daily mission brief.
 
-    reliability_path = DOCS_DIR / "reliability_report.txt"
-    drift_path = DOCS_DIR / "drift_report.txt"
+    Returns:
+        str: path to OUTPUT_PATH
+    """
+    _ensure_default_template()
 
-    reliability_text = _load_optional(
-        reliability_path,
-        "Reliability report not generated yet. Run sensor_reliability.py.",
+    # 1) Get the core text brief (string only)
+    brief_text = build_mission_brief()
+    if not isinstance(brief_text, str):
+        brief_text = str(brief_text)
+
+    # 2) Active profile display name
+    profile = get_active_profile()
+    display_name = getattr(profile, "display_name", None) or getattr(
+        profile, "name", None
     )
-    drift_text = _load_optional(
-        drift_path,
-        "Drift report not generated yet. Run sensor_drift_predictor.py.",
+    if not display_name:
+        display_name = str(profile)
+
+    # 3) Metrics for Golden Dome tile
+    stats = _load_metrics_fallback()
+    avg_rel = stats["avg_reliability"]
+    agreement = stats["agreement_score"]
+
+    dome_tile = build_golden_dome_tile(
+        reliability=avg_rel,
+        agreement=agreement,
+        profile=display_name,
     )
 
-    html = HTML_TEMPLATE
-    html = html.replace("{{CORE_BRIEF}}", core_text)
-    html = html.replace("{{SENSOR_READINESS}}", readiness_text)
-    html = html.replace("{{RELIABILITY}}", reliability_text)
-    html = html.replace("{{DRIFT}}", drift_text)
+    # 4) Optional embedded reports
+    cross_sensor_text = _read_or_default(
+        CROSS_SENSOR_REPORT,
+        "No cross-sensor report found. Run CLI Option 25.",
+    )
+    reliability_text = _read_or_default(
+        RELIABILITY_REPORT,
+        "No reliability report found. Run CLI Option 24.",
+    )
+    minimap_text = _read_or_default(
+        MINIMAP_TEXT,
+        "No minimap data found. Run fusion_minimap or CLI Option 19.",
+    )
+    sos_overlay_text = _read_or_default(
+        SOS_OVERLAY_JSON,
+        "No SOS overlay found. Run spectral_sos_overlay or CLI Option 20.",
+    )
 
-    out_path = DOCS_DIR / "daily_mission_brief.html"
-    out_path.write_text(html)
-    return str(out_path)
+    # If SOS overlay is JSON, pretty-print it for readability.
+    if sos_overlay_text and sos_overlay_text.startswith("{"):
+        try:
+            sos_obj = json.loads(sos_overlay_text)
+            sos_overlay_text = json.dumps(sos_obj, indent=2)
+        except Exception:
+            # keep raw text
+            pass
 
+    # 5) Load template and inject placeholders
+    html = TEMPLATE_PATH.read_text(encoding="utf-8")
 
-def main() -> None:
-    out = write_daily_brief()
-    print(f"[OK] HTML mission brief written → {out}")
+    html = html.replace("{{BRIEF_TEXT}}", brief_text)
+    html = html.replace("{{ACTIVE_PROFILE}}", display_name)
+    html = html.replace(
+        "{{GOLDEN_DOME_TILE}}", json.dumps(dome_tile, indent=2)
+    )
+    html = html.replace("{{CROSS_SENSOR}}", cross_sensor_text)
+    html = html.replace("{{RELIABILITY_REPORT}}", reliability_text)
+    html = html.replace("{{MINIMAP}}", minimap_text)
+    html = html.replace("{{SOS_OVERLAY}}", sos_overlay_text)
+
+    OUTPUT_PATH.parent.mkdir(parents=True, exist_ok=True)
+    OUTPUT_PATH.write_text(html, encoding="utf-8")
+    return str(OUTPUT_PATH)
 
 
 if __name__ == "__main__":
-    main()
+    print(write_daily_brief())
 

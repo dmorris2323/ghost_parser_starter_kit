@@ -1,91 +1,133 @@
 {
-  "meta": {
-    "description": "Ghost Lantern Labs \u2014 Spectral Snapshot Bundle",
-    "version": "1.0"
-  },
-  "dashboard_bundle": null,
-  "minimap_overlay": {
-    "timestamp": "2025-12-03T03:33:00.171331Z",
-    "map": {
-      "UNKNOWN": {
-        "critical": 0,
-        "warning": 0,
-        "stable": 4
-      }
+  "artifacts": {
+    "daily_brief_html": {
+      "content": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n  <meta charset=\"utf-8\" />\n  <title>Ghost Lantern Labs \u2013 Daily Mission Brief</title>\n  <style>\n    body {{\n      font-family: -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif;\n      margin: 0;\n      padding: 0;\n      background: #05050a;\n      color: #f5f5f5;\n    }}\n    .container {{\n      max-width: 1080px;\n      margin: 0 auto;\n      padding: 24px;\n    }}\n    h1, h2, h3 {{\n      margin-top: 1.2rem;\n      margin-bottom: 0.4rem;\n    }}\n    h1 {{\n      font-size: 1.8rem;\n    }}\n    h2 {{\n      font-size: 1.4rem;\n      color: #9fd5ff;\n    }}\n    pre {{\n      background: #11131c;\n      padding: 12px 16px;\n      border-radius: 8px;\n      overflow-x: auto;\n      font-size: 0.9rem;\n      line-height: 1.4;\n    }}\n    .section {{\n      margin-bottom: 24px;\n      border-bottom: 1px solid #222637;\n      padding-bottom: 16px;\n    }}\n    .badge {{\n      display: inline-block;\n      background: #1e2738;\n      color: #9fd5ff;\n      border-radius: 999px;\n      padding: 2px 10px;\n      font-size: 0.75rem;\n      margin-left: 8px;\n    }}\n  </style>\n</head>\n<body>\n  <div class=\"container\">\n    <h1>Ghost Lantern Labs \u2013 Daily Mission Brief<span class=\"badge\">Spectral Owl</span></h1>\n\n    <div class=\"section\">\n      <h2>Core Brief</h2>\n      <pre>GHOST LANTERN LABS \u2014 DAILY MISSION BRIEF\n----------------------------------------\nGenerated: 2025-12-04T04:42:37\n\nActive Profile: Sports Team Operations  (domain: unknown-domain)\n\n[SYSTEM STATUS] No data available.\n=== PIPELINE HEALTH ===\n======================================\n GLL PIPELINE HEALTH SUMMARY\n======================================\nOverall Health Score: 90/100\nStatus: GREEN\n\nQA Passed: 7\nQA Failed: 0\nCritical Alerts: 2\n\nNotes:\nAll tests passed. 2 critical alert(s) present \u2014 reduced health score.\n\n=== SENSOR HEALTH ===\nSensor Health Report \u2014 2025-12-02T01:32:37.214163 UTC\n============================================================\n\nSensor: optical_sensor_mock (optical)\n  Iterations:   10\n  Successes:    10\n  Failures:     0\n  Availability: 1.000\n  ValidityRate: 1.000\n\nSensor: seismic_sensor_mock (seismic)\n  Iterations:   10\n  Successes:    10\n  Failures:     0\n  Availability: 1.000\n  ValidityRate: 1.000\n\nSensor: ems_sensor_mock (ems)\n  Iterations:   10\n  Successes:    10\n  Failures:     0\n  Availability: 1.000\n  ValidityRate: 1.000\n\nSensor: radiation_sensor_mock (radiation)\n  Iterations:   10\n  Successes:    10\n  Failures:     0\n  Availability: 1.000\n  ValidityRate: 1.000\n\nSensor: generic_metrics_sensor_mock (generic)\n  Iterations:   10\n  Successes:    10\n  Failures:     0\n  Availability: 1.000\n  ValidityRate: 1.000\n\n=== THREAT MEMORY SNAPSHOT ===\nGLL Threat Memory Doctrine Report\n================================\n\nBy Doctrine Tag:\n  - general_threat_awareness: 105\n  - timeliness_and_decision_risk: 10\n\nBy Doctrine Tag + Severity:\n  - general_threat_awareness / CRITICAL: 105\n  - timeliness_and_decision_risk / HIGH: 10\n\n=== SENSOR RELIABILITY ===\n=== SENSOR RELIABILITY REPORT ===\nGenerated: 2025-12-04T09:33:16.911889Z\n\nOPTICAL    [\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2591\u2591\u2591\u2591\u2591] 76.8%\nSEISMIC    [\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2591] 96.7%\nEMS        [\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2591\u2591\u2591\u2591\u2591] 78.3%\nRADIATION  [\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2591\u2591\u2591] 87.2%\n\n[CROSS-SENSOR VALIDATION] No data available.</pre>\n    </div>\n\n    <div class=\"section\">\n      <h2>Sensor Readiness Overview</h2>\n      <pre>=== SENSOR READINESS BRIEF ===\n\nTotal sensors in manifest : 5\nEnabled                    : 5\nDisabled                   : 0\n\n=== ENABLED SENSOR DETAILS ===\n[OPTICAL]\n  Description : Optical plume and flash detection; detects bright anomalies used in launch detection.\n  Thresholds  : warning=0.55  critical=0.85\n  Drift       : no data\n\n[SEISMIC]\n  Description : No profile description.\n  Thresholds  : warning=n/a  critical=n/a\n  Drift       : no data\n\n[EMS]\n  Description : Electromagnetic spectrum detection for jamming, interference, and spoof attempts.\n  Thresholds  : warning=0.6  critical=0.9\n  Drift       : no data\n\n[RADIATION]\n  Description : Gamma and neutron radiation detection for nuclear event confirmation.\n  Thresholds  : warning=0.7  critical=0.95\n  Drift       : no data\n\n[GENERIC_METRICS]\n  Description : No profile description.\n  Thresholds  : warning=n/a  critical=n/a\n  Drift       : no data\n\n=== SENSOR RELIABILITY (SUMMARY) ===\n=== SENSOR RELIABILITY REPORT ===\nGenerated: 2025-12-04T09:33:16.911889Z\n\nOPTICAL    [\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2591\u2591\u2591\u2591\u2591] 76.8%\nSEISMIC    [\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2591] 96.7%\nEMS        [\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2591\u2591\u2591\u2591\u2591] 78.3%\nRADIATION  [\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2591\u2591\u2591] 87.2%\n</pre>\n    </div>\n\n    <div class=\"section\">\n      <h2>Sensor Reliability Report</h2>\n      <pre>=== SENSOR RELIABILITY REPORT ===\nGenerated: 2025-12-04T09:33:16.911889Z\n\nOPTICAL    [\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2591\u2591\u2591\u2591\u2591] 76.8%\nSEISMIC    [\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2591] 96.7%\nEMS        [\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2591\u2591\u2591\u2591\u2591] 78.3%\nRADIATION  [\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2591\u2591\u2591] 87.2%</pre>\n    </div>\n\n    <div class=\"section\">\n      <h2>Sensor Drift Prediction</h2>\n      <pre>=== SENSOR DRIFT PREDICTION REPORT ===\n\nTotal sensors with drift data: 1\n\nSensor           Status     Drift    Horizon      Visual\n--------------- ---------- ------- ----------- -------------------------\nUNKNOWN         stable       0%  24h+         [\u2591\u2591\u2591\u2591\u2591\u2591\u2591\u2591\u2591\u2591\u2591\u2591\u2591\u2591\u2591\u2591\u2591\u2591\u2591\u2591]</pre>\n    </div>\n  </div>\n</body>\n</html>\n",
+      "exists": true,
+      "path": "/Users/dextermorris/ghost/parser_starter_kit/src/docs/daily_mission_brief.html"
+    },
+    "daily_brief_txt": {
+      "content": "GHOST LANTERN LABS \u2014 DAILY MISSION BRIEF\n----------------------------------------\nGenerated: 2025-12-04T04:42:37\n\nActive Profile: Sports Team Operations  (domain: unknown-domain)\n\n[SYSTEM STATUS] No data available.\n=== PIPELINE HEALTH ===\n======================================\n GLL PIPELINE HEALTH SUMMARY\n======================================\nOverall Health Score: 90/100\nStatus: GREEN\n\nQA Passed: 7\nQA Failed: 0\nCritical Alerts: 2\n\nNotes:\nAll tests passed. 2 critical alert(s) present \u2014 reduced health score.\n\n=== SENSOR HEALTH ===\nSensor Health Report \u2014 2025-12-02T01:32:37.214163 UTC\n============================================================\n\nSensor: optical_sensor_mock (optical)\n  Iterations:   10\n  Successes:    10\n  Failures:     0\n  Availability: 1.000\n  ValidityRate: 1.000\n\nSensor: seismic_sensor_mock (seismic)\n  Iterations:   10\n  Successes:    10\n  Failures:     0\n  Availability: 1.000\n  ValidityRate: 1.000\n\nSensor: ems_sensor_mock (ems)\n  Iterations:   10\n  Successes:    10\n  Failures:     0\n  Availability: 1.000\n  ValidityRate: 1.000\n\nSensor: radiation_sensor_mock (radiation)\n  Iterations:   10\n  Successes:    10\n  Failures:     0\n  Availability: 1.000\n  ValidityRate: 1.000\n\nSensor: generic_metrics_sensor_mock (generic)\n  Iterations:   10\n  Successes:    10\n  Failures:     0\n  Availability: 1.000\n  ValidityRate: 1.000\n\n=== THREAT MEMORY SNAPSHOT ===\nGLL Threat Memory Doctrine Report\n================================\n\nBy Doctrine Tag:\n  - general_threat_awareness: 105\n  - timeliness_and_decision_risk: 10\n\nBy Doctrine Tag + Severity:\n  - general_threat_awareness / CRITICAL: 105\n  - timeliness_and_decision_risk / HIGH: 10\n\n=== SENSOR RELIABILITY ===\n=== SENSOR RELIABILITY REPORT ===\nGenerated: 2025-12-04T09:33:16.911889Z\n\nOPTICAL    [\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2591\u2591\u2591\u2591\u2591] 76.8%\nSEISMIC    [\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2591] 96.7%\nEMS        [\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2591\u2591\u2591\u2591\u2591] 78.3%\nRADIATION  [\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2591\u2591\u2591] 87.2%\n\n[CROSS-SENSOR VALIDATION] No data available.",
+      "exists": true,
+      "path": "/Users/dextermorris/ghost/parser_starter_kit/src/docs/daily_mission_brief.txt"
+    },
+    "minimap_json": {
+      "content": {
+        "map": {
+          "UNKNOWN": {
+            "critical": 0,
+            "stable": 4,
+            "warning": 0
+          }
+        },
+        "timestamp": "2025-12-03T03:33:00.171331Z"
+      },
+      "exists": true,
+      "path": "/Users/dextermorris/ghost/parser_starter_kit/src/gui_minimap.json"
+    },
+    "operator_snapshot_txt": {
+      "content": "======================================\n GHOST LANTERN LABS \u2014 OPERATOR SNAPSHOT\n======================================\n\n1) PIPELINE & QA STATUS\n--------------------------------------\n=== QA VALIDATION SUMMARY ===\nTotal tests: 7\nPassed:      7\nFailed:      0\n\n[PASS] fusion_scoring\nfusion_scoring PASSED.\nSTDOUT:\nnormal\n\u2705 Scoring complete \u2014 5 rows saved to scored_output.csv\n\n----------------------------------------\n[PASS] commander_extract\ncommander_extract PASSED.\nSTDOUT:\n\u2705 Commander Extract complete \u2014 5 events summarized to commander_extract.csv\n\n----------------------------------------\n[PASS] heatmap_prep\nheatmap_prep PASSED.\nSTDOUT:\n\ud83d\udd25 Heatmap-ready data written to heatmap_data.csv\n\n----------------------------------------\n[PASS] fusion_alerts\nfusion_alerts PASSED.\nSTDOUT:\n\n----------------------------------------\n[PASS] daily_report\ndaily_report PASSED.\nSTDOUT:\n\ud83e\uddfe Daily report written to daily_report.txt\n\n----------------------------------------\n[PASS] spectral_owl\nSpectral Owl module import OK.\n----------------------------------------\n[PASS] cloud_sync\nCloud sync health check OK: {'status': 'ok', 'details': {'provider': 'azure', 'mode': 'simulation', 'sync_enabled': True}, 'files_in_archive': 2}\n----------------------------------------\n\n2) ALERT STATUS\n--------------------------------------\nCritical alerts in current run: 2\n\n3) SPECTRAL OWL ASSESSMENT\n--------------------------------------\n{'status': 'bad_schema', 'total_rows': 0, 'critical_events': 0, 'recommendation': \"Fix scored_output schema: missing 'score' column.\", 'message': 'score column missing in scored_output.csv'}\n\n4) THREAT MEMORY SUMMARY\n--------------------------------------\n124 events total. Top patterns: UNKNOWN: 124\n\n5) CLOUD SYNC HEALTH\n--------------------------------------\n{'status': 'ok', 'details': {'provider': 'azure', 'mode': 'simulation', 'sync_enabled': True}, 'files_in_archive': 2}\n\n6) DAILY REPORT (LAST RUN)\n--------------------------------------\n========================================\nGLL DAILY REPORT \u2014 Day 45\nGenerated (UTC): 2025-12-03T03:32:46.262951\n========================================\n\nCommander Extract Summary\n- Total events: 5\n- Critical events: 2\n\nTop Events:\n- [Critical] Score 100: Seismic 5.2, Rad 1.62 \u00b5Sv, Comms: Burst\n- [Critical] Score 100: Seismic 4.1, Rad 3.39 \u00b5Sv, Comms: Normal\n- [Moderate] Score 10: Seismic 5.1, Rad 3.66 \u00b5Sv, Comms: Normal\n\nOps Log Summary\n- Recent errors: 0\n- Recent missing files: 0\n\nLast 10 Log Entries:\n2025-11-27T13:56:17.647440 | config_guard | ok | \u2705 SRC directory present: /Users/dextermorris/ghost/parser_starter_kit/src | \u2705 DATA directory present: /Users/dextermorris/ghost/parser_starter_kit/src/data | \u2705 baseline_schema.csv present and header looks correct: /Users/dextermorris/ghost/parser_starter_kit/src/baseline_schema.csv | \u2705 fused_output.csv found at: /Users/dextermorris/ghost/parser_starter_kit/fused_output.csv | \u2705 Owl memory file OK: /Users/dextermorris/ghost/parser_starter_kit/owl_memory.txt | \u2705 Log file present: /Users/dextermorris/ghost/parser_starter_kit/fusion_ops_log.csv\n2025-11-27T13:56:33.206533 | config_guard | ok | \u2705 SRC directory present: /Users/dextermorris/ghost/parser_starter_kit/src | \u2705 DATA directory present: /Users/dextermorris/ghost/parser_starter_kit/src/data | \u2705 baseline_schema.csv present and header looks correct: /Users/dextermorris/ghost/parser_starter_kit/src/baseline_schema.csv | \u2705 fused_output.csv found at: /Users/dextermorris/ghost/parser_starter_kit/fused_output.csv | \u2705 Owl memory file OK: /Users/dextermorris/ghost/parser_starter_kit/owl_memory.txt | \u2705 Log file present: /Users/dextermorris/ghost/parser_starter_kit/fusion_ops_log.csv\n2025-11-27T14:04:26.347466 | config_guard | ok | \u2705 SRC directory present: /Users/dextermorris/ghost/parser_starter_kit/src | \u2705 DATA directory present: /Users/dextermorris/ghost/parser_starter_kit/src/data | \u2705 Spectral Owl directory present: /Users/dextermorris/ghost/parser_starter_kit/src/spectral_owl | \u2705 Cloud directory present: /Users/dextermorris/ghost/parser_starter_kit/src/cloud | \u2705 baseline_schema.csv present and header looks correct: /Users/dextermorris/ghost/parser_starter_kit/src/baseline_schema.csv | \u2705 fused_output.csv found at: /Users/dextermorris/ghost/parser_starter_kit/fused_output.csv | \u2705 ghost_cli.py: /Users/dextermorris/ghost/parser_starter_kit/src/ghost_cli.py | \u2705 qa_validator.py: /Users/dextermorris/ghost/parser_starter_kit/src/qa_validator.py | \u2705 anti_dos.py: /Users/dextermorris/ghost/parser_starter_kit/src/anti_dos.py | \u2705 Spectral Owl component (__init__.py): /Users/dextermorris/ghost/parser_starter_kit/src/spectral_owl/__init__.py | \u2705 Spectral Owl component (owl_brain.py): /Users/dextermorris/ghost/parser_starter_kit/src/spectral_owl/owl_brain.py | \u2705 Spectral Owl component (owl_memory.py): /Users/dextermorris/ghost/parser_starter_kit/src/spectral_owl/owl_memory.py | \u2705 Spectral Owl component (llm_adapter.py): /Users/dextermorris/ghost/parser_starter_kit/src/spectral_owl/llm_adapter.py | \u2705 Cloud module file (__init__.py): /Users/dextermorris/ghost/parser_starter_kit/src/cloud/__init__.py | \u2705 Cloud module file (azure_blob_stub.py): /Users/dextermorris/ghost/parser_starter_kit/src/cloud/azure_blob_stub.py | \u2705 Cloud module file (azure_function_flow.md): /Users/dextermorris/ghost/parser_starter_kit/src/cloud/azure_function_flow.md | \u2705 Cloud module file (README.md): /Users/dextermorris/ghost/parser_starter_kit/src/cloud/README.md | \u2705 Cloud doc (CLOUD_READY.md): /Users/dextermorris/ghost/parser_starter_kit/CLOUD_READY.md | \u2705 Cloud doc (azure_architecture.md): /Users/dextermorris/ghost/parser_starter_kit/azure_architecture.md | \u2705 Owl memory file OK: /Users/dextermorris/ghost/parser_starter_kit/owl_memory.txt | \u2705 Log file present: /Users/dextermorris/ghost/parser_starter_kit/fusion_ops_log.csv | \u26a0\ufe0f bad_data_quarantine.csv not found (will appear when sanitizer quarantines rows). | \u26a0\ufe0f bad_data_heatmap.csv not found (will appear when heatmap prep runs).\n2025-11-27T14:07:04.588196 | anti_dos | classify | volume=50/min, payload=5.0KB -> normal\n2025-11-27T14:07:04.589011 | anti_dos | classify | volume=350/min, payload=8.0KB -> suspicious\n2025-11-27T14:07:04.589072 | anti_dos | classify | volume=2000/min, payload=1.0KB -> dos_suspected\n2025-11-27T14:07:04.590642 | config_guard | ok | \u2705 SRC directory present: /Users/dextermorris/ghost/parser_starter_kit/src | \u2705 DATA directory present: /Users/dextermorris/ghost/parser_starter_kit/src/data | \u2705 Spectral Owl directory present: /Users/dextermorris/ghost/parser_starter_kit/src/spectral_owl | \u2705 Cloud directory present: /Users/dextermorris/ghost/parser_starter_kit/src/cloud | \u2705 baseline_schema.csv present and header looks correct: /Users/dextermorris/ghost/parser_starter_kit/src/baseline_schema.csv | \u2705 fused_output.csv found at: /Users/dextermorris/ghost/parser_starter_kit/fused_output.csv | \u2705 ghost_cli.py: /Users/dextermorris/ghost/parser_starter_kit/src/ghost_cli.py | \u2705 qa_validator.py: /Users/dextermorris/ghost/parser_starter_kit/src/qa_validator.py | \u2705 anti_dos.py: /Users/dextermorris/ghost/parser_starter_kit/src/anti_dos.py | \u2705 Spectral Owl component (__init__.py): /Users/dextermorris/ghost/parser_starter_kit/src/spectral_owl/__init__.py | \u2705 Spectral Owl component (owl_brain.py): /Users/dextermorris/ghost/parser_starter_kit/src/spectral_owl/owl_brain.py | \u2705 Spectral Owl component (owl_memory.py): /Users/dextermorris/ghost/parser_starter_kit/src/spectral_owl/owl_memory.py | \u2705 Spectral Owl component (llm_adapter.py): /Users/dextermorris/ghost/parser_starter_kit/src/spectral_owl/llm_adapter.py | \u2705 Cloud module file (__init__.py): /Users/dextermorris/ghost/parser_starter_kit/src/cloud/__init__.py | \u2705 Cloud module file (azure_blob_stub.py): /Users/dextermorris/ghost/parser_starter_kit/src/cloud/azure_blob_stub.py | \u2705 Cloud module file (azure_function_flow.md): /Users/dextermorris/ghost/parser_starter_kit/src/cloud/azure_function_flow.md | \u2705 Cloud module file (README.md): /Users/dextermorris/ghost/parser_starter_kit/src/cloud/README.md | \u2705 Cloud doc (CLOUD_READY.md): /Users/dextermorris/ghost/parser_starter_kit/CLOUD_READY.md | \u2705 Cloud doc (azure_architecture.md): /Users/dextermorris/ghost/parser_starter_kit/azure_architecture.md | \u2705 Owl memory file OK: /Users/dextermorris/ghost/parser_starter_kit/owl_memory.txt | \u2705 Log file present: /Users/dextermorris/ghost/parser_starter_kit/fusion_ops_log.csv | \u26a0\ufe0f bad_data_quarantine.csv not found (will appear when sanitizer quarantines rows). | \u26a0\ufe0f bad_data_heatmap.csv not found (will appear when heatmap prep runs).\n2025-11-27T14:07:04.593296 | bad_data_quarantine | quarantine | 1 row(s) quarantined for reason='negative_Seismic_Mag'\n2025-11-27T14:07:04.594038 | bad_data_quarantine | quarantine | 1 row(s) quarantined for reason='negative_Radiation_uSv'\n2025-11-27T14:07:04.594199 | fusion_sanitizer | sanitize | 3 rows in, 3 rows remain after cleaning\n\nEnd of Report\n========================================\n",
+      "exists": true,
+      "path": "/Users/dextermorris/ghost/parser_starter_kit/src/operator_snapshot.txt"
+    },
+    "sensor_health_txt": {
+      "content": "Sensor Health Report \u2014 2025-12-02T01:32:37.214163 UTC\n============================================================\n\nSensor: optical_sensor_mock (optical)\n  Iterations:   10\n  Successes:    10\n  Failures:     0\n  Availability: 1.000\n  ValidityRate: 1.000\n\nSensor: seismic_sensor_mock (seismic)\n  Iterations:   10\n  Successes:    10\n  Failures:     0\n  Availability: 1.000\n  ValidityRate: 1.000\n\nSensor: ems_sensor_mock (ems)\n  Iterations:   10\n  Successes:    10\n  Failures:     0\n  Availability: 1.000\n  ValidityRate: 1.000\n\nSensor: radiation_sensor_mock (radiation)\n  Iterations:   10\n  Successes:    10\n  Failures:     0\n  Availability: 1.000\n  ValidityRate: 1.000\n\nSensor: generic_metrics_sensor_mock (generic)\n  Iterations:   10\n  Successes:    10\n  Failures:     0\n  Availability: 1.000\n  ValidityRate: 1.000\n\n",
+      "exists": true,
+      "path": "/Users/dextermorris/ghost/parser_starter_kit/src/sensor_health_report.txt"
+    },
+    "sos_overlay_json": {
+      "content": {
+        "ai_engine": {
+          "mode": "llm_config",
+          "provider": "provider_a"
+        },
+        "alerts": {
+          "count": 2,
+          "recent": [
+            {
+              "Confidence_Level": " Comms: Burst\"",
+              "Description": "\"Seismic 5.2",
+              "Score": " Rad 1.62 \u00b5Sv",
+              "id": "2"
+            },
+            {
+              "Confidence_Level": " Comms: Normal\"",
+              "Description": "\"Seismic 4.1",
+              "Score": " Rad 3.39 \u00b5Sv",
+              "id": "5"
+            }
+          ]
+        },
+        "profile": {
+          "description": "",
+          "display_name": "Sports Team Operations",
+          "key": "sports_team"
+        },
+        "status": "ok",
+        "threat_memory": {
+          "recent_sample": [
+            {
+              "details": "high",
+              "event_type": "fusion_critical",
+              "severity": "owl_brain",
+              "timestamp": "2025-12-02T11:57:02.604302"
+            },
+            {
+              "details": "high",
+              "event_type": "fusion_critical",
+              "severity": "owl_brain",
+              "timestamp": "2025-12-02T13:26:45.279558"
+            },
+            {
+              "details": "high",
+              "event_type": "fusion_critical",
+              "severity": "owl_brain",
+              "timestamp": "2025-12-02T13:58:58.500875"
+            },
+            {
+              "details": "high",
+              "event_type": "fusion_critical",
+              "severity": "owl_brain",
+              "timestamp": "2025-12-02T14:08:21.852019"
+            },
+            {
+              "details": "high",
+              "event_type": "fusion_critical",
+              "severity": "owl_brain",
+              "timestamp": "2025-12-03T03:32:49.527091"
+            }
+          ],
+          "total_events": 124
+        },
+        "threat_summary_text": "===== THREAT MEMORY SUMMARY =====\nTotal recorded anomalies: 124\n\nTop recurring threat types:\n  \u2022 UNKNOWN: 124 occurrences\n\nMost recent 50 events:\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [HIGH] stress_cycle \u2014 Stress cycle 1: status=ok, risk=HIGH\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [HIGH] stress_cycle \u2014 Stress cycle 2: status=ok, risk=HIGH\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [HIGH] stress_cycle \u2014 Stress cycle 3: status=ok, risk=HIGH\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [HIGH] stress_cycle \u2014 Stress cycle 4: status=ok, risk=HIGH\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [HIGH] stress_cycle \u2014 Stress cycle 5: status=ok, risk=HIGH\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [owl_brain] fusion_critical \u2014 high\n  [owl_brain] fusion_critical \u2014 high\n  [owl_brain] fusion_critical \u2014 high\n  [owl_brain] fusion_critical \u2014 high\n  [owl_brain] fusion_critical \u2014 high\n  [owl_brain] fusion_critical \u2014 high\n  [owl_brain] fusion_critical \u2014 high\n  [owl_brain] fusion_critical \u2014 high\n  [owl_brain] fusion_critical \u2014 high\n\nSummary complete.\n",
+        "timestamp": "2025-12-03T04:17:31.765724+00:00"
+      },
+      "exists": true,
+      "path": "/Users/dextermorris/ghost/parser_starter_kit/src/gui_sos_overlay.json"
+    },
+    "spectral_dashboard_json": {
+      "content": null,
+      "exists": false,
+      "path": "/Users/dextermorris/ghost/parser_starter_kit/src/docs/spectral_dashboard_bundle.json"
+    },
+    "system_status_txt": {
+      "content": "========================================\n GHOST LANTERN LABS \u2014 SYSTEM STATUS HUD \n========================================\nGenerated: 2025-12-02 19:31:19 UTC\n\n=== ACTIVE PROFILE / OPERATOR CONTEXT ===\nMission Profile \u2013 Parser v1.1 (Day 1)\n\n1) Problem Statement:\n   Monitor AOI for shallow, mid-mag events and surface only those matching operational interest.\n\n2) Customer / Decisionmaker:\n   Flight leadership/NCOIC; supports commander SA.\n\n3) AOI:\n   NK_TEST_ZONE (Lat 39\u201341 / Lon 128\u2013130); MINING_REGION for alternate signature.\n\n4) EEIs:\n   Time, lat/lon, depth, magnitude, AOI membership, flag reason.\n\n5) Assumptions:\n   AOI bounds correct; thresholds reflect current TTPs.\n\n6) Constraints:\n   Sy\n...[truncated]...\n\n=== OFFLINE / AI-INDEPENDENCE STATUS ===\nTIMESTAMP_UTC: 2025-12-01T23:58:51.041939\nSTATUS: OFFLINE_OR_DEGRADED\nREASON: local_rules in use; treating this as offline/degraded analysis path.\n\n\n=== GOLDEN DOME ALIGNMENT ===\n=== GOLDEN DOME ALIGNMENT REPORT ===\nScore: 10/11 checks passed (91%)\nTier:  GOLD\n\nDetail:\n - [OK ] AI_Plan: AI-Independence doctrine documented (FOUND @ /Users/dextermorris/ghost/parser_starter_kit/src/docs/AI_Independence_Plan.md)\n - [OK ] AI_Phase2: Phase 2 design captured (FOUND @ /Users/dextermorris/ghost/parser_starter_kit/src/docs/AI_Independence_Phase2.md)\n - [OK ] AI_Phase3: Phase 3 design captured (FOUND @ /Users/dextermorris/ghost/parser_starter_kit/src/docs/AI_Independence_Phase3.md)\n...[truncated]...\n\n=== PIPELINE HEALTH SUMMARY ===\n======================================\n GLL PIPELINE HEALTH SUMMARY\n======================================\nOverall Health Score: 90/100\nStatus: GREEN\n\nQA Passed: 7\nQA Failed: 0\nCritical Alerts: 2\n\nNotes:\nAll tests passed. 2 critical alert(s) present \u2014 reduced health score.\n\n\n=== SENSOR HEALTH SUMMARY ===\nSensor Health Report \u2014 2025-12-02T01:32:37.214163 UTC\n============================================================\n\nSensor: optical_sensor_mock (optical)\n  Iterations:   10\n  Successes:    10\n  Failures:     0\n  Availability: 1.000\n  ValidityRate: 1.000\n\nSensor: seismic_sensor_mock (seismic)\n  Iterations:   10\n  Successes:    10\n  Failures:     0\n  Availability: 1.000\n  ValidityRate: 1.000\n\nSensor: ems_sensor_mock (ems)\n  Iterations:   10\n  Successes:    10\n  Failures:     0\n  Availability: 1.000\n  ValidityRate: 1.000\n\nSensor: radiation_sensor_mock (radiation)\n  Iterations:   10\n  Successes:    10\n  Failures:     0\n  Availability: 1.000\n  ValidityRate: 1.000\n\nSensor: generic_metrics_sensor_mock (generic)\n  Iterations:   10\n  Successes:    10\n  Failures:     0\n  Availability: 1.000\n  ValidityRate: 1.000\n\n\n\n=== LATEST FUSION OPS LOG ENTRY ===\n2025-11-27T14:07:04.594199,fusion_sanitizer,sanitize,\"3 rows in, 3 rows remain after cleaning\"\n\n=== LATEST RUN HISTORY ENTRY ===\n2025-12-02T01:32:37.157321,10,5,ok,0.4,0.263\n\n=== THREAT MEMORY OVERVIEW ===\nThreat Memory Stats (from threat_memory_stats.txt):\nGLL Threat Memory Stats\n=======================\n\nBy Severity:\n  - CRITICAL: 105\n  - HIGH: 10\n\nBy Profile:\n  - UNKNOWN: 115\n\nTotal threat memory events logged: 123 row(s)\n\n=== FUSION MINI-MAP SNAPSHOT ===\n=== SENSOR FUSION MINI-MAP ===\n\n[UNKNOWN]   \u2714\ufe0f  C:0  W:0  S:4\n\nEnd of System Status Dashboard.",
+      "exists": true,
+      "path": "/Users/dextermorris/ghost/parser_starter_kit/src/docs/system_status_dashboard.txt"
+    },
+    "threat_memory_stats_txt": {
+      "content": "GLL Threat Memory Stats\n=======================\n\nBy Severity:\n  - CRITICAL: 105\n  - HIGH: 10\n\nBy Profile:\n  - UNKNOWN: 115",
+      "exists": true,
+      "path": "/Users/dextermorris/ghost/parser_starter_kit/src/threat_memory_stats.txt"
     }
   },
-  "sos_overlay": {
-    "timestamp": "2025-12-02T20:48:42.800406Z",
-    "active_profile": {
-      "key": "sports_team",
-      "display_name": "Sports Team Operations"
-    },
-    "ai_engine": {
-      "provider": "unknown"
-    },
-    "threat_memory_summary": "===== THREAT MEMORY SUMMARY =====\nTotal recorded anomalies: 0\n\nTop recurring threat types:\n\nMost recent 0 events:\n\nSummary complete.\n",
-    "critical_alerts": [
-      {
-        "id": "2",
-        "Description": "Seismic 5.2, Rad 1.62 \u00b5Sv, Comms: Burst",
-        "Score": "100",
-        "Confidence_Level": "Critical"
-      },
-      {
-        "id": "5",
-        "Description": "Seismic 4.1, Rad 3.39 \u00b5Sv, Comms: Normal",
-        "Score": "100",
-        "Confidence_Level": "Critical"
-      }
-    ],
-    "top_scores": [
-      {
-        "id": "2",
-        "Seismic_Mag": "5.2",
-        "Radiation_uSv": "1.62",
-        "Comms_State": "Burst",
-        "AOI_Hit": "True",
-        "Score": "100",
-        "score": 0.0
-      },
-      {
-        "id": "5",
-        "Seismic_Mag": "4.1",
-        "Radiation_uSv": "3.39",
-        "Comms_State": "Normal",
-        "AOI_Hit": "True",
-        "Score": "100",
-        "score": 0.0
-      },
-      {
-        "id": "1",
-        "Seismic_Mag": "5.1",
-        "Radiation_uSv": "3.66",
-        "Comms_State": "Normal",
-        "AOI_Hit": "False",
-        "Score": "10",
-        "score": 0.0
-      },
-      {
-        "id": "3",
-        "Seismic_Mag": "5.0",
-        "Radiation_uSv": "3.17",
-        "Comms_State": "Normal",
-        "AOI_Hit": "False",
-        "Score": "10",
-        "score": 0.0
-      },
-      {
-        "id": "4",
-        "Seismic_Mag": "4.4",
-        "Radiation_uSv": "0.19",
-        "Comms_State": "Silence",
-        "AOI_Hit": "False",
-        "Score": "10",
-        "score": 0.0
-      }
-    ]
+  "generated_at": "2025-12-04T10:33:19.377134Z",
+  "llm": {
+    "active_provider": null,
+    "mode": null
   },
-  "run_history_brief": "=== RUN HISTORY INTELLIGENCE BRIEF ===\n\nTotal runs logged: 72\n  Pass:    0\n  Fail:    0\n  Unknown: 72\nSuccess rate (known only): 0.0%\n\nCurrent streak: 1 \u00d7 UNKNOWN\n\nLast run:\n  Label:     run\n  Status:    unknown\n  Timestamp: unknown\n\nRecent timeline (last 10):\n- unknown | run | unknown\n- unknown | run | unknown\n- unknown | run | unknown\n- unknown | run | unknown\n- unknown | run | unknown\n- unknown | run | unknown\n- unknown | run | unknown\n- unknown | run | unknown\n- unknown | run | unknown\n- unknown | run | unknown",
-  "mission_brief": "==============================================\n      GLL \u2014 PROFILE AWARE OPERATOR BRIEF\n==============================================\n\nActive Profile     : Profile(key='sports_team', display_name='Sports Team Operations', mission_context='Analytics and operations picture for a professional or college sports team: performance health, workload, and risk of failure in upcoming contests.', data_focus='Metrics from wearables, practice intensity, travel fatigue, and opponent scouting summarized into a game-readiness snapshot.', risk_language='Threat levels translate to game risk: LOW for routine conditions, MEDIUM when fatigue or key-player flags rise, HIGH when multiple stressors converge.')\nProfile Key        : profile(key='sports_team',_display_name='sports_team_operations',_mission_context='analytics_and_operations_picture_for_a_professional_or_college_sports_team:_performance_health,_workload,_and_risk_of_failure_in_upcoming_contests.',_data_focus='metrics_from_wearables,_practice_intensity,_travel_fatigue,_and_opponent_scouting_summarized_into_a_game-readiness_snapshot.',_risk_language='threat_levels_translate_to_game_risk:_low_for_routine_conditions,_medium_when_fatigue_or_key-player_flags_rise,_high_when_multiple_stressors_converge.')\n\nPROFILE NOTES:\n----------------------------------------------\nProfile returned as simple string. No metadata available.\n\nFUSION MINI-MAP:\n----------------------------------------------\n=== SENSOR FUSION MINI-MAP ===\n\n[UNKNOWN]   \u2714\ufe0f  C:0  W:0  S:4\n\nDAILY MISSION BRIEF:\n----------------------------------------------\n=== GHOST LANTERN LABS \u2014 DAILY MISSION BRIEF ===\nGenerated (UTC): 2025-12-02T14:08:21.847278\n\n=== CORE MISSION STATUS ===\n=== GLL MISSION BRIEF ===\nGenerated (UTC): 2025-12-02T14:08:21.849079\n\n>>> PIPELINE HEALTH\nPipeline status: GREEN\nMissing outputs: none\n\n>>> FUSION / SPECTRAL OWL STATUS\nFusion status: critical\nTotal fused rows: 2\nCritical events: 1\nRecommendation: 1 critical event(s). Recommend operator review.\n\n>>> THREAT SNAPSHOT (OWL MEMORY)\n=== THREAT SNAPSHOT (OWL) ===\nTotal logged threat events: 123\n\nCounts by type:\n  - UNKNOWN: 123\n\nLast 3 event(s):\n  [2025-12-02T13:26:45.279558] UNKNOWN (sev=owl_brain) \u2014 \n  [2025-12-02T13:58:58.500875] UNKNOWN (sev=owl_brain) \u2014 \n  [2025-12-02T14:08:21.852019] UNKNOWN (sev=owl_brain) \u2014 \n\n\n=== SENSOR READINESS OVERVIEW ===\n=== SENSOR READINESS BRIEF ===\nTotal sensors: 5\nEnabled: ['optical', 'seismic', 'ems', 'radiation', 'generic_metrics']\nDisabled: []\n\n[OPTICAL]\n  Description: Optical plume and flash detection; detects bright anomalies used in launch detection.\n  Warning threshold: 0.55\n  Critical threshold: 0.85\n  Notes: First sensor to react to missile launch events (flash, plume).\n\n[SEISMIC]\n  No profile found.\n\n[EMS]\n  Description: Electromagnetic spectrum detection for jamming, interference, and spoof attempts.\n  Warning threshold: 0.6\n  Critical threshold: 0.9\n  Notes: Detects EW interference attempts and data-denial attacks.\n\n[RADIATION]\n  Description: Gamma and neutron radiation detection for nuclear event confirmation.\n  Warning threshold: 0.7\n  Critical threshold: 0.95\n  Notes: Final confirmation sensor for nuclear launch and post-detonation analysis.\n\n[GENERIC_METRICS]\n  No profile found.\n\n\n=== ACTIVE PROFILE STATUS ===\nActive profile: aftac_nuclear\nDescription: Nuclear / EMS / seismic fusion focus for AFTAC-style missions.\nDomains: nuclear, ems, seismic, space\nDefault threat types: launch_prep, sensor_spoof, jamming\nOffline priority: True\nSeverity labels:\n  - HIGH: Immediate commander attention\n  - MODERATE: Monitor closely / watchlist\n  - LOW: Routine background noise\n\n\n==============================================\nEND OF PROFILE MISSION BRIEF\n=============================================="
+  "profile": {
+    "display_name": "Sports Team Operations",
+    "domain": null,
+    "key": "sports_team"
+  }
 }

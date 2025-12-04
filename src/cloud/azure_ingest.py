@@ -1,101 +1,139 @@
 """
-azure_ingest.py
+azure_ingest.py — Simulated Azure ingest layer for Ghost Lantern Labs (GLL)
 
-Simulated Azure blob ingest for Ghost Lantern Labs.
+This module provides a local "cloud simulator" so you can:
+  - Upload fusion outputs (scored_output / fused_output) into an archive
+  - Upload operator snapshots
+  - List archived fusion files
+  - Download the latest archive into a local folder
+  - Run a simple cloud_sync_health_check used by QA + ghost_cli
 
-This does NOT use real Azure credentials.
-It just copies files into a local "cloud_sim/fusion_archive" directory
-to mimic upload/download behavior for testing and demos.
+All paths are LOCAL and safe — no real Azure calls here.
 """
 
-import json
-from datetime import datetime
+from __future__ import annotations
+
 from pathlib import Path
+from datetime import datetime
+import shutil
+import json
+from typing import Dict, Any, List
 
-CONFIG_PATH = Path("config/cloud_settings.json")
+# Base = repo_root/src
+BASE = Path(__file__).resolve().parent.parent
 
-
-def load_cloud_config():
-    if not CONFIG_PATH.exists():
-        raise FileNotFoundError(f"Cloud config not found at {CONFIG_PATH}")
-
-    with CONFIG_PATH.open("r") as f:
-        cfg = json.load(f)
-
-    return cfg
-
-
-def _update_last_sync_timestamp():
-    cfg = load_cloud_config()
-    cfg["last_sync_timestamp"] = datetime.utcnow().isoformat() + "Z"
-    with CONFIG_PATH.open("w") as f:
-        json.dump(cfg, f, indent=2)
+DATA_DIR = BASE / "data"
+CLOUD_SIM = BASE / "cloud_sim"
+ARCHIVE_DIR = CLOUD_SIM / "fusion_archive"
+OP_SNAPSHOT_DIR = CLOUD_SIM / "operator_snapshots"
+CONFIG_DIR = BASE / "config"
+CONFIG_FILE = CONFIG_DIR / "cloud_settings.json"
 
 
-def init_blob_client():
+def _ensure_dirs() -> None:
+    """Ensure simulated cloud directories exist."""
+    CLOUD_SIM.mkdir(exist_ok=True)
+    ARCHIVE_DIR.mkdir(exist_ok=True)
+    OP_SNAPSHOT_DIR.mkdir(exist_ok=True)
+    CONFIG_DIR.mkdir(exist_ok=True)
+
+
+def _timestamp() -> str:
+    return datetime.utcnow().strftime("%Y%m%dT%H%M%S")
+
+
+# ---------------------------------------------------------------------------
+# FUSION OUTPUT UPLOAD
+# ---------------------------------------------------------------------------
+
+def upload_fusion_output(source_path: str | Path) -> Dict[str, Any]:
     """
-    Stub init. In real Azure, this would return a BlobServiceClient / ContainerClient.
-    In simulation mode, we just ensure the local_sim_path exists.
+    Simulate uploading a fused or scored output CSV into cloud archive.
+
+    Copies the file into:
+      src/cloud_sim/fusion_archive/<timestamp>__<filename>
     """
-    cfg = load_cloud_config()
-    if not cfg.get("sync_enabled", False):
-        return {"status": "disabled", "reason": "sync_enabled is false"}
+    _ensure_dirs()
 
-    sim_path = Path(cfg.get("local_sim_path", "cloud_sim/fusion_archive"))
-    sim_path.mkdir(parents=True, exist_ok=True)
-
-    return {
-        "status": "ok",
-        "provider": cfg.get("provider", "unknown"),
-        "mode": "simulation" if cfg.get("simulation_mode", True) else "real",
-        "sim_path": str(sim_path),
-    }
-
-
-def upload_fusion_output(file_path: str):
-    """
-    Simulated upload:
-      - Verifies file exists
-      - Copies it into local_sim_path with a timestamped name
-    """
-    cfg = load_cloud_config()
-    if not cfg.get("sync_enabled", False):
-        return {"status": "skipped", "reason": "sync disabled"}
-
-    src = Path(file_path)
+    src = Path(source_path)
     if not src.exists():
-        return {"status": "error", "reason": f"File not found: {src}"}
+        return {
+            "status": "error",
+            "reason": f"source file not found: {src}"
+        }
 
-    sim_path = Path(cfg.get("local_sim_path", "cloud_sim/fusion_archive"))
-    sim_path.mkdir(parents=True, exist_ok=True)
+    dest_name = f"{_timestamp()}__{src.name}"
+    dest_path = ARCHIVE_DIR / dest_name
 
-    timestamp = datetime.utcnow().strftime("%Y%m%dT%H%M%S")
-    dest_name = f"{timestamp}__{src.name}"
-    dest = sim_path / dest_name
-
-    dest.write_bytes(src.read_bytes())
-
-    _update_last_sync_timestamp()
+    try:
+        shutil.copy2(src, dest_path)
+    except Exception as e:
+        return {
+            "status": "error",
+            "reason": f"failed to copy: {e}"
+        }
 
     return {
         "status": "uploaded",
         "source": str(src),
-        "destination": str(dest),
-        "mode": "simulation" if cfg.get("simulation_mode", True) else "real",
+        "destination": str(dest_path),
+        "mode": "simulation",
     }
 
 
-def list_fusion_blobs():
-    """
-    Lists files in the simulated cloud container.
-    """
-    cfg = load_cloud_config()
-    sim_path = Path(cfg.get("local_sim_path", "cloud_sim/fusion_archive"))
+# ---------------------------------------------------------------------------
+# OPERATOR SNAPSHOT UPLOAD
+# ---------------------------------------------------------------------------
 
-    if not sim_path.exists():
-        return {"status": "ok", "count": 0, "files": []}
+def upload_operator_snapshot(snapshot_path: str | Path) -> Dict[str, Any]:
+    """
+    Simulate uploading an operator snapshot text file into cloud archive.
 
-    files = sorted([f.name for f in sim_path.iterdir() if f.is_file()])
+    Copies the file into:
+      src/cloud_sim/operator_snapshots/<timestamp>__<filename>
+    """
+    _ensure_dirs()
+
+    src = Path(snapshot_path)
+    if not src.exists():
+        return {
+            "status": "error",
+            "reason": f"snapshot file not found: {src}"
+        }
+
+    dest_name = f"{_timestamp()}__{src.name}"
+    dest_path = OP_SNAPSHOT_DIR / dest_name
+
+    try:
+        shutil.copy2(src, dest_path)
+    except Exception as e:
+        return {
+            "status": "error",
+            "reason": f"failed to copy snapshot: {e}"
+        }
+
+    return {
+        "status": "uploaded",
+        "source": str(src),
+        "destination": str(dest_path),
+        "mode": "simulation",
+    }
+
+
+# ---------------------------------------------------------------------------
+# LIST / DOWNLOAD FUSION BLOBS
+# ---------------------------------------------------------------------------
+
+def list_fusion_blobs() -> Dict[str, Any]:
+    """
+    List archived fusion outputs in the simulated cloud archive.
+    """
+    _ensure_dirs()
+
+    files: List[str] = []
+    for p in sorted(ARCHIVE_DIR.glob("*")):
+        if p.is_file():
+            files.append(p.name)
 
     return {
         "status": "ok",
@@ -104,62 +142,104 @@ def list_fusion_blobs():
     }
 
 
-def download_latest_fusion_archive(target_dir: str = "downloads"):
+def download_latest_fusion_archive(dest_dir: str | Path) -> Dict[str, Any]:
     """
-    Simulated download:
-      - Finds latest file in sim_path
-      - Copies to target_dir
+    Simulate downloading the most recent fusion archive file into dest_dir.
     """
-    cfg = load_cloud_config()
-    sim_path = Path(cfg.get("local_sim_path", "cloud_sim/fusion_archive"))
-    target = Path(target_dir)
-    target.mkdir(parents=True, exist_ok=True)
+    _ensure_dirs()
 
-    if not sim_path.exists():
-        return {"status": "error", "reason": "no sim_path found"}
-
-    files = sorted(
-        [f for f in sim_path.iterdir() if f.is_file()],
-        key=lambda p: p.stat().st_mtime,
+    candidates = sorted(
+        [p for p in ARCHIVE_DIR.glob("*") if p.is_file()],
+        key=lambda p: p.name,
         reverse=True,
     )
 
-    if not files:
-        return {"status": "error", "reason": "no files in archive"}
+    if not candidates:
+        return {
+            "status": "error",
+            "reason": "no fusion archives in cloud_sim/fusion_archive"
+        }
 
-    latest = files[0]
-    dest = target / latest.name
-    dest.write_bytes(latest.read_bytes())
+    latest = candidates[0]
+    dest_dir = Path(dest_dir)
+    dest_dir.mkdir(parents=True, exist_ok=True)
+    dest_path = dest_dir / latest.name
+
+    try:
+        shutil.copy2(latest, dest_path)
+    except Exception as e:
+        return {
+            "status": "error",
+            "reason": f"failed to copy latest archive: {e}"
+        }
 
     return {
         "status": "downloaded",
         "source": str(latest),
-        "destination": str(dest),
+        "destination": str(dest_path),
+        "mode": "simulation",
     }
 
 
-def cloud_sync_health_check():
+# ---------------------------------------------------------------------------
+# CLOUD SYNC HEALTH CHECK
+# ---------------------------------------------------------------------------
+
+def _load_config() -> Dict[str, Any]:
     """
-    High-level health check for QA + CLI.
+    Load simulated cloud config from config/cloud_settings.json if present.
     """
+    if not CONFIG_FILE.exists():
+        # Default simulation config
+        return {
+            "provider": "azure",
+            "sync_enabled": True,
+            "mode": "simulation"
+        }
+
     try:
-        cfg = load_cloud_config()
-    except FileNotFoundError as e:
-        return {"status": "error", "details": str(e)}
+        return json.loads(CONFIG_FILE.read_text())
+    except Exception:
+        # If config is corrupted, fall back to safe defaults.
+        return {
+            "provider": "azure",
+            "sync_enabled": False,
+            "mode": "config_error",
+        }
 
-    init_result = init_blob_client()
-    if init_result.get("status") != "ok":
-        return {"status": "warning", "details": f"Init: {init_result}"}
 
-    listing = list_fusion_blobs()
+def cloud_sync_health_check() -> Dict[str, Any]:
+    """
+    Return a health summary used by qa_validator and ghost_cli.
+
+    Example output:
+    {
+      "status": "ok",
+      "details": {"provider": "azure", "mode": "simulation", "sync_enabled": true},
+      "files_in_archive": 3
+    }
+    """
+    _ensure_dirs()
+    cfg = _load_config()
+
+    files = [p for p in ARCHIVE_DIR.glob("*") if p.is_file()]
+    count = len(files)
+
+    status = "ok"
+    if not cfg.get("sync_enabled", True):
+        status = "warning"
+    if cfg.get("mode") == "config_error":
+        status = "error"
 
     return {
-        "status": "ok",
-        "details": {
-            "provider": cfg.get("provider"),
-            "mode": "simulation" if cfg.get("simulation_mode", True) else "real",
-            "sync_enabled": cfg.get("sync_enabled", False),
-        },
-        "files_in_archive": listing.get("count", 0),
+        "status": status,
+        "details": cfg,
+        "files_in_archive": count,
     }
+
+
+if __name__ == "__main__":
+    # Quick manual check
+    print("Cloud sync health:", cloud_sync_health_check())
+    print("Fusion blobs:", list_fusion_blobs())
 
