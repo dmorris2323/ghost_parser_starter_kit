@@ -1,0 +1,23 @@
+=== GOLDEN DOME READINESS REPORT ===
+
+Active Profile Key:   sports_team
+Active Profile Name:  Sports Team Operations
+
+Average Sensor Reliability: 92.00%
+Readiness Assessment: YELLOW – Caution. Investigate weak sensors and recent failures.
+
+Per-Sensor Reliability Snapshot:
+  - ems: 90.00%
+  - global: 100.00%
+  - optical: 90.00%
+  - radiation: 90.00%
+  - seismic: 90.00%
+
+Analyst Notes:
+  * This is a pre-brief snapshot only.
+  * Use fusion_ingest + QA to confirm pipeline health.
+  * Golden Dome validation should combine:
+      - Sensor reliability
+      - Cross-sensor agreement
+      - AI independence status
+      - Known threat activity in AOI.

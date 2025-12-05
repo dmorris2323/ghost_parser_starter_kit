@@ -1,8 +1,15 @@
-=== SENSOR RELIABILITY REPORT ===
+=== GLL SENSOR RELIABILITY REPORT ===
 
-OPTICAL    [██████████████████░░]  94%  (stable)
-SEISMIC    [██████████████████░░]  91%  (stable)
-EMS        [█████████████████░░░]  89%  (stable)
-RADIATION  [███████████████████░]  96%  (stable)
+Average Reliability: 92.00%
 
-OVERALL   [██████████████████░░]  92%  (stable)
+Per-Sensor Reliability:
+  - ems: 90.00%
+  - global: 100.00%
+  - optical: 90.00%
+  - radiation: 90.00%
+  - seismic: 90.00%
+
+Notes:
+  * Computed from run_history.csv when available.
+  * Falls back to safe defaults if logs are missing.
+  * This report is designed for commander-level briefings.
