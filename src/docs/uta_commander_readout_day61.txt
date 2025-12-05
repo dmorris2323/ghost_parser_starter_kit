@@ -1,0 +1,39 @@
+UTA COMMANDER READOUT — GLL STATUS (DAY 61)
+
+Purpose:
+  Provide a concise overview of the Ghost Lantern Labs (GLL) prototype for use in conversations with commanders, instructors, and mentors during UTA.
+
+Current Focus Profile:
+  - Key:   sports_team
+  - Name:  Sports Team Operations
+
+What GLL Does Today (Plain Language):
+  GLL is a multi-sensor fusion lab that ingests telemetry from simulated optical, seismic, EMS, and radiation sources, cleans it, scores it, and produces decision-support products for commanders.
+  As of Day 61, GLL can also measure its own reliability and generate a Golden Dome-style readiness assessment.
+
+Sensor Reliability Snapshot (Day 61):
+  - Average Reliability: 92.00%
+  - ems: 90.00%
+  - global: 100.00%
+  - optical: 90.00%
+  - radiation: 90.00%
+  - seismic: 90.00%
+
+Golden Dome Readiness Assessment:
+  - YELLOW – Caution. Investigate weak sensors and recent failures.
+  - Detailed report: /Users/dextermorris/ghost/parser_starter_kit/src/docs/golden_dome_readiness.txt
+
+Why This Matters for the Unit / Mission:
+  - Demonstrates ability to reason about sensor health, not just display raw data.
+  - Shows how a small, lab-scale ISR platform can support Golden Dome / AFTAC-style missions with reliability and readiness metrics.
+  - Provides a foundation for future integration with real data sources, exercises, or unit-level TTP development.
+
+How This Connects to My Development:
+  - Builds hands-on experience with sensor fusion, reliability engineering, and ISR-grade reporting.
+  - Aligns with 1N0X1 duties, AFTAC-style nuclear monitoring, and future SBIR / contractor opportunities.
+
+Talking Points for UTA / Mentors:
+  1) Ask what types of telemetry or mission data would be most useful to model in GLL.
+  2) Ask which readiness metrics commanders actually care about in your unit.
+  3) Offer to show a demo of reliability reports and Golden Dome readiness outputs.
+  4) Listen for where current tools are fragile or noisy — those are future GLL modules.
