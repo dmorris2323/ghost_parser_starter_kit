@@ -1,0 +1,33 @@
+GLL VALUE SNAPSHOT — DAY 61
+
+Snapshot UTC: 2025-12-05T09:55:29.341465Z
+Day Index:    61
+
+Active Profile:
+  - Key:   sports_team
+  - Name:  Sports Team Operations
+
+Reliability:
+  - Average: 92.00%
+  - ems: 90.00%
+  - global: 100.00%
+  - optical: 90.00%
+  - radiation: 90.00%
+  - seismic: 90.00%
+
+Golden Dome Readiness:
+  - Label:   YELLOW – Caution. Investigate weak sensors and recent failures.
+  - Report:  /Users/dextermorris/ghost/parser_starter_kit/src/docs/golden_dome_readiness.txt
+
+Key Artifacts:
+  - SBIR Note:     /Users/dextermorris/ghost/parser_starter_kit/src/docs/golden_dome_sbir_note_day61.txt
+  - Day 61 SITREP: /Users/dextermorris/ghost/parser_starter_kit/src/docs/day61_sitrep.txt
+  - Demo Manifest: N/A
+
+Notional Engineering Value (Edit These Assumptions):
+  - Total Hours (assumed): 180
+  - Hourly Rate (assumed): $350/hr
+  - Implied Engineering Value: $63,000
+
+Notes / Fallbacks:
+  - Demo deck manifest: not available ('str' object has no attribute 'get')

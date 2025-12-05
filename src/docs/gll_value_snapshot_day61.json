@@ -1,0 +1,37 @@
+{
+  "snapshot_date": "2025-12-05T09:55:29.341465Z",
+  "day_index": 61,
+  "profile": {
+    "key": "sports_team",
+    "display_name": "Sports Team Operations"
+  },
+  "reliability": {
+    "sensors": {
+      "global": 100.0,
+      "optical": 90.0,
+      "seismic": 90.0,
+      "ems": 90.0,
+      "radiation": 90.0
+    },
+    "avg_reliability": 92.0
+  },
+  "golden_dome_readiness": "YELLOW \u2013 Caution. Investigate weak sensors and recent failures.",
+  "golden_dome_readiness_report": "/Users/dextermorris/ghost/parser_starter_kit/src/docs/golden_dome_readiness.txt",
+  "sbir_note": {
+    "path": "/Users/dextermorris/ghost/parser_starter_kit/src/docs/golden_dome_sbir_note_day61.txt"
+  },
+  "day61_sitrep": {
+    "path": "/Users/dextermorris/ghost/parser_starter_kit/src/docs/day61_sitrep.txt"
+  },
+  "demo_deck_manifest": {
+    "path": "N/A"
+  },
+  "valuation_assumptions": {
+    "assumed_hours_total": 180,
+    "assumed_hourly_rate_usd": 350
+  },
+  "notional_engineering_value_usd": 63000,
+  "notes": [
+    "Demo deck manifest: not available ('str' object has no attribute 'get')"
+  ]
+}

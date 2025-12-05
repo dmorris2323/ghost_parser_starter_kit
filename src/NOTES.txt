@@ -1653,3 +1653,10 @@ Date: 2025-12-04
 Effect:
 • GLL moved from “logs and scores” to “pre-failure prediction.”
 • Platform is now closer to SBIR / AFTAC / SDA-grade reliability tooling.
+=== Day 60 – Golden Dome + Fallback Stabilization ===
+- Fixed Phase 2 LLM adapter by adding run_llm_with_fallback() and a clean multi-provider fallback chain.
+- Spectral Owl can now ALWAYS return a judgment, even if cloud/vendor logic fails.
+- Golden Dome validator remains wired to AI-independence (no single provider dependency).
+- mission_brief_html.py rebuilt: pulls text brief safely, injects Golden Dome tile, reliability, cross-sensor, minimap, and SOS overlays without type errors.
+- ghost_cli.py now loads clean with full menu (1–27+), closing out Day 60 technical stability work.
+- Net effect: GLL moved from “might fail when AI is down” to “guaranteed degraded-mode behavior with transparent provider metadata.”
