@@ -1,102 +1,130 @@
 """
-daily_mission_brief.py — Text Mission Brief for Ghost Lantern Labs
+daily_mission_brief.py — Text mission brief for Ghost Lantern Labs.
 
-Builds a commander-style daily brief that summarizes:
-- System status
-- Pipeline health
-- Sensor readiness & reliability
-- Threat memory snapshot
-- Cross-sensor validation (if available)
+Sections:
+  - Pipeline health
+  - Sensor readiness
+  - Sensor reliability summary
+  - Reliability trend
+  - Owl confidence (fallback estimator)
+  - Crisis Mode status
+  - Operator identity
 """
 
 from pathlib import Path
-from datetime import datetime
+import json
 
-BASE = Path(__file__).parent
-DOCS = BASE / "docs"
-DOCS.mkdir(exist_ok=True)
+from pipeline_health import evaluate_pipeline_health
+from sensor_readiness_brief import build_readiness_brief
+from sensor_reliability import compute_reliability_all
+from reliability_trend import compute_trend
+from spectral_owl.owl_confidence import compute_confidence
+from crisis_mode_flag import status as crisis_status
+from operator_identity import get_identity
 
-
-def load_text(path: Path, label: str | None = None) -> list[str]:
-    """Load a text file if it exists, else return a placeholder line."""
-    if not path.exists():
-        if label:
-            return [f"[{label}] No data available."]
-        return []
-    text = path.read_text().strip()
-    if not text:
-        if label:
-            return [f"[{label}] File was empty."]
-        return []
-    lines = text.splitlines()
-    if label:
-        return [f"=== {label} ==="] + lines + [""]
-    return lines + [""]
+BRIEF_TXT_PATH = Path("docs/daily_mission_brief.txt")
 
 
 def build_mission_brief() -> str:
     lines: list[str] = []
 
     # Header
-    lines.append("GHOST LANTERN LABS — DAILY MISSION BRIEF")
-    lines.append("----------------------------------------")
-    lines.append(f"Generated: {datetime.now().isoformat(timespec='seconds')}")
+    lines.append("=== GHOST LANTERN LABS — DAILY MISSION BRIEF ===")
+    lines.append(f"Operator: {get_identity()}")
+    lines.append(f"Crisis Mode: {crisis_status()}")
     lines.append("")
 
-    # Active profile (if available)
+    # 1) Pipeline Health
     try:
-        from profile_config import get_active_profile
-
-        prof = get_active_profile()
-        display_name = getattr(prof, "display_name", None) or getattr(
-            prof, "name", "UNKNOWN_PROFILE"
-        )
-        domain = getattr(prof, "domain", "unknown-domain")
-        lines.append(f"Active Profile: {display_name}  (domain: {domain})")
-    except Exception:
-        lines.append("Active Profile: UNKNOWN (profile_config error)")
-    lines.append("")
-
-    # System / pipeline summary (text files produced by other tools)
-    lines += load_text(BASE / "system_status_dashboard.txt", "SYSTEM STATUS")
-    lines += load_text(BASE / "pipeline_health.txt", "PIPELINE HEALTH")
-    lines += load_text(BASE / "sensor_health_report.txt", "SENSOR HEALTH")
-
-    # Threat memory snapshot
-    threat_summary_path = DOCS / "threat_memory_summary_day56.txt"
-    if not threat_summary_path.exists():
-        threat_summary_path = DOCS / "threat_memory_doctrine_report.txt"
-    lines += load_text(threat_summary_path, "THREAT MEMORY SNAPSHOT")
-
-    # Sensor reliability
-    reliability_report = DOCS / "reliability_report.txt"
-    lines += load_text(reliability_report, "SENSOR RELIABILITY")
-
-    # Cross-sensor validation
-    cross_sensor_report = DOCS / "cross_sensor_report.txt"
-    lines += load_text(cross_sensor_report, "CROSS-SENSOR VALIDATION")
-
-    # AI / LLM status (optional)
-    try:
-        from llm_phase2_adapter import describe_active_provider
-
-        lines.append("=== AI / LLM ENGINE STATUS ===")
-        lines.append(describe_active_provider())
+        health = evaluate_pipeline_health()
+        lines.append("=== PIPELINE HEALTH ===")
+        lines.append(json.dumps(health, indent=2))
         lines.append("")
-    except Exception:
-        pass
+    except Exception as e:
+        lines.append("=== PIPELINE HEALTH ===")
+        lines.append(f"Failed to evaluate pipeline health: {e}")
+        lines.append("")
+
+    # 2) Sensor Readiness
+    try:
+        lines.append("=== SENSOR READINESS BRIEF ===")
+        readiness_text = build_readiness_brief()
+        if isinstance(readiness_text, str):
+            lines.append(readiness_text)
+        else:
+            lines.append(json.dumps(readiness_text, indent=2))
+        lines.append("")
+    except Exception as e:
+        lines.append("=== SENSOR READINESS BRIEF ===")
+        lines.append(f"Failed to build readiness brief: {e}")
+        lines.append("")
+
+    # 3) Sensor Reliability Summary
+    reliability_summary = None
+    try:
+        lines.append("=== SENSOR RELIABILITY SUMMARY ===")
+        reliability_summary = compute_reliability_all()
+        lines.append(json.dumps(reliability_summary, indent=2))
+        lines.append("")
+    except Exception as e:
+        lines.append("=== SENSOR RELIABILITY SUMMARY ===")
+        lines.append(f"Failed to compute reliability: {e}")
+        lines.append("")
+
+    # 4) Reliability Trend
+    try:
+        lines.append("=== RELIABILITY TREND ===")
+        trend = compute_trend()
+        if isinstance(trend, (dict, list)):
+            lines.append(json.dumps(trend, indent=2))
+        else:
+            lines.append(str(trend))
+        lines.append("")
+    except Exception as e:
+        lines.append("=== RELIABILITY TREND ===")
+        lines.append(f"Failed to compute reliability trend: {e}")
+        lines.append("")
+
+    # 5) Owl Confidence
+    try:
+        lines.append("=== OWL CONFIDENCE ===")
+        # Derive rough counts from reliability_summary if available
+        crit = 0
+        warn = 0
+        avg_rel = 90.0
+        if isinstance(reliability_summary, dict):
+            crit = reliability_summary.get("total_critical", 0) or 0
+            warn = reliability_summary.get("total_warnings", 0) or 0
+            avg_rel = reliability_summary.get("avg_reliability", 90.0) or 90.0
+        sample = {
+            "critical_alerts": crit,
+            "warning_alerts": warn,
+            "avg_reliability": avg_rel,
+        }
+        conf = compute_confidence(sample)
+        lines.append(f"Sample confidence: {conf} (crit={crit}, warnings={warn}, avg_rel={avg_rel})")
+        lines.append("")
+    except Exception as e:
+        lines.append("=== OWL CONFIDENCE ===")
+        lines.append(f"Failed to compute Owl confidence: {e}")
+        lines.append("")
+
+    # 6) Crisis Mode status block (explicit)
+    lines.append("=== CRISIS MODE ===")
+    lines.append(crisis_status())
+    lines.append("")
 
     return "\n".join(lines)
 
 
-def write_daily_brief() -> Path:
+def write_daily_brief() -> str:
+    BRIEF_TXT_PATH.parent.mkdir(parents=True, exist_ok=True)
     text = build_mission_brief()
-    out_path = DOCS / "daily_mission_brief.txt"
-    out_path.write_text(text)
-    print(f"[OK] Daily mission brief written → {out_path}")
-    return out_path
+    BRIEF_TXT_PATH.write_text(text)
+    return str(BRIEF_TXT_PATH)
 
 
 if __name__ == "__main__":
-    write_daily_brief()
+    path = write_daily_brief()
+    print(f"Daily mission brief written to: {path}")
 

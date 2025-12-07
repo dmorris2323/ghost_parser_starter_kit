@@ -38,89 +38,94 @@
          ============================== -->
     <div class="section">
         <h2>Operational Summary</h2>
-        <pre>GHOST LANTERN LABS — DAILY MISSION BRIEF
-----------------------------------------
-Generated: 2025-12-04T06:13:17
+        <pre>=== GHOST LANTERN LABS — DAILY MISSION BRIEF ===
+Operator: Dexter M.
+Crisis Mode: ON
 
-Active Profile: Sports Team Operations  (domain: unknown-domain)
-
-[SYSTEM STATUS] No data available.
 === PIPELINE HEALTH ===
-======================================
- GLL PIPELINE HEALTH SUMMARY
-======================================
-Overall Health Score: 90/100
-Status: GREEN
+{
+  "score": 90,
+  "qa_passed": 7,
+  "qa_failed": 0,
+  "critical_alerts": 2,
+  "status": "GREEN",
+  "notes": "All tests passed. 2 critical alert(s) present \u2014 reduced health score."
+}
 
-QA Passed: 7
-QA Failed: 0
-Critical Alerts: 2
+=== SENSOR READINESS BRIEF ===
+=== SENSOR READINESS BRIEF ===
+
+Total sensors in manifest : 5
+Enabled                    : 5
+Disabled                   : 0
+
+=== ENABLED SENSOR DETAILS ===
+[OPTICAL]
+  Description : Optical plume and flash detection; detects bright anomalies used in launch detection.
+  Thresholds  : warning=0.55  critical=0.85
+  Drift       : no data
+
+[SEISMIC]
+  Description : No profile description.
+  Thresholds  : warning=n/a  critical=n/a
+  Drift       : no data
+
+[EMS]
+  Description : Electromagnetic spectrum detection for jamming, interference, and spoof attempts.
+  Thresholds  : warning=0.6  critical=0.9
+  Drift       : no data
+
+[RADIATION]
+  Description : Gamma and neutron radiation detection for nuclear event confirmation.
+  Thresholds  : warning=0.7  critical=0.95
+  Drift       : no data
+
+[GENERIC_METRICS]
+  Description : No profile description.
+  Thresholds  : warning=n/a  critical=n/a
+  Drift       : no data
+
+=== SENSOR RELIABILITY (SUMMARY) ===
+=== GLL SENSOR RELIABILITY REPORT ===
+
+Average Reliability: 92.00%
+
+Per-Sensor Reliability:
+  - ems: 90.00%
+  - global: 100.00%
+  - optical: 90.00%
+  - radiation: 90.00%
+  - seismic: 90.00%
 
 Notes:
-All tests passed. 2 critical alert(s) present — reduced health score.
+  * Computed from run_history.csv when available.
+  * Falls back to safe defaults if logs are missing.
+  * This report is designed for commander-level briefings.
 
-=== SENSOR HEALTH ===
-Sensor Health Report — 2025-12-02T01:32:37.214163 UTC
-============================================================
 
-Sensor: optical_sensor_mock (optical)
-  Iterations:   10
-  Successes:    10
-  Failures:     0
-  Availability: 1.000
-  ValidityRate: 1.000
+=== SENSOR RELIABILITY SUMMARY ===
+{
+  "sensors": {
+    "global": 100.0,
+    "optical": 90.0,
+    "seismic": 90.0,
+    "ems": 90.0,
+    "radiation": 90.0
+  },
+  "avg_reliability": 92.0
+}
 
-Sensor: seismic_sensor_mock (seismic)
-  Iterations:   10
-  Successes:    10
-  Failures:     0
-  Availability: 1.000
-  ValidityRate: 1.000
+=== RELIABILITY TREND ===
+{
+  "trend": "no_data"
+}
 
-Sensor: ems_sensor_mock (ems)
-  Iterations:   10
-  Successes:    10
-  Failures:     0
-  Availability: 1.000
-  ValidityRate: 1.000
+=== OWL CONFIDENCE ===
+Sample confidence: 92.0 (crit=0, warnings=0, avg_rel=92.0)
 
-Sensor: radiation_sensor_mock (radiation)
-  Iterations:   10
-  Successes:    10
-  Failures:     0
-  Availability: 1.000
-  ValidityRate: 1.000
-
-Sensor: generic_metrics_sensor_mock (generic)
-  Iterations:   10
-  Successes:    10
-  Failures:     0
-  Availability: 1.000
-  ValidityRate: 1.000
-
-=== THREAT MEMORY SNAPSHOT ===
-GLL Threat Memory Doctrine Report
-================================
-
-By Doctrine Tag:
-  - general_threat_awareness: 105
-  - timeliness_and_decision_risk: 10
-
-By Doctrine Tag + Severity:
-  - general_threat_awareness / CRITICAL: 105
-  - timeliness_and_decision_risk / HIGH: 10
-
-=== SENSOR RELIABILITY ===
-=== SENSOR RELIABILITY REPORT ===
-
-OPTICAL    [██████████████████░░]  94%  (stable)
-SEISMIC    [██████████████████░░]  91%  (stable)
-EMS        [█████████████████░░░]  89%  (stable)
-RADIATION  [███████████████████░]  96%  (stable)
-
-OVERALL   [██████████████████░░]  92%  (stable)
-
-[CROSS-SENSOR VALIDATION] No data available.</pre>
+=== CRISIS MODE ===
+ON
+</pre>
     </div>
 
     <!-- ==============================
@@ -129,9 +134,9 @@ OVERALL   [██████████████████░░]  92%  (
     <div class="section">
         <h2>Golden Dome Readiness</h2>
         <pre>{
-  "profile": "Sports Team Operations",
-  "reliability": 92.5,
-  "agreement": 88.0,
+  "profile": "Active Profile",
+  "reliability": 92.0,
+  "agreement": 90.0,
   "status": "GREEN",
   "summary": "System is ready: high sensor reliability and strong cross-sensor/Owl agreement."
 }</pre>

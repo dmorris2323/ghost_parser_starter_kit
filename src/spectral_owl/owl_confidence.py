@@ -1,43 +1,28 @@
 """
-owl_confidence.py — Simple confidence scoring for Spectral Owl fallback.
+owl_confidence.py — Compute fallback confidence for Spectral Owl.
 
-Input summary dict:
-    {
-        "critical_alerts": int,
-        "warning_alerts": int,
-        "avg_reliability": float
-    }
+Takes a simple summary dict:
+{
+    "critical_alerts": int,
+    "warning_alerts": int,
+    "avg_reliability": float
+}
 
-Logic:
-    Start from avg_reliability.
-    Subtract 5 points per critical alert.
-    Subtract 1.5 points per warning.
-    Floor at 10.
-
-Output:
-    float confidence score, 10–100 range.
+Returns a confidence score (0–100).
 """
 
+def compute_confidence(raw: dict):
+    crit = raw.get("critical_alerts", 0) or 0
+    warnings = raw.get("warning_alerts", 0) or 0
+    reliability = raw.get("avg_reliability", 90) or 90
 
-def compute_confidence(summary: dict) -> float:
-    critical = int(summary.get("critical_alerts", 0) or 0)
-    warning = int(summary.get("warning_alerts", 0) or 0)
-    avg_reliability = float(summary.get("avg_reliability", 90.0) or 90.0)
-
-    score = avg_reliability - (critical * 5.0) - (warning * 1.5)
-    if score < 10.0:
-        score = 10.0
-    if score > 100.0:
-        score = 100.0
-
+    # Penalty per critical + warning, anchored on reliability
+    score = reliability - crit * 5 - warnings * 1.5
+    score = max(10, min(100, score))
     return round(score, 2)
 
 
 if __name__ == "__main__":
-    test_payload = {
-        "critical_alerts": 1,
-        "warning_alerts": 4,
-        "avg_reliability": 92.0,
-    }
-    print("Test confidence:", compute_confidence(test_payload))
+    sample = {"critical_alerts": 1, "warning_alerts": 4, "avg_reliability": 92}
+    print("Sample confidence:", compute_confidence(sample))
 

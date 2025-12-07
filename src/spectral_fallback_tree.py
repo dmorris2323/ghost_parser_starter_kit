@@ -1,56 +1,57 @@
 """
-spectral_fallback_tree.py — Phase 3 Degraded-Mode Logic for Spectral Owl
+spectral_fallback_tree.py — Fallback response builder for Spectral Owl.
 
-Goal:
-    Provide a deterministic fallback logic tree when:
-      • LLM provider fails
-      • AI chain times out
-      • Data is incomplete
-      • Owl needs to return guaranteed output
+Used when:
+  - LLM provider fails
+  - Network / API issues
+  - We want a predictable "degraded mode" summary.
 
-Exports:
-    build_fallback_response(input_summary: dict) -> dict
+Integration points:
+  - spectral_owl/owl_router.py calls build_fallback_response(summary)
+  - ghost_cli.py Option 28 can run this as a test harness
 """
 
-from datetime import datetime
+from spectral_owl.owl_confidence import compute_confidence
 
 
-def build_fallback_response(input_summary: dict) -> dict:
+def build_fallback_response(summary: dict):
     """
-    Deterministic fallback logic.
-    Works without cloud, LLM, or full sensor data.
+    Build a simple, deterministic fallback payload.
+
+    Expected summary keys (best-effort):
+      - critical_alerts: int
+      - warning_alerts: int
+      - avg_reliability: float
+
+    Returns:
+      {
+        "source": "fallback",
+        "summary": {...},
+        "confidence": float
+      }
     """
-
-    # Extract what we *can* trust.
-    critical = input_summary.get("critical_alerts", 0)
-    warnings = input_summary.get("warning_alerts", 0)
-    reliability = input_summary.get("avg_reliability", 0)
-
-    # Basic threat logic table.
-    if critical > 0:
-        level = "SEVERE"
-        msg = "Critical anomalies detected. Recommend immediate review."
-    elif warnings > 2:
-        level = "ELEVATED"
-        msg = "Multiple warnings detected. Investigate subsystem changes."
-    else:
-        level = "STABLE"
-        msg = "No major anomalies detected. System appears nominal."
+    if summary is None:
+        summary = {}
 
     return {
-        "timestamp": datetime.utcnow().isoformat() + "Z",
-        "mode": "fallback",
-        "level": level,
-        "message": msg,
-        "inputs_used": input_summary,
+        "source": "fallback",
+        "summary": summary,
+        "confidence": compute_confidence(summary),
+    }
+
+
+def demo_summary():
+    """Small demo summary for CLI / manual testing."""
+    return {
+        "critical_alerts": 0,
+        "warning_alerts": 3,
+        "avg_reliability": 91.0,
     }
 
 
 if __name__ == "__main__":
-    test = {
-        "critical_alerts": 1,
-        "warning_alerts": 3,
-        "avg_reliability": 92.5,
-    }
-    print(build_fallback_response(test))
+    sample = demo_summary()
+    out = build_fallback_response(sample)
+    print("=== Fallback Response Demo ===")
+    print(out)
 

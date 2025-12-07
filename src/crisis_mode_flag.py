@@ -1,39 +1,36 @@
 """
-crisis_mode_flag.py — Simple ON/OFF flag for Crisis Mode.
+crisis_mode_flag.py — Global crisis mode flag for GLL.
 
-Backed by:
-    data/crisis_mode.txt
-
-Values:
-    "ON" or "OFF"
+Stores a simple ON/OFF state in data/crisis_mode.txt.
 """
 
 from pathlib import Path
 
-FLAG_FILE = Path("data/crisis_mode.txt")
+FILE = Path("data/crisis_mode.txt")
 
 
-def enable() -> str:
-    FLAG_FILE.parent.mkdir(parents=True, exist_ok=True)
-    FLAG_FILE.write_text("ON")
-    return "Crisis Mode: ON"
+def enable():
+    FILE.parent.mkdir(parents=True, exist_ok=True)
+    FILE.write_text("ON")
+    return "Crisis Mode: ENABLED"
 
 
-def disable() -> str:
-    FLAG_FILE.parent.mkdir(parents=True, exist_ok=True)
-    FLAG_FILE.write_text("OFF")
-    return "Crisis Mode: OFF"
+def disable():
+    FILE.parent.mkdir(parents=True, exist_ok=True)
+    FILE.write_text("OFF")
+    return "Crisis Mode: DISABLED"
 
 
-def status() -> str:
-    if not FLAG_FILE.exists():
+def status():
+    if not FILE.exists():
         return "OFF"
-    return FLAG_FILE.read_text().strip() or "OFF"
+    return FILE.read_text().strip() or "OFF"
 
 
 if __name__ == "__main__":
     print("Current:", status())
-    print("Enabling…")
     print(enable())
     print("Now:", status())
+    print(disable())
+    print("Final:", status())
 

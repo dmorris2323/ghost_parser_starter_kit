@@ -1,127 +1,166 @@
 """
-owl_brain_phase2.py — Ghost Lantern Labs
-----------------------------------------
-Spectral Owl wired into the Phase 2 multi-provider LLM adapter.
+spectral_owl/owl_brain_phase2.py
 
-Behavior:
-- Reads scored_output.csv (fused/Scored events).
-- Builds a summary prompt for the LLM.
-- Calls run_llm_with_fallback(...) from llm_phase2_adapter.
-- Prints an operator-style summary:
-    - how many events
-    - which provider actually answered
-    - the model's response
+Phase 2 Spectral Owl brain:
+- Reads scored_output.csv
+- Computes simple fusion risk metrics
+- Exposes analyze_fusion() and threat_snapshot()
+  for CLI, mission briefs, and overlays.
 
-This does NOT replace your existing owl_brain.py.
-It's a new, Phase-2-specific runner you can evolve separately.
+This version is deliberately self-contained:
+no external LLM calls, safe to run offline.
 """
 
 from __future__ import annotations
 
-from pathlib import Path
-from datetime import datetime
 import csv
-from typing import List, Dict, Any
+import json
+import statistics as stats
+from pathlib import Path
+from typing import Dict, Any, List
 
-from llm_phase2_adapter import run_llm_with_fallback
+# Base paths
+BASE_DIR = Path(__file__).resolve().parent.parent
+DATA_DIR = BASE_DIR / "data"
+SCORED_FILE = DATA_DIR / "scored_output.csv"
 
-SCORED_OUTPUT = Path("scored_output.csv")
 
+def _load_scored_rows() -> List[Dict[str, Any]]:
+    """
+    Load scored_output.csv and return a list of dict rows.
 
-def load_scored_events(path: Path) -> List[Dict[str, Any]]:
-    if not path.exists():
-        raise FileNotFoundError(
-            f"{path} not found. Run fusion_scoring.py first to generate scored_output.csv."
-        )
+    Expected columns (minimum):
+      - id
+      - score  (float between 0 and 1)
+    """
+    if not SCORED_FILE.exists():
+        return []
 
-    events: List[Dict[str, Any]] = []
-    with path.open("r", encoding="utf-8") as f:
+    rows: List[Dict[str, Any]] = []
+    with SCORED_FILE.open("r", newline="") as f:
         reader = csv.DictReader(f)
         for row in reader:
-            events.append(row)
-    return events
+            # Try to normalize score column
+            score_raw = row.get("score") or row.get("Score") or row.get("threat_score")
+            if score_raw is None:
+                continue
+            try:
+                score_val = float(score_raw)
+            except ValueError:
+                continue
+            row["score"] = score_val
+            rows.append(row)
+    return rows
 
 
-def build_prompt_from_events(events: List[Dict[str, Any]]) -> str:
+def _compute_metrics(rows: List[Dict[str, Any]]) -> Dict[str, Any]:
     """
-    Build a compact analysis prompt from the scored events.
-
-    Assumes there is a 'score' column and possibly fields like:
-    - id, Seismic_Mag, Radiation_uSv, Comms_State, etc.
+    Compute simple fusion metrics from scored rows.
     """
-    total = len(events)
-    if total == 0:
-        return "There are no events in scored_output.csv. Confirm the system is quiet."
+    if not rows:
+        return {
+            "status": "no_data",
+            "total_events": 0,
+            "critical_events": 0,
+            "warning_events": 0,
+            "avg_score": None,
+            "max_score": None,
+            "risk_level": "unknown",
+        }
 
-    # Try to parse score and sort descending
-    def parse_score(e: Dict[str, Any]) -> float:
-        try:
-            return float(e.get("score", 0.0))
-        except ValueError:
-            return 0.0
+    scores = [r["score"] for r in rows]
 
-    sorted_events = sorted(events, key=parse_score, reverse=True)
-    top = sorted_events[:3]
+    total = len(scores)
+    avg_score = stats.fmean(scores)
+    max_score = max(scores)
 
-    lines = []
-    lines.append(
-        f"There are {total} fused events in scored_output.csv. "
-        f"Here are the top {len(top)} by score:"
-    )
-    for e in top:
-        ident = e.get("id", "UNKNOWN")
-        score = e.get("score", "UNKNOWN")
-        seismic = e.get("Seismic_Mag", e.get("seismic_mag", "N/A"))
-        rad = e.get("Radiation_uSv", e.get("radiation_usv", "N/A"))
-        comms = e.get("Comms_State", e.get("comms_state", "N/A"))
-        lines.append(
-            f"- id={ident}, score={score}, Seismic={seismic}, "
-            f"Radiation={rad}, Comms={comms}"
-        )
+    # Simple buckets
+    critical_events = sum(1 for s in scores if s >= 0.85)
+    warning_events = sum(1 for s in scores if 0.6 <= s < 0.85)
 
-    lines.append(
-        "As Spectral Owl, provide a concise threat assessment for a commander: "
-        "is this situation stable, elevated, or critical? Note if this looks like "
-        "data denial / jamming, nuclear/EMS concern, or general noise."
-    )
-    return "\n".join(lines)
-
-
-def run_phase2_owl_analysis() -> Dict[str, Any]:
-    events = load_scored_events(SCORED_OUTPUT)
-    prompt = build_prompt_from_events(events)
-
-    # Call Phase 2 adapter with some basic params.
-    result = run_llm_with_fallback(
-        prompt,
-        max_tokens=128,
-        temperature=0.2,
-    )
+    # Risk level heuristic
+    if critical_events > 0 or avg_score >= 0.8:
+        risk_level = "high"
+    elif warning_events > 0 or avg_score >= 0.6:
+        risk_level = "medium"
+    else:
+        risk_level = "low"
 
     return {
-        "timestamp_utc": datetime.utcnow().isoformat(),
-        "num_events": len(events),
-        "provider_tried": result["provider_tried"],
-        "final_provider": result["final_provider"],
-        "llm_result": result["result"],
+        "status": "ok",
+        "total_events": total,
+        "critical_events": critical_events,
+        "warning_events": warning_events,
+        "avg_score": avg_score,
+        "max_score": max_score,
+        "risk_level": risk_level,
     }
 
 
-def main():
-    try:
-        summary = run_phase2_owl_analysis()
-    except FileNotFoundError as e:
-        print(f"[ERROR] {e}")
-        return
+def analyze_fusion() -> Dict[str, Any]:
+    """
+    Main entry point used by ghost_cli and mission briefs.
 
-    print("=== Spectral Owl Phase 2 Analysis ===")
-    print(f"Timestamp (UTC): {summary['timestamp_utc']}")
-    print(f"Total fused events: {summary['num_events']}")
-    print(f"Providers tried: {', '.join(summary['provider_tried'])}")
-    print(f"Final provider: {summary['final_provider']}")
-    print("")
-    print("LLM Engine Payload:")
-    print(summary["llm_result"])
+    Returns a dict with:
+      - status: "ok" | "no_data"
+      - total_events
+      - critical_events
+      - warning_events
+      - avg_score
+      - max_score
+      - risk_level: "low" | "medium" | "high" | "unknown"
+    """
+    rows = _load_scored_rows()
+    metrics = _compute_metrics(rows)
+    return metrics
+
+
+def threat_snapshot() -> Dict[str, Any]:
+    """
+    Higher-level summary wrapper around analyze_fusion().
+
+    Returns a dict like:
+      {
+        "summary": "...",
+        "metrics": {...}
+      }
+    """
+    metrics = analyze_fusion()
+
+    if metrics["status"] != "ok":
+        return {
+            "summary": "No scored fusion data available. Run fusion_scoring first.",
+            "metrics": metrics,
+        }
+
+    total = metrics["total_events"]
+    crit = metrics["critical_events"]
+    warn = metrics["warning_events"]
+    avg = metrics["avg_score"]
+    lvl = metrics["risk_level"]
+
+    summary = (
+        f"Fusion risk level: {lvl.upper()} — "
+        f"{crit} critical, {warn} warning out of {total} events "
+        f"(avg score {avg:.2f})."
+    )
+
+    return {
+        "summary": summary,
+        "metrics": metrics,
+    }
+
+
+def main() -> None:
+    """
+    CLI entrypoint for quick testing:
+
+    python -m spectral_owl.owl_brain_phase2
+    or
+    python spectral_owl/owl_brain_phase2.py
+    """
+    snap = threat_snapshot()
+    print(json.dumps(snap, indent=2, default=str))
 
 
 if __name__ == "__main__":
