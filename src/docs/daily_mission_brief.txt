@@ -1,6 +1,6 @@
 === GHOST LANTERN LABS — DAILY MISSION BRIEF ===
-Operator: Unknown Operator
-Crisis Mode: OFF
+Operator: A1C Dexter "Ghost" Morris
+Crisis Mode: ON
 
 === PIPELINE HEALTH ===
 {
@@ -63,18 +63,6 @@ Notes:
   * This report is designed for commander-level briefings.
 
 
-=== SENSOR RELIABILITY SUMMARY ===
-{
-  "sensors": {
-    "global": 100.0,
-    "optical": 90.0,
-    "seismic": 90.0,
-    "ems": 90.0,
-    "radiation": 90.0
-  },
-  "avg_reliability": 92.0
-}
-
 === RELIABILITY TREND ===
 {
   "trend": "no_data"
@@ -84,4 +72,40 @@ Notes:
 Sample confidence: 92.0 (crit=0, warnings=0, avg_rel=92.0)
 
 === CRISIS MODE ===
-OFF
+ON
+
+=== FUSION TRUST SCORE ===
+{
+  "fusion_trust": 72,
+  "factors": {
+    "outliers": 0,
+    "drift": {
+      "status": "corrupted",
+      "message": "could not parse golden_dome_status.txt",
+      "drift_score": 0
+    },
+    "reliability": {
+      "sensors": {
+        "global": 100.0,
+        "optical": 90.0,
+        "seismic": 90.0,
+        "ems": 90.0,
+        "radiation": 90.0
+      },
+      "avg_reliability": 92.0
+    },
+    "crisis_mode": "ON"
+  }
+}
+
+=== OPERATOR SAFETY LAYER ===
+{
+  "osl_status": "YELLOW",
+  "trust_score": 72,
+  "message": "Moderate risk \u2014 verify critical readings."
+}
+
+=== SENSOR LATENCY ===
+{
+  "status": "no_data"
+}

@@ -1,0 +1,12 @@
+=== GOLDEN DOME HISTORY ANALYZER ===
+Status: ok
+Total snapshots: 3
+Average reliability: 92.0
+Average drift magnitude: 0.0
+Crisis Mode snapshots: 3
+Anomaly count: 3
+
+=== ANOMALIES ===
+[2025-12-07T03:01:05.458930Z] CRISIS MODE ON (reliability=92.0, drift=0.0)
+[2025-12-07T03:04:39.598634Z] CRISIS MODE ON (reliability=92.0, drift=0.0)
+[2025-12-07T03:11:45.021682Z] CRISIS MODE ON (reliability=92.0, drift=0.0)

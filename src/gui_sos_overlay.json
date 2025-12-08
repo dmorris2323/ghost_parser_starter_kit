@@ -1,6 +1,6 @@
 {
   "status": "ok",
-  "timestamp": "2025-12-03T04:17:31.765724+00:00",
+  "timestamp": "2025-12-08T09:35:13.990565+00:00",
   "profile": {
     "key": "sports_team",
     "display_name": "Sports Team Operations",
@@ -28,14 +28,8 @@
     ]
   },
   "threat_memory": {
-    "total_events": 124,
+    "total_events": 125,
     "recent_sample": [
-      {
-        "timestamp": "2025-12-02T11:57:02.604302",
-        "severity": "owl_brain",
-        "event_type": "fusion_critical",
-        "details": "high"
-      },
       {
         "timestamp": "2025-12-02T13:26:45.279558",
         "severity": "owl_brain",
@@ -59,8 +53,14 @@
         "severity": "owl_brain",
         "event_type": "fusion_critical",
         "details": "high"
+      },
+      {
+        "timestamp": "2025-12-04T11:09:22.792429",
+        "severity": "owl_brain",
+        "event_type": "fusion_critical",
+        "details": "high"
       }
     ]
   },
-  "threat_summary_text": "===== THREAT MEMORY SUMMARY =====\nTotal recorded anomalies: 124\n\nTop recurring threat types:\n  \u2022 UNKNOWN: 124 occurrences\n\nMost recent 50 events:\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [HIGH] stress_cycle \u2014 Stress cycle 1: status=ok, risk=HIGH\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [HIGH] stress_cycle \u2014 Stress cycle 2: status=ok, risk=HIGH\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [HIGH] stress_cycle \u2014 Stress cycle 3: status=ok, risk=HIGH\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [HIGH] stress_cycle \u2014 Stress cycle 4: status=ok, risk=HIGH\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [HIGH] stress_cycle \u2014 Stress cycle 5: status=ok, risk=HIGH\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [owl_brain] fusion_critical \u2014 high\n  [owl_brain] fusion_critical \u2014 high\n  [owl_brain] fusion_critical \u2014 high\n  [owl_brain] fusion_critical \u2014 high\n  [owl_brain] fusion_critical \u2014 high\n  [owl_brain] fusion_critical \u2014 high\n  [owl_brain] fusion_critical \u2014 high\n  [owl_brain] fusion_critical \u2014 high\n  [owl_brain] fusion_critical \u2014 high\n\nSummary complete.\n"
+  "threat_summary_text": "===== THREAT MEMORY SUMMARY =====\nTotal recorded anomalies: 125\n\nTop recurring threat types:\n  \u2022 UNKNOWN: 125 occurrences\n\nMost recent 50 events:\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [HIGH] stress_cycle \u2014 Stress cycle 1: status=ok, risk=HIGH\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [HIGH] stress_cycle \u2014 Stress cycle 2: status=ok, risk=HIGH\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [HIGH] stress_cycle \u2014 Stress cycle 3: status=ok, risk=HIGH\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [HIGH] stress_cycle \u2014 Stress cycle 4: status=ok, risk=HIGH\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [HIGH] stress_cycle \u2014 Stress cycle 5: status=ok, risk=HIGH\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [owl_brain] fusion_critical \u2014 high\n  [owl_brain] fusion_critical \u2014 high\n  [owl_brain] fusion_critical \u2014 high\n  [owl_brain] fusion_critical \u2014 high\n  [owl_brain] fusion_critical \u2014 high\n  [owl_brain] fusion_critical \u2014 high\n  [owl_brain] fusion_critical \u2014 high\n  [owl_brain] fusion_critical \u2014 high\n  [owl_brain] fusion_critical \u2014 high\n  [owl_brain] fusion_critical \u2014 high\n\nSummary complete.\n"
 }

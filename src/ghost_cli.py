@@ -36,263 +36,384 @@ Menu options:
  31) Owl Confidence Estimator
  32) Crisis Mode Toggle
  33) Set Operator Name
+ 34) Operator Safety Layer Report
+ 35) Sensor Latency Intelligence
 """
 
 import sys
 import subprocess
+import json
 from pathlib import Path
 
-from operator_snapshot import build_operator_snapshot
-from pipeline_health import evaluate_pipeline_health
-from mission_briefing import build_mission_briefing
-from generate_daily_visual_pack import main as build_daily_pack
-from profile_status import build_profile_status
-from legal_ingest_family_law import main as ingest_family_law
-from family_law_scoring import main as score_family_law
-from family_law_brief import main as brief_family_law
-from cloud.azure_ingest import (
-    upload_fusion_output,
-    list_fusion_blobs,
-    download_latest_fusion_archive,
-    cloud_sync_health_check,
-)
-from golden_dome_drift import write_drift
-from spectral_owl.owl_confidence import compute_confidence
-from crisis_mode_flag import status as crisis_status
-from operator_identity import get_identity
 
-LOG_FILE = Path("fusion_ops_log.csv")
+def run_py(script: str) -> int:
+    """
+    Helper to run a Python script in this src/ directory.
+    Prints stdout/stderr and returns exit code.
+    """
+    result = subprocess.run(
+        [sys.executable, script],
+        capture_output=True,
+        text=True,
+    )
+    if result.stdout:
+        print(result.stdout)
+    if result.stderr:
+        print(result.stderr, file=sys.stderr)
+    return result.returncode
 
 
-def run_script(script_path: str):
-    """Safely run a Python script in this src folder."""
-    try:
-        result = subprocess.run([sys.executable, script_path])
-        if result.returncode != 0:
-            print(f"[WARN] Script {script_path} exited with code {result.returncode}.")
-    except FileNotFoundError:
-        print(f"[ERROR] Script not found: {script_path}")
+def tail_file(path: Path, n: int = 20) -> str:
+    if not path.exists():
+        return f"[INFO] File not found: {path}"
+    lines = path.read_text().splitlines()
+    tail = lines[-n:] if len(lines) > n else lines
+    return "\n".join(tail)
 
 
-def print_menu():
-    print("\n=== Ghost Lantern Labs — Operator Console ===")
-    print("  1) Run QA validation")
-    print("  2) Show latest 20 log events")
-    print("  3) Build operator snapshot")
-    print("  4) Run full fusion pipeline + snapshot")
-    print("  5) Spectral Owl memory viewer")
-    print("  6) Spectral Owl analysis (fusion scoring check)")
-    print("  7) Pipeline health check")
-    print("  8) Mission briefing (profile-aware)")
-    print("  9) Exit")
-    print(" 10) Anti-DoS environment scan")
-    print(" 11) Cloud Sync Check")
-    print(" 12) Threat Memory Summary")
-    print(" 13) Build Daily Visual Pack")
-    print(" 14) Show Active Profile Status")
-    print(" 15) Run Family Law Demo (Shari)")
-    print(" 16) Owl Memory Diagnostics")
-    print(" 17) Spectral Dashboard Export")
-    print(" 18) Mission Brief HTML Generator")
-    print(" 19) Export GUI Minimap Overlay")
-    print(" 20) Export SOS Overlay")
-    print(" 21) Run-History Intelligence Timeline")
-    print(" 22) Export Spectral Snapshot Bundle")
-    print(" 23) Build Demo Deck Manifest")
-    print(" 24) Export Sensor Reliability Report")
-    print(" 25) Cross-Sensor Validation + Report")
-    print(" 26) Generate SBIR Phase I One-Pager")
-    print(" 27) Golden Dome Validator")
-    print(" 28) Test Spectral Owl Fallback Mode")
-    print(" 29) Golden Dome Drift Report")
-    print(" 30) Sensor Reliability Trendline")
-    print(" 31) Owl Confidence Estimator")
-    print(" 32) Crisis Mode Toggle")
-    print(" 33) Set Operator Name")
-    print("============================================")
-    print(f"Operator: {get_identity()} | Crisis Mode: {crisis_status()}")
-    print("")
+def show_menu() -> None:
+    print("""
+Ghost Lantern Labs — Operator Console
+
+Menu options:
+  1) Run QA validation
+  2) Show latest 20 log events
+  3) Build operator snapshot
+  4) Run full fusion pipeline + snapshot
+  5) Spectral Owl memory viewer
+  6) Spectral Owl analysis (fusion scoring check)
+  7) Pipeline health check
+  8) Mission briefing (profile-aware)
+  9) Exit
+ 10) Anti-DoS environment scan
+ 11) Cloud Sync Check
+ 12) Threat Memory Summary
+ 13) Build Daily Visual Pack
+ 14) Show Active Profile Status
+ 15) Run Family Law Demo (Shari)
+ 16) Owl Memory Diagnostics
+ 17) Spectral Dashboard Export
+ 18) Mission Brief HTML Generator
+ 19) Export GUI Minimap Overlay
+ 20) Export SOS Overlay
+ 21) Run-History Intelligence Timeline
+ 22) Export Spectral Snapshot Bundle
+ 23) Build Demo Deck Manifest
+ 24) Export Sensor Reliability Report
+ 25) Cross-Sensor Validation + Report
+ 26) Generate SBIR Phase I One-Pager
+ 27) Golden Dome Validator
+ 28) Test Spectral Owl Fallback Mode
+ 29) Golden Dome Drift Report
+ 30) Sensor Reliability Trendline
+ 31) Owl Confidence Estimator
+ 32) Crisis Mode Toggle
+ 33) Set Operator Name
+ 34) Operator Safety Layer Report
+ 35) Sensor Latency Intelligence
+""")
 
 
-def main():
+def main() -> None:
     while True:
-        print_menu()
-        choice = input("Select an option: ").strip()
+        show_menu()
+        choice = input("Select option (1-35, or q to quit): ").strip()
 
+        if choice.lower() in {"q", "quit", "exit"}:
+            print("Exiting Ghost Lantern Labs console.")
+            break
+
+        # --- CORE OPS ---
         if choice == "1":
-            run_script("qa_validator.py")
+            # QA validation
+            try:
+                from qa_validator import run_all
+                print(run_all())
+            except Exception as e:
+                print(f"[ERROR] QA validation failed: {e}")
 
         elif choice == "2":
-            if LOG_FILE.exists():
-                lines = LOG_FILE.read_text().splitlines()
-                tail = lines[-20:] if len(lines) > 20 else lines
-                print("\n=== Last 20 fusion_ops_log events ===")
-                for line in tail:
-                    print(line)
-                print("=====================================\n")
-            else:
-                print(f"No log file found at {LOG_FILE}")
+            # Latest 20 log events
+            log_path = Path("fusion_ops_log.csv")
+            print(tail_file(log_path, 20))
 
         elif choice == "3":
-            path = build_operator_snapshot()
-            print(f"Operator snapshot written to: {path}")
+            # Build operator snapshot
+            try:
+                from operator_snapshot import build_operator_snapshot
+                out = build_operator_snapshot()
+                print(f"[OK] Operator snapshot built → {out}")
+            except Exception as e:
+                print(f"[ERROR] Operator snapshot failed: {e}")
 
         elif choice == "4":
-            print("[INFO] Running fusion pipeline…")
-            run_script("fusion_run.py")
-            print("[INFO] Building operator snapshot…")
-            path = build_operator_snapshot()
-            print(f"Operator snapshot written to: {path}")
+            # Full fusion pipeline + snapshot
+            print("[INFO] Running full fusion pipeline...")
+            run_py("fusion_run.py")
+            try:
+                from operator_snapshot import build_operator_snapshot
+                out = build_operator_snapshot()
+                print(f"[OK] Fusion + snapshot complete → {out}")
+            except Exception as e:
+                print(f"[WARN] Fusion ran, but snapshot failed: {e}")
 
         elif choice == "5":
-            run_script("spectral_owl/owl_memory.py")
+            # Spectral Owl memory viewer (use threat_memory_summary)
+            try:
+                from spectral_owl.threat_memory_summary import build_summary
+                print(build_summary())
+            except Exception as e:
+                print(f"[ERROR] Owl memory viewer failed: {e}")
 
         elif choice == "6":
-            run_script("spectral_owl/owl_brain_phase2.py")
+            # Spectral Owl analysis (simplified: fusion scoring check)
+            print("[INFO] Running fusion scoring (Owl analysis path)...")
+            rc = run_py("fusion_scoring.py")
+            print(f"[INFO] fusion_scoring.py exit code: {rc}")
 
         elif choice == "7":
-            result = evaluate_pipeline_health()
-            print("\n=== Pipeline Health ===")
-            print(result)
-            print("=======================\n")
+            # Pipeline health check
+            try:
+                from pipeline_health import evaluate_pipeline_health
+                report = evaluate_pipeline_health()
+                print(json.dumps(report, indent=2))
+            except Exception as e:
+                print(f"[ERROR] Pipeline health failed: {e}")
 
         elif choice == "8":
-            brief = build_mission_briefing()
-            print("\n=== Mission Brief ===")
-            print(brief)
-            print("=====================\n")
+            # Mission briefing (profile-aware if available)
+            try:
+                try:
+                    from profile_mission_brief import build_profile_mission_brief
+                    text = build_profile_mission_brief()
+                except Exception:
+                    from daily_mission_brief import build_mission_brief
+                    text = build_mission_brief()
+                print(text)
+            except Exception as e:
+                print(f"[ERROR] Mission briefing failed: {e}")
 
         elif choice == "9":
             print("Exiting Ghost Lantern Labs console.")
-            sys.exit(0)
+            break
 
+        # --- DEFENSIVE / ENVIRONMENTAL ---
         elif choice == "10":
-            run_script("anti_dos.py")
+            # Anti-DoS environment scan
+            print("[INFO] Running Anti-DoS scan...")
+            run_py("anti_dos.py")
 
         elif choice == "11":
-            print("\n[Cloud Sync Check]\n")
-            health = cloud_sync_health_check()
-            print(f"Health: {health}")
+            # Cloud Sync Check (Azure stub)
+            try:
+                from cloud.azure_ingest import upload_fusion_output, upload_operator_snapshot
+                print(upload_fusion_output())
+                print(upload_operator_snapshot())
+            except Exception as e:
+                print(f"[ERROR] Cloud sync check failed: {e}")
 
-            scored = Path("data/scored_output.csv")
-            if scored.exists():
-                print("\n[Cloud] Uploading scored_output.csv…")
-                result = upload_fusion_output(str(scored))
-                print(f"Upload result: {result}")
-            else:
-                print("\nNo data/scored_output.csv found. Skipping upload test.")
-
-            listing = list_fusion_blobs()
-            print(f"\nCloud archive listing: {listing}")
-
+        # --- THREAT MEMORY / DEMOS / VISUALS ---
         elif choice == "12":
-            run_script("spectral_owl/threat_memory_summary.py")
+            # Threat Memory Summary
+            try:
+                from spectral_owl.threat_memory_summary import build_summary
+                print(build_summary())
+            except Exception as e:
+                print(f"[ERROR] Threat Memory Summary failed: {e}")
 
         elif choice == "13":
-            path = build_daily_pack()
-            print(f"Daily visual pack built: {path}")
+            # Build Daily Visual Pack
+            print("[INFO] Building Daily Visual Pack...")
+            run_py("generate_daily_visual_pack.py")
 
         elif choice == "14":
-            status = build_profile_status()
-            print("\n=== Active Profile Status ===")
-            print(status)
-            print("=============================\n")
+            # Show Active Profile Status
+            try:
+                from profile_status import build_profile_status
+                print(build_profile_status())
+            except Exception as e:
+                print(f"[ERROR] Profile status failed: {e}")
 
         elif choice == "15":
-            print("[Family Law Demo] Ingesting cases…")
-            ingest_family_law()
-            print("[Family Law Demo] Scoring cases…")
-            score_family_law()
-            print("[Family Law Demo] Building brief…")
-            brief_family_law()
-            print("Family Law Demo complete. See docs/family_law_demo/ outputs if present.")
+            # Run Family Law Demo (Shari)
+            print("[INFO] Running Family Law Demo...")
+            run_py("legal_ingest_family_law.py")
+            run_py("family_law_scoring.py")
+            run_py("family_law_brief.py")
 
         elif choice == "16":
-            run_script("spectral_owl/owl_memory.py")
+            # Owl Memory Diagnostics
+            print("[INFO] Running Owl Memory Diagnostics...")
+            run_py("threat_memory_stats.py")
 
         elif choice == "17":
-            run_script("spectral_dashboard_api.py")
+            # Spectral Dashboard Export
+            print("[INFO] Exporting Spectral Dashboard bundle...")
+            run_py("spectral_dashboard_api.py")
 
         elif choice == "18":
-            run_script("mission_brief_html.py")
+            # Mission Brief HTML Generator
+            print("[INFO] Generating HTML mission brief...")
+            run_py("mission_brief_html.py")
 
         elif choice == "19":
-            run_script("fusion_minimap_overlay.py")
+            # Export GUI Minimap Overlay
+            print("[INFO] Exporting GUI minimap overlay...")
+            run_py("fusion_minimap_overlay.py")
 
         elif choice == "20":
-            run_script("spectral_sos_overlay.py")
+            # Export SOS Overlay
+            print("[INFO] Exporting SOS overlay...")
+            run_py("spectral_sos_overlay.py")
 
         elif choice == "21":
-            run_script("run_history_intel.py")
+            # Run-History Intelligence Timeline
+            print("[INFO] Building run-history intelligence timeline...")
+            run_py("run_history_intel.py")
 
         elif choice == "22":
-            run_script("spectral_snapshot_export.py")
+            # Export Spectral Snapshot Bundle
+            print("[INFO] Exporting spectral snapshot bundle...")
+            run_py("spectral_snapshot_export.py")
 
         elif choice == "23":
-            run_script("demo_deck_manifest.py")
+            # Build Demo Deck Manifest
+            print("[INFO] Building demo deck manifest...")
+            run_py("demo_deck_manifest.py")
 
+        # --- RELIABILITY / GOLDEN DOME / TRENDS / OSL ---
         elif choice == "24":
-            run_script("sensor_reliability.py")
+            # Export Sensor Reliability Report
+            try:
+                from sensor_reliability import export_reliability_report
+                out = export_reliability_report()
+                print(f"[OK] Sensor reliability report exported → {out}")
+            except Exception as e:
+                print(f"[ERROR] Sensor reliability export failed: {e}")
 
         elif choice == "25":
-            run_script("cross_sensor_validator.py")
-            run_script("cross_sensor_report.py")
+            # Cross-Sensor Validation + Report
+            try:
+                from cross_sensor_validator import run_cross_validation
+                from cross_sensor_report import build_report
+                cv = run_cross_validation()
+                rep = build_report()
+                print(cv)
+                print(rep)
+            except Exception as e:
+                print(f"[ERROR] Cross-sensor validation failed: {e}")
 
         elif choice == "26":
-            run_script("sbir_onepager.py")
+            # Generate SBIR Phase I One-Pager
+            try:
+                from sbir_onepager import write_onepager
+                out = write_onepager()
+                print(f"[OK] SBIR One-Pager written to: {out}")
+            except Exception as e:
+                print(f"[ERROR] SBIR one-pager failed: {e}")
 
         elif choice == "27":
-            run_script("golden_dome_validator.py")
+            # Golden Dome Validator
+            try:
+                from golden_dome_validator import build_validation
+                out = build_validation()
+                print(f"[OK] Golden Dome Validation complete → {out['path']}")
+            except Exception as e:
+                print(f"[ERROR] Golden Dome validation failed: {e}")
 
         elif choice == "28":
-            run_script("spectral_fallback_tree.py")
+            # Test Spectral Owl Fallback Mode
+            try:
+                from spectral_fallback_tree import build_fallback_response
+                sample = {
+                    "critical_alerts": 0,
+                    "warning_alerts": 3,
+                    "avg_reliability": 91.0,
+                }
+                out = build_fallback_response(sample)
+                print("=== Fallback Response ===")
+                print(json.dumps(out, indent=2))
+            except Exception as e:
+                print(f"[ERROR] Fallback test failed: {e}")
 
         elif choice == "29":
-            path = write_drift()
-            print(f"Golden Dome drift report written to: {path}")
-            p = Path(path)
-            if p.exists():
-                print("\n=== Golden Dome Drift ===")
-                print(p.read_text())
-                print("=========================\n")
-            else:
-                print("Drift report path exists in return but file not found on disk.")
+            # Golden Dome Drift Report
+            try:
+                from golden_dome_drift import write_drift
+                out = write_drift()
+                print(f"[OK] Golden Dome drift report written → {out}")
+            except Exception as e:
+                print(f"[ERROR] Golden Dome drift generation failed: {e}")
 
         elif choice == "30":
+            # Sensor Reliability Trendline
             try:
                 from reliability_trend import compute_trend
-                out = compute_trend()
-                print("\n=== Sensor Reliability Trendline ===")
-                print(out)
-                print("====================================\n")
+                trend = compute_trend()
+                print(json.dumps(trend, indent=2))
             except Exception as e:
                 print(f"[ERROR] Reliability trend failed: {e}")
 
         elif choice == "31":
-            sample = {"critical_alerts": 1, "warning_alerts": 4, "avg_reliability": 92}
-            print("\n=== Owl Confidence Estimator ===")
-            print("Input:", sample)
-            print("Confidence:", compute_confidence(sample))
-            print("================================\n")
+            # Owl Confidence Estimator
+            try:
+                from spectral_owl.owl_confidence import compute_confidence
+                sample = {"critical_alerts": 1, "warning_alerts": 4, "avg_reliability": 92}
+                print(f"Owl confidence: {compute_confidence(sample)}")
+            except Exception as e:
+                print(f"[ERROR] Owl confidence failed: {e}")
 
         elif choice == "32":
-            from crisis_mode_flag import enable, disable, status
-            print(f"Current: {status()}")
-            ch = input("Turn ON or OFF? ").strip().lower()
-            if ch == "on":
-                print(enable())
-            elif ch == "off":
-                print(disable())
-            else:
-                print("Invalid.")
+            # Crisis Mode Toggle
+            try:
+                from crisis_mode_flag import enable, disable, status
+                print(f"Current: {status()}")
+                ch = input("Turn ON or OFF? ").strip().lower()
+                if ch == "on":
+                    print(enable())
+                elif ch == "off":
+                    print(disable())
+                else:
+                    print("Invalid selection.")
+            except Exception as e:
+                print(f"[ERROR] Crisis mode toggle failed: {e}")
 
         elif choice == "33":
-            from operator_identity import set_identity
-            nm = input("Enter operator name: ").strip()
-            print(set_identity(nm))
+            # Set Operator Name
+            try:
+                from operator_identity import set_identity
+                nm = input("Enter operator name: ").strip()
+                print(set_identity(nm))
+            except Exception as e:
+                print(f"[ERROR] Operator identity set failed: {e}")
+
+        elif choice == "34":
+            # Operator Safety Layer Report
+            try:
+                from operator_safety_layer import compute_osl
+                out = compute_osl()
+                print("=== Operator Safety Layer ===")
+                print(json.dumps(out, indent=2))
+            except Exception as e:
+                print(f"[ERROR] Operator Safety Layer failed: {e}")
+
+        elif choice == "35":
+            # Sensor Latency Intelligence
+            try:
+                from sensor_latency import log_latency, write_latency_report, compute_latency_report
+                entry = log_latency()
+                path = write_latency_report()
+                report = compute_latency_report()
+                print("[OK] Latency entry logged:")
+                print(json.dumps(entry, indent=2))
+                print(f"[OK] Latency report written → {path}")
+                print("=== Latency Report ===")
+                print(json.dumps(report, indent=2))
+            except Exception as e:
+                print(f"[ERROR] Sensor latency intelligence failed: {e}")
 
         else:
-            print("Invalid choice. Try again.")
+            print(f"[WARN] Unknown option: {choice}")
 
 
 if __name__ == "__main__":

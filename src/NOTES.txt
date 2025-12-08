@@ -1660,3 +1660,4 @@ Effect:
 - mission_brief_html.py rebuilt: pulls text brief safely, injects Golden Dome tile, reliability, cross-sensor, minimap, and SOS overlays without type errors.
 - ghost_cli.py now loads clean with full menu (1–27+), closing out Day 60 technical stability work.
 - Net effect: GLL moved from “might fail when AI is down” to “guaranteed degraded-mode behavior with transparent provider metadata.”
+Day 64: Fixed fusion_trust import for GUI; validated Fusion Trust + OSL + Latency across CLI, HTML, and Spectral Dashboard. Stability-focused sprint.

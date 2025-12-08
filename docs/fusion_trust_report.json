@@ -1,0 +1,22 @@
+{
+  "fusion_trust": 87.0,
+  "factors": {
+    "outliers": 0,
+    "drift": {
+      "status": "no_data",
+      "message": "docs/golden_dome_status.txt not found",
+      "drift_score": 0
+    },
+    "reliability": {
+      "sensors": {
+        "global": 100.0,
+        "optical": 90.0,
+        "seismic": 90.0,
+        "ems": 90.0,
+        "radiation": 90.0
+      },
+      "avg_reliability": 92.0
+    },
+    "crisis_mode": "OFF"
+  }
+}

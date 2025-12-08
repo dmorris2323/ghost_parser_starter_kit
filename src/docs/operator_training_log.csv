@@ -1,0 +1,4 @@
+timestamp_utc,operator,domain,duration_min,notes,source
+2025-12-07T03:01:48.205097Z,Dexter M.,cd /Users/dextermorris/ghost/parser_starter_kit/src,0,,cd /Users/dextermorris/ghost/parser_starter_kit/src
+2025-12-07T03:11:12.504959Z,Dexter M.,python daily_mission_brief.py,0,Test,test
+2025-12-07T03:13:24.816802Z,Dexter M.,python operator_training_summary.py,30,test2,test2
