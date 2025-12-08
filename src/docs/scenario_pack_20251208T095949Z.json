@@ -1,0 +1,107 @@
+{
+  "generated_at": "2025-12-08T09:59:49.867092+00:00",
+  "base_dir": "/Users/dextermorris/ghost/parser_starter_kit/src",
+  "fusion_trust": {
+    "fusion_trust": 72,
+    "factors": {
+      "outliers": 0,
+      "drift": {
+        "status": "corrupted",
+        "message": "could not parse golden_dome_status.txt",
+        "drift_score": 0
+      },
+      "reliability": {
+        "sensors": {
+          "global": 100.0,
+          "optical": 90.0,
+          "seismic": 90.0,
+          "ems": 90.0,
+          "radiation": 90.0
+        },
+        "avg_reliability": 92.0
+      },
+      "crisis_mode": "ON"
+    }
+  },
+  "operator_safety_layer": {
+    "osl_status": "YELLOW",
+    "trust_score": 72,
+    "message": "Moderate risk \u2014 verify critical readings."
+  },
+  "minimap": {
+    "timestamp": "2025-12-08T09:35:08.249089Z",
+    "map": {
+      "UNKNOWN": {
+        "critical": 0,
+        "warning": 0,
+        "stable": 4
+      }
+    }
+  },
+  "sos_overlay": {
+    "status": "ok",
+    "timestamp": "2025-12-08T09:35:13.990565+00:00",
+    "profile": {
+      "key": "sports_team",
+      "display_name": "Sports Team Operations",
+      "description": ""
+    },
+    "ai_engine": {
+      "provider": "provider_a",
+      "mode": "llm_config"
+    },
+    "alerts": {
+      "count": 2,
+      "recent": [
+        {
+          "id": "2",
+          "Description": "\"Seismic 5.2",
+          "Score": " Rad 1.62 \u00b5Sv",
+          "Confidence_Level": " Comms: Burst\""
+        },
+        {
+          "id": "5",
+          "Description": "\"Seismic 4.1",
+          "Score": " Rad 3.39 \u00b5Sv",
+          "Confidence_Level": " Comms: Normal\""
+        }
+      ]
+    },
+    "threat_memory": {
+      "total_events": 125,
+      "recent_sample": [
+        {
+          "timestamp": "2025-12-02T13:26:45.279558",
+          "severity": "owl_brain",
+          "event_type": "fusion_critical",
+          "details": "high"
+        },
+        {
+          "timestamp": "2025-12-02T13:58:58.500875",
+          "severity": "owl_brain",
+          "event_type": "fusion_critical",
+          "details": "high"
+        },
+        {
+          "timestamp": "2025-12-02T14:08:21.852019",
+          "severity": "owl_brain",
+          "event_type": "fusion_critical",
+          "details": "high"
+        },
+        {
+          "timestamp": "2025-12-03T03:32:49.527091",
+          "severity": "owl_brain",
+          "event_type": "fusion_critical",
+          "details": "high"
+        },
+        {
+          "timestamp": "2025-12-04T11:09:22.792429",
+          "severity": "owl_brain",
+          "event_type": "fusion_critical",
+          "details": "high"
+        }
+      ]
+    },
+    "threat_summary_text": "===== THREAT MEMORY SUMMARY =====\nTotal recorded anomalies: 125\n\nTop recurring threat types:\n  \u2022 UNKNOWN: 125 occurrences\n\nMost recent 50 events:\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [HIGH] stress_cycle \u2014 Stress cycle 1: status=ok, risk=HIGH\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [HIGH] stress_cycle \u2014 Stress cycle 2: status=ok, risk=HIGH\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [HIGH] stress_cycle \u2014 Stress cycle 3: status=ok, risk=HIGH\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [HIGH] stress_cycle \u2014 Stress cycle 4: status=ok, risk=HIGH\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [HIGH] stress_cycle \u2014 Stress cycle 5: status=ok, risk=HIGH\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [owl_brain] fusion_critical \u2014 high\n  [owl_brain] fusion_critical \u2014 high\n  [owl_brain] fusion_critical \u2014 high\n  [owl_brain] fusion_critical \u2014 high\n  [owl_brain] fusion_critical \u2014 high\n  [owl_brain] fusion_critical \u2014 high\n  [owl_brain] fusion_critical \u2014 high\n  [owl_brain] fusion_critical \u2014 high\n  [owl_brain] fusion_critical \u2014 high\n  [owl_brain] fusion_critical \u2014 high\n\nSummary complete.\n"
+  }
+}

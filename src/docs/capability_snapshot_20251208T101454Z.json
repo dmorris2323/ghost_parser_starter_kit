@@ -1,0 +1,48 @@
+{
+  "timestamp": "2025-12-08 10:14:54Z",
+  "fusion_trust": {
+    "fusion_trust": 72,
+    "factors": {
+      "outliers": 0,
+      "drift": {
+        "status": "corrupted",
+        "message": "could not parse golden_dome_status.txt",
+        "drift_score": 0
+      },
+      "reliability": {
+        "sensors": {
+          "global": 100.0,
+          "optical": 90.0,
+          "seismic": 90.0,
+          "ems": 90.0,
+          "radiation": 90.0
+        },
+        "avg_reliability": 92.0
+      },
+      "crisis_mode": "ON"
+    }
+  },
+  "operator_safety_layer": {
+    "osl_status": "YELLOW",
+    "trust_score": 72,
+    "message": "Moderate risk \u2014 verify critical readings."
+  },
+  "latency": {
+    "status": "no_data"
+  },
+  "reliability": {
+    "sensors": {
+      "global": 100.0,
+      "optical": 90.0,
+      "seismic": 90.0,
+      "ems": 90.0,
+      "radiation": 90.0
+    },
+    "avg_reliability": 92.0
+  },
+  "drift": {
+    "status": "ok",
+    "drift_score": 0,
+    "total_lines": 57
+  }
+}
