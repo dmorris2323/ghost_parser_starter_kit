@@ -1,0 +1,143 @@
+# Ghost Lantern Labs — Scoreboard
+
+Generated at: 2025-12-09T13:41:08.584542+00:00
+
+## GLL Readiness
+```json
+{
+  "readiness_score": 60.9,
+  "components": {
+    "fusion_trust": 72,
+    "operator_safety_layer": 72,
+    "avg_reliability": 85.0,
+    "crisis_penalty": 15,
+    "drift_penalty": 0
+  },
+  "notes": [
+    "Crisis mode ON \u2014 readiness reduced."
+  ]
+}
+```
+
+## System Integrity
+```json
+{
+  "status": "GREEN",
+  "missing_items": [],
+  "checks": {
+    "dirs": {
+      "src": {
+        "path": "/Users/dextermorris/ghost/parser_starter_kit/src",
+        "exists": true,
+        "items": 225
+      },
+      "data": {
+        "path": "/Users/dextermorris/ghost/parser_starter_kit/src/data",
+        "exists": true,
+        "items": 14
+      },
+      "docs": {
+        "path": "/Users/dextermorris/ghost/parser_starter_kit/src/docs",
+        "exists": true,
+        "items": 79
+      },
+      "config": {
+        "path": "/Users/dextermorris/ghost/parser_starter_kit/src/config",
+        "exists": true,
+        "items": 3
+      }
+    },
+    "data_files": {
+      "fused_output.csv": {
+        "path": "/Users/dextermorris/ghost/parser_starter_kit/src/data/fused_output.csv",
+        "exists": true,
+        "size_bytes": 144
+      },
+      "scored_output.csv": {
+        "path": "/Users/dextermorris/ghost/parser_starter_kit/src/data/scored_output.csv",
+        "exists": true,
+        "size_bytes": 23
+      },
+      "run_history.csv": {
+        "path": "/Users/dextermorris/ghost/parser_starter_kit/src/data/run_history.csv",
+        "exists": true,
+        "size_bytes": 3781
+      },
+      "sensor_ingest.csv": {
+        "path": "/Users/dextermorris/ghost/parser_starter_kit/src/data/sensor_ingest.csv",
+        "exists": true,
+        "size_bytes": 263
+      }
+    },
+    "docs_files": {
+      "daily_mission_brief.txt": {
+        "path": "/Users/dextermorris/ghost/parser_starter_kit/src/docs/daily_mission_brief.txt",
+        "exists": true,
+        "size_bytes": 6114
+      },
+      "daily_mission_brief.html": {
+        "path": "/Users/dextermorris/ghost/parser_starter_kit/src/docs/daily_mission_brief.html",
+        "exists": true,
+        "size_bytes": 7361
+      },
+      "gll_readiness.json": {
+        "path": "/Users/dextermorris/ghost/parser_starter_kit/src/docs/gll_readiness.json",
+        "exists": true,
+        "size_bytes": 252
+      }
+    },
+    "sensor_manifest": {
+      "path": "/Users/dextermorris/ghost/parser_starter_kit/src/sensor_manifest.json",
+      "exists": true,
+      "size_bytes": 105
+    },
+    "sensor_profiles_dir": {
+      "path": "/Users/dextermorris/ghost/parser_starter_kit/src/sensor_profiles",
+      "exists": true,
+      "items": 4
+    }
+  }
+}
+```
+
+## Fusion Trust
+```json
+{
+  "fusion_trust": 72,
+  "factors": {
+    "outliers": 0,
+    "drift": {
+      "status": "corrupted",
+      "message": "could not parse golden_dome_status.txt",
+      "drift_score": 0
+    },
+    "reliability": {
+      "sensors": {
+        "global": 100.0,
+        "optical": 90.0,
+        "seismic": 90.0,
+        "ems": 90.0,
+        "radiation": 90.0
+      },
+      "avg_reliability": 92.0
+    },
+    "crisis_mode": "ON"
+  }
+}
+```
+
+## Operator Safety Layer
+```json
+{
+  "osl_status": "YELLOW",
+  "trust_score": 72,
+  "message": "Moderate risk \u2014 verify critical readings."
+}
+```
+
+## Reliability Trend
+```json
+{
+  "trend": "no_data"
+}
+```

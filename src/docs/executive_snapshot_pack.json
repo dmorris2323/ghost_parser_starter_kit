@@ -1,0 +1,141 @@
+{
+  "generated_at": "2025-12-09T11:54:50.518970+00:00",
+  "base_dir": "/Users/dextermorris/ghost/parser_starter_kit/src",
+  "artifacts": {
+    "gll_readiness_status": {
+      "path": "/Users/dextermorris/ghost/parser_starter_kit/src/docs/gll_readiness_status.json",
+      "present": false,
+      "content": null
+    },
+    "system_integrity_report": {
+      "path": "/Users/dextermorris/ghost/parser_starter_kit/src/docs/system_integrity_report.json",
+      "present": false,
+      "content": null
+    },
+    "daily_mission_brief_html": {
+      "path": "/Users/dextermorris/ghost/parser_starter_kit/src/docs/daily_mission_brief.html",
+      "present": true,
+      "content": "<!DOCTYPE html>\n<html>\n<head>\n    <meta charset=\"UTF-8\">\n    <title>Ghost Lantern Labs \u2014 Mission Brief</title>\n    <style>\n        body {\n            font-family: monospace;\n            white-space: pre-wrap;\n            background: #0d0d0d;\n            color: #e6e6e6;\n            padding: 20px;\n        }\n        h1, h2 {\n            color: #00e0ff;\n        }\n        pre {\n            background: #1a1a1a;\n            padding: 12px;\n            border-radius: 6px;\n            color: #d1d1d1;\n        }\n    </style>\n</head>\n\n<body>\n\n<h1>GHOST LANTERN LABS \u2014 DAILY MISSION BRIEF</h1>\n\n<p>Operator: {{OPERATOR}}</p>\n<p>Crisis Mode: {{CRISIS_MODE}}</p>\n\n<h2>Brief Text</h2>\n<pre>=== GHOST LANTERN LABS \u2014 DAILY MISSION BRIEF ===\nOperator: A1C Dexter \"Ghost\" Morris\nCrisis Mode: ON\n\n=== PIPELINE HEALTH ===\n{\n  \"score\": 90,\n  \"qa_passed\": 7,\n  \"qa_failed\": 0,\n  \"critical_alerts\": 2,\n  \"status\": \"GREEN\",\n  \"notes\": \"All tests passed. 2 critical alert(s) present \\u2014 reduced health score.\"\n}\n\n=== SENSOR READINESS BRIEF ===\n=== SENSOR READINESS BRIEF ===\n\nTotal sensors in manifest : 5\nEnabled                    : 5\nDisabled                   : 0\n\n=== ENABLED SENSOR DETAILS ===\n[OPTICAL]\n  Description : Optical plume and flash detection; detects bright anomalies used in launch detection.\n  Thresholds  : warning=0.55  critical=0.85\n  Drift       : no data\n\n[SEISMIC]\n  Description : No profile description.\n  Thresholds  : warning=n/a  critical=n/a\n  Drift       : no data\n\n[EMS]\n  Description : Electromagnetic spectrum detection for jamming, interference, and spoof attempts.\n  Thresholds  : warning=0.6  critical=0.9\n  Drift       : no data\n\n[RADIATION]\n  Description : Gamma and neutron radiation detection for nuclear event confirmation.\n  Thresholds  : warning=0.7  critical=0.95\n  Drift       : no data\n\n[GENERIC_METRICS]\n  Description : No profile description.\n  Thresholds  : warning=n/a  critical=n/a\n  Drift       : no data\n\n=== SENSOR RELIABILITY (SUMMARY) ===\n=== GLL SENSOR RELIABILITY REPORT ===\n\nAverage Reliability: 92.00%\n\nPer-Sensor Reliability:\n  - ems: 90.00%\n  - global: 100.00%\n  - optical: 90.00%\n  - radiation: 90.00%\n  - seismic: 90.00%\n\nNotes:\n  * Computed from run_history.csv when available.\n  * Falls back to safe defaults if logs are missing.\n  * This report is designed for commander-level briefings.\n\n\n=== SENSOR RELIABILITY SUMMARY ===\nSensor reliability module unavailable.\n\n=== RELIABILITY TREND ===\n{\n  \"trend\": \"no_data\"\n}\n\n=== FUSION TRUST SCORE ===\n{\n  \"fusion_trust\": 72,\n  \"factors\": {\n    \"outliers\": 0,\n    \"drift\": {\n      \"status\": \"corrupted\",\n      \"message\": \"could not parse golden_dome_status.txt\",\n      \"drift_score\": 0\n    },\n    \"reliability\": {\n      \"sensors\": {\n        \"global\": 100.0,\n        \"optical\": 90.0,\n        \"seismic\": 90.0,\n        \"ems\": 90.0,\n        \"radiation\": 90.0\n      },\n      \"avg_reliability\": 92.0\n    },\n    \"crisis_mode\": \"ON\"\n  }\n}\n\n=== OPERATOR SAFETY LAYER ===\n{\n  \"osl_status\": \"YELLOW\",\n  \"trust_score\": 72,\n  \"message\": \"Moderate risk \\u2014 verify critical readings.\"\n}\n\n=== SENSOR LATENCY ===\n{\n  \"status\": \"no_data\"\n}\n\n=== GOLDEN DOME DRIFT ===\n{\n  \"status\": \"ok\",\n  \"drift_score\": 0,\n  \"total_lines\": 57\n}\n\n=== NUCLEAR READINESS SNAPSHOT ===\n{\n  \"nuclear_readiness_score\": 75.6,\n  \"components\": {\n    \"trust\": {\n      \"fusion_trust\": 72,\n      \"factors\": {\n        \"outliers\": 0,\n        \"drift\": {\n          \"status\": \"corrupted\",\n          \"message\": \"could not parse golden_dome_status.txt\",\n          \"drift_score\": 0\n        },\n        \"reliability\": {\n          \"sensors\": {\n            \"global\": 100.0,\n            \"optical\": 90.0,\n            \"seismic\": 90.0,\n            \"ems\": 90.0,\n            \"radiation\": 90.0\n          },\n          \"avg_reliability\": 92.0\n        },\n        \"crisis_mode\": \"ON\"\n      }\n    },\n    \"reliability\": {\n      \"sensors\": {\n        \"global\": 100.0,\n        \"optical\": 90.0,\n        \"seismic\": 90.0,\n        \"ems\": 90.0,\n        \"radiation\": 90.0\n      },\n      \"avg_reliability\": 92.0\n    },\n    \"safety\": {\n      \"osl_status\": \"YELLOW\",\n      \"trust_score\": 72,\n      \"message\": \"Moderate risk \\u2014 verify critical readings.\"\n    }\n  }\n}\n\n=== GLL READINESS SCORE ===\n{\n  \"readiness_score\": 60.9,\n  \"components\": {\n    \"fusion_trust\": 72,\n    \"operator_safety_layer\": 72,\n    \"avg_reliability\": 85.0,\n    \"crisis_penalty\": 15,\n    \"drift_penalty\": 0\n  },\n  \"notes\": [\n    \"Crisis mode ON \\u2014 readiness reduced.\"\n  ]\n}\n\n=== SYSTEM INTEGRITY ===\n{\n  \"status\": \"GREEN\",\n  \"missing_items\": [],\n  \"checks\": {\n    \"dirs\": {\n      \"src\": {\n        \"path\": \"/Users/dextermorris/ghost/parser_starter_kit/src\",\n        \"exists\": true,\n        \"items\": 221\n      },\n      \"data\": {\n        \"path\": \"/Users/dextermorris/ghost/parser_starter_kit/src/data\",\n        \"exists\": true,\n        \"items\": 14\n      },\n      \"docs\": {\n        \"path\": \"/Users/dextermorris/ghost/parser_starter_kit/src/docs\",\n        \"exists\": true,\n        \"items\": 71\n      },\n      \"config\": {\n        \"path\": \"/Users/dextermorris/ghost/parser_starter_kit/src/config\",\n        \"exists\": true,\n        \"items\": 3\n      }\n    },\n    \"data_files\": {\n      \"fused_output.csv\": {\n        \"path\": \"/Users/dextermorris/ghost/parser_starter_kit/src/data/fused_output.csv\",\n        \"exists\": true,\n        \"size_bytes\": 144\n      },\n      \"scored_output.csv\": {\n        \"path\": \"/Users/dextermorris/ghost/parser_starter_kit/src/data/scored_output.csv\",\n        \"exists\": true,\n        \"size_bytes\": 23\n      },\n      \"run_history.csv\": {\n        \"path\": \"/Users/dextermorris/ghost/parser_starter_kit/src/data/run_history.csv\",\n        \"exists\": true,\n        \"size_bytes\": 3781\n      },\n      \"sensor_ingest.csv\": {\n        \"path\": \"/Users/dextermorris/ghost/parser_starter_kit/src/data/sensor_ingest.csv\",\n        \"exists\": true,\n        \"size_bytes\": 263\n      }\n    },\n    \"docs_files\": {\n      \"daily_mission_brief.txt\": {\n        \"path\": \"/Users/dextermorris/ghost/parser_starter_kit/src/docs/daily_mission_brief.txt\",\n        \"exists\": true,\n        \"size_bytes\": 6114\n      },\n      \"daily_mission_brief.html\": {\n        \"path\": \"/Users/dextermorris/ghost/parser_starter_kit/src/docs/daily_mission_brief.html\",\n        \"exists\": true,\n        \"size_bytes\": 7361\n      },\n      \"gll_readiness.json\": {\n        \"path\": \"/Users/dextermorris/ghost/parser_starter_kit/src/docs/gll_readiness.json\",\n        \"exists\": true,\n        \"size_bytes\": 252\n      }\n    },\n    \"sensor_manifest\": {\n      \"path\": \"/Users/dextermorris/ghost/parser_starter_kit/src/sensor_manifest.json\",\n      \"exists\": true,\n      \"size_bytes\": 105\n    },\n    \"sensor_profiles_dir\": {\n      \"path\": \"/Users/dextermorris/ghost/parser_starter_kit/src/sensor_profiles\",\n      \"exists\": true,\n      \"items\": 4\n    }\n  }\n}\n</pre>\n\n<h2>Golden Dome Readiness</h2>\n<pre>{{GOLDEN_DOME_TILE}}</pre>\n\n<h2>Nuclear Readiness Snapshot</h2>\n<pre>{{NUCLEAR_READINESS}}</pre>\n\n<h2>Sensor Reliability Summary</h2>\n<pre>{{SENSOR_RELIABILITY}}</pre>\n\n<h2>Reliability Trendline</h2>\n<pre>{{RELIABILITY_TREND}}</pre>\n\n<h2>Owl Confidence</h2>\n<pre>{{OWL_CONFIDENCE}}</pre>\n\n<h2>Operator Safety Layer</h2>\n<pre>{{OSL}}</pre>\n\n<h2>Sensor Latency</h2>\n<pre>{{SENSOR_LATENCY}}</pre>\n\n<h2>Fusion Heat Index</h2>\n<pre>{{FHI}}</pre>\n\n<h2>Golden Dome Drift</h2>\n<pre>{{GOLDEN_DOME_DRIFT}}</pre>\n\n</body>\n</html>\n\n"
+    },
+    "scenario_pack_latest": {
+      "path": "/Users/dextermorris/ghost/parser_starter_kit/src/docs/scenario_pack_latest.json",
+      "present": true,
+      "content": {
+        "generated_at": "2025-12-08T10:14:54.517119+00:00",
+        "base_dir": "/Users/dextermorris/ghost/parser_starter_kit/src",
+        "fusion_trust": {
+          "fusion_trust": 72,
+          "factors": {
+            "outliers": 0,
+            "drift": {
+              "status": "corrupted",
+              "message": "could not parse golden_dome_status.txt",
+              "drift_score": 0
+            },
+            "reliability": {
+              "sensors": {
+                "global": 100.0,
+                "optical": 90.0,
+                "seismic": 90.0,
+                "ems": 90.0,
+                "radiation": 90.0
+              },
+              "avg_reliability": 92.0
+            },
+            "crisis_mode": "ON"
+          }
+        },
+        "operator_safety_layer": {
+          "osl_status": "YELLOW",
+          "trust_score": 72,
+          "message": "Moderate risk \u2014 verify critical readings."
+        },
+        "minimap": {
+          "timestamp": "2025-12-08T09:35:08.249089Z",
+          "map": {
+            "UNKNOWN": {
+              "critical": 0,
+              "warning": 0,
+              "stable": 4
+            }
+          }
+        },
+        "sos_overlay": {
+          "status": "ok",
+          "timestamp": "2025-12-08T09:35:13.990565+00:00",
+          "profile": {
+            "key": "sports_team",
+            "display_name": "Sports Team Operations",
+            "description": ""
+          },
+          "ai_engine": {
+            "provider": "provider_a",
+            "mode": "llm_config"
+          },
+          "alerts": {
+            "count": 2,
+            "recent": [
+              {
+                "id": "2",
+                "Description": "\"Seismic 5.2",
+                "Score": " Rad 1.62 \u00b5Sv",
+                "Confidence_Level": " Comms: Burst\""
+              },
+              {
+                "id": "5",
+                "Description": "\"Seismic 4.1",
+                "Score": " Rad 3.39 \u00b5Sv",
+                "Confidence_Level": " Comms: Normal\""
+              }
+            ]
+          },
+          "threat_memory": {
+            "total_events": 125,
+            "recent_sample": [
+              {
+                "timestamp": "2025-12-02T13:26:45.279558",
+                "severity": "owl_brain",
+                "event_type": "fusion_critical",
+                "details": "high"
+              },
+              {
+                "timestamp": "2025-12-02T13:58:58.500875",
+                "severity": "owl_brain",
+                "event_type": "fusion_critical",
+                "details": "high"
+              },
+              {
+                "timestamp": "2025-12-02T14:08:21.852019",
+                "severity": "owl_brain",
+                "event_type": "fusion_critical",
+                "details": "high"
+              },
+              {
+                "timestamp": "2025-12-03T03:32:49.527091",
+                "severity": "owl_brain",
+                "event_type": "fusion_critical",
+                "details": "high"
+              },
+              {
+                "timestamp": "2025-12-04T11:09:22.792429",
+                "severity": "owl_brain",
+                "event_type": "fusion_critical",
+                "details": "high"
+              }
+            ]
+          },
+          "threat_summary_text": "===== THREAT MEMORY SUMMARY =====\nTotal recorded anomalies: 125\n\nTop recurring threat types:\n  \u2022 UNKNOWN: 125 occurrences\n\nMost recent 50 events:\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [HIGH] stress_cycle \u2014 Stress cycle 1: status=ok, risk=HIGH\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [HIGH] stress_cycle \u2014 Stress cycle 2: status=ok, risk=HIGH\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [HIGH] stress_cycle \u2014 Stress cycle 3: status=ok, risk=HIGH\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [HIGH] stress_cycle \u2014 Stress cycle 4: status=ok, risk=HIGH\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [HIGH] stress_cycle \u2014 Stress cycle 5: status=ok, risk=HIGH\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [owl_brain] fusion_critical \u2014 high\n  [owl_brain] fusion_critical \u2014 high\n  [owl_brain] fusion_critical \u2014 high\n  [owl_brain] fusion_critical \u2014 high\n  [owl_brain] fusion_critical \u2014 high\n  [owl_brain] fusion_critical \u2014 high\n  [owl_brain] fusion_critical \u2014 high\n  [owl_brain] fusion_critical \u2014 high\n  [owl_brain] fusion_critical \u2014 high\n  [owl_brain] fusion_critical \u2014 high\n\nSummary complete.\n"
+        }
+      }
+    },
+    "golden_dome_drift_report": {
+      "path": "/Users/dextermorris/ghost/parser_starter_kit/src/docs/golden_dome_drift_report.txt",
+      "present": true,
+      "content": "{\n  \"status\": \"ok\",\n  \"drift_score\": 0,\n  \"total_lines\": 57\n}"
+    }
+  },
+  "notes": {
+    "purpose": "Single-file executive snapshot for commanders, reviewers, or investors. Shows GLL readiness, integrity, mission brief, and key nuclear/Golden-Dome context.",
+    "missing_files_safe": "If some artifacts are missing, they are flagged as present=False but the pack still builds. This is intentional to support partial environments."
+  }
+}
