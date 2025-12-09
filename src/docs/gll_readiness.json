@@ -1,0 +1,13 @@
+{
+  "readiness_score": 60.9,
+  "components": {
+    "fusion_trust": 72,
+    "operator_safety_layer": 72,
+    "avg_reliability": 85.0,
+    "crisis_penalty": 15,
+    "drift_penalty": 0
+  },
+  "notes": [
+    "Crisis mode ON \u2014 readiness reduced."
+  ]
+}

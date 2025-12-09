@@ -1,15 +1,12 @@
 === GLL SYSTEM INTEGRITY REPORT ===
-Status: YELLOW
+Status: GREEN
 
-Missing or non-existent items:
-  - docs_files.gll_readiness.json
+All critical checked items present.
 
 Raw JSON:
 {
-  "status": "YELLOW",
-  "missing_items": [
-    "docs_files.gll_readiness.json"
-  ],
+  "status": "GREEN",
+  "missing_items": [],
   "checks": {
     "dirs": {
       "src": {
@@ -25,7 +22,7 @@ Raw JSON:
       "docs": {
         "path": "/Users/dextermorris/ghost/parser_starter_kit/src/docs",
         "exists": true,
-        "items": 69
+        "items": 71
       },
       "config": {
         "path": "/Users/dextermorris/ghost/parser_starter_kit/src/config",
@@ -59,17 +56,17 @@ Raw JSON:
       "daily_mission_brief.txt": {
         "path": "/Users/dextermorris/ghost/parser_starter_kit/src/docs/daily_mission_brief.txt",
         "exists": true,
-        "size_bytes": 2472
+        "size_bytes": 6114
       },
       "daily_mission_brief.html": {
         "path": "/Users/dextermorris/ghost/parser_starter_kit/src/docs/daily_mission_brief.html",
         "exists": true,
-        "size_bytes": 3605
+        "size_bytes": 7361
       },
       "gll_readiness.json": {
         "path": "/Users/dextermorris/ghost/parser_starter_kit/src/docs/gll_readiness.json",
-        "exists": false,
-        "size_bytes": 0
+        "exists": true,
+        "size_bytes": 252
       }
     },
     "sensor_manifest": {
