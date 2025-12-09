@@ -1,0 +1,12 @@
+{
+  "timestamp": "2025-12-08T15:40:54.937185Z",
+  "FHI": 5,
+  "level": "LOW",
+  "inputs": {
+    "critical_alerts": 0,
+    "warning_alerts": 0,
+    "avg_reliability": 90,
+    "drift_score": 0,
+    "latency_score": 90
+  }
+}

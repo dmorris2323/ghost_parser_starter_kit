@@ -1,0 +1,12 @@
+{
+  "timestamp": "2025-12-08T15:57:22.941374Z",
+  "fusion_heat_index": 5,
+  "heat_level": "LOW",
+  "trust_score": null,
+  "drift_status": "unknown",
+  "avg_reliability": null,
+  "latency": null,
+  "critical_alerts": null,
+  "warning_alerts": null,
+  "nuclear_readiness": {}
+}

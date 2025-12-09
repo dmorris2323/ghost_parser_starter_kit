@@ -1,102 +1,104 @@
 """
-apps/gui/app.py
+app.py — Ghost Lantern Labs Spectral Dashboard (v4, defensive)
 
-Ghost Lantern Labs — Spectral Dashboard
-Streamlit GUI
+This Streamlit app shows:
 
-Shows:
-- Fusion Trust Score (from fusion_trust.compute_trust)
-- Operator Safety Layer (from operator_safety_layer.compute_osl)
-- Sensor Latency (from sensor_latency.compute_latency_report, if available)
-- Fusion Mini-Map (from src/gui_minimap.json)
-- SOS Overlay (from src/gui_sos_overlay.json)
+- Fusion Trust Score
+- Operator Safety Layer
+- Sensor Latency
+- Fusion Mini-Map
+- SOS Overlay
+- GLL Readiness
+- System Integrity
+
+All imports are defensive so missing modules do NOT crash the GUI.
 """
 
+from __future__ import annotations
+
 import json
-import sys
 from pathlib import Path
-from datetime import datetime
 
 import streamlit as st
 
-# --- PATH SETUP: ensure `src` is importable ---
+
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
-SRC_DIR = BASE_DIR / "src"
-
-if str(SRC_DIR) not in sys.path:
-    sys.path.insert(0, str(SRC_DIR))
-
-# --- SAFE IMPORTS ---
-
-# Fusion Trust
-try:
-    from fusion_trust import compute_trust
-except Exception:
-    def compute_trust():
-        return {
-            "fusion_trust": None,
-            "factors": {
-                "error": "fusion_trust module not available"
-            },
-        }
-
-# Operator Safety Layer
-try:
-    from operator_safety_layer import compute_osl
-except Exception:
-    def compute_osl():
-        return {
-            "osl_status": "UNKNOWN",
-            "trust_score": None,
-            "message": "operator_safety_layer module not available",
-        }
-
-# Sensor Latency
-try:
-    from sensor_latency import compute_latency_report
-except Exception:
-    def compute_latency_report():
-        return {"status": "no_data", "message": "sensor_latency module not available"}
-
-# --- FILE PATHS FOR JSON ARTIFACTS ---
-
-MINIMAP_FILE = SRC_DIR / "gui_minimap.json"
-SOS_FILE = SRC_DIR / "gui_sos_overlay.json"
+SRC = BASE_DIR / "src"
 
 
-def load_gui_minimap():
-    """Load minimap JSON from src/gui_minimap.json."""
-    if not MINIMAP_FILE.exists():
-        return {
-            "timestamp": None,
-            "map": {},
-            "message": "No minimap data found. Run CLI Option 19 first.",
-        }
+# ----- SAFE LOADERS ----------------------------------------------------------
+
+def _safe_fusion_trust():
     try:
-        return json.loads(MINIMAP_FILE.read_text())
-    except Exception:
-        return {
-            "timestamp": None,
-            "map": {},
-            "message": "Failed to parse gui_minimap.json",
-        }
+        import sys
+        sys.path.insert(0, str(SRC))
+        from fusion_trust import compute_trust  # type: ignore
+        return compute_trust()
+    except Exception as e:
+        return {"error": f"fusion_trust unavailable: {e!r}"}
 
 
-def load_sos_overlay():
-    """Load SOS overlay JSON from src/gui_sos_overlay.json."""
-    if not SOS_FILE.exists():
-        return {
-            "status": "empty",
-            "message": "No SOS overlay found. Run CLI Option 20 first.",
-        }
+def _safe_osl():
     try:
-        return json.loads(SOS_FILE.read_text())
-    except Exception:
-        return {
-            "status": "corrupted",
-            "message": "Failed to parse gui_sos_overlay.json",
-        }
+        import sys
+        sys.path.insert(0, str(SRC))
+        from operator_safety_layer import compute_osl  # type: ignore
+        return compute_osl()
+    except Exception as e:
+        return {"error": f"operator_safety_layer unavailable: {e!r}"}
 
+
+def _safe_latency():
+    try:
+        import sys
+        sys.path.insert(0, str(SRC))
+        from sensor_latency import compute_latency_report  # type: ignore
+        return compute_latency_report()
+    except Exception as e:
+        return {"status": "no_data", "error": str(e)}
+
+
+def _safe_minimap():
+    try:
+        mm = SRC / "gui_minimap.json"
+        if not mm.exists():
+            return {"status": "no_data", "message": "Run minimap export first."}
+        return json.loads(mm.read_text())
+    except Exception as e:
+        return {"status": "error", "error": str(e)}
+
+
+def _safe_sos_overlay():
+    try:
+        sos = SRC / "gui_sos_overlay.json"
+        if not sos.exists():
+            return {"status": "no_data", "message": "Run SOS overlay export first."}
+        return json.loads(sos.read_text())
+    except Exception as e:
+        return {"status": "error", "error": str(e)}
+
+
+def _safe_gll_readiness():
+    try:
+        import sys
+        sys.path.insert(0, str(SRC))
+        from gll_readiness import compute_gll_readiness  # type: ignore
+        return compute_gll_readiness()
+    except Exception as e:
+        return {"error": f"gll_readiness unavailable: {e!r}"}
+
+
+def _safe_system_integrity():
+    try:
+        import sys
+        sys.path.insert(0, str(SRC))
+        from system_integrity import compute_system_integrity  # type: ignore
+        return compute_system_integrity()
+    except Exception as e:
+        return {"error": f"system_integrity unavailable: {e!r}"}
+
+
+# ----- STREAMLIT LAYOUT ------------------------------------------------------
 
 def main():
     st.set_page_config(
@@ -105,48 +107,32 @@ def main():
     )
 
     st.title("Ghost Lantern Labs — Spectral Dashboard")
+    st.caption(f"Base Directory: {BASE_DIR}")
 
-    # Top meta bar
-    col_meta1, col_meta2 = st.columns(2)
-    with col_meta1:
-        st.write(f"Base Directory: `{BASE_DIR}`")
-    with col_meta2:
-        st.write(f"Loaded at: {datetime.utcnow().isoformat()}Z")
-
-    # --- ROW 1: Trust + Operator Safety + Latency ---
-
-    col1, col2, col3 = st.columns(3)
+    col1, col2 = st.columns(2)
 
     with col1:
         st.subheader("Fusion Trust Score")
-        trust = compute_trust()
-        st.json(trust)
+        st.json(_safe_fusion_trust())
+
+        st.subheader("Operator Safety Layer")
+        st.json(_safe_osl())
+
+        st.subheader("Sensor Latency")
+        st.json(_safe_latency())
+
+        st.subheader("GLL Readiness")
+        st.json(_safe_gll_readiness())
 
     with col2:
-        st.subheader("Operator Safety Layer")
-        osl = compute_osl()
-        st.json(osl)
-
-    with col3:
-        st.subheader("Sensor Latency")
-        latency = compute_latency_report()
-        st.json(latency)
-
-    st.markdown("---")
-
-    # --- ROW 2: Minimap + SOS Overlay ---
-
-    col4, col5 = st.columns(2)
-
-    with col4:
         st.subheader("Fusion Mini-Map")
-        minimap = load_gui_minimap()
-        st.json(minimap)
+        st.json(_safe_minimap())
 
-    with col5:
         st.subheader("SOS Overlay")
-        sos = load_sos_overlay()
-        st.json(sos)
+        st.json(_safe_sos_overlay())
+
+        st.subheader("System Integrity")
+        st.json(_safe_system_integrity())
 
 
 if __name__ == "__main__":

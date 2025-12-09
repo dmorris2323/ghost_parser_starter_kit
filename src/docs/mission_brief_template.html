@@ -1,53 +1,64 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
     <meta charset="UTF-8">
-    <title>Daily Mission Brief</title>
+    <title>Ghost Lantern Labs — Mission Brief</title>
     <style>
         body {
-            font-family: Menlo, Consolas, monospace;
-            background-color: #0A0A0A;
-            color: #EAEAEA;
+            font-family: monospace;
+            white-space: pre-wrap;
+            background: #0d0d0d;
+            color: #e6e6e6;
             padding: 20px;
         }
-
         h1, h2 {
-            color: #5FD4FF;
+            color: #00e0ff;
         }
-
         pre {
-            background: #111;
-            padding: 15px;
+            background: #1a1a1a;
+            padding: 12px;
             border-radius: 6px;
-            white-space: pre-wrap;
-            border: 1px solid #333;
-        }
-
-        .section {
-            margin-bottom: 35px;
+            color: #d1d1d1;
         }
     </style>
 </head>
 
 <body>
 
-    <h1>Mission Brief — Ghost Lantern Labs</h1>
+<h1>GHOST LANTERN LABS — DAILY MISSION BRIEF</h1>
 
-    <!-- ==============================
-         MAIN TEXT BRIEF
-         ============================== -->
-    <div class="section">
-        <h2>Operational Summary</h2>
-        <pre>{{BRIEF_TEXT}}</pre>
-    </div>
+<p>Operator: {{OPERATOR}}</p>
+<p>Crisis Mode: {{CRISIS_MODE}}</p>
 
-    <!-- ==============================
-         GOLDEN DOME READINESS TILE
-         ============================== -->
-    <div class="section">
-        <h2>Golden Dome Readiness</h2>
-        <pre>{{GOLDEN_DOME_TILE}}</pre>
-    </div>
+<h2>Brief Text</h2>
+<pre>{{BRIEF_TEXT}}</pre>
+
+<h2>Golden Dome Readiness</h2>
+<pre>{{GOLDEN_DOME_TILE}}</pre>
+
+<h2>Nuclear Readiness Snapshot</h2>
+<pre>{{NUCLEAR_READINESS}}</pre>
+
+<h2>Sensor Reliability Summary</h2>
+<pre>{{SENSOR_RELIABILITY}}</pre>
+
+<h2>Reliability Trendline</h2>
+<pre>{{RELIABILITY_TREND}}</pre>
+
+<h2>Owl Confidence</h2>
+<pre>{{OWL_CONFIDENCE}}</pre>
+
+<h2>Operator Safety Layer</h2>
+<pre>{{OSL}}</pre>
+
+<h2>Sensor Latency</h2>
+<pre>{{SENSOR_LATENCY}}</pre>
+
+<h2>Fusion Heat Index</h2>
+<pre>{{FHI}}</pre>
+
+<h2>Golden Dome Drift</h2>
+<pre>{{GOLDEN_DOME_DRIFT}}</pre>
 
 </body>
 </html>

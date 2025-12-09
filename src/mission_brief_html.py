@@ -1,152 +1,79 @@
 """
-mission_brief_html.py
+mission_brief_html.py — HTML wrapper for Daily Mission Brief (v4)
 
-Wraps the text daily mission brief in an HTML template:
-docs/mission_brief_template.html
+Reads the text brief, injects into an HTML template, and adds:
+- GLL readiness JSON
+- System integrity JSON
 
-Supported placeholders in the template:
+Template path (if exists):
+  docs/mission_brief_template.html
 
-{{BRIEF_TEXT}}
-{{CRISIS_MODE}}
-{{OPERATOR}}
-{{FUSION_TRUST}}
-{{OSL}}
-{{SENSOR_LATENCY}}
-{{GOLDEN_DOME_TILE}}
-{{GOLDEN_DOME_DRIFT}}
+Placeholders expected (but safe if missing):
+  {{BRIEF_TEXT}}
+  {{GLL_READINESS}}
+  {{SYSTEM_INTEGRITY}}
 """
 
-from pathlib import Path
+from __future__ import annotations
+
 import json
+from pathlib import Path
+from typing import Any, Dict
 
 from daily_mission_brief import write_daily_brief
-from crisis_mode_flag import status as crisis_status
-from operator_identity import get_identity
-from fusion_trust import compute_trust
-from operator_safety_layer import compute_osl
-from sensor_latency import compute_latency_report
-
-# Optional Golden Dome tile/drift imports
-try:
-    from golden_dome_tile import build_golden_dome_tile
-except ImportError:
-    build_golden_dome_tile = None
-
-try:
-    from golden_dome_drift import compute_drift
-except ImportError:
-    compute_drift = None
+from gll_readiness import compute_gll_readiness
+from system_integrity import compute_system_integrity
 
 
-TEMPLATE_HTML = Path("docs/mission_brief_template.html")
-OUTPUT_HTML = Path("docs/daily_mission_brief.html")
-
-
-def build_html() -> str:
-    """
-    Build the HTML mission brief content as a string.
-    """
-    # 1) Get the plain-text brief (also writes docs/daily_mission_brief.txt)
-    brief_text = write_daily_brief()
-
-    # 2) Load template
-    if TEMPLATE_HTML.exists():
-        html = TEMPLATE_HTML.read_text()
-    else:
-        # Minimal fallback if template missing
-        html = """<html>
-<head><title>Daily Mission Brief</title></head>
+SRC = Path(__file__).resolve().parent
+DOCS = SRC / "docs"
+DEFAULT_TEMPLATE = """<html>
+<head>
+  <title>Daily Mission Brief — Ghost Lantern Labs</title>
+  <meta charset="utf-8" />
+</head>
 <body>
-<h1>Mission Brief — Ghost Lantern Labs</h1>
-<pre>{{BRIEF_TEXT}}</pre>
+  <h1>Mission Brief — Ghost Lantern Labs</h1>
+  <pre>{{BRIEF_TEXT}}</pre>
 
-<h2>Fusion Trust Score</h2>
-<pre>{{FUSION_TRUST}}</pre>
+  <h2>GLL Readiness</h2>
+  <pre>{{GLL_READINESS}}</pre>
 
-<h2>Operator Safety Layer</h2>
-<pre>{{OSL}}</pre>
-
-<h2>Sensor Latency</h2>
-<pre>{{SENSOR_LATENCY}}</pre>
-
-<p>Crisis Mode: {{CRISIS_MODE}}</p>
-<p>Operator: {{OPERATOR}}</p>
-
-<h2>Golden Dome Readiness</h2>
-<pre>{{GOLDEN_DOME_TILE}}</pre>
-
-<h2>Golden Dome Drift</h2>
-<pre>{{GOLDEN_DOME_DRIFT}}</pre>
+  <h2>System Integrity</h2>
+  <pre>{{SYSTEM_INTEGRITY}}</pre>
 </body>
 </html>
 """
 
-    # 3) Core replacements
+
+def _load_template() -> str:
+    tpl = DOCS / "mission_brief_template.html"
+    if tpl.exists():
+        return tpl.read_text()
+    return DEFAULT_TEMPLATE
+
+
+def write_html_brief(path: str | Path = "docs/daily_mission_brief.html") -> str:
+    DOCS.mkdir(parents=True, exist_ok=True)
+
+    # Ensure text brief is up to date
+    txt_path = write_daily_brief()
+    brief_text = Path(txt_path).read_text()
+
+    # Compute JSON blocks
+    gll = compute_gll_readiness()
+    integ = compute_system_integrity()
+
+    html = _load_template()
     html = html.replace("{{BRIEF_TEXT}}", brief_text)
-    html = html.replace("{{CRISIS_MODE}}", crisis_status())
-    html = html.replace("{{OPERATOR}}", get_identity())
+    html = html.replace("{{GLL_READINESS}}", json.dumps(gll, indent=2))
+    html = html.replace("{{SYSTEM_INTEGRITY}}", json.dumps(integ, indent=2))
 
-    # Fusion Trust + OSL
-    try:
-        trust = compute_trust()
-        html = html.replace("{{FUSION_TRUST}}", json.dumps(trust, indent=2))
-    except Exception:
-        html = html.replace("{{FUSION_TRUST}}", '"fusion_trust_error"')
-
-    try:
-        osl = compute_osl()
-        html = html.replace("{{OSL}}", json.dumps(osl, indent=2))
-    except Exception:
-        html = html.replace("{{OSL}}", '"osl_error"')
-
-    # Sensor Latency
-    try:
-        lat = compute_latency_report()
-        html = html.replace("{{SENSOR_LATENCY}}", json.dumps(lat, indent=2))
-    except Exception:
-        html = html.replace("{{SENSOR_LATENCY}}", '"latency_error"')
-
-    # Golden Dome Tile
-    if build_golden_dome_tile is not None:
-        try:
-            # If you have a stats object elsewhere, you can wire it in.
-            # Here we use simple safe defaults.
-            tile = build_golden_dome_tile(
-                reliability=92.0,
-                agreement=88.0,
-                profile=get_identity(),
-            )
-            html = html.replace("{{GOLDEN_DOME_TILE}}", json.dumps(tile, indent=2))
-        except Exception:
-            html = html.replace("{{GOLDEN_DOME_TILE}}", '"golden_dome_tile_error"')
-    else:
-        html = html.replace("{{GOLDEN_DOME_TILE}}", '"golden_dome_tile_unavailable"')
-
-    # Golden Dome Drift
-    if compute_drift is not None:
-        try:
-            drift = compute_drift()
-            html = html.replace("{{GOLDEN_DOME_DRIFT}}", json.dumps(drift, indent=2))
-        except Exception:
-            html = html.replace("{{GOLDEN_DOME_DRIFT}}", '"golden_dome_drift_error"')
-    else:
-        html = html.replace("{{GOLDEN_DOME_DRIFT}}", '"golden_dome_drift_unavailable"')
-
-    return html
-
-
-def write_html_brief() -> str:
-    """
-    Build and write docs/daily_mission_brief.html.
-    Returns the HTML string.
-    """
-    html = build_html()
-    OUTPUT_HTML.parent.mkdir(exist_ok=True, parents=True)
-    OUTPUT_HTML.write_text(html)
-    return html
+    out = DOCS / Path(path).name
+    out.write_text(html)
+    return str(out)
 
 
 if __name__ == "__main__":
-    out = write_html_brief()
-    print(out)
+    print(write_html_brief())
 

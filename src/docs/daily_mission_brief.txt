@@ -63,16 +63,13 @@ Notes:
   * This report is designed for commander-level briefings.
 
 
+=== SENSOR RELIABILITY SUMMARY ===
+Sensor reliability module unavailable.
+
 === RELIABILITY TREND ===
 {
   "trend": "no_data"
 }
-
-=== OWL CONFIDENCE ===
-Sample confidence: 92.0 (crit=0, warnings=0, avg_rel=92.0)
-
-=== CRISIS MODE ===
-ON
 
 === FUSION TRUST SCORE ===
 {
@@ -108,4 +105,151 @@ ON
 === SENSOR LATENCY ===
 {
   "status": "no_data"
+}
+
+=== GOLDEN DOME DRIFT ===
+{
+  "status": "ok",
+  "drift_score": 0,
+  "total_lines": 57
+}
+
+=== NUCLEAR READINESS SNAPSHOT ===
+{
+  "nuclear_readiness_score": 75.6,
+  "components": {
+    "trust": {
+      "fusion_trust": 72,
+      "factors": {
+        "outliers": 0,
+        "drift": {
+          "status": "corrupted",
+          "message": "could not parse golden_dome_status.txt",
+          "drift_score": 0
+        },
+        "reliability": {
+          "sensors": {
+            "global": 100.0,
+            "optical": 90.0,
+            "seismic": 90.0,
+            "ems": 90.0,
+            "radiation": 90.0
+          },
+          "avg_reliability": 92.0
+        },
+        "crisis_mode": "ON"
+      }
+    },
+    "reliability": {
+      "sensors": {
+        "global": 100.0,
+        "optical": 90.0,
+        "seismic": 90.0,
+        "ems": 90.0,
+        "radiation": 90.0
+      },
+      "avg_reliability": 92.0
+    },
+    "safety": {
+      "osl_status": "YELLOW",
+      "trust_score": 72,
+      "message": "Moderate risk \u2014 verify critical readings."
+    }
+  }
+}
+
+=== GLL READINESS SCORE ===
+{
+  "readiness_score": 60.9,
+  "components": {
+    "fusion_trust": 72,
+    "operator_safety_layer": 72,
+    "avg_reliability": 85.0,
+    "crisis_penalty": 15,
+    "drift_penalty": 0
+  },
+  "notes": [
+    "Crisis mode ON \u2014 readiness reduced."
+  ]
+}
+
+=== SYSTEM INTEGRITY ===
+{
+  "status": "YELLOW",
+  "missing_items": [
+    "docs_files.gll_readiness.json"
+  ],
+  "checks": {
+    "dirs": {
+      "src": {
+        "path": "/Users/dextermorris/ghost/parser_starter_kit/src",
+        "exists": true,
+        "items": 221
+      },
+      "data": {
+        "path": "/Users/dextermorris/ghost/parser_starter_kit/src/data",
+        "exists": true,
+        "items": 14
+      },
+      "docs": {
+        "path": "/Users/dextermorris/ghost/parser_starter_kit/src/docs",
+        "exists": true,
+        "items": 70
+      },
+      "config": {
+        "path": "/Users/dextermorris/ghost/parser_starter_kit/src/config",
+        "exists": true,
+        "items": 3
+      }
+    },
+    "data_files": {
+      "fused_output.csv": {
+        "path": "/Users/dextermorris/ghost/parser_starter_kit/src/data/fused_output.csv",
+        "exists": true,
+        "size_bytes": 144
+      },
+      "scored_output.csv": {
+        "path": "/Users/dextermorris/ghost/parser_starter_kit/src/data/scored_output.csv",
+        "exists": true,
+        "size_bytes": 23
+      },
+      "run_history.csv": {
+        "path": "/Users/dextermorris/ghost/parser_starter_kit/src/data/run_history.csv",
+        "exists": true,
+        "size_bytes": 3781
+      },
+      "sensor_ingest.csv": {
+        "path": "/Users/dextermorris/ghost/parser_starter_kit/src/data/sensor_ingest.csv",
+        "exists": true,
+        "size_bytes": 263
+      }
+    },
+    "docs_files": {
+      "daily_mission_brief.txt": {
+        "path": "/Users/dextermorris/ghost/parser_starter_kit/src/docs/daily_mission_brief.txt",
+        "exists": true,
+        "size_bytes": 6153
+      },
+      "daily_mission_brief.html": {
+        "path": "/Users/dextermorris/ghost/parser_starter_kit/src/docs/daily_mission_brief.html",
+        "exists": true,
+        "size_bytes": 3605
+      },
+      "gll_readiness.json": {
+        "path": "/Users/dextermorris/ghost/parser_starter_kit/src/docs/gll_readiness.json",
+        "exists": false,
+        "size_bytes": 0
+      }
+    },
+    "sensor_manifest": {
+      "path": "/Users/dextermorris/ghost/parser_starter_kit/src/sensor_manifest.json",
+      "exists": true,
+      "size_bytes": 105
+    },
+    "sensor_profiles_dir": {
+      "path": "/Users/dextermorris/ghost/parser_starter_kit/src/sensor_profiles",
+      "exists": true,
+      "items": 4
+    }
+  }
 }

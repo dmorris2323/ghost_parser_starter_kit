@@ -1,26 +1,39 @@
 <html>
 <head>
-<title>Daily Mission Brief</title>
+    <title>Ghost Lantern Labs — Mission Brief</title>
+    <style>
+        body { font-family: monospace; white-space: pre-wrap; }
+        h1, h2 { font-family: Arial, sans-serif; }
+    </style>
 </head>
+
 <body>
 
-<p>Operator: {{OPERATOR}}</p>
-<p>Crisis Mode: {{CRISIS_MODE}}</p>
-<p>Readiness Score: {{READINESS_SCORE}}</p>
+<h1>GHOST LANTERN LABS — DAILY MISSION BRIEF</h1>
 
+<h2>Operator</h2>
+<p>{{OPERATOR}}</p>
 
-<h1>Mission Brief — Ghost Lantern Labs</h1>
+<h2>Crisis Mode</h2>
+<p>{{CRISIS_MODE}}</p>
 
-<p>Operator: {{OPERATOR}}</p>
-<p>Crisis Mode: {{CRISIS_MODE}}</p>
-
+<h2>Mission Brief (Text Output)</h2>
 <pre>{{BRIEF_TEXT}}</pre>
 
-<h2>Golden Dome Readiness</h2>
-<pre>{{GOLDEN_DOME_TILE}}</pre>
+<h2>Sensor Latency</h2>
+<pre>{{SENSOR_LATENCY}}</pre>
 
-<h2>Golden Dome Drift</h2>
-<pre>{{GOLDEN_DOME_DRIFT}}</pre>
+<h2>Reliability Trend</h2>
+<pre>{{RELIABILITY_TREND}}</pre>
+
+<h2>Fusion Trust Score</h2>
+<pre>{{FUSION_TRUST}}</pre>
+
+<h2>Operator Safety Layer</h2>
+<pre>{{OSL}}</pre>
+
+<h2>Nuclear Readiness Snapshot</h2>
+<pre>{{NUCLEAR_READINESS}}</pre>
 
 </body>
 </html>
