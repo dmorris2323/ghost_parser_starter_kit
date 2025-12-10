@@ -1,0 +1,31 @@
+=== BASE DEFENSE STORYBOARD ===
+Generated: 2025-12-10T12:03:48.084018Z
+Base: Notional Installation
+Operator: A1C Dexter "Ghost" Morris
+Crisis Mode: ON
+Fusion Trust: 80
+Average Reliability: 90.00%
+
+[Detection]
+  How the base detects incoming threats (drones, gate rams, nuclear signals, cyber spikes).
+  Perimeter Risk     : ELEVATED
+  Airspace Risk      : ELEVATED
+  Outage (Global)    : risk=LOW, errors=0
+
+[Assessment]
+  How Ghost Lantern Labs fuses and rates the situation.
+  Fusion Trust       : 80
+  Avg Reliability    : 90.0
+  Crisis Mode        : ON
+
+[Response]
+  How the wing/group/squadron/team posture based on GLL outputs.
+  Wing Readiness     : YELLOW
+  Group Readiness    : GREEN
+  Squadron Readiness : GREEN
+  Team Readiness     : GREEN
+
+[Recovery]
+  Post-incident learning and reset posture.
+  Operator           : A1C Dexter "Ghost" Morris
+  Notes              : Storyboard is designed to be briefed, recorded, and iterated each day.

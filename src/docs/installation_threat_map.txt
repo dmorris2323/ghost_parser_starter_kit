@@ -1,0 +1,16 @@
+=== INSTALLATION THREAT MAP ===
+Base: Notional Installation
+Generated: 2025-12-10T12:03:41.265724Z
+Crisis Mode: ON
+Fusion Trust: 80
+Overall Risk: CRISIS – FRAGILE
+
+Sectors:
+  [PERIMETER] ELEVATED
+    - Monitors gate ramming, fence breaches, and ground incursions.
+  [AIRSPACE] ELEVATED
+    - Tracks drone incursions and low-altitude anomalies.
+  [CYBER] STABLE
+    - Monitors fusion pipeline integrity and critical alert load.
+  [INTERIOR] STABLE
+    - Covers mission systems, operations floors, and critical nodes.

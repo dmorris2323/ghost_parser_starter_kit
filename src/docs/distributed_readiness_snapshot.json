@@ -1,0 +1,14 @@
+{
+  "generated_at": "2025-12-10T12:03:43.931540Z",
+  "crisis_mode": "ON",
+  "operator": "A1C Dexter \"Ghost\" Morris",
+  "fusion_trust": 80,
+  "avg_reliability": 90.0,
+  "readiness": {
+    "wing": "YELLOW",
+    "group": "GREEN",
+    "squadron": "GREEN",
+    "team": "GREEN",
+    "operator": "SURGE"
+  }
+}

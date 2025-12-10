@@ -1,0 +1,13 @@
+=== PERIMETER INCIDENT REPORT ===
+Generated: 2025-12-10T12:03:46.001858Z
+Base: Notional Installation
+Crisis Mode: ON
+Fusion Trust Score: 80
+
+Perimeter / Airspace Summary:
+  Perimeter Risk          : ELEVATED
+  Airspace Risk           : ELEVATED
+  Global Sensor Outage    : LOW
+
+Commander Notes:
+  Perimeter is elevated but stable with current posture. Airspace is elevated but under control. Sensors appear stable with low outage risk.

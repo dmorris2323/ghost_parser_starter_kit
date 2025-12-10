@@ -1,0 +1,31 @@
+{
+  "generated_at": "2025-12-10T12:03:43.222452Z",
+  "source": "/Users/dextermorris/ghost/parser_starter_kit/src/data/run_history.csv",
+  "sensors": {
+    "optical": {
+      "error_events": 0,
+      "outage_risk": "LOW",
+      "comment": "No failures seen yet."
+    },
+    "seismic": {
+      "error_events": 0,
+      "outage_risk": "LOW",
+      "comment": "No failures seen yet."
+    },
+    "ems": {
+      "error_events": 0,
+      "outage_risk": "LOW",
+      "comment": "No failures seen yet."
+    },
+    "radiation": {
+      "error_events": 0,
+      "outage_risk": "LOW",
+      "comment": "No failures seen yet."
+    },
+    "global": {
+      "error_events": 0,
+      "outage_risk": "LOW",
+      "comment": "No failures seen yet."
+    }
+  }
+}

@@ -1,0 +1,50 @@
+{
+  "generated_at": "2025-12-10T12:03:48.084018Z",
+  "base_name": "Notional Installation",
+  "crisis_mode": "ON",
+  "fusion_trust": 80,
+  "avg_reliability": 90.0,
+  "operator": "A1C Dexter \"Ghost\" Morris",
+  "phases": [
+    {
+      "phase": "Detection",
+      "summary": "How the base detects incoming threats (drones, gate rams, nuclear signals, cyber spikes).",
+      "installation_risk": "CRISIS \u2013 FRAGILE",
+      "perimeter_risk": "ELEVATED",
+      "airspace_risk": "ELEVATED",
+      "sensor_outage_global": {
+        "error_events": 0,
+        "outage_risk": "LOW",
+        "comment": "No failures seen yet."
+      }
+    },
+    {
+      "phase": "Assessment",
+      "summary": "How Ghost Lantern Labs fuses and rates the situation.",
+      "fusion_trust": 80,
+      "avg_reliability": 90.0,
+      "crisis_mode": "ON",
+      "readiness_levels": {
+        "wing": "YELLOW",
+        "group": "GREEN",
+        "squadron": "GREEN",
+        "team": "GREEN",
+        "operator": "SURGE"
+      }
+    },
+    {
+      "phase": "Response",
+      "summary": "How the wing/group/squadron/team posture based on GLL outputs.",
+      "wing_level": "YELLOW",
+      "group_level": "GREEN",
+      "squadron_level": "GREEN",
+      "team_level": "GREEN"
+    },
+    {
+      "phase": "Recovery",
+      "summary": "Post-incident learning and reset posture.",
+      "operator": "A1C Dexter \"Ghost\" Morris",
+      "notes": "Storyboard is designed to be briefed, recorded, and iterated each day."
+    }
+  ]
+}

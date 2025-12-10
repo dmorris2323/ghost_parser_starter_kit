@@ -1,0 +1,29 @@
+{
+  "generated_at": "2025-12-10T12:03:41.265724Z",
+  "base_name": "Notional Installation",
+  "crisis_mode": "ON",
+  "fusion_trust_score": 80,
+  "overall_risk": "CRISIS \u2013 FRAGILE",
+  "sectors": {
+    "perimeter": {
+      "name": "Perimeter",
+      "risk_level": "ELEVATED",
+      "notes": "Monitors gate ramming, fence breaches, and ground incursions."
+    },
+    "airspace": {
+      "name": "Airspace",
+      "risk_level": "ELEVATED",
+      "notes": "Tracks drone incursions and low-altitude anomalies."
+    },
+    "cyber": {
+      "name": "Cyber",
+      "risk_level": "STABLE",
+      "notes": "Monitors fusion pipeline integrity and critical alert load."
+    },
+    "interior": {
+      "name": "Interior",
+      "risk_level": "STABLE",
+      "notes": "Covers mission systems, operations floors, and critical nodes."
+    }
+  }
+}

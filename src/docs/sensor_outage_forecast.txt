@@ -1,0 +1,14 @@
+=== SENSOR OUTAGE PREDICTOR ===
+Generated: 2025-12-10T12:03:43.222452Z
+History Source: /Users/dextermorris/ghost/parser_starter_kit/src/data/run_history.csv
+
+[OPTICAL] Risk=LOW, Errors=0
+  - No failures seen yet.
+[SEISMIC] Risk=LOW, Errors=0
+  - No failures seen yet.
+[EMS] Risk=LOW, Errors=0
+  - No failures seen yet.
+[RADIATION] Risk=LOW, Errors=0
+  - No failures seen yet.
+[GLOBAL] Risk=LOW, Errors=0
+  - No failures seen yet.
