@@ -1,79 +1,81 @@
 """
-mission_brief_html.py — HTML wrapper for Daily Mission Brief (v4)
-
-Reads the text brief, injects into an HTML template, and adds:
-- GLL readiness JSON
-- System integrity JSON
-
-Template path (if exists):
-  docs/mission_brief_template.html
-
-Placeholders expected (but safe if missing):
-  {{BRIEF_TEXT}}
-  {{GLL_READINESS}}
-  {{SYSTEM_INTEGRITY}}
+mission_brief_html.py — Build Daily Mission Brief HTML
+------------------------------------------------------
+Takes the text brief + analytics (trust, OSL, latency, nuclear readiness,
+temporal forecast, adversary patterns) and renders docs/daily_mission_brief.html
+using docs/mission_brief_template.html.
 """
-
-from __future__ import annotations
 
 import json
 from pathlib import Path
-from typing import Any, Dict
 
 from daily_mission_brief import write_daily_brief
-from gll_readiness import compute_gll_readiness
-from system_integrity import compute_system_integrity
+from fusion_trust import compute_trust
+from operator_safety_layer import compute_osl
+from sensor_latency import compute_latency_report
+from golden_dome_snapshot import build_snapshot
+from fusion_temporal_forecast import forecast_next_6h
+from adversary_pattern_engine import analyze_patterns
 
-
-SRC = Path(__file__).resolve().parent
+BASE = Path(__file__).resolve().parent.parent  # /parser_starter_kit
+SRC = BASE / "src"
 DOCS = SRC / "docs"
-DEFAULT_TEMPLATE = """<html>
-<head>
-  <title>Daily Mission Brief — Ghost Lantern Labs</title>
-  <meta charset="utf-8" />
-</head>
-<body>
-  <h1>Mission Brief — Ghost Lantern Labs</h1>
-  <pre>{{BRIEF_TEXT}}</pre>
 
-  <h2>GLL Readiness</h2>
-  <pre>{{GLL_READINESS}}</pre>
-
-  <h2>System Integrity</h2>
-  <pre>{{SYSTEM_INTEGRITY}}</pre>
-</body>
-</html>
-"""
+TEMPLATE = DOCS / "mission_brief_template.html"
+OUTFILE = DOCS / "daily_mission_brief.html"
+TEXT_BRIEF_FILE = DOCS / "daily_mission_brief.txt"
 
 
-def _load_template() -> str:
-    tpl = DOCS / "mission_brief_template.html"
-    if tpl.exists():
-        return tpl.read_text()
-    return DEFAULT_TEMPLATE
+def build_html_brief() -> str:
+    """
+    Build the HTML mission brief and return the output path as string.
+    """
 
+    # Ensure text brief exists & is current
+    write_daily_brief()
 
-def write_html_brief(path: str | Path = "docs/daily_mission_brief.html") -> str:
-    DOCS.mkdir(parents=True, exist_ok=True)
+    if not TEMPLATE.exists():
+        raise FileNotFoundError(f"Template not found: {TEMPLATE}")
 
-    # Ensure text brief is up to date
-    txt_path = write_daily_brief()
-    brief_text = Path(txt_path).read_text()
+    template_html = TEMPLATE.read_text()
 
-    # Compute JSON blocks
-    gll = compute_gll_readiness()
-    integ = compute_system_integrity()
+    # Load the text brief
+    if TEXT_BRIEF_FILE.exists():
+        brief_text = TEXT_BRIEF_FILE.read_text()
+    else:
+        brief_text = "No daily_mission_brief.txt found. Run daily_mission_brief.py."
 
-    html = _load_template()
+    # Compute analytics blocks
+    trust = compute_trust()
+    osl = compute_osl()
+    latency = compute_latency_report()
+    nuclear = build_snapshot()
+    temporal = forecast_next_6h()
+    patterns = analyze_patterns()
+
+    # Replace placeholders (no-op if not present in template)
+    html = template_html
     html = html.replace("{{BRIEF_TEXT}}", brief_text)
-    html = html.replace("{{GLL_READINESS}}", json.dumps(gll, indent=2))
-    html = html.replace("{{SYSTEM_INTEGRITY}}", json.dumps(integ, indent=2))
+    html = html.replace("{{FUSION_TRUST}}", json.dumps(trust, indent=2))
+    html = html.replace("{{OSL}}", json.dumps(osl, indent=2))
+    html = html.replace("{{SENSOR_LATENCY}}", json.dumps(latency, indent=2))
+    html = html.replace("{{NUCLEAR_READINESS}}", json.dumps(nuclear, indent=2))
+    html = html.replace("{{TEMPORAL_FORECAST}}", json.dumps(temporal, indent=2))
+    html = html.replace("{{ADV_PATTERNS}}", json.dumps(patterns, indent=2))
 
-    out = DOCS / Path(path).name
-    out.write_text(html)
-    return str(out)
+    OUTFILE.write_text(html)
+    return str(OUTFILE)
+
+
+def write_daily_brief() -> str:
+    """
+    Backward-compatible name some older calls expect.
+    Just builds the HTML and returns the path.
+    """
+    return build_html_brief()
 
 
 if __name__ == "__main__":
-    print(write_html_brief())
+    out = build_html_brief()
+    print(out)
 

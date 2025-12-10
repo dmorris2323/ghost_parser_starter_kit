@@ -1,0 +1,361 @@
+<html>
+<head>
+    <title>Ghost Lantern Labs — Mission Brief</title>
+    <style>
+        body { font-family: monospace; white-space: pre-wrap; }
+        h1, h2 { font-family: Arial, sans-serif; }
+    </style>
+</head>
+
+<body>
+
+<h1>GHOST LANTERN LABS — DAILY MISSION BRIEF</h1>
+
+<h2>Operator</h2>
+<p>A1C Dexter "Ghost" Morris</p>
+
+<h2>Crisis Mode</h2>
+<p>ON</p>
+
+<h2>Mission Brief (Text Output)</h2>
+<pre>=== GHOST LANTERN LABS — DAILY MISSION BRIEF ===
+Operator: A1C Dexter "Ghost" Morris
+Crisis Mode: ON
+
+=== PIPELINE HEALTH ===
+{
+  "score": 90,
+  "qa_passed": 7,
+  "qa_failed": 0,
+  "critical_alerts": 2,
+  "status": "GREEN",
+  "notes": "All tests passed. 2 critical alert(s) present \u2014 reduced health score."
+}
+
+=== SENSOR READINESS BRIEF ===
+=== SENSOR READINESS BRIEF ===
+
+Total sensors in manifest : 5
+Enabled                    : 5
+Disabled                   : 0
+
+=== ENABLED SENSOR DETAILS ===
+[OPTICAL]
+  Description : Optical plume and flash detection; detects bright anomalies used in launch detection.
+  Thresholds  : warning=0.55  critical=0.85
+  Drift       : no data
+
+[SEISMIC]
+  Description : No profile description.
+  Thresholds  : warning=n/a  critical=n/a
+  Drift       : no data
+
+[EMS]
+  Description : Electromagnetic spectrum detection for jamming, interference, and spoof attempts.
+  Thresholds  : warning=0.6  critical=0.9
+  Drift       : no data
+
+[RADIATION]
+  Description : Gamma and neutron radiation detection for nuclear event confirmation.
+  Thresholds  : warning=0.7  critical=0.95
+  Drift       : no data
+
+[GENERIC_METRICS]
+  Description : No profile description.
+  Thresholds  : warning=n/a  critical=n/a
+  Drift       : no data
+
+=== SENSOR RELIABILITY (SUMMARY) ===
+=== GLL SENSOR RELIABILITY REPORT ===
+
+Average Reliability: 92.00%
+
+Per-Sensor Reliability:
+  - ems: 90.00%
+  - global: 100.00%
+  - optical: 90.00%
+  - radiation: 90.00%
+  - seismic: 90.00%
+
+Notes:
+  * Computed from run_history.csv when available.
+  * Falls back to safe defaults if logs are missing.
+  * This report is designed for commander-level briefings.
+
+
+=== SENSOR RELIABILITY SUMMARY ===
+Sensor reliability module unavailable.
+
+=== RELIABILITY TREND ===
+{
+  "trend": "no_data"
+}
+
+=== FUSION TRUST SCORE ===
+{
+  "fusion_trust": 72,
+  "factors": {
+    "outliers": 0,
+    "drift": {
+      "status": "corrupted",
+      "message": "could not parse golden_dome_status.txt",
+      "drift_score": 0
+    },
+    "reliability": {
+      "sensors": {
+        "global": 100.0,
+        "optical": 90.0,
+        "seismic": 90.0,
+        "ems": 90.0,
+        "radiation": 90.0
+      },
+      "avg_reliability": 92.0
+    },
+    "crisis_mode": "ON"
+  }
+}
+
+=== OPERATOR SAFETY LAYER ===
+{
+  "osl_status": "YELLOW",
+  "trust_score": 72,
+  "message": "Moderate risk \u2014 verify critical readings."
+}
+
+=== SENSOR LATENCY ===
+{
+  "status": "no_data"
+}
+
+=== GOLDEN DOME DRIFT ===
+{
+  "status": "ok",
+  "drift_score": 0,
+  "total_lines": 57
+}
+
+=== NUCLEAR READINESS SNAPSHOT ===
+{
+  "nuclear_readiness_score": 75.6,
+  "components": {
+    "trust": {
+      "fusion_trust": 72,
+      "factors": {
+        "outliers": 0,
+        "drift": {
+          "status": "corrupted",
+          "message": "could not parse golden_dome_status.txt",
+          "drift_score": 0
+        },
+        "reliability": {
+          "sensors": {
+            "global": 100.0,
+            "optical": 90.0,
+            "seismic": 90.0,
+            "ems": 90.0,
+            "radiation": 90.0
+          },
+          "avg_reliability": 92.0
+        },
+        "crisis_mode": "ON"
+      }
+    },
+    "reliability": {
+      "sensors": {
+        "global": 100.0,
+        "optical": 90.0,
+        "seismic": 90.0,
+        "ems": 90.0,
+        "radiation": 90.0
+      },
+      "avg_reliability": 92.0
+    },
+    "safety": {
+      "osl_status": "YELLOW",
+      "trust_score": 72,
+      "message": "Moderate risk \u2014 verify critical readings."
+    }
+  }
+}
+
+=== GLL READINESS SCORE ===
+{
+  "readiness_score": 60.9,
+  "components": {
+    "fusion_trust": 72,
+    "operator_safety_layer": 72,
+    "avg_reliability": 85.0,
+    "crisis_penalty": 15,
+    "drift_penalty": 0
+  },
+  "notes": [
+    "Crisis mode ON \u2014 readiness reduced."
+  ]
+}
+
+=== SYSTEM INTEGRITY ===
+{
+  "status": "GREEN",
+  "missing_items": [],
+  "checks": {
+    "dirs": {
+      "src": {
+        "path": "/Users/dextermorris/ghost/parser_starter_kit/src",
+        "exists": true,
+        "items": 227
+      },
+      "data": {
+        "path": "/Users/dextermorris/ghost/parser_starter_kit/src/data",
+        "exists": true,
+        "items": 14
+      },
+      "docs": {
+        "path": "/Users/dextermorris/ghost/parser_starter_kit/src/docs",
+        "exists": true,
+        "items": 79
+      },
+      "config": {
+        "path": "/Users/dextermorris/ghost/parser_starter_kit/src/config",
+        "exists": true,
+        "items": 3
+      }
+    },
+    "data_files": {
+      "fused_output.csv": {
+        "path": "/Users/dextermorris/ghost/parser_starter_kit/src/data/fused_output.csv",
+        "exists": true,
+        "size_bytes": 144
+      },
+      "scored_output.csv": {
+        "path": "/Users/dextermorris/ghost/parser_starter_kit/src/data/scored_output.csv",
+        "exists": true,
+        "size_bytes": 23
+      },
+      "run_history.csv": {
+        "path": "/Users/dextermorris/ghost/parser_starter_kit/src/data/run_history.csv",
+        "exists": true,
+        "size_bytes": 3781
+      },
+      "sensor_ingest.csv": {
+        "path": "/Users/dextermorris/ghost/parser_starter_kit/src/data/sensor_ingest.csv",
+        "exists": true,
+        "size_bytes": 263
+      }
+    },
+    "docs_files": {
+      "daily_mission_brief.txt": {
+        "path": "/Users/dextermorris/ghost/parser_starter_kit/src/docs/daily_mission_brief.txt",
+        "exists": true,
+        "size_bytes": 6114
+      },
+      "daily_mission_brief.html": {
+        "path": "/Users/dextermorris/ghost/parser_starter_kit/src/docs/daily_mission_brief.html",
+        "exists": true,
+        "size_bytes": 7361
+      },
+      "gll_readiness.json": {
+        "path": "/Users/dextermorris/ghost/parser_starter_kit/src/docs/gll_readiness.json",
+        "exists": true,
+        "size_bytes": 252
+      }
+    },
+    "sensor_manifest": {
+      "path": "/Users/dextermorris/ghost/parser_starter_kit/src/sensor_manifest.json",
+      "exists": true,
+      "size_bytes": 105
+    },
+    "sensor_profiles_dir": {
+      "path": "/Users/dextermorris/ghost/parser_starter_kit/src/sensor_profiles",
+      "exists": true,
+      "items": 4
+    }
+  }
+}
+</pre>
+
+<h2>Sensor Latency</h2>
+<pre>{
+  "status": "no_data"
+}</pre>
+
+<h2>Reliability Trend</h2>
+<pre>{{RELIABILITY_TREND}}</pre>
+
+<h2>Fusion Trust Score</h2>
+<pre>{
+  "fusion_trust": 72,
+  "factors": {
+    "outliers": 0,
+    "drift": {
+      "status": "corrupted",
+      "message": "could not parse golden_dome_status.txt",
+      "drift_score": 0
+    },
+    "reliability": {
+      "sensors": {
+        "global": 100.0,
+        "optical": 90.0,
+        "seismic": 90.0,
+        "ems": 90.0,
+        "radiation": 90.0
+      },
+      "avg_reliability": 92.0
+    },
+    "crisis_mode": "ON"
+  }
+}</pre>
+
+<h2>Operator Safety Layer</h2>
+<pre>{
+  "osl_status": "YELLOW",
+  "trust_score": 72,
+  "message": "Moderate risk \u2014 verify critical readings."
+}</pre>
+
+<h2>Nuclear Readiness Snapshot</h2>
+<pre>{
+  "nuclear_readiness_score": 75.6,
+  "components": {
+    "trust": {
+      "fusion_trust": 72,
+      "factors": {
+        "outliers": 0,
+        "drift": {
+          "status": "corrupted",
+          "message": "could not parse golden_dome_status.txt",
+          "drift_score": 0
+        },
+        "reliability": {
+          "sensors": {
+            "global": 100.0,
+            "optical": 90.0,
+            "seismic": 90.0,
+            "ems": 90.0,
+            "radiation": 90.0
+          },
+          "avg_reliability": 92.0
+        },
+        "crisis_mode": "ON"
+      }
+    },
+    "reliability": {
+      "sensors": {
+        "global": 100.0,
+        "optical": 90.0,
+        "seismic": 90.0,
+        "ems": 90.0,
+        "radiation": 90.0
+      },
+      "avg_reliability": 92.0
+    },
+    "safety": {
+      "osl_status": "YELLOW",
+      "trust_score": 72,
+      "message": "Moderate risk \u2014 verify critical readings."
+    }
+  }
+}</pre>
+
+</body>
+</html>
+

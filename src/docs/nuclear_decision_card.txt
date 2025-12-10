@@ -1,3 +1,28 @@
+===== NUCLEAR DECISION CARD — GHOST LANTERN LABS =====
+Generated at (UTC): 2025-12-10T02:25:36.792704+00:00
+
+Crisis Mode: ON
+Golden Dome Readiness: UNKNOWN
+Fusion Heat Index: n/a
+
+Fusion Trust Score:
+{
+  "fusion_trust": 80,
+  "factors": {
+    "outliers": 0,
+    "drift": {
+      "status": "ok",
+      "drift_score": 0,
+      "total_lines": 57
+    },
+    "reliability": {
+      "trend": "no_data"
+    },
+    "crisis_mode": "ON"
+  }
+}
+
+Raw Nuclear Snapshot Payload:
 {
   "nuclear_readiness_score": 87.6,
   "components": {
@@ -33,3 +58,7 @@
     }
   }
 }
+
+Notes:
+ - This card is for rapid commander situational awareness.
+ - It summarizes GLL's nuclear readiness view, not final authority.

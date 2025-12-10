@@ -1,138 +1,149 @@
 """
-app.py — Ghost Lantern Labs Spectral Dashboard (v4, defensive)
-
-This Streamlit app shows:
-
-- Fusion Trust Score
-- Operator Safety Layer
-- Sensor Latency
-- Fusion Mini-Map
-- SOS Overlay
-- GLL Readiness
-- System Integrity
-
-All imports are defensive so missing modules do NOT crash the GUI.
+Ghost Lantern Labs — Spectral Dashboard (Streamlit)
+---------------------------------------------------
+Shows:
+  • Fusion Trust Score
+  • Operator Safety Layer
+  • Sensor Latency
+  • Fusion Mini-Map
+  • SOS Overlay
+  • Adversary Pattern Engine
+  • Daily Mission Brief (text)
 """
 
-from __future__ import annotations
-
 import json
+import sys
 from pathlib import Path
+from datetime import datetime, timezone
 
 import streamlit as st
 
+# --- Path setup so we can import from src/ cleanly ---
+BASE = Path(__file__).resolve().parent.parent.parent  # /parser_starter_kit
+SRC = BASE / "src"
 
-BASE_DIR = Path(__file__).resolve().parent.parent.parent
-SRC = BASE_DIR / "src"
+if str(SRC) not in sys.path:
+    sys.path.insert(0, str(SRC))
+
+# --- Core analytics imports from src/ ---
+from fusion_trust import compute_trust
+from operator_safety_layer import compute_osl
+from sensor_latency import compute_latency_report
+from adversary_pattern_engine import analyze_patterns
+
+# --- File paths for overlays / brief ---
+MINIMAP_FILE = SRC / "gui_minimap.json"
+SOS_FILE = SRC / "gui_sos_overlay.json"
+BRIEF_FILE = SRC / "docs" / "daily_mission_brief.txt"
 
 
-# ----- SAFE LOADERS ----------------------------------------------------------
+# ---------------------------
+# Helper loaders
+# ---------------------------
+def load_gui_minimap():
+    """Safe loader for GUI minimap JSON."""
+    if not MINIMAP_FILE.exists():
+        return {"map": {}, "timestamp": None, "status": "no_data"}
 
-def _safe_fusion_trust():
     try:
-        import sys
-        sys.path.insert(0, str(SRC))
-        from fusion_trust import compute_trust  # type: ignore
-        return compute_trust()
+        return json.loads(MINIMAP_FILE.read_text())
     except Exception as e:
-        return {"error": f"fusion_trust unavailable: {e!r}"}
+        return {
+            "map": {},
+            "timestamp": None,
+            "status": f"error_parsing_minimap: {e!r}",
+        }
 
 
-def _safe_osl():
+def load_sos_overlay():
+    """Safe loader for SOS overlay JSON."""
+    if not SOS_FILE.exists():
+        return {"status": "no_data", "message": "No SOS overlay found."}
+
     try:
-        import sys
-        sys.path.insert(0, str(SRC))
-        from operator_safety_layer import compute_osl  # type: ignore
-        return compute_osl()
+        return json.loads(SOS_FILE.read_text())
     except Exception as e:
-        return {"error": f"operator_safety_layer unavailable: {e!r}"}
+        return {
+            "status": "error",
+            "message": f"Error parsing SOS overlay: {e!r}",
+        }
 
 
-def _safe_latency():
+def load_daily_brief_text():
+    """Safe loader for text daily mission brief."""
+    if not BRIEF_FILE.exists():
+        return "No daily mission brief found. Run daily_mission_brief.py."
+
     try:
-        import sys
-        sys.path.insert(0, str(SRC))
-        from sensor_latency import compute_latency_report  # type: ignore
-        return compute_latency_report()
+        return BRIEF_FILE.read_text()
     except Exception as e:
-        return {"status": "no_data", "error": str(e)}
+        return f"[ERROR] Could not read daily_mission_brief.txt: {e!r}"
 
 
-def _safe_minimap():
-    try:
-        mm = SRC / "gui_minimap.json"
-        if not mm.exists():
-            return {"status": "no_data", "message": "Run minimap export first."}
-        return json.loads(mm.read_text())
-    except Exception as e:
-        return {"status": "error", "error": str(e)}
-
-
-def _safe_sos_overlay():
-    try:
-        sos = SRC / "gui_sos_overlay.json"
-        if not sos.exists():
-            return {"status": "no_data", "message": "Run SOS overlay export first."}
-        return json.loads(sos.read_text())
-    except Exception as e:
-        return {"status": "error", "error": str(e)}
-
-
-def _safe_gll_readiness():
-    try:
-        import sys
-        sys.path.insert(0, str(SRC))
-        from gll_readiness import compute_gll_readiness  # type: ignore
-        return compute_gll_readiness()
-    except Exception as e:
-        return {"error": f"gll_readiness unavailable: {e!r}"}
-
-
-def _safe_system_integrity():
-    try:
-        import sys
-        sys.path.insert(0, str(SRC))
-        from system_integrity import compute_system_integrity  # type: ignore
-        return compute_system_integrity()
-    except Exception as e:
-        return {"error": f"system_integrity unavailable: {e!r}"}
-
-
-# ----- STREAMLIT LAYOUT ------------------------------------------------------
-
+# ---------------------------
+# Streamlit layout
+# ---------------------------
 def main():
-    st.set_page_config(
-        page_title="Ghost Lantern Labs — Spectral Dashboard",
-        layout="wide",
-    )
+    st.set_page_config(page_title="Ghost Lantern Labs — Spectral Dashboard", layout="wide")
 
     st.title("Ghost Lantern Labs — Spectral Dashboard")
-    st.caption(f"Base Directory: {BASE_DIR}")
 
-    col1, col2 = st.columns(2)
+    st.text(f"Base Directory: {BASE}")
+    st.text(f"Loaded at: {datetime.now(timezone.utc).isoformat()}")
+
+    st.markdown("---")
+
+    # --- Top row: Trust + OSL + Latency ---
+    col1, col2, col3 = st.columns(3)
 
     with col1:
         st.subheader("Fusion Trust Score")
-        st.json(_safe_fusion_trust())
-
-        st.subheader("Operator Safety Layer")
-        st.json(_safe_osl())
-
-        st.subheader("Sensor Latency")
-        st.json(_safe_latency())
-
-        st.subheader("GLL Readiness")
-        st.json(_safe_gll_readiness())
+        try:
+            st.json(compute_trust())
+        except Exception as e:
+            st.error(f"Fusion Trust failed: {e!r}")
 
     with col2:
+        st.subheader("Operator Safety Layer")
+        try:
+            st.json(compute_osl())
+        except Exception as e:
+            st.error(f"OSL failed: {e!r}")
+
+    with col3:
+        st.subheader("Sensor Latency")
+        try:
+            st.json(compute_latency_report())
+        except Exception as e:
+            st.error(f"Latency report failed: {e!r}")
+
+    st.markdown("---")
+
+    # --- Second row: Minimap + SOS Overlay ---
+    col4, col5 = st.columns(2)
+
+    with col4:
         st.subheader("Fusion Mini-Map")
-        st.json(_safe_minimap())
+        st.json(load_gui_minimap())
 
+    with col5:
         st.subheader("SOS Overlay")
-        st.json(_safe_sos_overlay())
+        st.json(load_sos_overlay())
 
-        st.subheader("System Integrity")
-        st.json(_safe_system_integrity())
+    st.markdown("---")
+
+    # --- Adversary Pattern Engine ---
+    st.subheader("Adversary Pattern Engine")
+    try:
+        st.json(analyze_patterns())
+    except Exception as e:
+        st.error(f"Adversary pattern engine failed: {e!r}")
+
+    st.markdown("---")
+
+    # --- Daily brief text at the bottom ---
+    st.subheader("Daily Mission Brief (Text)")
+    st.text(load_daily_brief_text())
 
 
 if __name__ == "__main__":

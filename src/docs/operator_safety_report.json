@@ -1,5 +1,5 @@
 {
-  "osl_status": "YELLOW",
-  "trust_score": 72,
-  "message": "Moderate risk \u2014 verify critical readings."
+  "osl_status": "GREEN",
+  "trust_score": 80,
+  "message": "System stable."
 }
