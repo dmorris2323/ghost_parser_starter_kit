@@ -1,0 +1,102 @@
+GLL Nuclear Brief Packet
+========================
+Generated at (UTC): 2025-12-10T11:12:50.214133Z
+
+1. High-Level Nuclear Posture Snapshot
+--------------------------------------
+  Escalation Level: TENSE
+  Crisis Mode Line: Crisis Mode: ON
+  Golden Dome Readiness Line: Golden Dome Readiness: UNKNOWN
+
+  Escalation Rationale:
+    Crisis mode is ON, but trust/heat scores are unavailable. Defaulting to TENSE.
+
+2. Nuclear Status Summary (Excerpt)
+----------------------------------
+  GLL Nuclear Status Summary
+  ==========================
+  Generated at (UTC): 2025-12-10T11:12:50.129929Z
+  
+  Artifacts Present:
+    - golden_dome_daily_watch_json: OK
+    - golden_dome_daily_watch_txt: OK
+    - nuclear_decision_card_txt: OK
+    - treaty_evidence_bundle_json: OK
+    - gll_readiness_txt: MISSING
+    - system_integrity_report_txt: OK
+    - prelaunch_watchboard_json: MISSING
+  
+  Key Nuclear Signals (parsed from decision card if available):
+    Crisis Mode: Crisis Mode: ON
+    Golden Dome Readiness: Golden Dome Readiness: UNKNOWN
+    Fusion Trust: Fusion Trust Score:
+    Fusion Heat Index: Fusion Heat Index: n/a
+  
+  Notes:
+    - Missing artifacts: gll_readiness_txt, prelaunch_watchboard_json
+  
+  Excerpts:
+    Nuclear Decision Card:
+  ===== NUCLEAR DECISION CARD — GHOST LANTERN LABS =====
+  Generated at (UTC): 2025-12-10T02:25:36.792704+00:00
+  
+  Crisis Mode: ON
+  Golden Dome Readiness: UNKNOWN
+  Fusion Heat Index: n/a
+  
+  Fusion Trust Score:
+  {
+    "fusion_trust": 80,
+    "factors": {
+      "outliers": 0,
+      "drift": {
+        "status": "ok",
+        "drift_score": 0,
+        "total_lines": 57
+      },
+      "reliability": {
+        "trend": "no_data"
+      },
+      "crisis_mode": "ON"
+    }
+  }
+  
+  Raw Nuclear Snapshot Payload:
+  {
+    "nuclear_readiness_score": 87.6,
+    "components": {
+      "trust": {
+        "fusion_trust": 80,
+        "factors": {
+          "outliers"...
+  
+    GLL Readiness:
+    [no readiness report available]
+  
+
+3. Escalation Ladder (Full Text)
+--------------------------------
+  GLL Nuclear Escalation Ladder
+  ================================
+  Generated at (UTC): 2025-12-10T11:12:50.155329Z
+  
+  Escalation Level: TENSE
+  Rationale: Crisis mode is ON, but trust/heat scores are unavailable. Defaulting to TENSE.
+  
+  Crisis Mode ON: True
+  Fusion Trust Score: UNKNOWN
+  Fusion Heat Index: UNKNOWN
+  
+  Inputs:
+    Nuclear Status Summary present: True
+    Nuclear Decision Card present: True
+
+4. Treaty Evidence Bundle Overview
+----------------------------------
+  [Treaty evidence bundle has no artifacts listed]
+
+5. Commander Notes
+-------------------
+  - Use this packet as a starting point for deeper review.
+  - Pair with full mission brief, sensor reports, and higher HQ guidance.
+  - GLL is providing an integrated nuclear/treaty snapshot, not a final adjudication.

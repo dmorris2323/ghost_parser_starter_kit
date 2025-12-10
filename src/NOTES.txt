@@ -1844,3 +1844,15 @@ DAY 65 – Nuclear Watch / Commander Products / Treaty Bundle
 
 • Today’s shift: GLL now produces nuclear-ready daily watch, commander decision card, and treaty evidence bundle – moving from “cool lab” to something that actually looks like a nuclear/treaty operations support system.
 
+Day 66 – Nuclear Packaging & Escalation Ladder (25× Sprint)
+
+• Added nuclear_status_summary.py to consolidate Golden Dome Daily Watch, Nuclear Decision Card, readiness, integrity, pre-launch, and treaty bundle outputs into a single Nuclear Status Summary (JSON + TXT).
+• Added escalation_ladder.py to compute a simple, explainable Nuclear Escalation Ladder (STEADY/TENSE/BRINK/FLASHPOINT) based on crisis mode, fusion trust, and heat index derived from existing artifacts.
+• Upgraded treaty_evidence_bundle.py to include the new nuclear consolidation artifacts (nuclear_status_summary, escalation_ladder, nuclear_brief_packet) and to emit a richer JSON bundle with file metadata for audits and investigations.
+• Added nuclear_brief_packet.py to stitch together the status summary, escalation ladder, and treaty evidence bundle into a single commander-facing Nuclear Brief Packet TXT file suitable for print or as the first page in a demo.
+• All changes focus on packaging and explainability: no fragile changes to the core fusion pipeline, but a major upgrade to how GLL presents nuclear/treaty evidence to commanders, treaty lawyers, and SBIR/AFWERX reviewers.
+
+Vital to commit to git. Recommended commit:
+git add .
+git commit -m Day 66 – Nuclear status summary, escalation ladder, and treaty evidence packaging
+git push

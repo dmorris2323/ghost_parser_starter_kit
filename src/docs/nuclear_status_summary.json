@@ -1,0 +1,63 @@
+{
+  "artifacts_present": {
+    "gll_readiness_txt": false,
+    "golden_dome_daily_watch_json": true,
+    "golden_dome_daily_watch_txt": true,
+    "nuclear_decision_card_txt": true,
+    "prelaunch_watchboard_json": false,
+    "system_integrity_report_txt": true,
+    "treaty_evidence_bundle_json": true
+  },
+  "excerpts": {
+    "gll_readiness_excerpt": null,
+    "nuclear_decision_card_excerpt": "===== NUCLEAR DECISION CARD \u2014 GHOST LANTERN LABS =====\nGenerated at (UTC): 2025-12-10T02:25:36.792704+00:00\n\nCrisis Mode: ON\nGolden Dome Readiness: UNKNOWN\nFusion Heat Index: n/a\n\nFusion Trust Score:\n{\n  \"fusion_trust\": 80,\n  \"factors\": {\n    \"outliers\": 0,\n    \"drift\": {\n      \"status\": \"ok\",\n      \"drift_score\": 0,\n      \"total_lines\": 57\n    },\n    \"reliability\": {\n      \"trend\": \"no_data\"\n ...",
+    "system_integrity_excerpt": "=== GLL SYSTEM INTEGRITY REPORT ===\nStatus: GREEN\n\nAll critical checked items present.\n\nRaw JSON:\n{\n  \"status\": \"GREEN\",\n  \"missing_items\": [],\n  \"checks\": {\n    \"dirs\": {\n      \"src\": {\n        \"path\": \"/Users/dextermorris/ghost/parser_starter_kit/src\",\n        \"exists\": true,\n        \"items\": 221\n      },\n      \"data\": {\n        \"path\": \"/Users/dextermorris/ghost/parser_starter_kit/src/data\",..."
+  },
+  "file_metadata": {
+    "gll_readiness_txt": {
+      "exists": false,
+      "last_modified": null,
+      "path": "/Users/dextermorris/ghost/parser_starter_kit/src/docs/gll_readiness.txt"
+    },
+    "golden_dome_daily_watch_json": {
+      "exists": true,
+      "last_modified": "2025-12-09T21:25:26.872130",
+      "path": "/Users/dextermorris/ghost/parser_starter_kit/src/docs/golden_dome_daily_watch.json"
+    },
+    "golden_dome_daily_watch_txt": {
+      "exists": true,
+      "last_modified": "2025-12-09T21:25:26.872263",
+      "path": "/Users/dextermorris/ghost/parser_starter_kit/src/docs/golden_dome_daily_watch.txt"
+    },
+    "nuclear_decision_card_txt": {
+      "exists": true,
+      "last_modified": "2025-12-09T21:25:36.795276",
+      "path": "/Users/dextermorris/ghost/parser_starter_kit/src/docs/nuclear_decision_card.txt"
+    },
+    "prelaunch_watchboard_json": {
+      "exists": false,
+      "last_modified": null,
+      "path": "/Users/dextermorris/ghost/parser_starter_kit/src/docs/prelaunch_watchboard.json"
+    },
+    "system_integrity_report_txt": {
+      "exists": true,
+      "last_modified": "2025-12-09T06:46:23.712513",
+      "path": "/Users/dextermorris/ghost/parser_starter_kit/src/docs/system_integrity_report.txt"
+    },
+    "treaty_evidence_bundle_json": {
+      "exists": true,
+      "last_modified": "2025-12-09T21:25:39.221488",
+      "path": "/Users/dextermorris/ghost/parser_starter_kit/src/docs/treaty_evidence_bundle.json"
+    }
+  },
+  "generated_at": "2025-12-10T11:12:50.129929Z",
+  "notes": [
+    "Missing artifacts: gll_readiness_txt, prelaunch_watchboard_json"
+  ],
+  "nuclear_signals": {
+    "crisis_mode_line": "Crisis Mode: ON",
+    "fusion_heat_index_line": "Fusion Heat Index: n/a",
+    "fusion_trust_line": "Fusion Trust Score:",
+    "golden_dome_readiness_line": "Golden Dome Readiness: UNKNOWN"
+  }
+}

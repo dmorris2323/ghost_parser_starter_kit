@@ -1,0 +1,14 @@
+GLL Nuclear Escalation Ladder
+================================
+Generated at (UTC): 2025-12-10T11:12:50.155329Z
+
+Escalation Level: TENSE
+Rationale: Crisis mode is ON, but trust/heat scores are unavailable. Defaulting to TENSE.
+
+Crisis Mode ON: True
+Fusion Trust Score: UNKNOWN
+Fusion Heat Index: UNKNOWN
+
+Inputs:
+  Nuclear Status Summary present: True
+  Nuclear Decision Card present: True

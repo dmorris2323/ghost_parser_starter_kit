@@ -1,0 +1,12 @@
+{
+  "crisis_mode_on": true,
+  "escalation_level": "TENSE",
+  "fusion_heat_index": null,
+  "fusion_trust_score": null,
+  "generated_at": "2025-12-10T11:12:50.155329Z",
+  "inputs": {
+    "nuclear_decision_card_present": true,
+    "nuclear_status_summary_present": true
+  },
+  "rationale": "Crisis mode is ON, but trust/heat scores are unavailable. Defaulting to TENSE."
+}
