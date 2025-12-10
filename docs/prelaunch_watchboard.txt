@@ -1,0 +1,20 @@
+GLL Pre-Launch ISR Watchboard
+================================
+Generated at (UTC): 2025-12-10T17:52:45.529891Z
+
+Early Warning Level: STEADY
+Early Warning Score: 0.0/100
+Crisis Mode: OFF
+
+Inputs Present:
+  - golden_dome_daily_watch_json: MISSING
+  - sensor_latency_report: MISSING
+  - run_history_intel: MISSING
+  - adversary_patterns: MISSING
+  - adversary_pattern_memory: MISSING
+
+Rationale:
+  - Composite pre-launch signal score: 0.0/100 (crisis_mode=False).
+
+Signals:
+  [No distinct pre-launch signals identified]

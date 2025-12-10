@@ -1770,3 +1770,14 @@ NEXT TARGET (Day 54+):
 • Dashboard prep (only after security remains stable)
 • Continue AI-Independence Phase progression
 
+Day 66 – Pre-Launch Early Warning Hardening (Option C – 20× Block)
+
+• Added prelaunch_signals_analyzer.py to fuse Golden Dome watch, sensor latency, run history, and adversary pattern memory into a structured pre-launch signal picture with scores for sensor concurrence, EMS spikes, latency risk, and pattern anomalies.
+• Hardened prelaunch_watchboard.py to build a stable, commander-grade Pre-Launch ISR Watchboard with an early warning score (0–100), a 4-level ladder (STEADY/TENSE/ALERT/CRITICAL), and explicit rationale lines. Crisis mode now cleanly bumps the level when appropriate.
+• Added early_warning_scorecard.py as a thin presentation layer that turns the pre-launch watchboard JSON into a printable Early Warning Scorecard for commanders, staff briefings, or SBIR demos.
+• All changes are defensive and read-only on upstream artifacts. No changes were made to the fusion pipeline, Golden Dome validator, or treaty modules. The pre-launch early warning story is now more explainable, robust, and suitable for AFTAC/USNDS-style discussions.
+
+Vital to commit to git. Recommended commit:
+git add .
+git commit -m Day 66 – Pre-launch early warning hardening and scorecard
+git push

@@ -1,0 +1,26 @@
+{
+  "product_type": "Nuclear Risk Timeline",
+  "generated_at": "2025-12-10T16:58:03.588980Z",
+  "entries": [
+    {
+      "date": "2025-12-10",
+      "watch_level": "NORMAL",
+      "decision_card_level": "NORMAL",
+      "fused_risk_score": 1,
+      "source_files": {
+        "watch": "/Users/dextermorris/ghost/parser_starter_kit/src/docs/golden_dome_daily_watch.json",
+        "decision_card": "/Users/dextermorris/ghost/parser_starter_kit/src/docs/nuclear_decision_card.json"
+      }
+    }
+  ],
+  "risk_scale": {
+    "0": "No data / unknown",
+    "1": "Normal watch",
+    "2": "Elevated nuclear vigilance",
+    "3": "Critical nuclear posture"
+  },
+  "notes": [
+    "Timeline currently contains a single 'today' entry.",
+    "In future, this can be extended to append daily snapshots over time."
+  ]
+}

@@ -1,64 +1,14 @@
-===== NUCLEAR DECISION CARD — GHOST LANTERN LABS =====
-Generated at (UTC): 2025-12-10T02:25:36.792704+00:00
+=== NUCLEAR DECISION CARD ===
+Generated: 2025-12-10T16:56:32.504934Z
+Nuclear Threat Level: NORMAL
+Recommendation: MAINTAIN NORMAL NUCLEAR WATCH
 
-Crisis Mode: ON
-Golden Dome Readiness: UNKNOWN
-Fusion Heat Index: n/a
+--- Key Factors ---
+avg_reliability: 92.0
+outage_posture: STABLE
+base_readiness: READY
 
-Fusion Trust Score:
-{
-  "fusion_trust": 80,
-  "factors": {
-    "outliers": 0,
-    "drift": {
-      "status": "ok",
-      "drift_score": 0,
-      "total_lines": 57
-    },
-    "reliability": {
-      "trend": "no_data"
-    },
-    "crisis_mode": "ON"
-  }
-}
-
-Raw Nuclear Snapshot Payload:
-{
-  "nuclear_readiness_score": 87.6,
-  "components": {
-    "trust": {
-      "fusion_trust": 80,
-      "factors": {
-        "outliers": 0,
-        "drift": {
-          "status": "ok",
-          "drift_score": 0,
-          "total_lines": 57
-        },
-        "reliability": {
-          "trend": "no_data"
-        },
-        "crisis_mode": "ON"
-      }
-    },
-    "reliability": {
-      "sensors": {
-        "global": 100.0,
-        "optical": 90.0,
-        "seismic": 90.0,
-        "ems": 90.0,
-        "radiation": 90.0
-      },
-      "avg_reliability": 92.0
-    },
-    "safety": {
-      "osl_status": "GREEN",
-      "trust_score": 80,
-      "message": "System stable."
-    }
-  }
-}
-
-Notes:
- - This card is for rapid commander situational awareness.
- - It summarizes GLL's nuclear readiness view, not final authority.
+--- Commander Actions ---
+- 1) Maintain standard watch; continue trend and anomaly monitoring.
+- 2) Log any unusual nuclear-related activity with timestamps.
+- 3) Ensure fallback and redundancy paths remain tested.

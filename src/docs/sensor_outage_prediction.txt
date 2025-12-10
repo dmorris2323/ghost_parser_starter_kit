@@ -1,0 +1,9 @@
+=== SENSOR OUTAGE PREDICTION ===
+Generated at: 2025-12-10T16:00:44.119922Z
+Posture: STABLE
+
+Per-sensor risk:
+  - optical: reliability=90.00% risk=MEDIUM
+  - seismic: reliability=90.00% risk=MEDIUM
+  - ems: reliability=90.00% risk=MEDIUM
+  - radiation: reliability=90.00% risk=MEDIUM

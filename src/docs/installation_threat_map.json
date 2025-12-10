@@ -1,29 +1,27 @@
 {
-  "generated_at": "2025-12-10T12:03:41.265724Z",
-  "base_name": "Notional Installation",
-  "crisis_mode": "ON",
-  "fusion_trust_score": 80,
-  "overall_risk": "CRISIS \u2013 FRAGILE",
+  "product_type": "Installation Threat Map",
+  "generated_at": "2025-12-10T16:56:57.686207Z",
+  "status": "GREEN",
   "sectors": {
-    "perimeter": {
-      "name": "Perimeter",
-      "risk_level": "ELEVATED",
-      "notes": "Monitors gate ramming, fence breaches, and ground incursions."
+    "PERIMETER_NORTH": {
+      "critical": 0,
+      "high": 0,
+      "other": 0
     },
-    "airspace": {
-      "name": "Airspace",
-      "risk_level": "ELEVATED",
-      "notes": "Tracks drone incursions and low-altitude anomalies."
+    "PERIMETER_SOUTH": {
+      "critical": 0,
+      "high": 0,
+      "other": 0
     },
-    "cyber": {
-      "name": "Cyber",
-      "risk_level": "STABLE",
-      "notes": "Monitors fusion pipeline integrity and critical alert load."
+    "PERIMETER_EAST": {
+      "critical": 0,
+      "high": 0,
+      "other": 0
     },
-    "interior": {
-      "name": "Interior",
-      "risk_level": "STABLE",
-      "notes": "Covers mission systems, operations floors, and critical nodes."
+    "PERIMETER_WEST": {
+      "critical": 0,
+      "high": 0,
+      "other": 0
     }
   }
 }

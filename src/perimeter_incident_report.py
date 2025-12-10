@@ -1,174 +1,209 @@
-"""
-perimeter_incident_report.py
-
-Module 29 — Perimeter Incident Report (50x Sprint #2)
-
-Purpose:
-- Fuse installation threat map + sensor outage forecast into a simple
-  "Perimeter / Airspace incident" commander report.
-- Focused on:
-    • Gate rams / perimeter breaches
-    • Drone / airspace incursions
-    • Sensor stability around those sectors
-
-Inputs (optional, safe if missing):
-- docs/installation_threat_map.json
-- docs/sensor_outage_forecast.json
-
-Outputs:
-- docs/perimeter_incident_report.json
-- docs/perimeter_incident_report.txt
-"""
-
 from __future__ import annotations
 
 import json
-from dataclasses import dataclass, asdict
 from datetime import datetime
 from pathlib import Path
-from typing import Any, Dict
+from typing import Any, Dict, Iterable, List
 
 
-BASE = Path(__file__).resolve().parent
-DOCS_DIR = BASE / "docs"
-DOCS_DIR.mkdir(exist_ok=True)
-
-ITM_FILE = DOCS_DIR / "installation_threat_map.json"
-OUTAGE_FILE = DOCS_DIR / "sensor_outage_forecast.json"
+BASE_DIR = Path(__file__).resolve().parent
+DOCS_DIR = BASE_DIR / "docs"
+DATA_DIR = BASE_DIR / "data"
 
 
-@dataclass
-class PerimeterSummary:
-    sector_risk: str
-    airspace_risk: str
-    global_sensor_outage_risk: str
-    notes: str
-
-
-@dataclass
-class PerimeterIncidentReport:
-    generated_at: str
-    base_name: str
-    crisis_mode: str
-    fusion_trust_score: int
-    perimeter_summary: PerimeterSummary
-
-    def to_dict(self) -> Dict[str, Any]:
-        return {
-            "generated_at": self.generated_at,
-            "base_name": self.base_name,
-            "crisis_mode": self.crisis_mode,
-            "fusion_trust_score": self.fusion_trust_score,
-            "perimeter_summary": asdict(self.perimeter_summary),
-        }
-
-
-def _safe_load_json(path: Path) -> Dict[str, Any]:
+def _iter_threat_log(path: Path) -> Iterable[Dict[str, Any]]:
+    """
+    Safely iterate over threat_memory_log.jsonl.
+    Each line should be a JSON object. Malformed lines are skipped.
+    """
     if not path.exists():
-        return {}
+        return []
     try:
-        return json.loads(path.read_text())
+        lines = path.read_text().splitlines()
     except Exception:
-        return {}
+        return []
+
+    events: List[Dict[str, Any]] = []
+    for line in lines:
+        line = line.strip()
+        if not line:
+            continue
+        try:
+            ev = json.loads(line)
+            if isinstance(ev, dict):
+                events.append(ev)
+        except Exception:
+            continue
+    return events
 
 
-def build_perimeter_incident_report() -> Dict[str, Any]:
-    ts = datetime.utcnow().isoformat() + "Z"
+def _classify_sector(ev: Dict[str, Any]) -> str:
+    """
+    Map generic 'sector'/'zone' hints into named perimeter sectors.
+    Defaults to UNKNOWN.
+    """
+    raw = (ev.get("sector") or ev.get("zone") or "").upper()
 
-    itm = _safe_load_json(ITM_FILE)
-    outage = _safe_load_json(OUTAGE_FILE)
+    if "NORTH" in raw or raw == "N":
+        return "PERIMETER_NORTH"
+    if "SOUTH" in raw or raw == "S":
+        return "PERIMETER_SOUTH"
+    if "EAST" in raw or raw == "E":
+        return "PERIMETER_EAST"
+    if "WEST" in raw or raw == "W":
+        return "PERIMETER_WEST"
+    if "GATE" in raw:
+        return "GATE_COMPLEX"
+    if "AIRFIELD" in raw or "RUNWAY" in raw:
+        return "AIRFIELD"
+    return "UNKNOWN"
 
-    base_name = itm.get("base_name", "Notional Installation")
-    crisis_mode = itm.get("crisis_mode", "OFF")
-    fusion_trust_score = int(itm.get("fusion_trust_score", 80))
 
-    sectors = itm.get("sectors", {})
-    per = sectors.get("perimeter", {}) or {}
-    air = sectors.get("airspace", {}) or {}
-
-    perimeter_risk = per.get("risk_level", "UNKNOWN")
-    airspace_risk = air.get("risk_level", "UNKNOWN")
-
-    outage_sensors = outage.get("sensors", {})
-    global_outage = outage_sensors.get("global", {}) or {}
-    global_outage_risk = global_outage.get("outage_risk", "LOW")
-
-    notes_parts = []
-
-    if perimeter_risk in {"HIGH", "SEVERE", "CRISIS – FRAGILE"}:
-        notes_parts.append("Perimeter shows elevated risk — gate/ground security should be primed.")
-    elif perimeter_risk in {"ELEVATED", "CRISIS – STABLE"}:
-        notes_parts.append("Perimeter is elevated but stable with current posture.")
-    else:
-        notes_parts.append("Perimeter is currently assessed as stable.")
-
-    if airspace_risk in {"HIGH", "SEVERE", "CRISIS – FRAGILE"}:
-        notes_parts.append("Airspace risk is high — drone incursions / low-alt threats must be watched closely.")
-    elif airspace_risk in {"ELEVATED", "CRISIS – STABLE"}:
-        notes_parts.append("Airspace is elevated but under control.")
-    else:
-        notes_parts.append("Airspace threat picture is currently stable.")
-
-    if global_outage_risk == "HIGH":
-        notes_parts.append("Sensor outage risk is HIGH — commander should expect potential blind spots.")
-    elif global_outage_risk == "MEDIUM":
-        notes_parts.append("Some sensor instability detected — plan around moderate blind spots.")
-    else:
-        notes_parts.append("Sensors appear stable with low outage risk.")
-
-    notes = " ".join(notes_parts)
-
-    summary = PerimeterSummary(
-        sector_risk=perimeter_risk,
-        airspace_risk=airspace_risk,
-        global_sensor_outage_risk=global_outage_risk,
-        notes=notes,
+def _classify_pattern(ev: Dict[str, Any]) -> str:
+    """
+    Very simple tagger for 'drone', 'gate', 'fence', etc.
+    Helps tie to real-world incident narratives.
+    """
+    text = " ".join(
+        str(ev.get(k, "")).lower()
+        for k in ("event_type", "details", "Description", "message")
     )
 
-    report = PerimeterIncidentReport(
-        generated_at=ts,
-        base_name=base_name,
-        crisis_mode=crisis_mode,
-        fusion_trust_score=fusion_trust_score,
-        perimeter_summary=summary,
-    )
+    if any(word in text for word in ("uav", "drone", "quad", "uas")):
+        return "DRONE_ACTIVITY"
+    if "gate" in text or "entry control" in text:
+        return "GATE_PRESSURE"
+    if "fence" in text or "perimeter" in text:
+        return "FENCE_PROBE"
+    if "jam" in text or "jamming" in text:
+        return "EMS_JAMMING"
+    if "rad" in text or "radiation" in text:
+        return "RADIATION_ANOMALY"
+    return "GENERAL_INCIDENT"
 
-    out = report.to_dict()
+
+def build_perimeter_incident_report(max_events: int = 50) -> Dict[str, Any]:
+    """
+    Build an Installation / Perimeter Incident Report from threat_memory_log.jsonl.
+
+    Output structure:
+      {
+        "product_type": "Perimeter Incident Report",
+        "generated_at": "...Z",
+        "total_events": int,
+        "sector_counts": {...},
+        "pattern_counts": {...},
+        "recent_events": [ ... up to max_events ... ]
+      }
+    """
+    DOCS_DIR.mkdir(exist_ok=True, parents=True)
+    DATA_DIR.mkdir(exist_ok=True, parents=True)
+
+    threat_log = DATA_DIR / "threat_memory_log.jsonl"
+    events = list(_iter_threat_log(threat_log))
+
+    sector_counts: Dict[str, int] = {}
+    pattern_counts: Dict[str, int] = {}
+
+    recent: List[Dict[str, Any]] = []
+
+    for ev in events:
+        sector = _classify_sector(ev)
+        pattern = _classify_pattern(ev)
+
+        sector_counts[sector] = sector_counts.get(sector, 0) + 1
+        pattern_counts[pattern] = pattern_counts.get(pattern, 0) + 1
+
+    # Sort newest first by timestamp if present
+    def _parse_ts(e: Dict[str, Any]) -> float:
+        t = e.get("timestamp") or e.get("time") or ""
+        try:
+            # ISO-ish fallback
+            return datetime.fromisoformat(t.replace("Z", "+00:00")).timestamp()
+        except Exception:
+            return 0.0
+
+    events_sorted = sorted(events, key=_parse_ts, reverse=True)
+    for ev in events_sorted[:max_events]:
+        # Strip to a small, briefing-friendly subset
+        recent.append(
+            {
+                "timestamp": ev.get("timestamp"),
+                "sector": _classify_sector(ev),
+                "pattern": _classify_pattern(ev),
+                "severity": ev.get("severity"),
+                "event_type": ev.get("event_type") or ev.get("Description"),
+                "details": ev.get("details"),
+            }
+        )
+
+    report = {
+        "product_type": "Perimeter Incident Report",
+        "generated_at": datetime.utcnow().isoformat() + "Z",
+        "total_events": len(events),
+        "sector_counts": sector_counts,
+        "pattern_counts": pattern_counts,
+        "recent_events": recent,
+    }
+
+    # If no data at all, return a shaped-safe default
+    if len(events) == 0:
+        report["note"] = "No perimeter incidents recorded yet; this is a shaped default."
+
+    return report
+
+
+def write_perimeter_incident_report() -> Dict[str, str]:
+    """
+    Write JSON and TXT versions under docs/.
+    """
+    DOCS_DIR.mkdir(exist_ok=True, parents=True)
+
+    data = build_perimeter_incident_report()
 
     json_path = DOCS_DIR / "perimeter_incident_report.json"
     txt_path = DOCS_DIR / "perimeter_incident_report.txt"
 
-    json_path.write_text(json.dumps(out, indent=2))
+    json_path.write_text(json.dumps(data, indent=2))
 
-    lines = [
-        "=== PERIMETER INCIDENT REPORT ===",
-        f"Generated: {ts}",
-        f"Base: {base_name}",
-        f"Crisis Mode: {crisis_mode}",
-        f"Fusion Trust Score: {fusion_trust_score}",
-        "",
-        "Perimeter / Airspace Summary:",
-        f"  Perimeter Risk          : {summary.sector_risk}",
-        f"  Airspace Risk           : {summary.airspace_risk}",
-        f"  Global Sensor Outage    : {summary.global_sensor_outage_risk}",
-        "",
-        "Commander Notes:",
-        f"  {summary.notes}",
-    ]
+    lines: List[str] = []
+    lines.append("=== PERIMETER INCIDENT REPORT ===")
+    lines.append(f"Generated at: {data['generated_at']}")
+    lines.append(f"Total events in log: {data['total_events']}")
+    lines.append("")
+
+    if "note" in data:
+        lines.append(f"NOTE: {data['note']}")
+        lines.append("")
+
+    lines.append("Sector incident counts:")
+    for sector, count in sorted(data["sector_counts"].items()):
+        lines.append(f"  - {sector}: {count}")
+    lines.append("")
+
+    lines.append("Pattern counts:")
+    for pattern, count in sorted(data["pattern_counts"].items()):
+        lines.append(f"  - {pattern}: {count}")
+    lines.append("")
+
+    lines.append("Most recent events:")
+    for ev in data["recent_events"]:
+        lines.append(
+            f"  [{ev.get('timestamp')}] {ev['sector']} | {ev['pattern']} | "
+            f"severity={ev.get('severity')} | type={ev.get('event_type')}"
+        )
+        if ev.get("details"):
+            lines.append(f"    details: {ev['details']}")
+    lines.append("")
+
     txt_path.write_text("\n".join(lines))
 
-    return {
-        "status": "ok",
-        "json_path": str(json_path),
-        "text_path": str(txt_path),
-    }
-
-
-def main() -> None:
-    out = build_perimeter_incident_report()
-    print(json.dumps(out, indent=2))
+    return {"json_path": str(json_path), "txt_path": str(txt_path)}
 
 
 if __name__ == "__main__":
-    main()
+    out = write_perimeter_incident_report()
+    print("Perimeter Incident Report written:")
+    print(f"JSON → {out['json_path']}")
+    print(f"TXT  → {out['txt_path']}")
 

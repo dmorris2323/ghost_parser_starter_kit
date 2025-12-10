@@ -1,0 +1,16 @@
+=== STRATEGIC READINESS INDEX ===
+Generated: 2025-12-10T16:58:09.627757Z
+Index  : 90.0
+Posture: STRONG
+
+--- Inputs ---
+nuclear_threat_level: NORMAL
+nuclear_score: 90
+avg_reliability: 90.0
+base_defense_score: 90
+
+--- Posture Interpretation ---
+STRONG: Nuclear posture, sensors, and base defense are aligned and healthy.
+WATCH: Overall posture acceptable, but watch trends and hotspots closely.
+AT_RISK: Risk building — nuclear, sensors, or base defense need intervention.
+CRITICAL: Severe degradation in one or more pillars — immediate action required.

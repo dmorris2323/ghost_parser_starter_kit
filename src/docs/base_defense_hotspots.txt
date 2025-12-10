@@ -1,0 +1,5 @@
+=== BASE DEFENSE HOTSPOTS ===
+Generated: 2025-12-10T16:58:07.826185Z
+Top N: 5
+
+No hotspots detected (no data or all clear).

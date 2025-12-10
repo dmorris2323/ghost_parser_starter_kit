@@ -1,12 +1,9 @@
 {
-  "generated_at": "2025-12-10T12:03:46.001858Z",
-  "base_name": "Notional Installation",
-  "crisis_mode": "ON",
-  "fusion_trust_score": 80,
-  "perimeter_summary": {
-    "sector_risk": "ELEVATED",
-    "airspace_risk": "ELEVATED",
-    "global_sensor_outage_risk": "LOW",
-    "notes": "Perimeter is elevated but stable with current posture. Airspace is elevated but under control. Sensors appear stable with low outage risk."
-  }
+  "product_type": "Perimeter Incident Report",
+  "generated_at": "2025-12-10T16:57:09.889182Z",
+  "total_events": 0,
+  "sector_counts": {},
+  "pattern_counts": {},
+  "recent_events": [],
+  "note": "No perimeter incidents recorded yet; this is a shaped default."
 }

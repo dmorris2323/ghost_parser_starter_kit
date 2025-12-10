@@ -1,0 +1,13 @@
+=== NUCLEAR RISK TIMELINE ===
+Generated: 2025-12-10T16:58:03.588980Z
+
+Date: 2025-12-10
+  Watch level        : NORMAL
+  Decision card level: NORMAL
+  Fused risk score   : 1
+
+Scale:
+  0: No data / unknown
+  1: Normal watch
+  2: Elevated nuclear vigilance
+  3: Critical nuclear posture

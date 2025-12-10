@@ -1,0 +1,170 @@
+{
+  "meta": {
+    "generated_at": "2025-12-10T14:49:20.601668Z",
+    "tool": "Ghost Lantern Labs \u2014 War Room Brief",
+    "version": "1.0"
+  },
+  "system_health": {
+    "pipeline_health": {
+      "status": "unknown",
+      "score": 0,
+      "notes": "pipeline_health.json not found \u2013 run pipeline health check."
+    },
+    "reliability": {
+      "avg_reliability": 92.0,
+      "sensors": {},
+      "notes": "sensor_reliability_summary.json not found \u2013 using defaults."
+    },
+    "sos_overlay": {
+      "status": "ok",
+      "timestamp": "2025-12-08T09:35:13.990565+00:00",
+      "profile": {
+        "key": "sports_team",
+        "display_name": "Sports Team Operations",
+        "description": ""
+      },
+      "ai_engine": {
+        "provider": "provider_a",
+        "mode": "llm_config"
+      },
+      "alerts": {
+        "count": 2,
+        "recent": [
+          {
+            "id": "2",
+            "Description": "\"Seismic 5.2",
+            "Score": " Rad 1.62 \u00b5Sv",
+            "Confidence_Level": " Comms: Burst\""
+          },
+          {
+            "id": "5",
+            "Description": "\"Seismic 4.1",
+            "Score": " Rad 3.39 \u00b5Sv",
+            "Confidence_Level": " Comms: Normal\""
+          }
+        ]
+      },
+      "threat_memory": {
+        "total_events": 125,
+        "recent_sample": [
+          {
+            "timestamp": "2025-12-02T13:26:45.279558",
+            "severity": "owl_brain",
+            "event_type": "fusion_critical",
+            "details": "high"
+          },
+          {
+            "timestamp": "2025-12-02T13:58:58.500875",
+            "severity": "owl_brain",
+            "event_type": "fusion_critical",
+            "details": "high"
+          },
+          {
+            "timestamp": "2025-12-02T14:08:21.852019",
+            "severity": "owl_brain",
+            "event_type": "fusion_critical",
+            "details": "high"
+          },
+          {
+            "timestamp": "2025-12-03T03:32:49.527091",
+            "severity": "owl_brain",
+            "event_type": "fusion_critical",
+            "details": "high"
+          },
+          {
+            "timestamp": "2025-12-04T11:09:22.792429",
+            "severity": "owl_brain",
+            "event_type": "fusion_critical",
+            "details": "high"
+          }
+        ]
+      },
+      "threat_summary_text": "===== THREAT MEMORY SUMMARY =====\nTotal recorded anomalies: 125\n\nTop recurring threat types:\n  \u2022 UNKNOWN: 125 occurrences\n\nMost recent 50 events:\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [HIGH] stress_cycle \u2014 Stress cycle 1: status=ok, risk=HIGH\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [HIGH] stress_cycle \u2014 Stress cycle 2: status=ok, risk=HIGH\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [HIGH] stress_cycle \u2014 Stress cycle 3: status=ok, risk=HIGH\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [HIGH] stress_cycle \u2014 Stress cycle 4: status=ok, risk=HIGH\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [HIGH] stress_cycle \u2014 Stress cycle 5: status=ok, risk=HIGH\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [CRITICAL] fusion_spike \u2014 Score \u2265 0.80 detected\n  [owl_brain] fusion_critical \u2014 high\n  [owl_brain] fusion_critical \u2014 high\n  [owl_brain] fusion_critical \u2014 high\n  [owl_brain] fusion_critical \u2014 high\n  [owl_brain] fusion_critical \u2014 high\n  [owl_brain] fusion_critical \u2014 high\n  [owl_brain] fusion_critical \u2014 high\n  [owl_brain] fusion_critical \u2014 high\n  [owl_brain] fusion_critical \u2014 high\n  [owl_brain] fusion_critical \u2014 high\n\nSummary complete.\n"
+    },
+    "minimap": {
+      "timestamp": "2025-12-08T09:35:08.249089Z",
+      "map": {
+        "UNKNOWN": {
+          "critical": 0,
+          "warning": 0,
+          "stable": 4
+        }
+      }
+    }
+  },
+  "base_defense": {
+    "installation_threat_map": {
+      "generated_at": "2025-12-10T12:03:41.265724Z",
+      "base_name": "Notional Installation",
+      "crisis_mode": "ON",
+      "fusion_trust_score": 80,
+      "overall_risk": "CRISIS \u2013 FRAGILE",
+      "sectors": {
+        "perimeter": {
+          "name": "Perimeter",
+          "risk_level": "ELEVATED",
+          "notes": "Monitors gate ramming, fence breaches, and ground incursions."
+        },
+        "airspace": {
+          "name": "Airspace",
+          "risk_level": "ELEVATED",
+          "notes": "Tracks drone incursions and low-altitude anomalies."
+        },
+        "cyber": {
+          "name": "Cyber",
+          "risk_level": "STABLE",
+          "notes": "Monitors fusion pipeline integrity and critical alert load."
+        },
+        "interior": {
+          "name": "Interior",
+          "risk_level": "STABLE",
+          "notes": "Covers mission systems, operations floors, and critical nodes."
+        }
+      }
+    },
+    "sensor_outage_predictor": {
+      "status": "no_data",
+      "message": "No sensor_outage_predictor.json present."
+    },
+    "distributed_readiness_snapshot": {
+      "generated_at": "2025-12-10T12:03:43.931540Z",
+      "crisis_mode": "ON",
+      "operator": "A1C Dexter \"Ghost\" Morris",
+      "fusion_trust": 80,
+      "avg_reliability": 90.0,
+      "readiness": {
+        "wing": "YELLOW",
+        "group": "GREEN",
+        "squadron": "GREEN",
+        "team": "GREEN",
+        "operator": "SURGE"
+      }
+    },
+    "perimeter_incident_report": {
+      "generated_at": "2025-12-10T12:03:46.001858Z",
+      "base_name": "Notional Installation",
+      "crisis_mode": "ON",
+      "fusion_trust_score": 80,
+      "perimeter_summary": {
+        "sector_risk": "ELEVATED",
+        "airspace_risk": "ELEVATED",
+        "global_sensor_outage_risk": "LOW",
+        "notes": "Perimeter is elevated but stable with current posture. Airspace is elevated but under control. Sensors appear stable with low outage risk."
+      }
+    },
+    "storyboard_text": "=== BASE DEFENSE STORYBOARD ===\nGenerated: 2025-12-10T12:03:48.084018Z\nBase: Notional Installation\nOperator: A1C Dexter \"Ghost\" Morris\nCrisis Mode: ON\nFusion Trust: 80\nAverage Reliability: 90.00%\n\n[Detection]\n  How the base detects incoming threats (drones, gate rams, nuclear signals, cyber spikes).\n  Perimeter Risk     : ELEVATED\n  Airspace Risk      : ELEVATED\n  Outage (Global)    : risk=LOW, errors=0\n\n[Assessment]\n  How Ghost Lantern Labs fuses and rates the situation.\n  Fusion Trust       : 80\n  Avg Reliability    : 90.0\n  Crisis Mode        : ON\n\n[Response]\n  How the wing/group/squadron/team posture based on GLL outputs.\n  Wing Readiness     : YELLOW\n  Group Readiness    : GREEN\n  Squadron Readiness : GREEN\n  Team Readiness     : GREEN\n\n[Recovery]\n  Post-incident learning and reset posture.\n  Operator           : A1C Dexter \"Ghost\" Morris\n  Notes              : Storyboard is designed to be briefed, recorded, and iterated each day."
+  },
+  "nuclear_picture": {
+    "golden_dome_status": "GOLDEN DOME ALIGNMENT SNAPSHOT \u2014 GHOST LANTERN LABS\n----------------------------------------------------------------\nGenerated: 2025-12-03T09:44:46.129854Z\n\nMISSION CONTEXT\n\u2022 The 'Golden Dome' idea = a layered shield against missile,\n  nuclear, and high-end strategic threats.\n\u2022 Real-world versions mix early warning, tracking, interception,\n  and damage-limitation \u2014 across multiple sensors and domains.\n\u2022 GLL's job is NOT to fire interceptors; it is to see, fuse, and\n  brief the picture so commanders can act in time.\n\nHOW GLL SUPPORTS A GOLDEN DOME-STYLE SHIELD (V1)\n\u2022 Multi-sensor fusion pipeline already in place:\n    - Optical (launch flash / plume simulations)\n    - Seismic (ground event simulations)\n    - EMS (jamming / interference simulations)\n    - Radiation (confirmation / nuclear context simulations)\n\u2022 Bad-data quarantine + sanitization:\n    - Corrupted or adversarial telemetry is quarantined, not trusted.\n\u2022 Anti-DoS and stress-testing modules:\n    - Environment checks and stress_tester keep the pipeline alive\n      under noisy or hostile conditions.\n\u2022 Spectral Owl AI:\n    - Reads fused scores, highlights critical events, logs threat memory.\n    - Runs through a vendor-agnostic adapter for AI-independence.\n\nAI-INDEPENDENCE STATUS (SUMMARY)\n\u2022 Phase 1: DONE \u2014 all LLM calls routed through an adapter layer.\n\u2022 Phase 2: IN PROGRESS \u2014 multi-provider adapter + local rules path.\n\u2022 Design intent: GLL must still brief commanders even if cloud AI\n  is degraded or unavailable.\n\nLOCAL SYSTEM ARTIFACTS\n\u2022 system_metrics.json: FOUND (keys = alerts, bad_data, cloud, pipeline_health, qa, stress_test, threat_memory)\n\u2022 pipeline_health.txt: FOUND\n\u2022 sensor_health_report.txt: FOUND\n\nCOMMANDER-FACING SUMMARY (V1)\n\u2022 GLL currently behaves as a prototype Golden Dome intel node:\n    - Fuses multiple sensor streams into a single score.\n    - Flags critical events and writes daily mission briefs.\n    - Survives bad data, noise, and simulated DoS conditions.\n\u2022 Next steps on the path to a serious Golden Dome role:\n    1) Tie real (or lab) sensors into the ingest layer.\n    2) Expand reliability scoring and drift detection.\n    3) Build dedicated Golden Dome dashboards / overlays\n       (sector view, shot doctrine, escalation thresholds).\n    4) Formalize AI-Independence Phase 3\u20134 for offline ops.\n\nNOTE FOR FUTURE DEMOS\n\u2022 This report should be refreshed before any briefing to:\n    - AFTAC / ICADS-style audiences\n    - Missile defense / Golden Dome concept teams\n    - SBIR / defense innovation panels\n\u2022 It proves that GLL is already thinking in Golden Dome terms \u2014\n  layered detection, resilient fusion, and offline-capable AI.",
+    "nuclear_readiness_snapshot": {
+      "status": "no_data",
+      "message": "No nuclear_readiness_snapshot.json present."
+    },
+    "nuclear_decision_card": "===== NUCLEAR DECISION CARD \u2014 GHOST LANTERN LABS =====\nGenerated at (UTC): 2025-12-10T02:25:36.792704+00:00\n\nCrisis Mode: ON\nGolden Dome Readiness: UNKNOWN\nFusion Heat Index: n/a\n\nFusion Trust Score:\n{\n  \"fusion_trust\": 80,\n  \"factors\": {\n    \"outliers\": 0,\n    \"drift\": {\n      \"status\": \"ok\",\n      \"drift_score\": 0,\n      \"total_lines\": 57\n    },\n    \"reliability\": {\n      \"trend\": \"no_data\"\n    },\n    \"crisis_mode\": \"ON\"\n  }\n}\n\nRaw Nuclear Snapshot Payload:\n{\n  \"nuclear_readiness_score\": 87.6,\n  \"components\": {\n    \"trust\": {\n      \"fusion_trust\": 80,\n      \"factors\": {\n        \"outliers\": 0,\n        \"drift\": {\n          \"status\": \"ok\",\n          \"drift_score\": 0,\n          \"total_lines\": 57\n        },\n        \"reliability\": {\n          \"trend\": \"no_data\"\n        },\n        \"crisis_mode\": \"ON\"\n      }\n    },\n    \"reliability\": {\n      \"sensors\": {\n        \"global\": 100.0,\n        \"optical\": 90.0,\n        \"seismic\": 90.0,\n        \"ems\": 90.0,\n        \"radiation\": 90.0\n      },\n      \"avg_reliability\": 92.0\n    },\n    \"safety\": {\n      \"osl_status\": \"GREEN\",\n      \"trust_score\": 80,\n      \"message\": \"System stable.\"\n    }\n  }\n}\n\nNotes:\n - This card is for rapid commander situational awareness.\n - It summarizes GLL's nuclear readiness view, not final authority.",
+    "treaty_evidence_bundle": "No treaty_evidence_bundle.txt present."
+  },
+  "china_threat": {
+    "china_threat_notes": "No china_threat_notes.txt \u2013 add PLA / SSF notes here as you study.",
+    "space_domain_awareness_notes": "No space_domain_awareness_notes.txt present."
+  }
+}

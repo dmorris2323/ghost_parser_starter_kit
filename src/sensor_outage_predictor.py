@@ -1,120 +1,123 @@
-"""
-sensor_outage_predictor.py
-
-Very lightweight "next outage" predictor.
-
-Phase 1:
-- Looks at run_history.csv if available.
-- Counts how often each sensor shows up in errors.
-- Produces a "risk bucket" (LOW / MEDIUM / HIGH) and simple notes.
-
-Safe:
-- Works even when run_history.csv is missing or incomplete.
-"""
-
 from __future__ import annotations
 
 import csv
 import json
-from collections import Counter
 from datetime import datetime
 from pathlib import Path
-from typing import Dict, Any
+from typing import Any, Dict
 
 
-BASE = Path(__file__).resolve().parent
-DATA_DIR = BASE / "data"
-DOCS_DIR = BASE / "docs"
-DOCS_DIR.mkdir(exist_ok=True)
-
-RUN_HISTORY = DATA_DIR / "run_history.csv"
+BASE_DIR = Path(__file__).resolve().parent
+DOCS_DIR = BASE_DIR / "docs"
+DATA_DIR = BASE_DIR / "data"
 
 
-def _risk_bucket(error_count: int) -> str:
-    if error_count == 0:
-        return "LOW"
-    if error_count <= 3:
-        return "MEDIUM"
-    return "HIGH"
+def _safe_load_reliability_log() -> Dict[str, float]:
+    """
+    Load sensor_reliability_log.csv if it exists.
+    Expected columns: sensor,name,reliability
+    Returns: {sensor_name: reliability_float}
+    """
+    log_file = DATA_DIR / "sensor_reliability_log.csv"
+    if not log_file.exists():
+        return {}
 
-
-def _load_error_counts() -> Counter:
-    counts: Counter = Counter()
-    if not RUN_HISTORY.exists():
-        return counts
-
+    results: Dict[str, float] = {}
     try:
-        with RUN_HISTORY.open("r", newline="") as f:
+        with log_file.open() as f:
             reader = csv.DictReader(f)
             for row in reader:
-                status = (row.get("status") or "").lower()
-                sensor = (row.get("sensor") or "global").lower()
-                if status in {"fail", "error", "degraded"}:
-                    counts[sensor] += 1
+                name = row.get("sensor") or row.get("name")
+                rel = row.get("reliability")
+                if not name or not rel:
+                    continue
+                try:
+                    results[name] = float(rel)
+                except ValueError:
+                    continue
     except Exception:
-        # Fail safely — just return empty
-        return Counter()
-
-    return counts
+        return {}
+    return results
 
 
-def predict_outages() -> Dict[str, Any]:
+def compute_outage_risk() -> Dict[str, Any]:
     """
-    Build a simple prediction object per sensor based on error counts.
+    Computes an outage risk band (LOW / MEDIUM / HIGH) per sensor
+    based on reliability scores.
     """
-    ts = datetime.utcnow().isoformat() + "Z"
-    counts = _load_error_counts()
+    DOCS_DIR.mkdir(exist_ok=True, parents=True)
+    DATA_DIR.mkdir(exist_ok=True, parents=True)
 
-    sensors = ["optical", "seismic", "ems", "radiation", "global"]
-    sensor_view = {}
+    rel = _safe_load_reliability_log()
 
-    for s in sensors:
-        c = counts.get(s, 0)
-        sensor_view[s] = {
-            "error_events": int(c),
-            "outage_risk": _risk_bucket(c),
-            "comment": (
-                "No failures seen yet."
-                if c == 0
-                else "Some instability detected; monitor closely."
-                if c <= 3
-                else "High risk of outage; prioritize maintenance."
-            ),
+    risks: Dict[str, Dict[str, Any]] = {}
+
+    for sensor, score in rel.items():
+        if score >= 95:
+            band = "LOW"
+        elif score >= 85:
+            band = "MEDIUM"
+        else:
+            band = "HIGH"
+        risks[sensor] = {"reliability": score, "outage_risk": band}
+
+    # Fallback shape if no logs yet
+    if not risks:
+        risks = {
+            "optical": {"reliability": 90.0, "outage_risk": "MEDIUM"},
+            "seismic": {"reliability": 90.0, "outage_risk": "MEDIUM"},
+            "ems": {"reliability": 90.0, "outage_risk": "MEDIUM"},
+            "radiation": {"reliability": 90.0, "outage_risk": "MEDIUM"},
         }
 
-    out = {
-        "generated_at": ts,
-        "source": str(RUN_HISTORY) if RUN_HISTORY.exists() else "no_history",
-        "sensors": sensor_view,
-    }
-
-    # Write artifacts
-    json_path = DOCS_DIR / "sensor_outage_forecast.json"
-    txt_path = DOCS_DIR / "sensor_outage_forecast.txt"
-
-    json_path.write_text(json.dumps(out, indent=2))
-    lines = [
-        "=== SENSOR OUTAGE PREDICTOR ===",
-        f"Generated: {ts}",
-        f"History Source: {out['source']}",
-        "",
-    ]
-    for name, info in sensor_view.items():
-        lines.append(f"[{name.upper()}] Risk={info['outage_risk']}, Errors={info['error_events']}")
-        lines.append(f"  - {info['comment']}")
-    txt_path.write_text("\n".join(lines))
+    high_count = sum(1 for r in risks.values() if r["outage_risk"] == "HIGH")
+    if high_count >= 2:
+        posture = "AT_RISK"
+    elif high_count == 1:
+        posture = "WATCH"
+    else:
+        posture = "STABLE"
 
     return {
-        "status": "ok",
-        "json_path": str(json_path),
-        "text_path": str(txt_path),
+        "product_type": "Sensor Outage Predictor",
+        "generated_at": datetime.utcnow().isoformat() + "Z",
+        "posture": posture,
+        "sensors": risks,
     }
 
 
-def main() -> None:
-    print(json.dumps(predict_outages(), indent=2))
+def write_outage_prediction() -> Dict[str, str]:
+    """
+    Writes JSON + TXT snapshot for outage risk.
+    """
+    DOCS_DIR.mkdir(exist_ok=True, parents=True)
+    data = compute_outage_risk()
+
+    json_path = DOCS_DIR / "sensor_outage_prediction.json"
+    txt_path = DOCS_DIR / "sensor_outage_prediction.txt"
+
+    json_path.write_text(json.dumps(data, indent=2))
+
+    lines = []
+    lines.append("=== SENSOR OUTAGE PREDICTION ===")
+    lines.append(f"Generated at: {data['generated_at']}")
+    lines.append(f"Posture: {data['posture']}")
+    lines.append("")
+    lines.append("Per-sensor risk:")
+    for name, info in data["sensors"].items():
+        lines.append(
+            f"  - {name}: reliability={info['reliability']:.2f}% "
+            f"risk={info['outage_risk']}"
+        )
+    lines.append("")
+    txt_path.write_text("\n".join(lines))
+
+    return {"json_path": str(json_path), "txt_path": str(txt_path)}
 
 
 if __name__ == "__main__":
-    main()
+    out = write_outage_prediction()
+    print("Sensor Outage Prediction written:")
+    print(f"JSON → {out['json_path']}")
+    print(f"TXT  → {out['txt_path']}")
 

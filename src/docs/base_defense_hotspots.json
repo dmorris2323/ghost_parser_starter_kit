@@ -1,0 +1,10 @@
+{
+  "product_type": "Base Defense Hotspots",
+  "generated_at": "2025-12-10T16:58:07.826185Z",
+  "top_n": 5,
+  "hotspots": [],
+  "notes": [
+    "Hotspots aggregated from installation threat map and perimeter incidents.",
+    "Risk score is a fused, simplified metric for quick commander awareness."
+  ]
+}

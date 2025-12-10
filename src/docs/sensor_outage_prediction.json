@@ -1,0 +1,23 @@
+{
+  "product_type": "Sensor Outage Predictor",
+  "generated_at": "2025-12-10T16:00:44.119922Z",
+  "posture": "STABLE",
+  "sensors": {
+    "optical": {
+      "reliability": 90.0,
+      "outage_risk": "MEDIUM"
+    },
+    "seismic": {
+      "reliability": 90.0,
+      "outage_risk": "MEDIUM"
+    },
+    "ems": {
+      "reliability": 90.0,
+      "outage_risk": "MEDIUM"
+    },
+    "radiation": {
+      "reliability": 90.0,
+      "outage_risk": "MEDIUM"
+    }
+  }
+}

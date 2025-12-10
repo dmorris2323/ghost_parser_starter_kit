@@ -1,77 +1,14 @@
 === GOLDEN DOME DAILY WATCH ===
-Generated at (UTC): 2025-12-10T02:25:26.870246+00:00
+Generated: 2025-12-10T16:56:18.547673Z
+Nuclear Threat Level: NORMAL
 
->> Nuclear Readiness Snapshot
-{
-  "nuclear_readiness_score": 87.6,
-  "components": {
-    "trust": {
-      "fusion_trust": 80,
-      "factors": {
-        "outliers": 0,
-        "drift": {
-          "status": "ok",
-          "drift_score": 0,
-          "total_lines": 57
-        },
-        "reliability": {
-          "trend": "no_data"
-        },
-        "crisis_mode": "ON"
-      }
-    },
-    "reliability": {
-      "sensors": {
-        "global": 100.0,
-        "optical": 90.0,
-        "seismic": 90.0,
-        "ems": 90.0,
-        "radiation": 90.0
-      },
-      "avg_reliability": 92.0
-    },
-    "safety": {
-      "osl_status": "GREEN",
-      "trust_score": 80,
-      "message": "System stable."
-    }
-  }
-}
+--- Inputs ---
+installation_threat_status: GREEN
+base_readiness: READY
+avg_reliability: 92.0
 
->> Drift Status
-{
-  "status": "ok",
-  "drift_score": 0,
-  "total_lines": 57
-}
-
->> Fusion Trust
-{
-  "fusion_trust": 80,
-  "factors": {
-    "outliers": 0,
-    "drift": {
-      "status": "ok",
-      "drift_score": 0,
-      "total_lines": 57
-    },
-    "reliability": {
-      "trend": "no_data"
-    },
-    "crisis_mode": "ON"
-  }
-}
-
->> Temporal Forecast (Next 6 Hours)
-{
-  "timestamp": "2025-12-10T02:25:26.871907Z",
-  "event_count_last50": 50,
-  "baseline_score": 0,
-  "forecast": {
-    "t+1h": 0.0,
-    "t+3h": 0.0,
-    "t+6h": 0.0
-  }
-}
-
-Note: This product is for situational awareness and rapid commander briefings.
+--- Notes ---
+- Threat status: GREEN
+- Base readiness: READY
+- Average sensor reliability: 92.00% (STRONG)
+- Nuclear picture stable; continue standard watch.

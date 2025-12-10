@@ -1,0 +1,10 @@
+=== GOLDEN DOME NUCLEAR BRIEF PACK ===
+Generated: 2025-12-10T16:58:05.808969Z
+
+Includes:
+  • Golden Dome Daily Watch
+  • Nuclear Decision Card
+  • Treaty Evidence Bundle
+
+See JSON for full detail:
+  /Users/dextermorris/ghost/parser_starter_kit/src/docs/golden_dome_brief_pack.json

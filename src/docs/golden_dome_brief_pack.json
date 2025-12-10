@@ -1,0 +1,124 @@
+{
+  "product_type": "Golden Dome Nuclear Brief Pack",
+  "generated_at": "2025-12-10T16:58:05.808969Z",
+  "watch": {
+    "product_type": "Golden Dome Daily Watch",
+    "generated_at": "2025-12-10T16:58:05.807749Z",
+    "nuclear_threat_level": "NORMAL",
+    "inputs": {
+      "installation_threat_status": "GREEN",
+      "base_readiness": "READY",
+      "avg_reliability": 92.0
+    },
+    "summary": {
+      "reliability_posture": "STRONG"
+    },
+    "notes": [
+      "Threat status: GREEN",
+      "Base readiness: READY",
+      "Average sensor reliability: 92.00% (STRONG)",
+      "Nuclear picture stable; continue standard watch."
+    ]
+  },
+  "decision_card": {
+    "product_type": "Nuclear Decision Card",
+    "generated_at": "2025-12-10T16:58:05.808447Z",
+    "nuclear_threat_level": "NORMAL",
+    "decision_recommendation": "MAINTAIN NORMAL NUCLEAR WATCH",
+    "key_factors": {
+      "avg_reliability": 92.0,
+      "outage_posture": "STABLE",
+      "base_readiness": "READY"
+    },
+    "commander_actions": [
+      "1) Maintain standard watch; continue trend and anomaly monitoring.",
+      "2) Log any unusual nuclear-related activity with timestamps.",
+      "3) Ensure fallback and redundancy paths remain tested."
+    ],
+    "source_products": {
+      "golden_dome_daily_watch": "docs/golden_dome_daily_watch.json",
+      "sensor_outage_prediction": "docs/sensor_outage_prediction.json",
+      "base_defense_storyboard": "docs/base_defense_storyboard.json"
+    }
+  },
+  "treaty_evidence_bundle": {
+    "product_type": "Treaty Evidence Bundle",
+    "generated_at": "2025-12-10T16:58:05.808965Z",
+    "evidence_items": [
+      {
+        "name": "golden_dome_daily_watch",
+        "path": "/Users/dextermorris/ghost/parser_starter_kit/src/docs/golden_dome_daily_watch.json",
+        "exists": true,
+        "status": "NORMAL",
+        "summary": {
+          "nuclear_threat_level": "NORMAL",
+          "product_type": "Golden Dome Daily Watch"
+        }
+      },
+      {
+        "name": "nuclear_decision_card",
+        "path": "/Users/dextermorris/ghost/parser_starter_kit/src/docs/nuclear_decision_card.json",
+        "exists": true,
+        "status": "NORMAL",
+        "summary": {
+          "nuclear_threat_level": "NORMAL",
+          "product_type": "Nuclear Decision Card"
+        }
+      },
+      {
+        "name": "installation_threat_map",
+        "path": "/Users/dextermorris/ghost/parser_starter_kit/src/docs/installation_threat_map.json",
+        "exists": true,
+        "status": "GREEN",
+        "summary": {
+          "product_type": "Installation Threat Map"
+        }
+      },
+      {
+        "name": "sensor_outage_prediction",
+        "path": "/Users/dextermorris/ghost/parser_starter_kit/src/docs/sensor_outage_prediction.json",
+        "exists": true,
+        "status": "UNKNOWN",
+        "summary": {
+          "product_type": "Sensor Outage Predictor"
+        }
+      },
+      {
+        "name": "distributed_readiness_snapshot",
+        "path": "/Users/dextermorris/ghost/parser_starter_kit/src/docs/distributed_readiness_snapshot.json",
+        "exists": true,
+        "status": "READY",
+        "summary": {
+          "readiness": "READY",
+          "product_type": "Distributed Readiness Snapshot"
+        }
+      },
+      {
+        "name": "perimeter_incident_report",
+        "path": "/Users/dextermorris/ghost/parser_starter_kit/src/docs/perimeter_incident_report.json",
+        "exists": true,
+        "status": "UNKNOWN",
+        "summary": {
+          "product_type": "Perimeter Incident Report"
+        }
+      },
+      {
+        "name": "base_defense_storyboard",
+        "path": "/Users/dextermorris/ghost/parser_starter_kit/src/docs/base_defense_storyboard.json",
+        "exists": true,
+        "status": "UNKNOWN",
+        "summary": {
+          "installation_threat_status": "GREEN",
+          "outage_posture": "STABLE",
+          "readiness": "READY",
+          "total_perimeter_incidents": 0,
+          "product_type": "Base Defense Storyboard"
+        }
+      }
+    ],
+    "notes": [
+      "This bundle is intended for treaty, audit, or oversight workflows.",
+      "Each item records existence, path, and a light summary at generation time."
+    ]
+  }
+}

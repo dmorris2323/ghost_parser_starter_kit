@@ -1,52 +1,80 @@
 {
-  "generated_at": "2025-12-10T11:12:50.188693+00:00",
-  "bundle_name": "GLL Treaty Evidence Bundle",
-  "description": "Collection of mission briefs and nuclear readiness artifacts suitable for treaty / audit workflows.",
-  "files": [
+  "product_type": "Treaty Evidence Bundle",
+  "generated_at": "2025-12-10T16:56:41.950088Z",
+  "evidence_items": [
     {
-      "name": "daily_mission_brief.html",
-      "path": "/Users/dextermorris/ghost/parser_starter_kit/src/docs/daily_mission_brief.html",
-      "exists": true
-    },
-    {
-      "name": "daily_mission_brief.txt",
-      "path": "/Users/dextermorris/ghost/parser_starter_kit/src/docs/daily_mission_brief.txt",
-      "exists": true
-    },
-    {
-      "name": "golden_dome_drift_report.txt",
-      "path": "/Users/dextermorris/ghost/parser_starter_kit/src/docs/golden_dome_drift_report.txt",
-      "exists": true
-    },
-    {
-      "name": "golden_dome_daily_watch.json",
+      "name": "golden_dome_daily_watch",
       "path": "/Users/dextermorris/ghost/parser_starter_kit/src/docs/golden_dome_daily_watch.json",
-      "exists": true
+      "exists": true,
+      "status": "NORMAL",
+      "summary": {
+        "nuclear_threat_level": "NORMAL",
+        "product_type": "Golden Dome Daily Watch"
+      }
     },
     {
-      "name": "nuclear_decision_card.txt",
-      "path": "/Users/dextermorris/ghost/parser_starter_kit/src/docs/nuclear_decision_card.txt",
-      "exists": true
+      "name": "nuclear_decision_card",
+      "path": "/Users/dextermorris/ghost/parser_starter_kit/src/docs/nuclear_decision_card.json",
+      "exists": true,
+      "status": "NORMAL",
+      "summary": {
+        "nuclear_threat_level": "NORMAL",
+        "product_type": "Nuclear Decision Card"
+      }
     },
     {
-      "name": "gll_readiness.txt",
-      "path": "/Users/dextermorris/ghost/parser_starter_kit/src/docs/gll_readiness.txt",
-      "exists": false
+      "name": "installation_threat_map",
+      "path": "/Users/dextermorris/ghost/parser_starter_kit/src/docs/installation_threat_map.json",
+      "exists": true,
+      "status": "GREEN",
+      "summary": {
+        "product_type": "Installation Threat Map"
+      }
     },
     {
-      "name": "system_integrity_report.txt",
-      "path": "/Users/dextermorris/ghost/parser_starter_kit/src/docs/system_integrity_report.txt",
-      "exists": true
+      "name": "sensor_outage_prediction",
+      "path": "/Users/dextermorris/ghost/parser_starter_kit/src/docs/sensor_outage_prediction.json",
+      "exists": true,
+      "status": "UNKNOWN",
+      "summary": {
+        "product_type": "Sensor Outage Predictor"
+      }
     },
     {
-      "name": "prelaunch_watchboard.json",
-      "path": "/Users/dextermorris/ghost/parser_starter_kit/src/docs/prelaunch_watchboard.json",
-      "exists": false
+      "name": "distributed_readiness_snapshot",
+      "path": "/Users/dextermorris/ghost/parser_starter_kit/src/docs/distributed_readiness_snapshot.json",
+      "exists": true,
+      "status": "READY",
+      "summary": {
+        "readiness": "READY",
+        "product_type": "Distributed Readiness Snapshot"
+      }
     },
     {
-      "name": "scenario_pack_latest.json",
-      "path": "/Users/dextermorris/ghost/parser_starter_kit/src/docs/scenario_pack_latest.json",
-      "exists": true
+      "name": "perimeter_incident_report",
+      "path": "/Users/dextermorris/ghost/parser_starter_kit/src/docs/perimeter_incident_report.json",
+      "exists": true,
+      "status": "UNKNOWN",
+      "summary": {
+        "product_type": "Perimeter Incident Report"
+      }
+    },
+    {
+      "name": "base_defense_storyboard",
+      "path": "/Users/dextermorris/ghost/parser_starter_kit/src/docs/base_defense_storyboard.json",
+      "exists": true,
+      "status": "UNKNOWN",
+      "summary": {
+        "installation_threat_status": "GREEN",
+        "outage_posture": "STABLE",
+        "readiness": "READY",
+        "total_perimeter_incidents": 0,
+        "product_type": "Base Defense Storyboard"
+      }
     }
+  ],
+  "notes": [
+    "This bundle is intended for treaty, audit, or oversight workflows.",
+    "Each item records existence, path, and a light summary at generation time."
   ]
 }

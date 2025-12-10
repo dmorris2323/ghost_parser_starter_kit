@@ -1,0 +1,58 @@
+===== GHOST LANTERN LABS — WAR ROOM BRIEF =====
+Generated at: 2025-12-10T13:21:46.368774+00:00
+Base directory: /Users/dextermorris/ghost/parser_starter_kit/src
+
+=== CORE PRODUCTS ===
+- Daily Mission Brief (TXT):   OK
+- Daily Mission Brief (HTML):  OK
+- GLL Readiness:               MISSING
+- System Integrity:            MISSING
+
+=== NUCLEAR / PRE-LAUNCH ===
+- Nuclear Readiness Snapshot:  OK
+- Pre-Launch ISR Watchboard:   MISSING
+- Scenario Pack (Latest):      OK
+
+=== MISSION BRIEF PREVIEW (FIRST 40 LINES) ===
+=== GHOST LANTERN LABS — DAILY MISSION BRIEF ===
+Operator: A1C Dexter "Ghost" Morris
+Crisis Mode: ON
+
+=== PIPELINE HEALTH ===
+{
+  "score": 90,
+  "qa_passed": 7,
+  "qa_failed": 0,
+  "critical_alerts": 2,
+  "status": "GREEN",
+  "notes": "All tests passed. 2 critical alert(s) present \u2014 reduced health score."
+}
+
+=== SENSOR READINESS BRIEF ===
+=== SENSOR READINESS BRIEF ===
+
+Total sensors in manifest : 5
+Enabled                    : 5
+Disabled                   : 0
+
+=== ENABLED SENSOR DETAILS ===
+[OPTICAL]
+  Description : Optical plume and flash detection; detects bright anomalies used in launch detection.
+  Thresholds  : warning=0.55  critical=0.85
+  Drift       : no data
+
+[SEISMIC]
+  Description : No profile description.
+  Thresholds  : warning=n/a  critical=n/a
+  Drift       : no data
+
+[EMS]
+  Description : Electromagnetic spectrum detection for jamming, interference, and spoof attempts.
+  Thresholds  : warning=0.6  critical=0.9
+  Drift       : no data
+
+[RADIATION]
+  Description : Gamma and neutron radiation detection for nuclear event confirmation.
+  Thresholds  : warning=0.7  critical=0.95
+
+===== END OF WAR ROOM BRIEF =====

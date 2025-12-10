@@ -1,42 +1,19 @@
-"""
-base_defense_storyboard.py
-
-Module 30 — Base Defense Storyboard (50x Sprint #2)
-
-Purpose:
-- Turn your nuclear/base-defense picture into a simple storyboard
-  for commanders and briefings.
-
-It stitches together:
-- Installation Threat Map
-- Sensor Outage Forecast
-- Distributed Readiness Snapshot
-- Perimeter Incident Report (if present)
-
-Outputs:
-- docs/base_defense_storyboard.json
-- docs/base_defense_storyboard.txt
-"""
-
 from __future__ import annotations
 
 import json
 from datetime import datetime
 from pathlib import Path
-from typing import Any, Dict, List
+from typing import Any, Dict
 
 
-BASE = Path(__file__).resolve().parent
-DOCS_DIR = BASE / "docs"
-DOCS_DIR.mkdir(exist_ok=True)
-
-ITM_FILE = DOCS_DIR / "installation_threat_map.json"
-OUTAGE_FILE = DOCS_DIR / "sensor_outage_forecast.json"
-DIST_FILE = DOCS_DIR / "distributed_readiness_snapshot.json"
-PERIM_FILE = DOCS_DIR / "perimeter_incident_report.json"
+BASE_DIR = Path(__file__).resolve().parent
+DOCS_DIR = BASE_DIR / "docs"
 
 
-def _safe_load(path: Path) -> Dict[str, Any]:
+def _safe_read_json(path: Path) -> Dict[str, Any]:
+    """
+    Safely read a JSON file, returning {} on any failure.
+    """
     if not path.exists():
         return {}
     try:
@@ -45,137 +22,115 @@ def _safe_load(path: Path) -> Dict[str, Any]:
         return {}
 
 
-def build_storyboard() -> Dict[str, Any]:
-    ts = datetime.utcnow().isoformat() + "Z"
+def build_base_defense_storyboard() -> Dict[str, Any]:
+    """
+    Fuse base-defense artifacts into a commander-readable storyboard:
+      - installation_threat_map.json
+      - sensor_outage_prediction.json
+      - distributed_readiness_snapshot.json
+      - perimeter_incident_report.json (module 41)
+    """
+    DOCS_DIR.mkdir(exist_ok=True, parents=True)
 
-    itm = _safe_load(ITM_FILE)
-    outage = _safe_load(OUTAGE_FILE)
-    dist = _safe_load(DIST_FILE)
-    perim = _safe_load(PERIM_FILE)
+    threat = _safe_read_json(DOCS_DIR / "installation_threat_map.json")
+    outage = _safe_read_json(DOCS_DIR / "sensor_outage_prediction.json")
+    dist = _safe_read_json(DOCS_DIR / "distributed_readiness_snapshot.json")
+    perimeter = _safe_read_json(DOCS_DIR / "perimeter_incident_report.json")
 
-    base_name = itm.get("base_name", "Notional Installation")
-    crisis_mode = itm.get("crisis_mode", "OFF")
-    fusion_trust = int(itm.get("fusion_trust_score", dist.get("fusion_trust", 80)))
-    avg_rel = float(dist.get("avg_reliability", 90.0))
-    operator = dist.get("operator", "Unknown Operator")
+    threat_status = threat.get("status", "GREEN")
+    outage_posture = outage.get("posture", "STABLE")
+    readiness = dist.get("readiness", "READY")
 
-    # Build storyboard phases: Detection, Assessment, Response, Recovery
-    phases: List[Dict[str, Any]] = []
+    total_incidents = perimeter.get("total_events", 0)
+    sector_counts = perimeter.get("sector_counts", {})
+    pattern_counts = perimeter.get("pattern_counts", {})
 
-    # Detection
-    phases.append(
-        {
-            "phase": "Detection",
-            "summary": "How the base detects incoming threats (drones, gate rams, nuclear signals, cyber spikes).",
-            "installation_risk": itm.get("overall_risk", "UNKNOWN"),
-            "perimeter_risk": perim.get("perimeter_summary", {}).get("sector_risk", "UNKNOWN"),
-            "airspace_risk": perim.get("perimeter_summary", {}).get("airspace_risk", "UNKNOWN"),
-            "sensor_outage_global": outage.get("sensors", {}).get("global", {}),
-        }
-    )
+    storyline = []
 
-    # Assessment
-    phases.append(
-        {
-            "phase": "Assessment",
-            "summary": "How Ghost Lantern Labs fuses and rates the situation.",
-            "fusion_trust": fusion_trust,
-            "avg_reliability": avg_rel,
-            "crisis_mode": crisis_mode,
-            "readiness_levels": dist.get("readiness", {}),
-        }
-    )
+    storyline.append("Base-Defense Storyboard")
+    storyline.append("-----------------------")
+    storyline.append(f"Installation threat status: {threat_status}")
+    storyline.append(f"Outage posture            : {outage_posture}")
+    storyline.append(f"Distributed readiness     : {readiness}")
+    storyline.append("")
+    storyline.append(f"Total perimeter incidents recorded: {total_incidents}")
+    storyline.append("")
 
-    # Response
-    phases.append(
-        {
-            "phase": "Response",
-            "summary": "How the wing/group/squadron/team posture based on GLL outputs.",
-            "wing_level": dist.get("readiness", {}).get("wing", "UNKNOWN"),
-            "group_level": dist.get("readiness", {}).get("group", "UNKNOWN"),
-            "squadron_level": dist.get("readiness", {}).get("squadron", "UNKNOWN"),
-            "team_level": dist.get("readiness", {}).get("team", "UNKNOWN"),
-        }
-    )
+    if sector_counts:
+        storyline.append("Sector pressure profile:")
+        for sector, count in sorted(sector_counts.items()):
+            storyline.append(f"  - {sector}: {count} events")
+        storyline.append("")
+    else:
+        storyline.append("Sector pressure profile: no events logged.")
+        storyline.append("")
 
-    # Recovery
-    phases.append(
-        {
-            "phase": "Recovery",
-            "summary": "Post-incident learning and reset posture.",
-            "operator": operator,
-            "notes": "Storyboard is designed to be briefed, recorded, and iterated each day.",
-        }
-    )
+    if pattern_counts:
+        storyline.append("Incident pattern summary:")
+        for pattern, count in sorted(pattern_counts.items()):
+            storyline.append(f"  - {pattern}: {count}")
+        storyline.append("")
+    else:
+        storyline.append("Incident pattern summary: no pattern data.")
+        storyline.append("")
 
-    out: Dict[str, Any] = {
-        "generated_at": ts,
-        "base_name": base_name,
-        "crisis_mode": crisis_mode,
-        "fusion_trust": fusion_trust,
-        "avg_reliability": avg_rel,
-        "operator": operator,
-        "phases": phases,
+    storyline.append("Commanders' Bottom Line:")
+    if readiness == "STRAPPED":
+        storyline.append(
+            "  • Base-defense posture is STRAPPED — prioritize mitigation now."
+        )
+    elif readiness == "WATCH":
+        storyline.append(
+            "  • Base-defense posture is WATCH — elevated risk, maintain vigilance."
+        )
+    else:
+        storyline.append(
+            "  • Base-defense posture is READY — normal ops with heightened awareness."
+        )
+
+    if threat_status == "RED":
+        storyline.append("  • Installation threat map indicates RED sectors under pressure.")
+    elif threat_status == "AMBER":
+        storyline.append("  • AMBER sectors show localized pressure; monitor closely.")
+
+    if outage_posture in ("WATCH", "AT_RISK"):
+        storyline.append(
+            "  • Sensor outage posture is elevated — confirm redundancy and backups."
+        )
+
+    storyboard = {
+        "product_type": "Base Defense Storyboard",
+        "generated_at": datetime.utcnow().isoformat() + "Z",
+        "summary": {
+            "installation_threat_status": threat_status,
+            "outage_posture": outage_posture,
+            "readiness": readiness,
+            "total_perimeter_incidents": total_incidents,
+        },
+        "storyboard_lines": storyline,
     }
+    return storyboard
+
+
+def write_base_defense_storyboard() -> Dict[str, str]:
+    """
+    Write JSON + TXT storyboard files.
+    """
+    DOCS_DIR.mkdir(exist_ok=True, parents=True)
+    data = build_base_defense_storyboard()
 
     json_path = DOCS_DIR / "base_defense_storyboard.json"
     txt_path = DOCS_DIR / "base_defense_storyboard.txt"
 
-    json_path.write_text(json.dumps(out, indent=2))
+    json_path.write_text(json.dumps(data, indent=2))
+    txt_path.write_text("\n".join(data["storyboard_lines"]) + "\n")
 
-    # Human-readable TXT
-    lines: List[str] = [
-        "=== BASE DEFENSE STORYBOARD ===",
-        f"Generated: {ts}",
-        f"Base: {base_name}",
-        f"Operator: {operator}",
-        f"Crisis Mode: {crisis_mode}",
-        f"Fusion Trust: {fusion_trust}",
-        f"Average Reliability: {avg_rel:.2f}%",
-        "",
-    ]
-
-    for p in phases:
-        lines.append(f"[{p['phase']}]")
-        lines.append(f"  {p['summary']}")
-        # Add a few key fields if present
-        if p["phase"] == "Detection":
-            lines.append(f"  Perimeter Risk     : {p['perimeter_risk']}")
-            lines.append(f"  Airspace Risk      : {p['airspace_risk']}")
-            g = p.get("sensor_outage_global", {})
-            if g:
-                lines.append(
-                    f"  Outage (Global)    : risk={g.get('outage_risk','UNKNOWN')}, "
-                    f"errors={g.get('error_events',0)}"
-                )
-        elif p["phase"] == "Assessment":
-            lines.append(f"  Fusion Trust       : {p['fusion_trust']}")
-            lines.append(f"  Avg Reliability    : {p['avg_reliability']}")
-            lines.append(f"  Crisis Mode        : {p['crisis_mode']}")
-        elif p["phase"] == "Response":
-            lines.append(f"  Wing Readiness     : {p.get('wing_level','UNKNOWN')}")
-            lines.append(f"  Group Readiness    : {p.get('group_level','UNKNOWN')}")
-            lines.append(f"  Squadron Readiness : {p.get('squadron_level','UNKNOWN')}")
-            lines.append(f"  Team Readiness     : {p.get('team_level','UNKNOWN')}")
-        elif p["phase"] == "Recovery":
-            lines.append(f"  Operator           : {p['operator']}")
-            lines.append(f"  Notes              : {p['notes']}")
-        lines.append("")
-
-    txt_path.write_text("\n".join(lines))
-
-    return {
-        "status": "ok",
-        "json_path": str(json_path),
-        "text_path": str(txt_path),
-    }
-
-
-def main() -> None:
-    out = build_storyboard()
-    print(json.dumps(out, indent=2))
+    return {"json_path": str(json_path), "txt_path": str(txt_path)}
 
 
 if __name__ == "__main__":
-    main()
+    out = write_base_defense_storyboard()
+    print("Base Defense Storyboard written:")
+    print(f"JSON → {out['json_path']}")
+    print(f"TXT  → {out['txt_path']}")
 

@@ -1,0 +1,21 @@
+{
+  "product_type": "Nuclear Decision Card",
+  "generated_at": "2025-12-10T16:56:32.504934Z",
+  "nuclear_threat_level": "NORMAL",
+  "decision_recommendation": "MAINTAIN NORMAL NUCLEAR WATCH",
+  "key_factors": {
+    "avg_reliability": 92.0,
+    "outage_posture": "STABLE",
+    "base_readiness": "READY"
+  },
+  "commander_actions": [
+    "1) Maintain standard watch; continue trend and anomaly monitoring.",
+    "2) Log any unusual nuclear-related activity with timestamps.",
+    "3) Ensure fallback and redundancy paths remain tested."
+  ],
+  "source_products": {
+    "golden_dome_daily_watch": "docs/golden_dome_daily_watch.json",
+    "sensor_outage_prediction": "docs/sensor_outage_prediction.json",
+    "base_defense_storyboard": "docs/base_defense_storyboard.json"
+  }
+}

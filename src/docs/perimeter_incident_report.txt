@@ -1,13 +1,11 @@
 === PERIMETER INCIDENT REPORT ===
-Generated: 2025-12-10T12:03:46.001858Z
-Base: Notional Installation
-Crisis Mode: ON
-Fusion Trust Score: 80
+Generated at: 2025-12-10T16:57:09.889182Z
+Total events in log: 0
 
-Perimeter / Airspace Summary:
-  Perimeter Risk          : ELEVATED
-  Airspace Risk           : ELEVATED
-  Global Sensor Outage    : LOW
+NOTE: No perimeter incidents recorded yet; this is a shaped default.
 
-Commander Notes:
-  Perimeter is elevated but stable with current posture. Airspace is elevated but under control. Sensors appear stable with low outage risk.
+Sector incident counts:
+
+Pattern counts:
+
+Most recent events:

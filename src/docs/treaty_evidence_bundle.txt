@@ -1,0 +1,58 @@
+=== TREATY EVIDENCE BUNDLE ===
+Generated: 2025-12-10T16:56:41.950088Z
+
+- golden_dome_daily_watch
+  Path   : /Users/dextermorris/ghost/parser_starter_kit/src/docs/golden_dome_daily_watch.json
+  Exists : True
+  Status : NORMAL
+  Summary:
+    nuclear_threat_level: NORMAL
+    product_type: Golden Dome Daily Watch
+
+- nuclear_decision_card
+  Path   : /Users/dextermorris/ghost/parser_starter_kit/src/docs/nuclear_decision_card.json
+  Exists : True
+  Status : NORMAL
+  Summary:
+    nuclear_threat_level: NORMAL
+    product_type: Nuclear Decision Card
+
+- installation_threat_map
+  Path   : /Users/dextermorris/ghost/parser_starter_kit/src/docs/installation_threat_map.json
+  Exists : True
+  Status : GREEN
+  Summary:
+    product_type: Installation Threat Map
+
+- sensor_outage_prediction
+  Path   : /Users/dextermorris/ghost/parser_starter_kit/src/docs/sensor_outage_prediction.json
+  Exists : True
+  Status : UNKNOWN
+  Summary:
+    product_type: Sensor Outage Predictor
+
+- distributed_readiness_snapshot
+  Path   : /Users/dextermorris/ghost/parser_starter_kit/src/docs/distributed_readiness_snapshot.json
+  Exists : True
+  Status : READY
+  Summary:
+    readiness: READY
+    product_type: Distributed Readiness Snapshot
+
+- perimeter_incident_report
+  Path   : /Users/dextermorris/ghost/parser_starter_kit/src/docs/perimeter_incident_report.json
+  Exists : True
+  Status : UNKNOWN
+  Summary:
+    product_type: Perimeter Incident Report
+
+- base_defense_storyboard
+  Path   : /Users/dextermorris/ghost/parser_starter_kit/src/docs/base_defense_storyboard.json
+  Exists : True
+  Status : UNKNOWN
+  Summary:
+    installation_threat_status: GREEN
+    outage_posture: STABLE
+    readiness: READY
+    total_perimeter_incidents: 0
+    product_type: Base Defense Storyboard

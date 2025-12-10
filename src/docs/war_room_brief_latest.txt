@@ -1,0 +1,168 @@
+GHOST LANTERN LABS — WAR ROOM BRIEF
+Generated: 2025-12-10T14:49:20.601668Z
+
+SYSTEM HEALTH SUMMARY
+=====================
+Pipeline status : unknown
+Pipeline score  : 0
+Avg reliability : 92.0%
+
+Notes:
+  pipeline_health.json not found – run pipeline health check.
+
+
+BASE DEFENSE PICTURE
+====================
+Threat map status        : unknown
+Sensor outage predictor  : no_data
+Readiness snapshot       : unknown
+Perimeter incident state : unknown
+
+Base Defense Storyboard (short excerpt):
+=== BASE DEFENSE STORYBOARD ===
+Generated: 2025-12-10T12:03:48.084018Z
+Base: Notional Installation
+Operator: A1C Dexter "Ghost" Morris
+Crisis Mode: ON
+Fusion Trust: 80
+Average Reliability: 90.00%
+
+[Detection]
+  How the base detects incoming threats (drones, gate rams, nuclear signals, cyber spikes).
+  Perimeter Risk     : ELEVATED
+  Airspace Risk      : ELEVATED
+  Outage (Global)    : risk=LOW, errors=0
+
+[Assessment]
+  How Ghost Lantern Labs fuses and rates the situation.
+  Fusion Trust       : 80
+  Avg Reliability    : 90.0
+  Crisis Mode        : ON
+
+[Response]
+  How the wing/group/squadron/t
+[...]
+
+
+NUCLEAR / GOLDEN DOME PICTURE
+=============================
+Golden Dome Status:
+GOLDEN DOME ALIGNMENT SNAPSHOT — GHOST LANTERN LABS
+----------------------------------------------------------------
+Generated: 2025-12-03T09:44:46.129854Z
+
+MISSION CONTEXT
+• The 'Golden Dome' idea = a layered shield against missile,
+  nuclear, and high-end strategic threats.
+• Real-world versions mix early warning, tracking, interception,
+  and damage-limitation — across multiple sensors and domains.
+• GLL's job is NOT to fire interceptors; it is to see, fuse, and
+  brief the picture so commanders can act in time.
+
+HOW GLL SUPPORTS A GOLDEN DOME-STYLE SHIELD (V1)
+• Multi-sensor fusion pipeline already in place:
+    - Optical (launch flash / plume simulations)
+    - Seismic (ground event simulations)
+    - EMS (jamming / interference simulations)
+    - Radiation (confirmation / nuclear context simulations)
+• Bad-data quarantine + sanitization:
+    - Corrupted or adversarial telemetry is quarantined, not trusted.
+• Anti-DoS and stress-testing modules:
+    - Environment checks and stress_tester keep the pipeline alive
+      under noisy or hostile conditions.
+• Spectral Owl AI:
+    - Reads fused scores, highlights critical events, logs threat memory.
+    - Runs through a vendor-agnostic adapter for AI-independence.
+
+AI-INDEPENDENCE STATUS (SUMMARY)
+• Phase 1: DONE — all LLM calls routed through an adapter layer.
+• Phase 2: IN PROGRESS — multi-provider adapter + local rules path.
+• Design intent: GLL must still brief commanders even if cloud AI
+  is degraded or unavailable.
+
+LOCAL SYSTEM ARTIFACTS
+• system_metrics.json: FOUND (keys = alerts, bad_data, cloud, pipeline_health, qa, stress_test, threat_memory)
+• pipeline_health.txt: FOUND
+• sensor_health_report.txt: FOUND
+
+COMMANDER-FACING SUMMARY (V1)
+• GLL currently behaves as a prototype Golden Dome intel node:
+    - Fuses multiple sensor streams into a single score.
+    - Flags critical events and writes daily mission briefs.
+    - Survives bad data, noise, and simulated DoS conditions.
+• Next steps on the path to a serious Golden Dome role:
+    1) Tie real (or lab) sensors into the ingest layer.
+    2) Expand reliability scoring and drift detection.
+    3) Build dedicated Golden Dome dashboards / overlays
+       (sector view, shot doctrine, escalation thresholds).
+    4) Formalize AI-Independence Phase 3–4 for offline ops.
+
+NOTE FOR FUTURE DEMOS
+• This report should be refreshed before any briefing to:
+    - AFTAC / ICADS-style audiences
+    - Missile defense / Golden Dome concept teams
+    - SBIR / defense innovation panels
+• It proves that GLL is already thinking in Golden Dome terms —
+  layered detection, resilient fusion, and offline-capable AI.
+
+Nuclear Readiness Snapshot (JSON excerpt):
+{
+  "status": "no_data",
+  "message": "No nuclear_readiness_snapshot.json present."
+}
+
+Nuclear Decision Card:
+===== NUCLEAR DECISION CARD — GHOST LANTERN LABS =====
+Generated at (UTC): 2025-12-10T02:25:36.792704+00:00
+
+Crisis Mode: ON
+Golden Dome Readiness: UNKNOWN
+Fusion Heat Index: n/a
+
+Fusion Trust Score:
+{
+  "fusion_trust": 80,
+  "factors": {
+    "outliers": 0,
+    "drift": {
+      "status": "ok",
+      "drift_score": 0,
+      "total_lines": 57
+    },
+    "reliability": {
+      "trend": "no_data"
+    },
+    "crisis_mode": "ON"
+  }
+}
+
+Raw Nuclear Snapshot Payload:
+{
+  "nuclear_readiness_score": 87.6,
+  "components": {
+    "trust": {
+      "fusion_trust": 80,
+      "factors": {
+        "outliers": 0,
+        "drift": {
+          "status": "ok",
+          "drift_score": 0,
+          "total_lines": 57
+        },
+        "reliability": {
+          "trend": "no_data"
+        },
+        "crisis_mode"
+[...]
+
+Treaty Evidence Bundle (excerpt):
+No treaty_evidence_bundle.txt present.
+
+
+CHINA / SPACE THREAT CONTEXT
+============================
+China / PLA / SSF Threat Notes:
+No china_threat_notes.txt – add PLA / SSF notes here as you study.
+
+Space Domain Awareness Notes:
+No space_domain_awareness_notes.txt present.

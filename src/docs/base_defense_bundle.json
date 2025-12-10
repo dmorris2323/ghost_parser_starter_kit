@@ -1,0 +1,99 @@
+{
+  "product_type": "Base Defense Bundle",
+  "generated_at": "2025-12-10T16:02:22.064505Z",
+  "installation_threat_map": {
+    "product_type": "Installation Threat Map",
+    "generated_at": "2025-12-10T16:00:27.783690Z",
+    "status": "GREEN",
+    "sectors": {
+      "PERIMETER_NORTH": {
+        "critical": 0,
+        "high": 0,
+        "other": 0
+      },
+      "PERIMETER_SOUTH": {
+        "critical": 0,
+        "high": 0,
+        "other": 0
+      },
+      "PERIMETER_EAST": {
+        "critical": 0,
+        "high": 0,
+        "other": 0
+      },
+      "PERIMETER_WEST": {
+        "critical": 0,
+        "high": 0,
+        "other": 0
+      }
+    }
+  },
+  "sensor_outage_prediction": {
+    "product_type": "Sensor Outage Predictor",
+    "generated_at": "2025-12-10T16:00:44.119922Z",
+    "posture": "STABLE",
+    "sensors": {
+      "optical": {
+        "reliability": 90.0,
+        "outage_risk": "MEDIUM"
+      },
+      "seismic": {
+        "reliability": 90.0,
+        "outage_risk": "MEDIUM"
+      },
+      "ems": {
+        "reliability": 90.0,
+        "outage_risk": "MEDIUM"
+      },
+      "radiation": {
+        "reliability": 90.0,
+        "outage_risk": "MEDIUM"
+      }
+    }
+  },
+  "distributed_readiness_snapshot": {
+    "product_type": "Distributed Readiness Snapshot",
+    "generated_at": "2025-12-10T16:00:59.432468Z",
+    "readiness": "READY",
+    "inputs": {
+      "installation_threat_status": "GREEN",
+      "outage_posture": "STABLE",
+      "avg_reliability": 90.0
+    }
+  },
+  "perimeter_incident_report": {
+    "product_type": "Perimeter Incident Report",
+    "generated_at": "2025-12-10T16:01:11.383924Z",
+    "total_events": 0,
+    "sector_counts": {},
+    "pattern_counts": {},
+    "recent_events": [],
+    "note": "No perimeter incidents recorded yet; this is a shaped default."
+  },
+  "base_defense_storyboard": {
+    "product_type": "Base Defense Storyboard",
+    "generated_at": "2025-12-10T16:02:10.892454Z",
+    "summary": {
+      "installation_threat_status": "GREEN",
+      "outage_posture": "STABLE",
+      "readiness": "READY",
+      "total_perimeter_incidents": 0
+    },
+    "storyboard_lines": [
+      "Base-Defense Storyboard",
+      "-----------------------",
+      "Installation threat status: GREEN",
+      "Outage posture            : STABLE",
+      "Distributed readiness     : READY",
+      "",
+      "Total perimeter incidents recorded: 0",
+      "",
+      "Sector pressure profile: no events logged.",
+      "",
+      "Incident pattern summary: no pattern data.",
+      "",
+      "Commanders' Bottom Line:",
+      "  \u2022 Base-defense posture is READY \u2014 normal ops with heightened awareness."
+    ]
+  }
+}

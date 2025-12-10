@@ -1,0 +1,21 @@
+{
+  "crisis_mode": false,
+  "early_warning_level": "STEADY",
+  "early_warning_score": 0.0,
+  "ems_spike_score": 0.0,
+  "generated_at": "2025-12-10T17:52:45.529891Z",
+  "inputs_present": {
+    "adversary_pattern_memory": false,
+    "adversary_patterns": false,
+    "golden_dome_daily_watch_json": false,
+    "run_history_intel": false,
+    "sensor_latency_report": false
+  },
+  "latency_risk_score": 0.0,
+  "pattern_anomaly_score": 0.0,
+  "rationale": [
+    "Composite pre-launch signal score: 0.0/100 (crisis_mode=False)."
+  ],
+  "sensor_concurrence_score": 0.0,
+  "signals": []
+}

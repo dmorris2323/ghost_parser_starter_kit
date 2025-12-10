@@ -1,0 +1,29 @@
+{
+  "generated_at": "2025-12-10T14:49:28.086023Z",
+  "source": "Ghost Lantern Labs \u2014 Commander Readiness Tile",
+  "meta_version": "1.0",
+  "overall_status": "RED",
+  "pipeline": {
+    "status": "unknown",
+    "health_score": 0,
+    "notes": "pipeline_health.json not found \u2013 run pipeline health check."
+  },
+  "reliability": {
+    "avg_reliability": 92.0,
+    "sensors": {}
+  },
+  "base_defense": {
+    "threat_map": "unknown",
+    "outage": "no_data",
+    "readiness": "unknown",
+    "perimeter": "unknown"
+  },
+  "nuclear": {
+    "status": "unknown",
+    "golden_dome_status_text": "GOLDEN DOME ALIGNMENT SNAPSHOT \u2014 GHOST LANTERN LABS\n----------------------------------------------------------------\nGenerated: 2025-12-03T09:44:46.129854Z\n\nMISSION CONTEXT\n\u2022 The 'Golden Dome' idea = a layered shield against missile,\n  nuclear, and high-end strategic threats.\n\u2022 Real-world versions mix early warning, tracking, interception,\n  and damage-limitation \u2014 across multiple sensors and domains.\n\u2022 GLL's job is NOT to fire interceptors; it is to see, fuse, and\n  brief the picture so commanders can act in time.\n\nHOW GLL SUPPORTS A GOLDEN DOME-STYLE SHIELD (V1)\n\u2022 Multi-sensor fusion pipeline already in place:\n    - Optical (launch flash / plume simulations)\n    - Seismic (ground event simulations)\n    - EMS (jamming / interference simulations)\n    - Radiation (confirmation / nuclear context simulations)\n\u2022 Bad-data quarantine + sanitization:\n    - Corrupted or adversarial telemetry is quarantined, not trusted.\n\u2022 Anti-DoS and stress-testing modules:\n    - Environment checks and stress_tester keep the pipeline alive\n      under noisy or hostile conditions.\n\u2022 Spectral Owl AI:\n    - Reads fused scores, highlights critical events, logs threat memory.\n    - Runs through a vendor-agnostic adapter for AI-independence.\n\nAI-INDEPENDENCE STATUS (SUMMARY)\n\u2022 Phase 1: DONE \u2014 all LLM calls routed through an adapter layer.\n\u2022 Phase 2: IN PROGRESS \u2014 multi-provider adapter + local rules path.\n\u2022 Design intent: GLL must still brief commanders even if cloud AI\n  is degraded or unavailable.\n\nLOCAL SYSTEM ARTIFACTS\n\u2022 system_metrics.json: FOUND (keys = alerts, bad_data, cloud, pipeline_health, qa, stress_test, threat_memory)\n\u2022 pipeline_health.txt: FOUND\n\u2022 sensor_health_report.txt: FOUND\n\nCOMMANDER-FACING SUMMARY (V1)\n\u2022 GLL currently behaves as a prototype Golden Dome intel node:\n    - Fuses multiple sensor streams into a single score.\n    - Flags critical events and writes daily mission briefs.\n    - Survives bad data, noise, and simulated DoS conditions.\n\u2022 Next steps on the path to a serious Golden Dome role:\n    1) Tie real (or lab) sensors into the ingest layer.\n    2) Expand reliability scoring and drift detection.\n    3) Build dedicated Golden Dome dashboards / overlays\n       (sector view, shot doctrine, escalation thresholds).\n    4) Formalize AI-Independence Phase 3\u20134 for offline ops.\n\nNOTE FOR FUTURE DEMOS\n\u2022 This report should be refreshed before any briefing to:\n    - AFTAC / ICADS-style audiences\n    - Missile defense / Golden Dome concept teams\n    - SBIR / defense innovation panels\n\u2022 It proves that GLL is already thinking in Golden Dome terms \u2014\n  layered detection, resilient fusion, and offline-capable AI."
+  },
+  "china_space": {
+    "china_tag": "noted",
+    "sda_tag": "noted"
+  }
+}

@@ -1,0 +1,32 @@
+GLL Early Warning Scorecard
+================================
+Generated at (UTC): 2025-12-10T17:52:59.846531Z
+
+1. Early Warning Posture
+-------------------------
+  Level: STEADY
+  Score: 0.0/100
+  Crisis Mode: OFF
+
+2. Contributing Factors
+------------------------
+  Multi-Sensor Concurrence Score: 0.0/100
+  EMS / RF Spike Score:          0.0/100
+  Sensor Latency Risk Score:     0.0/100
+  Pattern Anomaly Score:         0.0/100
+
+3. Inputs Present
+-----------------
+  - adversary_pattern_memory: MISSING
+  - adversary_patterns: MISSING
+  - golden_dome_daily_watch_json: MISSING
+  - run_history_intel: MISSING
+  - sensor_latency_report: MISSING
+
+4. Rationale Summary
+---------------------
+  - Composite pre-launch signal score: 0.0/100 (crisis_mode=False).
+
+5. Signals Overview
+-------------------
+  [No distinct signals recorded in watchboard]
