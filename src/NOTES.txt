@@ -2171,3 +2171,26 @@ Day 67 – Self-Preservation Shield (SPS) – Module 2: Mutation Watcher
   - GLL now has a file-level tamper/mutation awareness layer.
   - Any unexpected changes to fusion, nuclear, base-defense, or SPS modules can be detected and reconciled with git history.
   - This is a self-defense mechanism against accidental overwrites, bad copy–paste, or quiet sabotage.
+Day 67 – Cyber Resilience & SPS tile wired into Spectral Command Center
+
+• Updated apps/gui/app.py:
+  - Added a Cyber Resilience & Self-Preservation Shield (SPS) panel.
+  - SPS tile calls:
+      • write_sps_status_files() from sps_guardrail_engine.py
+      • write_mutation_report() from sps_mutation_watcher.py
+  - Derives a GREEN / AMBER / RED status based on:
+      • critical alerts
+      • zero-byte files
+      • missing/empty critical modules
+  - Displays:
+      • Guardrails defined
+      • Self-sabotage risk items
+      • Missing/empty critical files
+      • Zero-byte files
+      • Changed files
+  - Exposes links to SPS text reports in docs/ for Shari/instructors.
+
+• The Spectral Command Center now:
+  - Shows the latest daily_mission_brief.txt if present.
+  - Shows prelaunch_watchboard.json if present.
+  - Surfaces system self-preservation posture visually for commanders/instructors.
