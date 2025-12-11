@@ -2,7 +2,7 @@
   "base_early_warning_score": 0.0,
   "drift_adjusted_early_warning_score": 0.0,
   "drift_confidence": 80.0,
-  "generated_at": "2025-12-11T02:47:12.185696Z",
+  "generated_at": "2025-12-11T02:51:23.781510Z",
   "inputs_present": {
     "golden_dome_drift_report_txt": true,
     "prelaunch_watchboard_json": false,

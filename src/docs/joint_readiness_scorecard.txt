@@ -1,0 +1,36 @@
+Joint Readiness Scorecard – Ghost Lantern Labs
+==============================================
+Generated at (UTC): 2025-12-11T02:58:07.854232Z
+
+JOINT READINESS: GREEN  (90.0/100)
+
+NUCLEAR POSTURE
+----------------
+  • Nuclear Early-Warning Level: STEADY
+  • Nuclear Early-Warning Score: 0.0/100
+  • Drift Confidence: 80.0/100
+  • Temporal Volatility: 0.0/100
+
+BASE DEFENSE POSTURE
+---------------------
+  • Base Threat Level: LOW
+  • Base Threat Score: 0.0/100
+  • Sectors Tracked: 0
+
+SENSOR & FUSION HEALTH
+------------------------
+  • Sensor Outage Risk: 0.0/100
+  • Critical Sensors at Risk: 0
+  • Fusion Trust Score: 0.0/100
+  • Avg Sensor Reliability: 0.0/100
+  • Units / Elements Tracked: 0
+
+INTERPRETATION GUIDE
+---------------------
+  • GREEN (70–100): System is ready; nuclear + base-defense posture aligned and stable.
+  • AMBER (40–69): System is under stress; commanders should increase monitoring and prepare contingencies.
+  • RED (<40): System is degraded or under significant threat; immediate command attention required.
+
+NOTE:
+  This scorecard fuses nuclear early warning, base-defense threat, sensor outage risk,
+  and fusion health into a single view suitable for commanders, evaluators, and demos.

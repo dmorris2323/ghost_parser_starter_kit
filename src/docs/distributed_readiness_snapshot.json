@@ -1,6 +1,6 @@
 {
   "product_type": "Distributed Readiness Snapshot",
-  "generated_at": "2025-12-10T16:00:59.432468Z",
+  "generated_at": "2025-12-11T02:57:45.223040Z",
   "readiness": "READY",
   "inputs": {
     "installation_threat_status": "GREEN",

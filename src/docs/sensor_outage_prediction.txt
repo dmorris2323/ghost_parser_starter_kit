@@ -1,5 +1,5 @@
 === SENSOR OUTAGE PREDICTION ===
-Generated at: 2025-12-10T16:00:44.119922Z
+Generated at: 2025-12-11T02:57:29.885958Z
 Posture: STABLE
 
 Per-sensor risk:

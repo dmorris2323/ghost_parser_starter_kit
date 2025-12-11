@@ -1,0 +1,13 @@
+{
+  "generated_at": "2025-12-11T02:58:07.906900Z",
+  "joint_readiness_level": "GREEN",
+  "joint_readiness_score": 90.0,
+  "risks": [
+    {
+      "detail": "Fusion trust 0.0/100 and average reliability 0.0/100 indicate the fusion engine and/or sensors need tuning and validation.",
+      "domain": "FUSION",
+      "severity": "HIGH",
+      "title": "Fusion trust and reliability under target"
+    }
+  ]
+}

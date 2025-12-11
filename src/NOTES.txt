@@ -1900,3 +1900,14 @@ Vital to commit to git. Recommended commit:
 git add .
 git commit -m Day 66 – Nuclear early warning validation and summary hardening
 git push
+Day 67 – Joint Nuclear + Base-Defense Readiness Board
+
+• Added joint_readiness_board.py to fuse nuclear_early_warning_summary, installation_threat_map, sensor_outage_predictor, distributed_readiness_snapshot, and base_defense_storyboard into a single Joint Readiness Board with a 0–100 joint readiness score, GREEN/AMBER/RED level, and narrative rationale.
+• Added joint_readiness_scorecard.py to convert the Joint Readiness Board into a clean commander-facing scorecard (JOINT, NUCLEAR, BASE DEFENSE, SENSOR & FUSION HEALTH) suitable for AFTAC/base commander briefs, AFWERX/SBIR decks, and Shari demo day.
+• Added joint_risk_register.py to generate a Joint Risk Register that lists top nuclear, base-defense, sensor, fusion, and overall joint readiness risks in ranked order with severity tags (HIGH/MEDIUM) and concise detail.
+• This block turns GLL’s separate nuclear and base-defense stacks into a single, explainable joint readiness artifact that a commander can read at a glance and use for decisions or funding evaluation.
+
+Vital to commit to git. Recommended commit:
+git add .
+git commit -m Day 67 – Joint nuclear + base-defense readiness board and risk register
+git push

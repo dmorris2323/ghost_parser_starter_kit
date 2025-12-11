@@ -1,0 +1,22 @@
+{
+  "composite_signal_pressure": 22.0,
+  "ems_spike_score": 20.0,
+  "generated_at": "2025-12-11T02:51:23.729916Z",
+  "inputs_present": {
+    "adversary_pattern_memory_json": false,
+    "golden_dome_daily_watch_json": true,
+    "run_history_intel_json": false,
+    "sensor_latency_report_json": false
+  },
+  "latency_risk_score": 30.0,
+  "pattern_anomaly_score": 20.0,
+  "rationale": [
+    "No structured 'sensor_status' map; assuming low concurrence.",
+    "No visible sensor inventory; defaulting concurrence to 20/100.",
+    "No latency report JSON; applying conservative baseline risk.",
+    "No run_history_intel.json; EMS spike set to low default.",
+    "No adversary_pattern_memory.json; pattern anomaly minimal by default.",
+    "Composite pre-launch signal pressure computed as a blend of EMS spikes, adversary anomalies, latency risk, and sensor concurrence; final pressure: 22.0/100."
+  ],
+  "sensor_concurrence_score": 20.0
+}

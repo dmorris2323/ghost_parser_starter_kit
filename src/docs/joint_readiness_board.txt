@@ -1,0 +1,27 @@
+GLL Joint Readiness Board – Nuclear + Base Defense
+==================================================
+Generated at (UTC): 2025-12-11T02:58:07.854232Z
+
+Joint Readiness Score: 90.0/100
+Joint Readiness Level: GREEN
+
+Domain Snapshots:
+  • Nuclear: level STEADY, score 0.0/100, volatility 0.0/100, drift confidence 80.0/100, alignment HIGH.
+  • Base Defense: level LOW, threat score 0.0/100, sectors tracked: 0.
+  • Sensor Outage: outage risk 0.0/100, critical sensors at risk: 0.
+  • Distributed Readiness: fusion trust 0.0/100, avg reliability 0.0/100, units tracked: 0.
+  • Storyboard Tone: UNKNOWN
+
+Inputs Present:
+  - nuclear_early_warning_summary_json: OK
+  - installation_threat_map_json: OK
+  - sensor_outage_predictor_json: MISSING
+  - distributed_readiness_snapshot_json: OK
+  - base_defense_storyboard_json: OK
+
+Joint Rationale:
+  - Nuclear early-warning score 0.0/100 (level STEADY) applies a strong penalty.
+  - Base-defense threat score 0.0/100 increases penalty when the base perimeter/airspace is stressed.
+  - Sensor outage risk score 0.0/100 further reduces confidence in the joint picture.
+  - Fusion trust score 0.0/100 provides a modest bonus when the fusion engine is performing well.
+  - Resulting joint readiness score: 90.0/100 → level GREEN.

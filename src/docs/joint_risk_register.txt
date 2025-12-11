@@ -1,0 +1,9 @@
+GLL Joint Risk Register
+=======================
+Generated at (UTC): 2025-12-11T02:58:07.906900Z
+
+Joint Readiness: GREEN (90.0/100)
+
+Top Risks:
+1. [HIGH] FUSION – Fusion trust and reliability under target
+   Fusion trust 0.0/100 and average reliability 0.0/100 indicate the fusion engine and/or sensors need tuning and validation.

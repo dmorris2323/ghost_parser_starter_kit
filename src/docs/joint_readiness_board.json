@@ -1,0 +1,41 @@
+{
+  "base_defense": {
+    "level": "LOW",
+    "score": 0.0,
+    "sectors": 0
+  },
+  "distributed_readiness": {
+    "average_reliability": 0.0,
+    "fusion_trust_score": 0.0,
+    "units_tracked": 0
+  },
+  "generated_at": "2025-12-11T02:58:07.854232Z",
+  "inputs_present": {
+    "base_defense_storyboard_json": true,
+    "distributed_readiness_snapshot_json": true,
+    "installation_threat_map_json": true,
+    "nuclear_early_warning_summary_json": true,
+    "sensor_outage_predictor_json": false
+  },
+  "joint_rationale": [
+    "Nuclear early-warning score 0.0/100 (level STEADY) applies a strong penalty.",
+    "Base-defense threat score 0.0/100 increases penalty when the base perimeter/airspace is stressed.",
+    "Sensor outage risk score 0.0/100 further reduces confidence in the joint picture.",
+    "Fusion trust score 0.0/100 provides a modest bonus when the fusion engine is performing well.",
+    "Resulting joint readiness score: 90.0/100 \u2192 level GREEN."
+  ],
+  "joint_readiness_level": "GREEN",
+  "joint_readiness_score": 90.0,
+  "nuclear": {
+    "alignment": "HIGH",
+    "drift_confidence": 80.0,
+    "level": "STEADY",
+    "score": 0.0,
+    "volatility_index": 0.0
+  },
+  "outage": {
+    "critical_sensors_at_risk": 0,
+    "outage_risk_score": 0.0
+  },
+  "storyboard_tone": "UNKNOWN"
+}

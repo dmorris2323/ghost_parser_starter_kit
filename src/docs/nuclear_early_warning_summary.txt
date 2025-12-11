@@ -1,6 +1,6 @@
 GLL Nuclear Early Warning Summary (Hardened View)
 =================================================
-Generated at (UTC): 2025-12-11T02:47:52.684387Z
+Generated at (UTC): 2025-12-11T02:56:59.512258Z
 
 Base Early Warning Level: UNKNOWN
 Base Early Warning Score: 0.0/100

@@ -1,6 +1,6 @@
 {
   "product_type": "Sensor Outage Predictor",
-  "generated_at": "2025-12-10T16:00:44.119922Z",
+  "generated_at": "2025-12-11T02:57:29.885958Z",
   "posture": "STABLE",
   "sensors": {
     "optical": {

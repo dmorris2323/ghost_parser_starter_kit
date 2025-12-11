@@ -1,0 +1,24 @@
+GLL Pre-Launch Signals Analysis
+================================
+Generated at (UTC): 2025-12-11T02:51:23.729916Z
+
+Sensor Concurrence Score: 20.0/100
+EMS Spike Score: 20.0/100
+Latency Risk Score: 30.0/100
+Pattern Anomaly Score: 20.0/100
+
+Composite Pre-Launch Signal Pressure: 22.0/100
+
+Inputs Present:
+  - golden_dome_daily_watch_json: OK
+  - sensor_latency_report_json: MISSING
+  - run_history_intel_json: MISSING
+  - adversary_pattern_memory_json: MISSING
+
+Rationale:
+  - No structured 'sensor_status' map; assuming low concurrence.
+  - No visible sensor inventory; defaulting concurrence to 20/100.
+  - No latency report JSON; applying conservative baseline risk.
+  - No run_history_intel.json; EMS spike set to low default.
+  - No adversary_pattern_memory.json; pattern anomaly minimal by default.
+  - Composite pre-launch signal pressure computed as a blend of EMS spikes, adversary anomalies, latency risk, and sensor concurrence; final pressure: 22.0/100.
