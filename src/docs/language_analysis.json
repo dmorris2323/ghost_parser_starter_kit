@@ -1,0 +1,41 @@
+{
+  "title": "Ghost Lantern Labs \u2013 Language Interpreter Analysis (Module 1)",
+  "language": "Russian",
+  "domain": "general_fusion",
+  "source_note": "threat report",
+  "foreign_text": "\u9019\u5c31\u662f\u4e2d\u570b\u4eba\u6c11\u89e3\u653e\u8ecd\u3002\u9019\u5c31\u662f\u6838\u653b\u64ca\u7684\u6a23\u5b50\u3002\n\n\u042d\u0442\u043e \u0440\u043e\u0441\u0441\u0438\u0439\u0441\u043a\u0438\u0435 \u0432\u043e\u0435\u043d\u043d\u044b\u0435. \u0412\u043e\u0442 \u043a\u0430\u043a \u0432\u044b\u0433\u043b\u044f\u0434\u0438\u0442 \u044f\u0434\u0435\u0440\u043d\u0430\u044f \u0430\u0442\u0430\u043a\u0430.",
+  "agent_perspectives": {
+    "Lumen": {
+      "role": "clarity_and_plain_english",
+      "notes": ""
+    },
+    "Denae": {
+      "role": "adversary_cognition_and_intent",
+      "notes": ""
+    },
+    "Valdez": {
+      "role": "cyber_offense_defense_implications",
+      "notes": ""
+    },
+    "Obasi": {
+      "role": "ISR_and_early_warning_implications",
+      "notes": ""
+    },
+    "Shari": {
+      "role": "legal_policy_and_rules_of_engagement",
+      "notes": ""
+    },
+    "Author": {
+      "role": "briefing_narrative_and_communication",
+      "notes": ""
+    }
+  },
+  "suggested_analytic_questions": [
+    "What is the core message or claim in this text?",
+    "What indicators of intent, capability, or posture are present?",
+    "What assumptions or biases might be embedded in this source?",
+    "Is there any mention of timelines, locations, or units?",
+    "Does this support or contradict existing assessments in GLL?"
+  ],
+  "intended_use": "This artifact is meant to serve as a structured entry point for foreign-language text. Analysts (or AI agents in the future) can fill in the agent_perspectives fields and derive nuclear, cyber, ISR, and policy-relevant conclusions."
+}

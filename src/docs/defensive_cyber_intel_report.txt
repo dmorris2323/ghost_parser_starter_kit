@@ -1,6 +1,6 @@
 Ghost Lantern Labs – Defensive Cyber Intelligence Report
 =======================================================
-Generated at (UTC): 2025-12-11T04:20:15.807049Z
+Generated at (UTC): 2025-12-11T12:28:32.361896Z
 
 Overall Cyber Threat Score: 0.0 / 100
 Cyber Posture Level: GREEN

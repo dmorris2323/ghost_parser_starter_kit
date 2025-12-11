@@ -2142,3 +2142,32 @@ Day 67 – Self-Preservation Shield (SPS) – Module 1
 
 • Net effect:
   - GLL now has a formal “Self-Preservation Shield – Module 1” that proves we are thinking about sabotage, guardrails, and AI-safe development as first-class design concerns.
+Day 67 – Self-Preservation Shield (SPS) – Module 2: Mutation Watcher
+
+• Added sps_mutation_watcher.py:
+  - Walks the src/ tree and records all .py files with:
+      • relative path
+      • file size
+      • mtime
+      • sha256 hash
+  - On first run:
+      • Creates docs/sps_file_snapshot.json as the baseline snapshot.
+      • Writes docs/sps_mutation_report.json and .txt in BASELINE_CREATED mode.
+  - On subsequent runs:
+      • Compares current snapshot to previous baseline.
+      • Reports:
+          – new_files
+          – removed_files
+          – changed_files (size/hash differs)
+          – zero_byte_files
+          – critical_alerts for core modules (fusion, CLI, Golden Dome, base-defense, SPS modules).
+      • Writes docs/sps_mutation_report.json and .txt in DIFF mode.
+
+• Optional CLI integration:
+  - Added Option 49) SPS Mutation Watcher Report in ghost_cli.py.
+  - Running this option generates a fresh mutation report and prints the JSON/TXT paths.
+
+• Operational impact:
+  - GLL now has a file-level tamper/mutation awareness layer.
+  - Any unexpected changes to fusion, nuclear, base-defense, or SPS modules can be detected and reconciled with git history.
+  - This is a self-defense mechanism against accidental overwrites, bad copy–paste, or quiet sabotage.

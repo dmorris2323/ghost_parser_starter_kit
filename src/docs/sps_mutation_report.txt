@@ -1,0 +1,40 @@
+Ghost Lantern Labs – Self-Preservation Shield (SPS)
+Module 2 – Mutation Watcher Report
+========================================================================
+
+Repo root: /Users/dextermorris/ghost/parser_starter_kit
+Docs dir : /Users/dextermorris/ghost/parser_starter_kit/src/docs
+Mode     : DIFF
+Message  : Compared current snapshot to previous SPS baseline. Review changes carefully and reconcile with git history.
+Generated: 2025-12-11T12:41:50Z
+Files in current snapshot: 246
+
+1) Summary of Changes
+------------------------------
+New files       : 0
+Removed files   : 0
+Changed files   : 1
+Zero-byte files : 2
+
+Critical Alerts:
+  - CRITICAL: src/ghost_cli.py has changed since last snapshot.
+
+4) Changed Files (size or hash)
+----------------------------------
+  - src/ghost_cli.py
+
+5) Zero-Byte Files
+----------------------
+  - src/__init__.py
+  - src/cloud/__init__.py
+
+6) How to Use This Report
+------------------------------
+  - Treat unexpected changes, missing files, or zero-byte modules as red flags.
+  - Cross-check with git history to confirm whether changes were intentional.
+  - For critical alerts, restore from a known-good commit before running GLL.
+
+This report is suitable for:
+  - Internal self-preservation checks
+  - Tech School / training discussions about safe AI-assisted development
+  - AFWERX/SBIR demonstrations of GLL's tamper-awareness capabilities

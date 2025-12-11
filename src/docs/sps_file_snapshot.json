@@ -1,0 +1,1478 @@
+{
+  "src/generate_daily_visual_pack.py": {
+    "rel_path": "src/generate_daily_visual_pack.py",
+    "size_bytes": 4672,
+    "mtime": 1764554533.1249056,
+    "sha256": "953c513caa53de8b8433622072a1cc1655e0bceb6a6df8367fe8a0df73ba5b8c"
+  },
+  "src/joint_readiness_board.py": {
+    "rel_path": "src/joint_readiness_board.py",
+    "size_bytes": 12000,
+    "mtime": 1765421743.5746903,
+    "sha256": "cfeb2ac3649ca880dff1be9b4189bc2fdc67a7083d0a116147b4f9affb83e27d"
+  },
+  "src/attack_replay.py": {
+    "rel_path": "src/attack_replay.py",
+    "size_bytes": 594,
+    "mtime": 1764248561.125512,
+    "sha256": "2a168f8465e4dd75e446eae4b9194e22b0e9a779f0a5ed57226b9815e155ce6c"
+  },
+  "src/nuclear_drift_adjuster.py": {
+    "rel_path": "src/nuclear_drift_adjuster.py",
+    "size_bytes": 7719,
+    "mtime": 1765421012.0503788,
+    "sha256": "b7f26d4919174f81348f0e972b09ef44fa6f20740042d9a88d51d61601b8eb6f"
+  },
+  "src/anti_dos.py": {
+    "rel_path": "src/anti_dos.py",
+    "size_bytes": 3312,
+    "mtime": 1764235662.0372746,
+    "sha256": "1391b4c2e850219a76a0431587155e4223a299e69e989ff62ee15657cba55a51"
+  },
+  "src/defensive_cyber_intel_module.py": {
+    "rel_path": "src/defensive_cyber_intel_module.py",
+    "size_bytes": 14257,
+    "mtime": 1765426792.3880382,
+    "sha256": "ef902ab6c2995e8de54dd2941aadada7e210c26e470d75067b4d0c572ac11892"
+  },
+  "src/day61_sitrep_builder.py": {
+    "rel_path": "src/day61_sitrep_builder.py",
+    "size_bytes": 3781,
+    "mtime": 1764926976.2983463,
+    "sha256": "4f730b632e80769c11c68c0d74a2190d5e2aff749ae7eedd6544dbfecdf653bd"
+  },
+  "src/family_law_scoring.py": {
+    "rel_path": "src/family_law_scoring.py",
+    "size_bytes": 1652,
+    "mtime": 1764554386.5478323,
+    "sha256": "3d6d0b0b150753f2da8a773a880bdbd57b2741a0b30836a21c4487c06d7c7a71"
+  },
+  "src/cyber_resilience_summary.py": {
+    "rel_path": "src/cyber_resilience_summary.py",
+    "size_bytes": 6200,
+    "mtime": 1765452877.5303862,
+    "sha256": "3955183d25deb29f7db4ad995a0b4a0a39afc10826d9e97f7323c483a5db8652"
+  },
+  "src/sensor_normalizer.py": {
+    "rel_path": "src/sensor_normalizer.py",
+    "size_bytes": 3088,
+    "mtime": 1764634894.092692,
+    "sha256": "c069ed8c3e010dfa3651cb9764bd0290dcdfa9e3a272239067a8131ecaa567c4"
+  },
+  "src/threat_level_classifier.py": {
+    "rel_path": "src/threat_level_classifier.py",
+    "size_bytes": 3266,
+    "mtime": 1764637983.1843884,
+    "sha256": "dd72a57b0f7c0edf4429cfa51800f6171b45b807637421fd7005bfcb22913177"
+  },
+  "src/operator_snapshot.py": {
+    "rel_path": "src/operator_snapshot.py",
+    "size_bytes": 3337,
+    "mtime": 1764387144.5858018,
+    "sha256": "6dcebe4fb49ff31ce466f45d8b772988ac64478be1a0b4aaa8b7d0ec8246ab20"
+  },
+  "src/sensor_heath.py": {
+    "rel_path": "src/sensor_heath.py",
+    "size_bytes": 2898,
+    "mtime": 1764634120.312056,
+    "sha256": "953afe6ca5ffe02d489c4e12ffa2389733eb5d9009df1e9c5308a223e266ee0a"
+  },
+  "src/operator_career_readiness_day61.py": {
+    "rel_path": "src/operator_career_readiness_day61.py",
+    "size_bytes": 11311,
+    "mtime": 1764928515.3461368,
+    "sha256": "30bbbda1b9aa3eb6e77f30b0cbc250e9d4140b2c6c930a2662d017c88b199d9d"
+  },
+  "src/spectral_snapshot_bundle.py": {
+    "rel_path": "src/spectral_snapshot_bundle.py",
+    "size_bytes": 2629,
+    "mtime": 1764733229.299379,
+    "sha256": "d43ef1370972832d8ef02768794f3ce3abce69c656cd61d51b5862d2966071d5"
+  },
+  "src/golden_dome_drift.py": {
+    "rel_path": "src/golden_dome_drift.py",
+    "size_bytes": 1330,
+    "mtime": 1765072472.8532546,
+    "sha256": "07dd2ea71e2ad6f95e40608d4a1e4513b30e72539b897dbf8c9cf0e0094063a9"
+  },
+  "src/crisis_mode_flag.py": {
+    "rel_path": "src/crisis_mode_flag.py",
+    "size_bytes": 709,
+    "mtime": 1765075685.1340635,
+    "sha256": "95f05fb35d9f9865c67715491d9acef82183be0c79e673b3cf4914f3126ee0e4"
+  },
+  "src/demo_gui_pack.py": {
+    "rel_path": "src/demo_gui_pack.py",
+    "size_bytes": 2014,
+    "mtime": 1764683525.8404245,
+    "sha256": "3f5ab0cafe350331a944ce470258f7e42fa13ba046f1dfc4bb74650afdc8ed71"
+  },
+  "src/legal_demo_pack.py": {
+    "rel_path": "src/legal_demo_pack.py",
+    "size_bytes": 3115,
+    "mtime": 1764554878.7973933,
+    "sha256": "8b42f0d7b8c13394b347fbc21771eb8dc93591065bd848fd6da4ee9f504ca4a6"
+  },
+  "src/build_fused_output.py": {
+    "rel_path": "src/build_fused_output.py",
+    "size_bytes": 1633,
+    "mtime": 1763803427.8280458,
+    "sha256": "7bd3d187cd3402e21b4fcaec03eb118405a74316d5e6a6dfa821948473f8b396"
+  },
+  "src/llm_phase2_adapter.py": {
+    "rel_path": "src/llm_phase2_adapter.py",
+    "size_bytes": 5416,
+    "mtime": 1764847492.4176388,
+    "sha256": "45077821a73d3724f233c55035eef85d2419a5321a5b7b04f3b682157b083e0b"
+  },
+  "src/bad_data_heatmap_prep.py": {
+    "rel_path": "src/bad_data_heatmap_prep.py",
+    "size_bytes": 1610,
+    "mtime": 1764233673.4464488,
+    "sha256": "03320eee29412ea67a5afa7ccea5071793e563a1241d54c2137b87d822be1cb9"
+  },
+  "src/nuclear_brief_packet.py": {
+    "rel_path": "src/nuclear_brief_packet.py",
+    "size_bytes": 5360,
+    "mtime": 1765365135.3889828,
+    "sha256": "20898a9e41a128f7e20304bd0cf3e93f5059e931d1b2b4c27f8fd5e8dafab49f"
+  },
+  "src/system_status_dashboard_txt.py": {
+    "rel_path": "src/system_status_dashboard_txt.py",
+    "size_bytes": 5373,
+    "mtime": 1764699981.3353345,
+    "sha256": "63a4e780ed0a967bfb9f97067c00ad52385f4b5d64d6c38a8d0e12260f2fdb75"
+  },
+  "src/conference_pitch_cards.py": {
+    "rel_path": "src/conference_pitch_cards.py",
+    "size_bytes": 7799,
+    "mtime": 1764781910.9731855,
+    "sha256": "310bd3be71f569ed0a0c68552abc057c52024fa6cb99766fa15d60639013a18f"
+  },
+  "src/fusion_calibration.py": {
+    "rel_path": "src/fusion_calibration.py",
+    "size_bytes": 648,
+    "mtime": 1761832293.491252,
+    "sha256": "de4a9db15c60c2fcda9f64dfc53b562735dd5f41b5c6fddb78515b3a03c81ada"
+  },
+  "src/escalation_ladder.py": {
+    "rel_path": "src/escalation_ladder.py",
+    "size_bytes": 7325,
+    "mtime": 1765365105.8282084,
+    "sha256": "4bf42ea8d6714b7f29af5e5d2ce7ff016eb82d26b975a54e89a4eb7dc5e9c153"
+  },
+  "src/threat_memory_doctrine_report.py": {
+    "rel_path": "src/threat_memory_doctrine_report.py",
+    "size_bytes": 1603,
+    "mtime": 1764580090.3516216,
+    "sha256": "9318427cfc8da941eb4b85975f1edf75339c00b7a9ac14026815e4a431421d2c"
+  },
+  "src/legal_ingest_family_law.py": {
+    "rel_path": "src/legal_ingest_family_law.py",
+    "size_bytes": 1751,
+    "mtime": 1764554356.0677252,
+    "sha256": "03d1da3e18eaa9841bdc313ce4497a3cb15954f42ecb89d1f57a1a6172858275"
+  },
+  "src/golden_dome_brief_pack.py": {
+    "rel_path": "src/golden_dome_brief_pack.py",
+    "size_bytes": 2094,
+    "mtime": 1765384560.3746567,
+    "sha256": "ffc512eba0d45e93ccc7e11131be9bb61e73dd4b9e6b022386768c1a92754854"
+  },
+  "src/operator_identity.py": {
+    "rel_path": "src/operator_identity.py",
+    "size_bytes": 672,
+    "mtime": 1765075704.242772,
+    "sha256": "007b94326944e2f3cd8a77ff45bfca240949aa2826367fd501197ae681a3beef"
+  },
+  "src/daily_report.py": {
+    "rel_path": "src/daily_report.py",
+    "size_bytes": 3796,
+    "mtime": 1763550469.8245494,
+    "sha256": "a835af5863e0371ce95cfc762637e7965e6826e8c60ac7071c2fd609470f8f3d"
+  },
+  "src/career_income_ladder_doc.py": {
+    "rel_path": "src/career_income_ladder_doc.py",
+    "size_bytes": 8148,
+    "mtime": 1764781953.4224029,
+    "sha256": "946dcee5be7ccdb1188eaf61fca5be84036df0270e8cea71eec6207f82650a93"
+  },
+  "src/stress_tester.py": {
+    "rel_path": "src/stress_tester.py",
+    "size_bytes": 3373,
+    "mtime": 1764407119.5235934,
+    "sha256": "0c9d37256c123249c7fbe524fe170f723a05f585507d6f2ddc5562c188ee9f5b"
+  },
+  "src/commercial_readiness_brief.py": {
+    "rel_path": "src/commercial_readiness_brief.py",
+    "size_bytes": 11377,
+    "mtime": 1764779569.3303921,
+    "sha256": "e14f890cb29c4d1aa19c8027bf81754965064bf1264eb265244115d915cb865a"
+  },
+  "src/normalize_all_sensors.py": {
+    "rel_path": "src/normalize_all_sensors.py",
+    "size_bytes": 1072,
+    "mtime": 1764634931.1079757,
+    "sha256": "60c54e06cae6f7a70b9518fd7af448f9999ba401fc4c7218943df712729e83ab"
+  },
+  "src/uta_commander_readout_day61.py": {
+    "rel_path": "src/uta_commander_readout_day61.py",
+    "size_bytes": 4611,
+    "mtime": 1764927581.3834028,
+    "sha256": "6b4206dd950b45bc76a60b977afc07efcd9258ad8e403c67e749a91f4c577916"
+  },
+  "src/base_defense_storyboard.py": {
+    "rel_path": "src/base_defense_storyboard.py",
+    "size_bytes": 4633,
+    "mtime": 1765382516.6044633,
+    "sha256": "3a87d4d0572d757d297cc54a03d45220d44f255fec6c4d39fda2c20f8ca61dc8"
+  },
+  "src/operator_training_log.py": {
+    "rel_path": "src/operator_training_log.py",
+    "size_bytes": 2375,
+    "mtime": 1765076478.5547595,
+    "sha256": "99d8cd83ea975aaa4c62e95b05e8bdbdcfe2ce3f67d145d121d324328faacef2"
+  },
+  "src/joint_readiness_scorecard.py": {
+    "rel_path": "src/joint_readiness_scorecard.py",
+    "size_bytes": 5216,
+    "mtime": 1765421769.6968246,
+    "sha256": "ce48bd30868bda77225f094ba5e43bc96ee4728c47946467f15baff97c233e9e"
+  },
+  "src/threat_memory_stats.py": {
+    "rel_path": "src/threat_memory_stats.py",
+    "size_bytes": 1342,
+    "mtime": 1764554442.5569785,
+    "sha256": "4a1571868646a51fff0b7551e55fd7eb885ef432aeb02ad109a8af1b65f36654"
+  },
+  "src/prelaunch_signals_analyzer.py": {
+    "rel_path": "src/prelaunch_signals_analyzer.py",
+    "size_bytes": 13522,
+    "mtime": 1765421434.7417061,
+    "sha256": "5cbb8a4fe41d34e7e264e9b694ea64c2159adb7c566a2281711ff2d8f3b3debb"
+  },
+  "src/sbir_outline_export.py": {
+    "rel_path": "src/sbir_outline_export.py",
+    "size_bytes": 10245,
+    "mtime": 1764762270.2163796,
+    "sha256": "b2d4121c512ea629a93c79fff6bd8e1e1d8ccba42671d52b964c779b68698cb4"
+  },
+  "src/analyst_notes.py": {
+    "rel_path": "src/analyst_notes.py",
+    "size_bytes": 5161,
+    "mtime": 1764638538.6837347,
+    "sha256": "3d982490b43f884c9e8b9003a1dd1bb6891c5f8915c1134286f3f09e28076638"
+  },
+  "src/strategic_readiness_index.py": {
+    "rel_path": "src/strategic_readiness_index.py",
+    "size_bytes": 4588,
+    "mtime": 1765384646.4455402,
+    "sha256": "b58a19637b8f581f0a8a7b18e4981517605c592362d490178be7bdc4ed952868"
+  },
+  "src/run_history_intel.py": {
+    "rel_path": "src/run_history_intel.py",
+    "size_bytes": 6127,
+    "mtime": 1764733026.6655986,
+    "sha256": "67c42235cd02ac35dec60cea2d3501112b666379a4553aa3d4d461268d4372cb"
+  },
+  "src/sum_of_all_fears_sim.py": {
+    "rel_path": "src/sum_of_all_fears_sim.py",
+    "size_bytes": 818,
+    "mtime": 1762528801.8530035,
+    "sha256": "f8e3aab0dd58b32867734564eee30768948a4d91a81f568ee60cf0a6db4c7cfc"
+  },
+  "src/nuclear_decision_card.py": {
+    "rel_path": "src/nuclear_decision_card.py",
+    "size_bytes": 5030,
+    "mtime": 1765383736.134288,
+    "sha256": "15f67841e45260b7f5bbfffc318880675ad27cf1e255f5b008c41c2f24bbb28a"
+  },
+  "src/profile_status.py": {
+    "rel_path": "src/profile_status.py",
+    "size_bytes": 1174,
+    "mtime": 1764554294.2984695,
+    "sha256": "5463b6cfcae39b4aa66ecad7c4732bab623fdf74606190455d6cdfb9abb7ab69"
+  },
+  "src/gll_scoreboard.py": {
+    "rel_path": "src/gll_scoreboard.py",
+    "size_bytes": 4244,
+    "mtime": 1765283131.5804303,
+    "sha256": "be231b1488fa67dbe852cc67ca9dda1f3bb9d94fa2f118426d232d4d05315213"
+  },
+  "src/gll_profile.py": {
+    "rel_path": "src/gll_profile.py",
+    "size_bytes": 1377,
+    "mtime": 1764554239.8072417,
+    "sha256": "0c918298a9e36d5e7424cb032308eeb797a93ced5a7bd48758429e87f8c24775"
+  },
+  "src/base_defense_bundle.py": {
+    "rel_path": "src/base_defense_bundle.py",
+    "size_bytes": 2052,
+    "mtime": 1765382294.5308118,
+    "sha256": "8fa58b0c18cc5ec334ae11e968268d59616021c156131c8990472f1307053b9d"
+  },
+  "src/base_defense_hotspots.py": {
+    "rel_path": "src/base_defense_hotspots.py",
+    "size_bytes": 5107,
+    "mtime": 1765384578.963682,
+    "sha256": "0b477d3ded48df539d4ad7cfb91473e2c5af94a92b48623f3867175dd8eddc12"
+  },
+  "src/qa_validator.py": {
+    "rel_path": "src/qa_validator.py",
+    "size_bytes": 4013,
+    "mtime": 1764321684.993159,
+    "sha256": "dca5b19089f168744ddfd958a1b042a65640259cd06e80b21ac6f7b64c5b86a5"
+  },
+  "src/sensor_concurrence_matrix.py": {
+    "rel_path": "src/sensor_concurrence_matrix.py",
+    "size_bytes": 6108,
+    "mtime": 1765421072.1058567,
+    "sha256": "d8f3d6c0c9851d665ac6f19a01ff9e1b6ad31d03fd6586ca6dcb68de38e32f71"
+  },
+  "src/sbir_onepager.py": {
+    "rel_path": "src/sbir_onepager.py",
+    "size_bytes": 6224,
+    "mtime": 1764779756.699778,
+    "sha256": "5ae84e4291b7e25b9df89f7ebbc80983dbeb15cab90088678b131ebf856ff8ae"
+  },
+  "src/threat_timeline_brief.py": {
+    "rel_path": "src/threat_timeline_brief.py",
+    "size_bytes": 2158,
+    "mtime": 1764638037.8130054,
+    "sha256": "46bc5b96dabf40bb0a922fa42a42c927b2adb155e408341dd42db7f9d6b13857"
+  },
+  "src/sensor_drift_predictor.py": {
+    "rel_path": "src/sensor_drift_predictor.py",
+    "size_bytes": 4367,
+    "mtime": 1764840644.3386378,
+    "sha256": "ef04bbe0749efb8fdf02f7054f1f89ffcf5d2529259d09c82fa4726315e8f354"
+  },
+  "src/sensor_profile_loader.py": {
+    "rel_path": "src/sensor_profile_loader.py",
+    "size_bytes": 1344,
+    "mtime": 1764674364.4944499,
+    "sha256": "cc7ff16a587ea6a3e53e7ab2ea52967e50fa84671fe9544478721d89a12d40c5"
+  },
+  "src/gll_training_session_logger.py": {
+    "rel_path": "src/gll_training_session_logger.py",
+    "size_bytes": 8539,
+    "mtime": 1765446934.0213106,
+    "sha256": "7a91d24c19842270ed5dbacab2b98d50e40dfaec376e3fb6a175b9c8c52c4750"
+  },
+  "src/manifest_health.py": {
+    "rel_path": "src/manifest_health.py",
+    "size_bytes": 450,
+    "mtime": 1764672619.4937115,
+    "sha256": "9aa17d95987440c7875b68a75d333117e1498bec0721421775d272307818182a"
+  },
+  "src/fusion_sanitizer.py": {
+    "rel_path": "src/fusion_sanitizer.py",
+    "size_bytes": 2489,
+    "mtime": 1764155091.0664892,
+    "sha256": "fa7fba53f700637b4ac9576c65b59752e6c425fc8bdc1c79d58de804bbe041e2"
+  },
+  "src/demo_deck_manifest.py": {
+    "rel_path": "src/demo_deck_manifest.py",
+    "size_bytes": 3689,
+    "mtime": 1764734207.6980119,
+    "sha256": "5e67763825341091ee37a1a0143c7ebce73a30b4bd7a3675ce5dc40f2d182094"
+  },
+  "src/golden_dome_snapshot.py": {
+    "rel_path": "src/golden_dome_snapshot.py",
+    "size_bytes": 780,
+    "mtime": 1765196895.2070696,
+    "sha256": "e284b447aac2d93f68f9367a926beba50c64be477c119db95c78ce88e547b10c"
+  },
+  "src/golden_dome_history.py": {
+    "rel_path": "src/golden_dome_history.py",
+    "size_bytes": 3125,
+    "mtime": 1765076460.7905827,
+    "sha256": "fd914d71c137fc79de0f095982054f556caf682730041a00805f4735d4570ef3"
+  },
+  "src/validators.py": {
+    "rel_path": "src/validators.py",
+    "size_bytes": 5077,
+    "mtime": 1763716434.7099357,
+    "sha256": "af3310101dcb91df59ee22bec029664021d3f6a3a157cae98f0a0bdbe00cd759"
+  },
+  "src/system_metrics_rollup.py": {
+    "rel_path": "src/system_metrics_rollup.py",
+    "size_bytes": 4678,
+    "mtime": 1764408992.064284,
+    "sha256": "8481f841d7fd12821b6454a81f509d4e5dccbf7c68024d0f72c2e8be68bd3cf0"
+  },
+  "src/gll_training_mode_brief.py": {
+    "rel_path": "src/gll_training_mode_brief.py",
+    "size_bytes": 12745,
+    "mtime": 1765446669.4109738,
+    "sha256": "7517dfc217b41995d5014f82844eb63c8781783a8f01ba880a0a3a3648c323f9"
+  },
+  "src/sensor_run_history.py": {
+    "rel_path": "src/sensor_run_history.py",
+    "size_bytes": 3179,
+    "mtime": 1764635115.7583442,
+    "sha256": "0340637fcaeca843c5ea428505e7900644754d1f1629e053f8cf0a856cd1bf57"
+  },
+  "src/llm_provider_pool.py": {
+    "rel_path": "src/llm_provider_pool.py",
+    "size_bytes": 3161,
+    "mtime": 1764597895.8462884,
+    "sha256": "512cffbcbb3fa462bfa422bc96d3fb665d8cc7f94a475fc2e89f3cb00a516269"
+  },
+  "src/notes_cli.py": {
+    "rel_path": "src/notes_cli.py",
+    "size_bytes": 892,
+    "mtime": 1764599511.7891438,
+    "sha256": "12be57cc4d9c757bac88345c0ef02f33ba87a97164702a9f000af87eeb9ba1ca"
+  },
+  "src/audience_pitch_pack.py": {
+    "rel_path": "src/audience_pitch_pack.py",
+    "size_bytes": 6110,
+    "mtime": 1764781604.6923728,
+    "sha256": "c2236d2d4f79127b2bff4a94788d2dacbe940492631b10f6fbd64058755c2bd8"
+  },
+  "src/fusion_scoring.py": {
+    "rel_path": "src/fusion_scoring.py",
+    "size_bytes": 2966,
+    "mtime": 1764149707.1111255,
+    "sha256": "6ce5fc198ca9cc2877babf0e2f4cb0baf34de354ff60b37ec9284600b50a0a03"
+  },
+  "src/nuclear_status_summary.py": {
+    "rel_path": "src/nuclear_status_summary.py",
+    "size_bytes": 8451,
+    "mtime": 1765365076.5757587,
+    "sha256": "c3a867a99bae2d86605ce0c1a3e70aa107b2b48efb49716352c46a0bc8b9be3d"
+  },
+  "src/day62_ops_cli.py": {
+    "rel_path": "src/day62_ops_cli.py",
+    "size_bytes": 3265,
+    "mtime": 1765072540.0535657,
+    "sha256": "1c4f8e0c243c8381d5f74f1b2884c218968906bb3a30ab54e107fb6ff1b350ab"
+  },
+  "src/sps_mutation_watcher.py": {
+    "rel_path": "src/sps_mutation_watcher.py",
+    "size_bytes": 11185,
+    "mtime": 1765456774.5684757,
+    "sha256": "dead89ba1aa862cc25d2207dc1b47f3e98d216e3bcede16863001518ae94e04d"
+  },
+  "src/baseline_drift_check.py": {
+    "rel_path": "src/baseline_drift_check.py",
+    "size_bytes": 2018,
+    "mtime": 1764554480.036797,
+    "sha256": "f2f22da303aba63d9c0308fff7499a8596ca6f9029c923316dbb28a1a2fd997d"
+  },
+  "src/anti_dos_guard.py": {
+    "rel_path": "src/anti_dos_guard.py",
+    "size_bytes": 8735,
+    "mtime": 1765452816.6923976,
+    "sha256": "4062b84deccb42ba096001d15823b45032ccbb473f07615acba9b972e1401241"
+  },
+  "src/bad_data_heatmap.py": {
+    "rel_path": "src/bad_data_heatmap.py",
+    "size_bytes": 1656,
+    "mtime": 1764155349.079681,
+    "sha256": "782ba68437cf2c1e81c501210dee751df025256959034c9f60f46926b2169575"
+  },
+  "src/investor_packet_builder.py": {
+    "rel_path": "src/investor_packet_builder.py",
+    "size_bytes": 5583,
+    "mtime": 1764781164.742821,
+    "sha256": "45eaf2c5005f84d569be09869a3e08690ca75ac9a1df55dfcf61661833de7aad"
+  },
+  "src/scenario_pack_builder.py": {
+    "rel_path": "src/scenario_pack_builder.py",
+    "size_bytes": 3455,
+    "mtime": 1765187973.5709078,
+    "sha256": "f1833d4ca7f4548074b846c72cccffdac56ec1268676fa4a454fe053ced659f4"
+  },
+  "src/run_history_trend_plot.py": {
+    "rel_path": "src/run_history_trend_plot.py",
+    "size_bytes": 1953,
+    "mtime": 1764579569.3452182,
+    "sha256": "bd1e3db86d4ffbf247fa8610017d1a0274db32bc14ecb886596cff036992318d"
+  },
+  "src/demo_day55_builder.py": {
+    "rel_path": "src/demo_day55_builder.py",
+    "size_bytes": 5995,
+    "mtime": 1764407764.9097753,
+    "sha256": "b85a9f4068d10402b3842c1dd67f2660844a596754f9258ef5893a23f9ee3d75"
+  },
+  "src/sensor_outage_predictor.py": {
+    "rel_path": "src/sensor_outage_predictor.py",
+    "size_bytes": 3556,
+    "mtime": 1765381704.8871121,
+    "sha256": "69dc32f8a5037e2283b34a496ff5eb7e4784aacadc0a83635fd5193796b5dfec"
+  },
+  "src/notes_merge_doc_notes.py": {
+    "rel_path": "src/notes_merge_doc_notes.py",
+    "size_bytes": 1689,
+    "mtime": 1764581933.9028776,
+    "sha256": "4642fedc1e8ed91513ff6c5a5db089ea15d7218fca37b11e8b8155635e06b789"
+  },
+  "src/sbir_export_bundle.py": {
+    "rel_path": "src/sbir_export_bundle.py",
+    "size_bytes": 6241,
+    "mtime": 1765188211.5325935,
+    "sha256": "d1506f394c730ecf2159654b7f758c4c510b229810f9c75af7cb84d55524d345"
+  },
+  "src/__init__.py": {
+    "rel_path": "src/__init__.py",
+    "size_bytes": 0,
+    "mtime": 1764321368.968108,
+    "sha256": ""
+  },
+  "src/simulate_bad_quarantine.py": {
+    "rel_path": "src/simulate_bad_quarantine.py",
+    "size_bytes": 2235,
+    "mtime": 1764247673.2425323,
+    "sha256": "ac02986963313e62914040bfcdaeb039560af60fb64eb238077be4f75dd40a7f"
+  },
+  "src/ems_sensor_mock.py": {
+    "rel_path": "src/ems_sensor_mock.py",
+    "size_bytes": 2466,
+    "mtime": 1764634644.1514344,
+    "sha256": "6ec29c3b90c9c649628e4f59f19c070b2bee0689120c19a7d5e2a4ee26fa81f0"
+  },
+  "src/spectral_snapshot_export.py": {
+    "rel_path": "src/spectral_snapshot_export.py",
+    "size_bytes": 4462,
+    "mtime": 1764844387.8351076,
+    "sha256": "1f590d0a90ff3ab280938bd74ebdf0f6232137c9805ad63909412ed874cf6e34"
+  },
+  "src/gll_readiness.py": {
+    "rel_path": "src/gll_readiness.py",
+    "size_bytes": 4126,
+    "mtime": 1765278299.8112726,
+    "sha256": "fc927b2570bb22bca28c04a55d7a5207fa0eaa0fd5a01855557d037716700031"
+  },
+  "src/golden_dome_sbir_note.py": {
+    "rel_path": "src/golden_dome_sbir_note.py",
+    "size_bytes": 3840,
+    "mtime": 1764927533.6190104,
+    "sha256": "d6196dfde9c5286729bf95d1529563e1fc2659148a08f46361200c50fa86055a"
+  },
+  "src/joint_risk_register.py": {
+    "rel_path": "src/joint_risk_register.py",
+    "size_bytes": 7619,
+    "mtime": 1765421799.7686808,
+    "sha256": "6c50b36792b37bdf92f735bb6090101168c354738588791903c9191cb7659979"
+  },
+  "src/war_room_html_pack.py": {
+    "rel_path": "src/war_room_html_pack.py",
+    "size_bytes": 3671,
+    "mtime": 1765378146.6238353,
+    "sha256": "82a8d2b0725014e256131f1ea66ebec1ec062ce20420244153c5dc148fb0030d"
+  },
+  "src/nuclear_early_warning_summary.py": {
+    "rel_path": "src/nuclear_early_warning_summary.py",
+    "size_bytes": 8501,
+    "mtime": 1765421105.6759913,
+    "sha256": "eee8b31ea63c763c08d264e5d49263bc079fc13b00946284c82603fa1b073e23"
+  },
+  "src/spectral_fallback_tree.py": {
+    "rel_path": "src/spectral_fallback_tree.py",
+    "size_bytes": 1281,
+    "mtime": 1765075663.5480897,
+    "sha256": "1e00e7053722e19b6b3e3021200caef3f1bd01c1f1022baab0f624ee60f89b8b"
+  },
+  "src/operator_training_summary.py": {
+    "rel_path": "src/operator_training_summary.py",
+    "size_bytes": 2818,
+    "mtime": 1765077152.8330479,
+    "sha256": "98197f0e7236f6f60e245df5cceb66c0c7af503070a58ebd7fa87b086340d1af"
+  },
+  "src/strategic_readiness_brief.py": {
+    "rel_path": "src/strategic_readiness_brief.py",
+    "size_bytes": 2678,
+    "mtime": 1764842869.7559159,
+    "sha256": "d1349c5a4ae7bdc8958fb2b3816e33e991583f7c966ed5498b34c555a519716f"
+  },
+  "src/anti_dos_metrics.py": {
+    "rel_path": "src/anti_dos_metrics.py",
+    "size_bytes": 459,
+    "mtime": 1764233245.504103,
+    "sha256": "163cb409fe30dfb229bc44146ea28fb0f2fc813e495e418b1ed65dbcb3c5c8e7"
+  },
+  "src/sensor_mapping.py": {
+    "rel_path": "src/sensor_mapping.py",
+    "size_bytes": 1052,
+    "mtime": 1764634912.090295,
+    "sha256": "e4873aaef9a00b400332de0e2ecca1b6c4c6ce81bab8f21a3380ea338f230ff4"
+  },
+  "src/readiness_score.py": {
+    "rel_path": "src/readiness_score.py",
+    "size_bytes": 2566,
+    "mtime": 1765076514.719799,
+    "sha256": "692c62aa079017031d227559853142e9c393d124cc55cd269d7df90e9c96f4ab"
+  },
+  "src/edge_case_simulator.py": {
+    "rel_path": "src/edge_case_simulator.py",
+    "size_bytes": 1293,
+    "mtime": 1763549612.9535997,
+    "sha256": "688cb8e5b7986ff1def26340dd607ca19cc29f9ce20c97a642c3f943b5d76f80"
+  },
+  "src/llm_phase_probe.py": {
+    "rel_path": "src/llm_phase_probe.py",
+    "size_bytes": 1166,
+    "mtime": 1764597994.4686189,
+    "sha256": "429679d5564df01f8cb28ea085dcf868a0704e1712fa0fbd9785c37bc25b78c4"
+  },
+  "src/mission_brief_html.py": {
+    "rel_path": "src/mission_brief_html.py",
+    "size_bytes": 2603,
+    "mtime": 1765332428.4664402,
+    "sha256": "03d0d554eea9c624fc247e445d0725d7dd7d44854dd3bcabc08fedc4739711f2"
+  },
+  "src/sensor_outlier.py": {
+    "rel_path": "src/sensor_outlier.py",
+    "size_bytes": 1427,
+    "mtime": 1765096894.267429,
+    "sha256": "8ee00ac9b444d25c8cb035a2043a9032fe88e2dd95b6965f79402e7d7d32298b"
+  },
+  "src/seismic_sensor_mock.py": {
+    "rel_path": "src/seismic_sensor_mock.py",
+    "size_bytes": 2249,
+    "mtime": 1764634620.1813192,
+    "sha256": "06d07e45adc5159ee291806bdf34bff3b8e0d2e5dd1eec907655c220cc5430c8"
+  },
+  "src/resilience_badge_export.py": {
+    "rel_path": "src/resilience_badge_export.py",
+    "size_bytes": 778,
+    "mtime": 1764774144.8899515,
+    "sha256": "3db7bde1f24de0bbdac36ebbe3f2a83affc15e0b98d0bc0e7f97463471cbb466"
+  },
+  "src/uta_battle_rhythm_log.py": {
+    "rel_path": "src/uta_battle_rhythm_log.py",
+    "size_bytes": 1268,
+    "mtime": 1764842912.7467675,
+    "sha256": "e12406c87879e25b5bb9b35e4caa9933aa7aaaf3589e8a053d015fe0cb81c63a"
+  },
+  "src/fusion_ingest.py": {
+    "rel_path": "src/fusion_ingest.py",
+    "size_bytes": 3003,
+    "mtime": 1764674685.7605522,
+    "sha256": "8b59e4d3ca75ce47a47304400298d574200df891c4e5d101447835cd112d7613"
+  },
+  "src/sensor_reliability.py": {
+    "rel_path": "src/sensor_reliability.py",
+    "size_bytes": 5958,
+    "mtime": 1764926900.3556144,
+    "sha256": "2f003d2e49132bcb8423c149d0ca661c9e402116061737ce830906e6524be42c"
+  },
+  "src/mission_briefing.py": {
+    "rel_path": "src/mission_briefing.py",
+    "size_bytes": 2978,
+    "mtime": 1764675727.4663281,
+    "sha256": "1fa01c80857e91c370c45180f7135fc72246c4820c2c83c51e6a55aea199dc6e"
+  },
+  "src/sbir_pitch_bundle.py": {
+    "rel_path": "src/sbir_pitch_bundle.py",
+    "size_bytes": 7527,
+    "mtime": 1764779106.5153964,
+    "sha256": "8748318895d0b79fa4c2c8e71460530b82249a974d7410707c8341afd610910d"
+  },
+  "src/fusion_aoi.py": {
+    "rel_path": "src/fusion_aoi.py",
+    "size_bytes": 845,
+    "mtime": 1762248426.7223527,
+    "sha256": "e42a78b7a36ea65e2e3f8137cbb17b710d29954a5f7b5e36e56c4b76e1f2d647"
+  },
+  "src/telemetry_fusion_check.py": {
+    "rel_path": "src/telemetry_fusion_check.py",
+    "size_bytes": 1481,
+    "mtime": 1762353172.273775,
+    "sha256": "97541a3c5c8dcfead64c6dbba8e6e18a3130c2db5ab73a6fad64f5bd5ca63a77"
+  },
+  "src/heatmap_prep.py": {
+    "rel_path": "src/heatmap_prep.py",
+    "size_bytes": 2320,
+    "mtime": 1763715897.3721387,
+    "sha256": "ed3ef350e1e39caeed24973b42bd31000007905e5277c7c62bdd9cfc981c155d"
+  },
+  "src/sbir_readiness_assessor.py": {
+    "rel_path": "src/sbir_readiness_assessor.py",
+    "size_bytes": 9081,
+    "mtime": 1764781124.0747201,
+    "sha256": "549e59ef317721917bd923a5bf67e0c121a4ca2ad67928e1877822627e673de0"
+  },
+  "src/corruptor.py": {
+    "rel_path": "src/corruptor.py",
+    "size_bytes": 715,
+    "mtime": 1764069171.4387007,
+    "sha256": "28b0d54b49f977620245dba021eeb0f55316b8bc2d64230c1cc5eb5d00a17b75"
+  },
+  "src/daly_mission_brief.py": {
+    "rel_path": "src/daly_mission_brief.py",
+    "size_bytes": 1644,
+    "mtime": 1764674982.1535668,
+    "sha256": "bcd9b9d3e479cc10ab14a5c09f5d47537c7d6139172952af8d1d0ea4e6693a2c"
+  },
+  "src/sensor_health.py": {
+    "rel_path": "src/sensor_health.py",
+    "size_bytes": 2898,
+    "mtime": 1764634482.1074662,
+    "sha256": "953afe6ca5ffe02d489c4e12ffa2389733eb5d9009df1e9c5308a223e266ee0a"
+  },
+  "src/fusion_alerts.py": {
+    "rel_path": "src/fusion_alerts.py",
+    "size_bytes": 2343,
+    "mtime": 1764705519.5947506,
+    "sha256": "2ea8d19b63e72ef8271d4437745bfdaf6b6ec12ee5ad52bcbd0cd0167666e605"
+  },
+  "src/generic_metrics_sensor_mock.py": {
+    "rel_path": "src/generic_metrics_sensor_mock.py",
+    "size_bytes": 2216,
+    "mtime": 1764634141.5365603,
+    "sha256": "6ace939a3dea1b81f18373d963d0277f7628201b1a398365ad6353006a676df2"
+  },
+  "src/operator_safety_layer.py": {
+    "rel_path": "src/operator_safety_layer.py",
+    "size_bytes": 851,
+    "mtime": 1765096941.4255967,
+    "sha256": "f14164738a73aaf2b8125d3e9d3207af181ac92e84c85acf1f7377f595d012df"
+  },
+  "src/build_fused_output_from_seismic.py": {
+    "rel_path": "src/build_fused_output_from_seismic.py",
+    "size_bytes": 1747,
+    "mtime": 1763803932.073009,
+    "sha256": "1abe2bd1f8e90964ca699554b5b1fad9f26a03f8a223d1502f7bcf680119931c"
+  },
+  "src/golden_dome_readiness_report.py": {
+    "rel_path": "src/golden_dome_readiness_report.py",
+    "size_bytes": 3460,
+    "mtime": 1764926944.2904522,
+    "sha256": "16420178edd9b3c2ebc9f773a11422b5c690506fa3a68a8e57174c6650ac5197"
+  },
+  "src/gui_screenshot_export.py": {
+    "rel_path": "src/gui_screenshot_export.py",
+    "size_bytes": 1268,
+    "mtime": 1764734819.0398896,
+    "sha256": "4c177088999b1791ab265e189b09dfdc7a5280f5dd78dd36b6ff5eb143f5b9d4"
+  },
+  "src/spectral_dashboard_api.py": {
+    "rel_path": "src/spectral_dashboard_api.py",
+    "size_bytes": 2880,
+    "mtime": 1764705935.139233,
+    "sha256": "643beff95ede9c73d97ce03f5e2b4a01b5edd431066f89f76cbd94952e4ac85b"
+  },
+  "src/golden_dome_title.py": {
+    "rel_path": "src/golden_dome_title.py",
+    "size_bytes": 880,
+    "mtime": 1764845544.899067,
+    "sha256": "7634a0208344f43e651e6f7a65f9ec1dcf00714e7e4c2181e803f84424f5295f"
+  },
+  "src/profile_mission_brief.py": {
+    "rel_path": "src/profile_mission_brief.py",
+    "size_bytes": 4316,
+    "mtime": 1764682390.9820948,
+    "sha256": "6d6b743c1e05540bc8a180f83e248016585c47fd7c649704ca06d8efb1b6db70"
+  },
+  "src/gll_war_room_brief.py": {
+    "rel_path": "src/gll_war_room_brief.py",
+    "size_bytes": 10054,
+    "mtime": 1765377387.702092,
+    "sha256": "ff01522b894b19ae2f86ccc39aa3fad37469cf1c490f217b047c8fdb839fc8ab"
+  },
+  "src/alerts_trend_plot.py": {
+    "rel_path": "src/alerts_trend_plot.py",
+    "size_bytes": 1061,
+    "mtime": 1764554456.7121894,
+    "sha256": "eece24580969a7c62f5eab38a60635963ad2525e98777ea18b8f1876b130459a"
+  },
+  "src/spectral_value_snapshot_day61.py": {
+    "rel_path": "src/spectral_value_snapshot_day61.py",
+    "size_bytes": 6650,
+    "mtime": 1764928089.4389148,
+    "sha256": "6972f537f3779c442807df8faa9df6d4f53fd21c68e7a64cc8d4b1e3ebda3e87"
+  },
+  "src/commander_readiness_tile.py": {
+    "rel_path": "src/commander_readiness_tile.py",
+    "size_bytes": 4814,
+    "mtime": 1765378115.1370056,
+    "sha256": "acc6cfd33027145cbb3f2632a44a5d75bfd5ed4c03297f436d49c5241889831a"
+  },
+  "src/sensor_interface.py": {
+    "rel_path": "src/sensor_interface.py",
+    "size_bytes": 2712,
+    "mtime": 1764634456.3230045,
+    "sha256": "0f09640aa3f6f3493940af6be95ea55300d14c37399aaeae4fd0ed341f363d14"
+  },
+  "src/golden_dome_tile.py": {
+    "rel_path": "src/golden_dome_tile.py",
+    "size_bytes": 3196,
+    "mtime": 1764846556.223397,
+    "sha256": "fc10c2e641219f8d9267ec5f909ef296a3ba3ccb195286dec81bedd32651ec51"
+  },
+  "src/nuclear_mission_brief.py": {
+    "rel_path": "src/nuclear_mission_brief.py",
+    "size_bytes": 4114,
+    "mtime": 1765283166.365926,
+    "sha256": "ede8ce19147f699072baa7cc04a7d66ff1fd4bef7a69a5325aa77d4cefe85d42"
+  },
+  "src/language_interpreter.py": {
+    "rel_path": "src/language_interpreter.py",
+    "size_bytes": 9595,
+    "mtime": 1765455056.9631248,
+    "sha256": "ee22fdf9aab87a633af9613248378cbf3b502fa8aa7f279349208ed0afc230c4"
+  },
+  "src/nuclear_cross_validator.py": {
+    "rel_path": "src/nuclear_cross_validator.py",
+    "size_bytes": 8854,
+    "mtime": 1765420964.0492158,
+    "sha256": "535555ecc676b6e6f46152774e88e6d4d4dbdfbdd026b2230827a21738de0c53"
+  },
+  "src/bad_data_heatmap_plot.py": {
+    "rel_path": "src/bad_data_heatmap_plot.py",
+    "size_bytes": 5714,
+    "mtime": 1764408853.8555279,
+    "sha256": "b70027ee857b0d6c4c0e97c7c6d2b9beba4599e90403319162ab1854e1c791c1"
+  },
+  "src/run_history_logger.py": {
+    "rel_path": "src/run_history_logger.py",
+    "size_bytes": 2430,
+    "mtime": 1764579463.4620187,
+    "sha256": "c64e19617d7d5ef16d72b04c0929681839ee134e3c1ad9e749e4520c31d528f1"
+  },
+  "src/day61_investor_brief.py": {
+    "rel_path": "src/day61_investor_brief.py",
+    "size_bytes": 5915,
+    "mtime": 1764928117.9105747,
+    "sha256": "132b1a7e74293672363cedc417bacdacc0235a65a64a92400122f0548677138d"
+  },
+  "src/sensor_readiness_brief.py": {
+    "rel_path": "src/sensor_readiness_brief.py",
+    "size_bytes": 2966,
+    "mtime": 1764840687.941009,
+    "sha256": "8768aee3d92674f2eb0100f44e811617c7358bf79e21d996ca607c8ebfcdc23f"
+  },
+  "src/adversary_pattern_engine.py": {
+    "rel_path": "src/adversary_pattern_engine.py",
+    "size_bytes": 960,
+    "mtime": 1765331825.0117698,
+    "sha256": "781f176bbfe6d05f655a6cd61fe9e91671e694934af1de8e459428aa9f510710"
+  },
+  "src/ghost_parser__init__.py": {
+    "rel_path": "src/ghost_parser__init__.py",
+    "size_bytes": 105,
+    "mtime": 1760520477.9160004,
+    "sha256": "b55d1fcfae137deac5e020e0130158d26c9f5eb35de3f3d02689443bf2f297d7"
+  },
+  "src/joint_readiness_html_brief.py": {
+    "rel_path": "src/joint_readiness_html_brief.py",
+    "size_bytes": 11741,
+    "mtime": 1765422230.6419778,
+    "sha256": "27069b48cf5df29fb9283a1ddd04b9104d029c43ab32be78fa9ea984aedff8a8"
+  },
+  "src/daily_sensor_brief.py": {
+    "rel_path": "src/daily_sensor_brief.py",
+    "size_bytes": 2282,
+    "mtime": 1764635137.1316943,
+    "sha256": "7fd9f55f38e13ce908d783845d643016e14871f8c5bb1ef07e90d89633118f89"
+  },
+  "src/sensor_latency.py": {
+    "rel_path": "src/sensor_latency.py",
+    "size_bytes": 1550,
+    "mtime": 1765099567.4617867,
+    "sha256": "351e44ba678f201005319df43dc2fb06398ac6d2420e6c727a56de65d73f24f3"
+  },
+  "src/attack_memory.py": {
+    "rel_path": "src/attack_memory.py",
+    "size_bytes": 835,
+    "mtime": 1764248541.3862135,
+    "sha256": "b43fbf530d48c17780b61ea54c37a795df18782002f627c7c16ebd21e7adbbc6"
+  },
+  "src/obasi_training_coach.py": {
+    "rel_path": "src/obasi_training_coach.py",
+    "size_bytes": 7530,
+    "mtime": 1765451572.8962302,
+    "sha256": "b8c2d67b9d706613b4c920529d2154aeb4620759340110491719ac1a641df504"
+  },
+  "src/fusion_minimap.py": {
+    "rel_path": "src/fusion_minimap.py",
+    "size_bytes": 2054,
+    "mtime": 1764677798.6643171,
+    "sha256": "81dbf6a49c2515a296013f16a00eb340692c78be23e4190e2ce818c2bd3ed9fd"
+  },
+  "src/stress_test.py": {
+    "rel_path": "src/stress_test.py",
+    "size_bytes": 1009,
+    "mtime": 1764069106.2184355,
+    "sha256": "40c0c421400f2e5f5f287d484eb7c13dc51147d4bb4638f064adcde3ae0d48c6"
+  },
+  "src/radiation_sensor_mock.py": {
+    "rel_path": "src/radiation_sensor_mock.py",
+    "size_bytes": 1978,
+    "mtime": 1764634666.080299,
+    "sha256": "4c0792fb110ba1c98c51af4ed1842bc980bbb554ede8f38f31851ce2c8bb5c20"
+  },
+  "src/gll_fortification_suite.py": {
+    "rel_path": "src/gll_fortification_suite.py",
+    "size_bytes": 19213,
+    "mtime": 1765446226.8122227,
+    "sha256": "179b5048502b7b4e77d497af9bf0cf713557c6dd612c916cbb8ff4449047f75d"
+  },
+  "src/settings.py": {
+    "rel_path": "src/settings.py",
+    "size_bytes": 757,
+    "mtime": 1764553613.838583,
+    "sha256": "7636fc17261464c48d15da917199aa38f4803ead7d04bc6dea14e1cf1fb33097"
+  },
+  "src/cross_sensor_rules.py": {
+    "rel_path": "src/cross_sensor_rules.py",
+    "size_bytes": 1083,
+    "mtime": 1764762660.2583852,
+    "sha256": "0e0aea89ab2ad6b8ea80927a44586890ff9c19fe21578d19e82a00bfa29cf3f4"
+  },
+  "src/gll_training_instructor_mode.py": {
+    "rel_path": "src/gll_training_instructor_mode.py",
+    "size_bytes": 13311,
+    "mtime": 1765449508.6657495,
+    "sha256": "a80c775c6c728a264dc4f4b78a61f4c1f356f80a7d02fea25853f5eca3200c9e"
+  },
+  "src/perimeter_incident_report.py": {
+    "rel_path": "src/perimeter_incident_report.py",
+    "size_bytes": 6381,
+    "mtime": 1765382178.7407963,
+    "sha256": "16afa58bb5ab1cfbdebec67dea149e27c61fb7ee7f161bfdd0c808c862f96ccd"
+  },
+  "src/fusion_minimap_overlay.py": {
+    "rel_path": "src/fusion_minimap_overlay.py",
+    "size_bytes": 1257,
+    "mtime": 1764706892.4580634,
+    "sha256": "609c6aadc72aeb1831dc2f3fb608792946b7f1b2c0d5cbdf7421f82b8c945b1f"
+  },
+  "src/system_integrity.py": {
+    "rel_path": "src/system_integrity.py",
+    "size_bytes": 3683,
+    "mtime": 1765278321.6837218,
+    "sha256": "967229e232480f81bdf245d0c030c2e5fa05c888c585bbfba0e81844a473fbbe"
+  },
+  "src/family_law_brief.py": {
+    "rel_path": "src/family_law_brief.py",
+    "size_bytes": 1541,
+    "mtime": 1764554418.796656,
+    "sha256": "b28c66d5cd8eae4e7c299a2ece52014253a307d88bc361c45c555908e0e5228f"
+  },
+  "src/demo_day54_builder.py": {
+    "rel_path": "src/demo_day54_builder.py",
+    "size_bytes": 5995,
+    "mtime": 1764326712.5717707,
+    "sha256": "b85a9f4068d10402b3842c1dd67f2660844a596754f9258ef5893a23f9ee3d75"
+  },
+  "src/fusion_evet_alerts.py": {
+    "rel_path": "src/fusion_evet_alerts.py",
+    "size_bytes": 564,
+    "mtime": 1763043098.686518,
+    "sha256": "11e0c8275c663fa73c6a7af24625a83ffbd0e1468ea2aef2050ededbcbbc4b2d"
+  },
+  "src/joint_readiness_integrity_guard.py": {
+    "rel_path": "src/joint_readiness_integrity_guard.py",
+    "size_bytes": 19443,
+    "mtime": 1765422553.1088681,
+    "sha256": "a27d0ad4b7d2dfa8de402f670ef2b36ba8330ecaed9f0de186edeeae973acea1"
+  },
+  "src/error_handler.py": {
+    "rel_path": "src/error_handler.py",
+    "size_bytes": 762,
+    "mtime": 1763294463.7140098,
+    "sha256": "38bbc2e0fa05d80ec7e4992bf16a8ba911e1889e80fcb662937ade24f3022a0a"
+  },
+  "src/golden_dome_alignment_report.py": {
+    "rel_path": "src/golden_dome_alignment_report.py",
+    "size_bytes": 5644,
+    "mtime": 1764755079.8327184,
+    "sha256": "94b260d1ab9b2df224a9004441a035bd92d7079d605a76543920a62bef8ccb09"
+  },
+  "src/fusion_temporal_forecast.py": {
+    "rel_path": "src/fusion_temporal_forecast.py",
+    "size_bytes": 1317,
+    "mtime": 1765323590.4003594,
+    "sha256": "00ee639bacd92eb413136cf914b4d638ab135d1273485471a273c8ca7cd05f13"
+  },
+  "src/exercise_brief_pacific.py": {
+    "rel_path": "src/exercise_brief_pacific.py",
+    "size_bytes": 4766,
+    "mtime": 1764780813.3674915,
+    "sha256": "67bc40189dc6c2a9203bbb6a4dfbb1b76b85062b60ca2204f4e9d4e79ae51bcb"
+  },
+  "src/daily_mission_brief.py": {
+    "rel_path": "src/daily_mission_brief.py",
+    "size_bytes": 6737,
+    "mtime": 1765278360.3516288,
+    "sha256": "62e5be0a3478788ece488a44ae7ca7404740d51e8c646a774969783cef717f52"
+  },
+  "src/fusion_quarantine.py": {
+    "rel_path": "src/fusion_quarantine.py",
+    "size_bytes": 436,
+    "mtime": 1764149638.9991436,
+    "sha256": "431dc671fc5ff63f3a887dcef9fcac998659478214de914a5f4be852efcf9d02"
+  },
+  "src/ghost_cli.py": {
+    "rel_path": "src/ghost_cli.py",
+    "size_bytes": 19409,
+    "mtime": 1765456901.3297312,
+    "sha256": "f5e63045fc17abca18ed180217568765cd3e915c8cc6fc1752b4d0bece95d50b"
+  },
+  "src/log_intel.py": {
+    "rel_path": "src/log_intel.py",
+    "size_bytes": 4291,
+    "mtime": 1764253884.9167237,
+    "sha256": "b8893eb628dae73958ec0dccf2d9e19e6122cebf06d3bfdcc3b0ffaa21ff081c"
+  },
+  "src/optical_sensor_mock.py": {
+    "rel_path": "src/optical_sensor_mock.py",
+    "size_bytes": 2182,
+    "mtime": 1764634599.7680516,
+    "sha256": "9a2707f672d8cdb070ca04b72de0cdce4fccf2ec4091854b6b48fc5321ae7f28"
+  },
+  "src/azure_ingest_adapter.py": {
+    "rel_path": "src/azure_ingest_adapter.py",
+    "size_bytes": 5179,
+    "mtime": 1765452851.2972507,
+    "sha256": "3d6b11e0b6c85558976842494d9abe691cfc9fcca39bf13e68d8de0378d61328"
+  },
+  "src/config_guard.py": {
+    "rel_path": "src/config_guard.py",
+    "size_bytes": 6583,
+    "mtime": 1764252246.5325904,
+    "sha256": "ab1ff545d14dc45540389f56e9b9cb170c1ca4da7cc6318cc377844141d40481"
+  },
+  "src/distributed_readiness_snapshot.py": {
+    "rel_path": "src/distributed_readiness_snapshot.py",
+    "size_bytes": 2438,
+    "mtime": 1765381728.1430516,
+    "sha256": "dbb096634627b3321fd5fb89525726a1548d6c331312d17bcc025852b36229df"
+  },
+  "src/ghost_parser_cli.py": {
+    "rel_path": "src/ghost_parser_cli.py",
+    "size_bytes": 3856,
+    "mtime": 1762078711.096635,
+    "sha256": "3eb0517df362b6b23e7b932d82f977d9dce41c5e033df91207f5528d8bd34db0"
+  },
+  "src/cross_sensor_validator.py": {
+    "rel_path": "src/cross_sensor_validator.py",
+    "size_bytes": 1721,
+    "mtime": 1764762638.40538,
+    "sha256": "7810c3ad5492fcf91e047c1a4d165bdd1568751bf882d2db09ce54915a04130c"
+  },
+  "src/sps_guardrail_engine.py": {
+    "rel_path": "src/sps_guardrail_engine.py",
+    "size_bytes": 14901,
+    "mtime": 1765454301.8089442,
+    "sha256": "21e49fcd93c228c964162f0a6a4015d927a48060ed56ffad10dfef9100a7c6a5"
+  },
+  "src/treaty_evidence_bundle.py": {
+    "rel_path": "src/treaty_evidence_bundle.py",
+    "size_bytes": 4105,
+    "mtime": 1765383780.9662569,
+    "sha256": "da9ba59c4e5d20fe33e70c9d38637e251bbfb8e3e994beaa7b9944237b3871a9"
+  },
+  "src/threat_doctrine_tagger.py": {
+    "rel_path": "src/threat_doctrine_tagger.py",
+    "size_bytes": 2359,
+    "mtime": 1764579954.091362,
+    "sha256": "43d6b52e9f48d53db6d2595d3a2325d5643daf0ee7cd00a64bb4c1137b48a9e3"
+  },
+  "src/prelaunch_watchboard.py": {
+    "rel_path": "src/prelaunch_watchboard.py",
+    "size_bytes": 1712,
+    "mtime": 1765208782.2101896,
+    "sha256": "83a8561e4b2aa8549fda5b607a16a726eaf899845357c6d85371658ca93acb01"
+  },
+  "src/pipeline_health.py": {
+    "rel_path": "src/pipeline_health.py",
+    "size_bytes": 3450,
+    "mtime": 1764387177.660137,
+    "sha256": "4e00fb01802b1c3fa81b49b3cd5132562c157df348cbcb01f9ca4c84687fc977"
+  },
+  "src/installation_threat_map.py": {
+    "rel_path": "src/installation_threat_map.py",
+    "size_bytes": 3668,
+    "mtime": 1765381670.4065185,
+    "sha256": "6459804f74d3148c8905ffdaf8b60ef7030aa4b807aaf03ec36a919de8018ed8"
+  },
+  "src/fusion_heat_index.py": {
+    "rel_path": "src/fusion_heat_index.py",
+    "size_bytes": 2186,
+    "mtime": 1765207975.9356303,
+    "sha256": "c5a7af97267e75c3aacab71a80b632134a61820cfe923fc2c86e6ce17dd44d34"
+  },
+  "src/fusion_run.py": {
+    "rel_path": "src/fusion_run.py",
+    "size_bytes": 1466,
+    "mtime": 1762861585.7521079,
+    "sha256": "a216639a9cb89a9b87bf8a352b73efc36a2ae4006611f1718e2e8bf2173473c5"
+  },
+  "src/bad_data_summary.py": {
+    "rel_path": "src/bad_data_summary.py",
+    "size_bytes": 1721,
+    "mtime": 1764247783.4607449,
+    "sha256": "69fbf14bdff92f94e05d4e89816f511080401ac740142e4a8356fc2e9c5fbb0c"
+  },
+  "src/bad_data_quarantine.py": {
+    "rel_path": "src/bad_data_quarantine.py",
+    "size_bytes": 1214,
+    "mtime": 1764147282.577534,
+    "sha256": "f7d78b1fca12b47ec949146cb5cbcac15d2b23953d87bdd5a97ccf933657eb60"
+  },
+  "src/config_profiles.py": {
+    "rel_path": "src/config_profiles.py",
+    "size_bytes": 2714,
+    "mtime": 1764554266.3571384,
+    "sha256": "c7f6593611d512b1913390122d14f28a02e47de56619c277b3272ef580d1fb19"
+  },
+  "src/llm_config.py": {
+    "rel_path": "src/llm_config.py",
+    "size_bytes": 1991,
+    "mtime": 1764597831.464109,
+    "sha256": "fc8f9f1af36291e0f786593051252c1aabb8f163b15e7c3f72aaf1dbd949708a"
+  },
+  "src/customer_segment_brief.py": {
+    "rel_path": "src/customer_segment_brief.py",
+    "size_bytes": 8377,
+    "mtime": 1764780369.3532424,
+    "sha256": "bc58cbe1a31cb4efc15bec24fa56153dcc29fc79b1088fef0f103f42f3726c32"
+  },
+  "src/demo_deck_outline.py": {
+    "rel_path": "src/demo_deck_outline.py",
+    "size_bytes": 6431,
+    "mtime": 1764734597.4997764,
+    "sha256": "6ead621b7249510189d6f99dc34eded73d8e0f33355458ecf1321f0727417098"
+  },
+  "src/cross_sensor_report.py": {
+    "rel_path": "src/cross_sensor_report.py",
+    "size_bytes": 981,
+    "mtime": 1764762682.8966362,
+    "sha256": "35b0485639d85b0906d47fe9739cad891f55bf67760c1b75067926cf30b07d85"
+  },
+  "src/commander_extract.py": {
+    "rel_path": "src/commander_extract.py",
+    "size_bytes": 3236,
+    "mtime": 1763715848.3825762,
+    "sha256": "da529428827e064e2e402779f4d0db0ecf44771cc614b12969584b9191a1d895"
+  },
+  "src/fusion_trust.py": {
+    "rel_path": "src/fusion_trust.py",
+    "size_bytes": 4249,
+    "mtime": 1765385964.413471,
+    "sha256": "d5bd5b49dfd09dce24391957334e150130c73a4edfcc13fec08d5eba14129cd9"
+  },
+  "src/capability_snapshot.py": {
+    "rel_path": "src/capability_snapshot.py",
+    "size_bytes": 2909,
+    "mtime": 1765188871.3799145,
+    "sha256": "9ed5c7507aee7927ce1308b63a03a297f88c36c319e9fbddcf1cbf6244bd9095"
+  },
+  "src/fusion_logger.py": {
+    "rel_path": "src/fusion_logger.py",
+    "size_bytes": 1080,
+    "mtime": 1764253621.0691178,
+    "sha256": "8719be54e771077b8b419711d1834594d8f6c48cf8f66e5eda338394d9aacce5"
+  },
+  "src/nuclear_risk_timeline.py": {
+    "rel_path": "src/nuclear_risk_timeline.py",
+    "size_bytes": 3803,
+    "mtime": 1765384499.4758232,
+    "sha256": "bb45af7816fda3574557993b7ab9802adbef4301900b6bce85253f3a05c04e3c"
+  },
+  "src/golden_dome_analyzer.py": {
+    "rel_path": "src/golden_dome_analyzer.py",
+    "size_bytes": 3722,
+    "mtime": 1765077085.0163295,
+    "sha256": "91763e581afbf3a8d8f318fb1f76651ebff338bb7806c5e4eea3991385323f3b"
+  },
+  "src/sbir_pitch_outline_builder.py": {
+    "rel_path": "src/sbir_pitch_outline_builder.py",
+    "size_bytes": 8639,
+    "mtime": 1764781559.735008,
+    "sha256": "f5b8c1c33b377318a23f57d76042984e951fa72ca24d7d12bc27653a52617866"
+  },
+  "src/sensor_manifest_loader.py": {
+    "rel_path": "src/sensor_manifest_loader.py",
+    "size_bytes": 281,
+    "mtime": 1764672595.554104,
+    "sha256": "d3f5b6bb88d2042754bbb037a746e144e6ae4ea9752533dd1167ae7d911c120e"
+  },
+  "src/profile_auto_switch.py": {
+    "rel_path": "src/profile_auto_switch.py",
+    "size_bytes": 1415,
+    "mtime": 1764675057.4349933,
+    "sha256": "33b3fb4e2ba0af853fbb598f0636de8bda91479f7dd471a9a40a791d6e33e282"
+  },
+  "src/ingest_tuning.py": {
+    "rel_path": "src/ingest_tuning.py",
+    "size_bytes": 1335,
+    "mtime": 1764674452.6194732,
+    "sha256": "d24b1ef52d5a51ab1f91f613bcffe186d1bf9296f0b64fd1d065e374fe0e29c8"
+  },
+  "src/temporal_volatility_filter.py": {
+    "rel_path": "src/temporal_volatility_filter.py",
+    "size_bytes": 5480,
+    "mtime": 1765421041.9379845,
+    "sha256": "802d31e1d73c43364551353641a88fb5d602fbf9b43bb465bfef122d36a46af8"
+  },
+  "src/reliability_trend.py": {
+    "rel_path": "src/reliability_trend.py",
+    "size_bytes": 780,
+    "mtime": 1765073056.1170993,
+    "sha256": "72e04f1aa00532345d73b846845c84d8618b549fe42311e69405b403f22e1bd7"
+  },
+  "src/llm_phase2_probe.py": {
+    "rel_path": "src/llm_phase2_probe.py",
+    "size_bytes": 709,
+    "mtime": 1764598122.8055573,
+    "sha256": "c3bb8ea208ec7fe4b697eb068e7d31e920e5132fc23e45da2dccd38f05ddeef5"
+  },
+  "src/profile_config.py": {
+    "rel_path": "src/profile_config.py",
+    "size_bytes": 5135,
+    "mtime": 1764639098.3723636,
+    "sha256": "cab549aeb95960d7d38ed3bd46b23447b91ab0b410a8c76886f2ed25e8b09292"
+  },
+  "src/golden_dome_validator.py": {
+    "rel_path": "src/golden_dome_validator.py",
+    "size_bytes": 2889,
+    "mtime": 1764842066.1728568,
+    "sha256": "c24de6b57548983fac6513fb218f7c6205fd57c613eb94e7ff0fb481e6daa7a8"
+  },
+  "src/fusion_minimap_png.py": {
+    "rel_path": "src/fusion_minimap_png.py",
+    "size_bytes": 2376,
+    "mtime": 1764683071.9513938,
+    "sha256": "b4c3f5977b1488335d4cde48962100fafd8c219141183a4c95ae1fd69a0c0848"
+  },
+  "src/distributed_readiness.py": {
+    "rel_path": "src/distributed_readiness.py",
+    "size_bytes": 4094,
+    "mtime": 1765366939.15439,
+    "sha256": "7647f62469683be63825b9b6195585df99822e956630e883cf0db0630251c59b"
+  },
+  "src/offline_mode_flag.py": {
+    "rel_path": "src/offline_mode_flag.py",
+    "size_bytes": 2037,
+    "mtime": 1764633450.864193,
+    "sha256": "f66b5f86a9aa17e52a624408dc6c36b9a420770a18c94ccae6c4d54f30c08d1f"
+  },
+  "src/auto_retry_runner.py": {
+    "rel_path": "src/auto_retry_runner.py",
+    "size_bytes": 1015,
+    "mtime": 1764554494.4323874,
+    "sha256": "2cee30b7733aa9d7d045a13491c2e9ca8b55120aabe52a24903494466d435e6a"
+  },
+  "src/spectral_sos_overlay.py": {
+    "rel_path": "src/spectral_sos_overlay.py",
+    "size_bytes": 4268,
+    "mtime": 1764735433.3632255,
+    "sha256": "59c9d8d046293d526a11eb6a3f990b3a9a5eb3c90afef739cc87cbcbc54fb00c"
+  },
+  "src/executive_snapshot_pack.py": {
+    "rel_path": "src/executive_snapshot_pack.py",
+    "size_bytes": 4814,
+    "mtime": 1765281249.320509,
+    "sha256": "6138cb566ef1c0d9bc23c32179af6466a7e845cdd0cf30f2de1e6fc1aa8b0a97"
+  },
+  "src/schema_loader.py": {
+    "rel_path": "src/schema_loader.py",
+    "size_bytes": 1201,
+    "mtime": 1763716388.9627457,
+    "sha256": "ae000802785840788e193495b279c87411a7cdf1da3db7a9f6e8acada659fcc8"
+  },
+  "src/golden_dome_daily_watch.py": {
+    "rel_path": "src/golden_dome_daily_watch.py",
+    "size_bytes": 4634,
+    "mtime": 1765383690.1746159,
+    "sha256": "000abfe131ee14d5e1818e072a0c2b35909fe1b5fb27e3578e817fb7d0944ef1"
+  },
+  "src/spectral_resilience_score.py": {
+    "rel_path": "src/spectral_resilience_score.py",
+    "size_bytes": 12486,
+    "mtime": 1764774128.5401075,
+    "sha256": "d881a5a3aedf477cf48b45b4f3a97c30fa833c4222515811b0a488dc093b07a5"
+  },
+  "src/joint_readiness_voice_script.py": {
+    "rel_path": "src/joint_readiness_voice_script.py",
+    "size_bytes": 6050,
+    "mtime": 1765422272.1969464,
+    "sha256": "25495b356d9e0701c5f13b469e1f304eb5f8190a19069d8da049623351e95f4e"
+  },
+  "src/gll_readiness_timeline.py": {
+    "rel_path": "src/gll_readiness_timeline.py",
+    "size_bytes": 4758,
+    "mtime": 1765281197.887782,
+    "sha256": "e78ca474ad49af857bf075cabfb215a46d664f209eb527d3240a471b99e4aab3"
+  },
+  "src/treay_evidence_bundle.py": {
+    "rel_path": "src/treay_evidence_bundle.py",
+    "size_bytes": 5513,
+    "mtime": 1765365154.692235,
+    "sha256": "c807f543c60c154533e107e42b0b69229fa2f4a150a83ffe56fb80880dbb7ae3"
+  },
+  "src/ghost_parser/validator.py": {
+    "rel_path": "src/ghost_parser/validator.py",
+    "size_bytes": 713,
+    "mtime": 1760520159.7697387,
+    "sha256": "c268d3230b32b429dbc319d75f8d752831c7f68d6357dad07fe025b10c63d923"
+  },
+  "src/ghost_parser/framework_map.py": {
+    "rel_path": "src/ghost_parser/framework_map.py",
+    "size_bytes": 475,
+    "mtime": 1760686299.2199397,
+    "sha256": "d1afbea0f9a353e1163d989337a84fc62f8b01b68bee44383000388b3f607cc7"
+  },
+  "src/ghost_parser/__init__.py": {
+    "rel_path": "src/ghost_parser/__init__.py",
+    "size_bytes": 3174,
+    "mtime": 1760981318.9096148,
+    "sha256": "440c654570c403dd068b7d6c85c2835b668ccb4e8a15ddec71bd132ec5dee302"
+  },
+  "src/ghost_parser/core.py": {
+    "rel_path": "src/ghost_parser/core.py",
+    "size_bytes": 1989,
+    "mtime": 1760366857.5831637,
+    "sha256": "82a513b5b63a2b5efdab8c808d736e1c773a7d3c383f5c3c7cf727fbac93c6a9"
+  },
+  "src/ghost_parser/fusion/test_fusion.py": {
+    "rel_path": "src/ghost_parser/fusion/test_fusion.py",
+    "size_bytes": 805,
+    "mtime": 1761063416.1598058,
+    "sha256": "70b32e8540455f8b11812308895b98c0582309952d0098c0de1a1ad5ab67ba68"
+  },
+  "src/ghost_parser/fusion/core_fusion.py": {
+    "rel_path": "src/ghost_parser/fusion/core_fusion.py",
+    "size_bytes": 4780,
+    "mtime": 1761062356.2336018,
+    "sha256": "553b759fad5d9a09ffd0bccc137b92c1814cbf3577fe823c0dedcc3397df428f"
+  },
+  "src/spectral_owl/owl_prompts.py": {
+    "rel_path": "src/spectral_owl/owl_prompts.py",
+    "size_bytes": 557,
+    "mtime": 1763889110.1461458,
+    "sha256": "ac096d4eea63cbeec0eac1bc4e24c35d6e4607eec3589793c18cb58f28fa838c"
+  },
+  "src/spectral_owl/owl_router.py": {
+    "rel_path": "src/spectral_owl/owl_router.py",
+    "size_bytes": 1431,
+    "mtime": 1764845451.73129,
+    "sha256": "077ab581b9a26d87c924e3978f29a74cf8d425f854c2f2503a7a55ea6276918f"
+  },
+  "src/spectral_owl/owl_fallbacks.py": {
+    "rel_path": "src/spectral_owl/owl_fallbacks.py",
+    "size_bytes": 503,
+    "mtime": 1763889143.7034903,
+    "sha256": "e416404ccceb98b7f0bb6d07b412fc035379df6298569db46e7fa8b1401dd034"
+  },
+  "src/spectral_owl/threat_memory_summary.py": {
+    "rel_path": "src/spectral_owl/threat_memory_summary.py",
+    "size_bytes": 1013,
+    "mtime": 1764323217.623496,
+    "sha256": "eceb658db8bee57c00beaf210a613d7421dbb10a2552e9168c64fbb0186010d5"
+  },
+  "src/spectral_owl/__init__.py": {
+    "rel_path": "src/spectral_owl/__init__.py",
+    "size_bytes": 36,
+    "mtime": 1764598839.927806,
+    "sha256": "f42dd0b2dadd62399f9d313f4d8c9a81ebb8f63a2774aca10ffd06fc8aeffcb7"
+  },
+  "src/spectral_owl/local_rules_engine.py": {
+    "rel_path": "src/spectral_owl/local_rules_engine.py",
+    "size_bytes": 4146,
+    "mtime": 1764633427.4360745,
+    "sha256": "56fac04eb9504710e878abf9f48fff06d72cf5860f3a013cfa8243ed1008c4d4"
+  },
+  "src/spectral_owl/threat_memory.py": {
+    "rel_path": "src/spectral_owl/threat_memory.py",
+    "size_bytes": 3751,
+    "mtime": 1764675312.218885,
+    "sha256": "4073388443cab84a2e917895ae33f4e80696f304d315a2d6b7e06fdbcd8f70a9"
+  },
+  "src/spectral_owl/owl_brain.py": {
+    "rel_path": "src/spectral_owl/owl_brain.py",
+    "size_bytes": 4389,
+    "mtime": 1764675557.4633431,
+    "sha256": "90e4047e4b3ee93f1dd00c099fb5d348cb8fa36d41b5db5a3d3001edf7b2c2b5"
+  },
+  "src/spectral_owl/owl_brain_phase2.py": {
+    "rel_path": "src/spectral_owl/owl_brain_phase2.py",
+    "size_bytes": 4123,
+    "mtime": 1764929585.106104,
+    "sha256": "937d7402b0f0a95138513cb884e476aa1f644a18b43decdadf41b9dd160017ea"
+  },
+  "src/spectral_owl/owl_memory.py": {
+    "rel_path": "src/spectral_owl/owl_memory.py",
+    "size_bytes": 3150,
+    "mtime": 1764843906.1949782,
+    "sha256": "0d624ee7afa949f29bac79ed39035321d4bf3e9d223b400d49239c4e6040f975"
+  },
+  "src/spectral_owl/llm_adapter.py": {
+    "rel_path": "src/spectral_owl/llm_adapter.py",
+    "size_bytes": 2476,
+    "mtime": 1764177848.7733257,
+    "sha256": "2ee0f3caed8b6cdd9daeabf94b450dcd33c4908d6a04a1adfaef7b52d296238c"
+  },
+  "src/spectral_owl/owl_confidence.py": {
+    "rel_path": "src/spectral_owl/owl_confidence.py",
+    "size_bytes": 768,
+    "mtime": 1765075634.0146854,
+    "sha256": "fb27be34978dd7968fab2067ebb11772b00f5b13536105aa381ef465d9585fba"
+  },
+  "src/cloud/azure_blob_stub.py": {
+    "rel_path": "src/cloud/azure_blob_stub.py",
+    "size_bytes": 590,
+    "mtime": 1764062760.0502481,
+    "sha256": "df33dd84e01824b0ba7c2ad4d85ea45dc14ee8fdce6096d8fa7445435580ace9"
+  },
+  "src/cloud/azure_ingest.py": {
+    "rel_path": "src/cloud/azure_ingest.py",
+    "size_bytes": 6468,
+    "mtime": 1764843185.0504339,
+    "sha256": "4960589b88f73966c2529dd9341277e1569d130ca5d19aed6f67db20d4f3df97"
+  },
+  "src/cloud/azure_client_stub.py": {
+    "rel_path": "src/cloud/azure_client_stub.py",
+    "size_bytes": 1678,
+    "mtime": 1763976076.8761797,
+    "sha256": "a21c353e19c0933bc0fa7289e24c09eaf5f8df66201df055a82ff5a624e50bb9"
+  },
+  "src/cloud/package_for_cloud.py": {
+    "rel_path": "src/cloud/package_for_cloud.py",
+    "size_bytes": 1110,
+    "mtime": 1764234054.6127079,
+    "sha256": "ceb454d311c6c2202de4bffc8b6445b32b482b2a6203b964d82e69899024ffb8"
+  },
+  "src/cloud/__init__.py": {
+    "rel_path": "src/cloud/__init__.py",
+    "size_bytes": 0,
+    "mtime": 1764321368.970602,
+    "sha256": ""
+  },
+  "src/profiles/__init__.py": {
+    "rel_path": "src/profiles/__init__.py",
+    "size_bytes": 290,
+    "mtime": 1765207401.1001766,
+    "sha256": "8e9b805771f03307a2fec267c61216ebf4de0ab47641c81b2a2b4c8c08ec7f42"
+  },
+  "src/profiles/nuclear_early_warning.py": {
+    "rel_path": "src/profiles/nuclear_early_warning.py",
+    "size_bytes": 665,
+    "mtime": 1765207418.1228685,
+    "sha256": "6fc81da1ae16e8ca38b11548e069ed43b62425f55083e64964f600c04c7c5c21"
+  },
+  "src/apps/gui/joint_readiness_app.py": {
+    "rel_path": "src/apps/gui/joint_readiness_app.py",
+    "size_bytes": 13068,
+    "mtime": 1765425325.647412,
+    "sha256": "dd0bee1e9abf059ca8657a09aa6f7ad6ee230ffbccf51f17757e1b05cdb1f1cb"
+  },
+  "src/apps/gui/app.py": {
+    "rel_path": "src/apps/gui/app.py",
+    "size_bytes": 20210,
+    "mtime": 1765427878.3124287,
+    "sha256": "267faa181cc008850ad91c9a326bdca29375eb0a7d60e54faeb12412c70e83cf"
+  },
+  "src/apps/gui/training_dashboard_app.py": {
+    "rel_path": "src/apps/gui/training_dashboard_app.py",
+    "size_bytes": 8699,
+    "mtime": 1765451617.342003,
+    "sha256": "6dc0b902526e01b9f02e7a9beb9359fdb12cdfe46ba82cfc9281df8aa7ff140d"
+  }
+}

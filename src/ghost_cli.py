@@ -50,6 +50,8 @@ Menu options:
  45) Base Defense Hotspots
  46) Strategic Readiness Index
  47) Defensive Cyber Intelligence Report
+ 48) Foreign Language Interpreter
+ 49) SPS Mutation Watcher Report
 """
 
 import sys
@@ -57,6 +59,8 @@ import subprocess
 import json
 from pathlib import Path
 from defensive_cyber_intel_module import analyze_defensive_cyber_intel
+from language_interpreter import run_language_interpreter
+from sps_mutation_watcher import write_mutation_report
 
 
 BASE_DIR = Path(__file__).resolve().parent
@@ -490,9 +494,23 @@ def main() -> int:
             result = analyze_defensive_cyber_intel()
             print(json.dumps(result, indent=2))
 
+
+        elif choice == "48":
+            print("Running GLL Language Interpreter (Module 1 – Framework)...")
+            result = run_language_interpreter()
+            print("Language analysis written:")
+            print(f"  JSON: {result['json_path']}")
+            print(f"  TXT:  {result['txt_path']}")
+
+        elif choice == "49":
+            print("Running SPS Module 2 – Mutation Watcher...")
+            result = write_mutation_report()
+            print("SPS Mutation Watcher report written:")
+            print(f"  JSON: {result['json_path']}")
+            print(f"  TXT:  {result['txt_path']}")
+
         else:
             print("Invalid option. Try again.")
-
     return 0
 
 
