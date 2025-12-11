@@ -1,0 +1,28 @@
+{
+  "alignment": "HIGH",
+  "alignment_score": 90.0,
+  "base_early_warning_level": "UNKNOWN",
+  "base_early_warning_score": 0.0,
+  "crisis_mode": false,
+  "drift_adjusted_early_warning_score": 0.0,
+  "drift_confidence": 80.0,
+  "generated_at": "2025-12-11T02:47:52.684387Z",
+  "inputs_present": {
+    "nuclear_cross_validation_json": true,
+    "nuclear_drift_adjusted_score_json": true,
+    "nuclear_temporal_volatility_json": true,
+    "prelaunch_watchboard_json": false,
+    "sensor_concurrence_matrix_json": true
+  },
+  "overall_nuclear_early_warning_level": "STEADY",
+  "rationale": [
+    "Base early-warning level from prelaunch_watchboard: UNKNOWN (0.0/100).",
+    "No drift-adjusted score available; using base early-warning score.",
+    "Temporal volatility index: 0.0/100 (higher values indicate more rapid or clustered activity).",
+    "Nuclear cross-validation alignment: HIGH (90.0/100).",
+    "All nuclear indicators are at roughly the same level.",
+    "Levels observed \u2013 Watchboard: UNKNOWN, Golden Dome: GREEN, Decision Card: UNKNOWN."
+  ],
+  "sensor_count_in_concurrence_matrix": 0,
+  "volatility_index": 0.0
+}

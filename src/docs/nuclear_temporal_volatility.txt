@@ -1,0 +1,12 @@
+GLL Nuclear Temporal Volatility Report
+======================================
+Generated at (UTC): 2025-12-11T02:47:26.043641Z
+
+Event Count in History: 0
+Volatility Index: 0.0/100
+
+Inputs Present:
+  - run_history_intel_json: MISSING
+
+Rationale:
+  - No events in run_history_intel.

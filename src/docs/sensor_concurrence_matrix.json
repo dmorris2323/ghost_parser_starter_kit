@@ -1,0 +1,11 @@
+{
+  "generated_at": "2025-12-11T02:47:41.683773Z",
+  "inputs_present": {
+    "golden_dome_daily_watch_json": true
+  },
+  "matrix": [],
+  "notes": [
+    "Could not infer sensor names from Golden Dome JSON."
+  ],
+  "sensors": []
+}

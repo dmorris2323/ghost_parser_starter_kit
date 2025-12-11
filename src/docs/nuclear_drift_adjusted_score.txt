@@ -1,0 +1,20 @@
+GLL Nuclear Drift-Adjusted Early Warning Score
+==============================================
+Generated at (UTC): 2025-12-11T02:47:12.185696Z
+
+Base Early Warning Score: 0.0/100
+Total Drift/Reliability Penalty: 10.0
+Drift-Adjusted Early Warning Score: 0.0/100
+Drift Confidence: 80.0/100
+
+Inputs Present:
+  - prelaunch_watchboard_json: MISSING
+  - reliability_report_json: MISSING
+  - golden_dome_drift_report_txt: OK
+
+Rationale:
+  - Base early-warning score from watchboard: 0.0/100.
+  - Total drift/reliability penalty: 10.0 points (reliability + drift).
+  - No structured reliability report available.
+  - Drift language ambiguous – applying conservative penalty.
+  - Drift-adjusted early-warning score: 0.0/100; drift confidence: 80.0/100.

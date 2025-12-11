@@ -1,0 +1,29 @@
+GLL Nuclear Early Warning Summary (Hardened View)
+=================================================
+Generated at (UTC): 2025-12-11T02:47:52.684387Z
+
+Base Early Warning Level: UNKNOWN
+Base Early Warning Score: 0.0/100
+Crisis Mode: OFF
+
+Drift-Adjusted Early Warning Score: 0.0/100
+Drift Confidence: 80.0/100
+Temporal Volatility Index: 0.0/100
+
+Nuclear Alignment: HIGH (90.0/100)
+Sensors in Concurrence Matrix: 0
+
+Inputs Present:
+  - prelaunch_watchboard_json: MISSING
+  - nuclear_cross_validation_json: OK
+  - nuclear_drift_adjusted_score_json: OK
+  - nuclear_temporal_volatility_json: OK
+  - sensor_concurrence_matrix_json: OK
+
+Rationale:
+  - Base early-warning level from prelaunch_watchboard: UNKNOWN (0.0/100).
+  - No drift-adjusted score available; using base early-warning score.
+  - Temporal volatility index: 0.0/100 (higher values indicate more rapid or clustered activity).
+  - Nuclear cross-validation alignment: HIGH (90.0/100).
+  - All nuclear indicators are at roughly the same level.
+  - Levels observed – Watchboard: UNKNOWN, Golden Dome: GREEN, Decision Card: UNKNOWN.

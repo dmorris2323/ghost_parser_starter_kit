@@ -1888,3 +1888,15 @@ Day 66 – War Room Brief + Operator Console Stabilization
 • War Room Brief is the one-button “brief the commander” output that can be dropped into slides, emails, or war-room handouts as a fused snapshot of system state and threat context.
 • Today’s work shifts GLL from “many powerful tools” to a disciplined operator console that can generate a commander-grade brief on demand.
 • Estimated feature-equivalent value added today ~ K (War Room briefing product), bringing GLL into an implied ~.0M–.5M early-stage defense-tech valuation band.
+Day 66 – Nuclear Hardening Block (Validation + Summary Layer)
+
+• Added nuclear_cross_validator.py to cross-check Golden Dome daily watch, pre-launch ISR watchboard, and the nuclear decision card, producing a nuclear_cross_validation.json/.txt product with an explicit alignment score and rationale for how well the nuclear indicators agree.
+• Added nuclear_drift_adjuster.py to factor reliability and drift into the pre-launch early-warning score, generating a drift-adjusted early warning score and a “drift confidence” metric in nuclear_drift_adjusted_score.json/.txt.
+• Added temporal_volatility_filter.py to estimate a nuclear temporal volatility index from run_history_intel.json, giving a 0–100 volatility score and narrative rationale in nuclear_temporal_volatility.json/.txt.
+• Added sensor_concurrence_matrix.py to build a simple AFTAC-style sensor concurrence matrix from Golden Dome JSON, exporting both JSON and human-readable text in sensor_concurrence_matrix.json/.txt for commander visualization.
+• Added nuclear_early_warning_summary.py to aggregate prelaunch_watchboard, cross-validation, drift-adjusted score, temporal volatility, and sensor concurrence into a single, hardened Nuclear Early Warning Summary product (JSON + TXT) that a commander or AFWERX/SBIR reviewer can read at a glance.
+
+Vital to commit to git. Recommended commit:
+git add .
+git commit -m Day 66 – Nuclear early warning validation and summary hardening
+git push

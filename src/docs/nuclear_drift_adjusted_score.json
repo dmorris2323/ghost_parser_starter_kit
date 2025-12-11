@@ -1,0 +1,19 @@
+{
+  "base_early_warning_score": 0.0,
+  "drift_adjusted_early_warning_score": 0.0,
+  "drift_confidence": 80.0,
+  "generated_at": "2025-12-11T02:47:12.185696Z",
+  "inputs_present": {
+    "golden_dome_drift_report_txt": true,
+    "prelaunch_watchboard_json": false,
+    "reliability_report_json": false
+  },
+  "rationale": [
+    "Base early-warning score from watchboard: 0.0/100.",
+    "Total drift/reliability penalty: 10.0 points (reliability + drift).",
+    "No structured reliability report available.",
+    "Drift language ambiguous \u2013 applying conservative penalty.",
+    "Drift-adjusted early-warning score: 0.0/100; drift confidence: 80.0/100."
+  ],
+  "total_penalty": 10.0
+}

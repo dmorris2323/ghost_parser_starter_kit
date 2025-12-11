@@ -1,0 +1,20 @@
+{
+  "alignment": "HIGH",
+  "alignment_rationale": [
+    "All nuclear indicators are at roughly the same level.",
+    "Levels observed \u2013 Watchboard: UNKNOWN, Golden Dome: GREEN, Decision Card: UNKNOWN."
+  ],
+  "alignment_score": 90.0,
+  "decision_card_notes": "Could not infer tone explicitly from decision card text.",
+  "decision_card_tone": "UNKNOWN",
+  "generated_at": "2025-12-11T02:46:57.720625Z",
+  "golden_dome_level": "GREEN",
+  "golden_dome_notes": [],
+  "inputs_present": {
+    "golden_dome_daily_watch_json": true,
+    "nuclear_decision_card_txt": true,
+    "prelaunch_watchboard_json": false
+  },
+  "watchboard_level": "UNKNOWN",
+  "watchboard_score": 0.0
+}

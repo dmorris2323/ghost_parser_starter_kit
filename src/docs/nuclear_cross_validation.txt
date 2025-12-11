@@ -1,0 +1,17 @@
+GLL Nuclear Cross-Validation Summary
+====================================
+Generated at (UTC): 2025-12-11T02:46:57.720625Z
+
+Inputs Present:
+  - golden_dome_daily_watch_json: OK
+  - prelaunch_watchboard_json: MISSING
+  - nuclear_decision_card_txt: OK
+
+Watchboard Level: UNKNOWN (0.0/100)
+Golden Dome Level: GREEN
+Decision Card Tone: UNKNOWN
+
+Alignment: HIGH (90.0/100)
+Rationale:
+  - All nuclear indicators are at roughly the same level.
+  - Levels observed – Watchboard: UNKNOWN, Golden Dome: GREEN, Decision Card: UNKNOWN.
