@@ -1,0 +1,72 @@
+{
+  "timestamp": "2025-12-11T04:38:37.221603+00:00",
+  "active_profile": {
+    "key": "sports_team",
+    "display": "Sports Team Operations",
+    "sector": "unknown"
+  },
+  "sensor_manifest": {
+    "status": "ok",
+    "total": 5,
+    "disabled": [],
+    "enabled": [
+      "optical",
+      "seismic",
+      "ems",
+      "radiation",
+      "generic_metrics"
+    ]
+  },
+  "fusion_minimap": {
+    "status": "ok",
+    "map": {
+      "UNKNOWN": {
+        "critical": 0,
+        "warning": 0,
+        "stable": 4
+      }
+    },
+    "file": "minimap.txt"
+  },
+  "pipeline_health": {
+    "score": 40,
+    "qa_passed": 0,
+    "qa_failed": 0,
+    "critical_alerts": 0,
+    "status": "RED",
+    "notes": "No passing tests detected or QA summary missing. No critical alerts detected in current run."
+  },
+  "threat_memory_summary": "===== THREAT MEMORY SUMMARY =====\nTotal recorded anomalies: 0\n\nTop recurring threat types:\n\nMost recent 0 events:\n\nSummary complete.\n",
+  "critical_alerts": [
+    {
+      "id": "2",
+      "Description": "Seismic 5.2, Rad 1.62 \u00b5Sv, Comms: Burst",
+      "Score": "100",
+      "Confidence_Level": "Critical"
+    },
+    {
+      "id": "5",
+      "Description": "Seismic 4.1, Rad 3.39 \u00b5Sv, Comms: Normal",
+      "Score": "100",
+      "Confidence_Level": "Critical"
+    }
+  ],
+  "cloud_status": {
+    "enabled": true,
+    "provider": "azure",
+    "simulated": true,
+    "status": "ok"
+  },
+  "operator_notes_last10": [
+    "",
+    "\u2022 Added apps/gui/joint_readiness_app.py as a dedicated Streamlit \u201cJoint Readiness Console\u201d for Obasi and commanders. This UI reads the joint readiness board, risk register, integrity report, and Obasi voice script from docs/ and presents them as a nuclear + base-defense command console.",
+    "\u2022 The console shows joint readiness score/level, joint integrity health score/level, nuclear posture, base-defense posture, sensor outage risk, fusion health, and top risks in a commander-readable layout.",
+    "\u2022 The sidebar includes a \u201cRebuild joint readiness products\u201d button that calls build_joint_readiness_board, build_joint_readiness_scorecard, build_joint_risk_register, build_joint_readiness_voice_script, and run_joint_readiness_integrity_guard to refresh outputs from the latest upstream data.",
+    "\u2022 The dashboard includes an Obasi voice script panel that surfaces the full joint readiness script and structured segments, along with the full integrity check list from the integrity guard, so a commander or reviewer can see both the narrative and the underlying structural health.",
+    "",
+    "Vital to commit to git. Recommended commit:",
+    "git add .",
+    "git commit -m Day 70 \u2013 Joint readiness console dashboard for Obasi",
+    "git push"
+  ]
+}

@@ -1,0 +1,12 @@
+======================================
+ GLL PIPELINE HEALTH SUMMARY
+======================================
+Overall Health Score: 40/100
+Status: RED
+
+QA Passed: 0
+QA Failed: 0
+Critical Alerts: 0
+
+Notes:
+No passing tests detected or QA summary missing. No critical alerts detected in current run.

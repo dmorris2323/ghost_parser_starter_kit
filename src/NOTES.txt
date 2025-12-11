@@ -1945,3 +1945,16 @@ Vital to commit to git. Recommended commit:
 git add .
 git commit -m DCIM – Defensive Cyber Intelligence Module for GLL
 git push
+
+GUI Upgrade – Spectral Command Center (Level 2)
+
+• Replaced apps/gui/app.py with a Command Center Edition Spectral Dashboard using a darker ISR-style theme, card-based layout, and sectioned tabs for nuclear/base-defense, defensive cyber intel (DCIM), minimap/SOS overlays, and the daily mission brief.
+• The new GUI pulls from existing docs artifacts (golden_dome_daily_watch.json, defensive_cyber_intel_report.json, joint_readiness_board.json, gui_minimap.json, gui_sos_overlay.json, daily_mission_brief.txt/html) and degrades gracefully when any file is missing – no crashes, only operator guidance.
+• Top-level metrics now present Fusion Trust, Nuclear Early Warning, Defensive Cyber Intel posture, and Joint Readiness as commander-facing tiles with GREEN/AMBER/RED posture badges and a unified Spectral Command Center aesthetic.
+• Added CSS-based dark theme, GLL card components, and structured tab layout to align the UI with a real ISR/base-defense command console suitable for demos to Shari, AFWERX/SBIR reviewers, and future AFTAC/base leadership.
+
+Vital to commit to git. Recommended commit:
+git add .
+git commit -m "GUI L2 – Spectral Command Center dashboard upgrade"
+git push
+
