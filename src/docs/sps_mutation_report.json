@@ -7,23 +7,19 @@
     "current": "/Users/dextermorris/ghost/parser_starter_kit/src/docs/sps_file_snapshot.json"
   },
   "previous_snapshot_present": true,
-  "generated_at": "2025-12-11T12:41:50Z",
+  "generated_at": "2025-12-11T13:00:33Z",
   "current_file_count": 246,
   "mode": "DIFF",
   "message": "Compared current snapshot to previous SPS baseline. Review changes carefully and reconcile with git history.",
   "diff": {
     "new_files": [],
     "removed_files": [],
-    "changed_files": [
-      "src/ghost_cli.py"
-    ],
+    "changed_files": [],
     "zero_byte_files": [
       "src/__init__.py",
       "src/cloud/__init__.py"
     ],
-    "critical_alerts": [
-      "CRITICAL: src/ghost_cli.py has changed since last snapshot."
-    ]
+    "critical_alerts": []
   },
   "snapshot": {
     "src/generate_daily_visual_pack.py": {
