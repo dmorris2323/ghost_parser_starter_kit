@@ -2278,3 +2278,47 @@ Day 67 – Impact Module 3: Nuclear Early-Warning – Pre-Boost Threat Card
   - This ties together nuclear readiness (Golden Dome), ISR watchboard, and SPS
     system behavior into one quick decision aid for commanders and reviewers.
 
+Day 67 – Impact Module 4: Hybrid Fusion Scenario Engine with Difficulty Levels
+
+• Added scenario_engine.py:
+  - Defines flagship HYBRID_FUSION_01 scenario:
+      • Nuclear early-warning (pre-launch environment)
+      • Base-defense (drone/perimeter probes)
+      • Cyber/DLP (beaconing + SPS mutation)
+      • Final reporting style choice to commander
+  - Provides get_hybrid_scenario_definition() for GUIs.
+  - Implements evaluate_hybrid_scenario(decisions, difficulty):
+      • Difficulty tiers: CADET, ANALYST, WAR_ROOM.
+      • Uses best-practice answers per question.
+      • Maps trainee decisions into rubric dimensions:
+          - analysis_quality
+          - fusion_thinking
+          - nuclear_relevance
+          - reporting_discipline
+      • Produces a 0–100 composite score aligned with Training Dashboard.
+  - Implements record_hybrid_scenario_session(...):
+      • Logs scenario runs to src/docs/training_sessions.json.
+      • Adds metadata: mode=SCENARIO, scenario_type=HYBRID_FUSION, difficulty.
+
+• Added mission_scenario_app.py:
+  - Streamlit GUI for Hybrid Fusion scenario.
+  - Trainee config:
+      • Name
+      • Difficulty (Cadet / Analyst / War Room)
+      • Session date
+  - Displays scenario phases and questions.
+  - Collects decisions per phase.
+  - Calls scenario_engine.evaluate_hybrid_scenario + record_hybrid_scenario_session.
+  - Shows:
+      • Composite score
+      • Rubric breakdown (4 dimensions)
+      • Obasi coaching message
+      • Per-question feedback.
+  - Confirms that the run is written to training_sessions.json for use by the Training Dashboard.
+
+• Operational impact:
+  - GLL now runs a full-spectrum hybrid ISR training mission:
+      • Nuclear + base-defense + cyber + SPS reasoning.
+      • Difficulty-aware assessment (beginner to war-room).
+      • Integrated with persistent training history.
+  - This is a credible Tech School / Goodfellow / AFTAC training aid, not a toy demo.

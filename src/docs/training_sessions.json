@@ -1,0 +1,20 @@
+[
+  {
+    "id": 1,
+    "trainee_name": "Ghost",
+    "scenario": "Hybrid Fusion \u2013 Missile Prep, Drone Probe, Cyber Beacon (Analyst)",
+    "session_date": "2025-12-11",
+    "created_at": "2025-12-11T17:17:48Z",
+    "rubric": {
+      "analysis_quality": 2,
+      "fusion_thinking": 2,
+      "nuclear_relevance": 2,
+      "reporting_discipline": 2
+    },
+    "composite_score": 40.0,
+    "mode": "SCENARIO",
+    "scenario_id": "HYBRID_FUSION_01",
+    "scenario_type": "HYBRID_FUSION",
+    "difficulty": "ANALYST"
+  }
+]
