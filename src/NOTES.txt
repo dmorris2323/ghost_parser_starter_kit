@@ -2454,3 +2454,34 @@ Operational impact:
   - CLI is hardened for demos and SBIR-style evaluations.
   - Integrity reporting is a real artifact, not just a concept.
 
+Day 67 – Training Dashboard v2 (UI + Coaching)
+
+• Upgraded training_dashboard_app.py:
+  - Added src/ path bootstrap so training engines import cleanly.
+  - Integrated training_curve_engine + training_sessions.json into a unified training cockpit.
+  - New summary functions:
+      • summarize_sessions(): total runs, scenario vs exercise counts, average scores.
+      • build_recent_sessions_table(): last N sessions table for instructor review.
+      • build_score_series(): simple score-over-time series for plotting.
+
+• Obasi Coach Panel:
+  - build_obasi_message() combines AGI, improvement slope, volatility, and session count.
+  - Feeds a base recommendation into build_obasi_training_coach_speech() so Obasi
+    gives adaptive coaching instead of static text.
+  - Panel now reacts to:
+      • high AGI + positive slope (harder missions, time pressure),
+      • average performance (structured debriefs),
+      • low or unstable performance (slow down, focus on fundamentals).
+
+• Training Dashboard UI:
+  - Top row: AGI, improvement slope, difficulty-weighted average, volatility index.
+  - Summary row: total sessions, scenario vs exercise counts, average scores overall and by mode.
+  - Progress Curve: line chart of composite scores across sessions.
+  - Recent Sessions: interactive table with date, mode, difficulty, score, scenario_type.
+
+Operational impact:
+  - GLL’s training environment now looks and behaves like a real ISR schoolhouse dashboard.
+  - Instructors and Shari can see Ghost’s curve, balance of training modes, and coaching guidance
+    in one place.
+  - This strengthens the “GLL as training tool + real product” narrative for SBIR/AFWERX.
+
