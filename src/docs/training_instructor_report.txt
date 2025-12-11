@@ -1,0 +1,51 @@
+Ghost Lantern Labs – Instructor Mode Report
+==========================================
+Generated at (UTC): 2025-12-11T10:41:29.310216Z
+
+Progress Overview
+-----------------
+Total sessions logged: 2
+First session UTC: 2025-12-11T09:57:11.862381Z
+Last session UTC:  2025-12-11T10:41:14.729021Z
+
+Average self-confidence: 96.5
+Confidence trend:        INSUFFICIENT_DATA
+
+Average engagement (chars in summary+lessons): 31.5
+Engagement trend:        INSUFFICIENT_DATA
+
+Domain Coverage (by training_focus)
+-----------------------------------
+- GENERAL_FUSION: 2 session(s)
+
+Latest Brief Snapshot
+----------------------
+Latest training focus:  GENERAL_FUSION
+Latest overall posture: GREEN
+Latest key scores:
+  Fusion trust:   0.0 (UNKNOWN)
+  Nuclear score:  0.0 (UNKNOWN)
+  Cyber threat:   0.0 (GREEN)
+  Joint readiness:90.0 (GREEN)
+
+Recent Sessions (most recent last)
+----------------------------------
+Session #1 – 2025-12-11T09:57:11.862381Z
+  Trainee:         Morris
+  Session ID:      4545
+  Training focus:  GENERAL_FUSION
+  Overall posture: GREEN
+  Confidence:      95.0 / 100
+  Engagement:      LOW (55 chars)
+  Instructor notes:
+    - Encourage deeper written reasoning (more detail).
+
+Session #2 – 2025-12-11T10:41:14.729021Z
+  Trainee:         MORRIS
+  Session ID:      45451
+  Training focus:  GENERAL_FUSION
+  Overall posture: GREEN
+  Confidence:      98.0 / 100
+  Engagement:      LOW (8 chars)
+  Instructor notes:
+    - Encourage deeper written reasoning (more detail).

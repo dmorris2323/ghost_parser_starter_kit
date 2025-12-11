@@ -2032,3 +2032,37 @@ Vital to commit to git. Recommended commit:
 git add .
 git commit -m Training Mode – interactive session logger and history for GLL training platform
 git push
+Day 7x – Instructor Mode + Training Dashboard (20× Training/GUI Block)
+
+• Added gll_training_instructor_mode.py as an instructor-facing analysis tool for GLL Training Mode.
+  - Reads docs/training_sessions_log.json and docs/training_mode_brief.json.
+  - Computes per-session summaries:
+    • self-confidence
+    • engagement level (based on length of written answers)
+    • posture/score snapshot (nuclear, cyber, joint, fusion)
+    • suggested instructor focus notes (e.g., nuclear volatility, cyber threat vectors, joint/base-defense implications, depth of reasoning).
+  - Computes aggregate progress metrics:
+    • total sessions and time span
+    • average self-confidence and confidence trend (increasing/decreasing/stable)
+    • average engagement and engagement trend
+    • domain coverage by training_focus (NUCLEAR_EARLY_WARNING, DEFENSIVE_CYBER_INTEL, JOINT_BASE_DEFENSE, GENERAL_FUSION).
+  - Writes:
+    • docs/training_instructor_report.json
+    • docs/training_instructor_report.txt
+    giving an instructor-grade overview of training progress and focus.
+
+• Added apps/gui/training_dashboard_app.py as a dedicated Training Dashboard GUI.
+  - Displays tiles for:
+    • Total sessions
+    • Average self-confidence (with trend label)
+    • Average engagement (chars per session, with trend)
+    • Latest training focus and overall posture from the most recent training_mode_brief.
+  - Renders a confidence-over-time line chart using training_sessions_log.json.
+  - Shows domain coverage (sessions per training_focus) based on the instructor report.
+  - Displays a recent-sessions table (last 10) with trainee, focus, posture, confidence, and key scores.
+  - This app does not modify any pipeline behavior; it is a read-only training intelligence view on top of GLL’s training artifacts.
+
+Vital to commit to git. Recommended commit:
+git add .
+git commit -m Training Mode – instructor report and Training Dashboard GUI with confidence progress and domain coverage
+git push

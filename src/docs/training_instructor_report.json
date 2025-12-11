@@ -1,0 +1,62 @@
+{
+  "generated_at": "2025-12-11T10:41:29.310216Z",
+  "latest_overall_posture": "GREEN",
+  "latest_scores": {
+    "cyber_posture_level": "GREEN",
+    "cyber_threat_score": 0.0,
+    "drift_index": 0.0,
+    "fusion_posture_level": "UNKNOWN",
+    "fusion_trust_score": 0.0,
+    "joint_readiness_level": "GREEN",
+    "joint_readiness_score": 90.0,
+    "nuclear_level": "UNKNOWN",
+    "nuclear_score": 0.0,
+    "temporal_volatility": 0.0
+  },
+  "latest_training_focus": "GENERAL_FUSION",
+  "module": "gll_training_instructor_mode",
+  "progress_summary": {
+    "average_confidence": 96.5,
+    "average_engagement_chars": 31.5,
+    "confidence_trend": "INSUFFICIENT_DATA",
+    "domain_counts": {
+      "GENERAL_FUSION": 2
+    },
+    "engagement_trend": "INSUFFICIENT_DATA",
+    "session_summaries": [
+      {
+        "engagement_chars": 55,
+        "engagement_level": "LOW",
+        "instructor_suggestions": [
+          "Encourage deeper written reasoning (more detail)."
+        ],
+        "overall_posture": "GREEN",
+        "self_confidence": 95.0,
+        "session_id": "4545",
+        "session_index": 1,
+        "timestamp_utc": "2025-12-11T09:57:11.862381Z",
+        "trainee_name": "Morris",
+        "training_focus": "GENERAL_FUSION"
+      },
+      {
+        "engagement_chars": 8,
+        "engagement_level": "LOW",
+        "instructor_suggestions": [
+          "Encourage deeper written reasoning (more detail)."
+        ],
+        "overall_posture": "GREEN",
+        "self_confidence": 98.0,
+        "session_id": "45451",
+        "session_index": 2,
+        "timestamp_utc": "2025-12-11T10:41:14.729021Z",
+        "trainee_name": "MORRIS",
+        "training_focus": "GENERAL_FUSION"
+      }
+    ],
+    "time_span": {
+      "first_session_utc": "2025-12-11T09:57:11.862381Z",
+      "last_session_utc": "2025-12-11T10:41:14.729021Z"
+    },
+    "total_sessions": 2
+  }
+}
