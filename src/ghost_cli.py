@@ -63,11 +63,16 @@ import sys
 import subprocess
 import json
 from pathlib import Path
+
+# Defensive Cyber Intel
 from defensive_cyber_intel_module import analyze_defensive_cyber_intel
+
+# Language Interpreter
 from language_interpreter import run_language_interpreter
-from sps_mutation_watcher import write_mutation_report
-from sps_behavior_monitor import write_behavior_report
-from prelaunch_signals_analyzer import write_preboost_threat_card
+
+# SPS – Self-Protection System
+from sps_mutation_watcher import run_sps_immunity_scan
+from system_integrity_report import generate_system_integrity_report
 
 
 BASE_DIR = Path(__file__).resolve().parent
@@ -522,13 +527,11 @@ def main() -> int:
             print(json.dumps(result, indent=2))
         elif choice == "51":
             print("Running SPS – System Immunity Scan...")
-            from sps_mutation_watcher import run_sps_immunity_scan
             result = run_sps_immunity_scan()
             print(json.dumps(result, indent=2))
 
         elif choice == "52":
             print("Generating System Integrity Report...")
-            from system_integrity_report import generate_system_integrity_report
             result = generate_system_integrity_report()
             print(f"System Integrity Report written to: {result['report_path']}")
             summary = result["summary"]
@@ -537,21 +540,13 @@ def main() -> int:
                 f"Modified: {summary['modified']}, "
                 f"Missing: {summary['missing']}, "
                 f"Untracked: {summary['untracked_baseline']}"
-        )
+            )
 
         elif choice == "60":
-            print("Running SPS Module 3 – Behavioral Integrity Monitor...")
-            result = write_behavior_report()
-            print("SPS Behavioral Integrity report written:")
-            print(f"  JSON: {result['json_path']}")
-            print(f"  TXT:  {result['txt_path']}")
+            print("SPS Module 3 – Behavioral Integrity Monitor is under development. No action taken.")
 
         elif choice == "61":
-            print("Running Pre-Boost Threat Card analysis...")
-            result = write_preboost_threat_card()
-            print("Pre-Boost Threat Card written:")
-            print(f"  JSON: {result['json_path']}")
-            print(f"  TXT:  {result['txt_path']}")
+            print("Pre-Boost Threat Card module is under development. No action taken.")
 
         else:
             print("Invalid option. Try again.")

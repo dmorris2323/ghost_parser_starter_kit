@@ -2431,3 +2431,26 @@ Operational impact:
   - This moves GLL closer to a real, production-hardened ISR platform,
     not just a fusion toy.
 
+Day 67 – SPS CLI sanity + integrity verification
+
+• Fixed ghost_cli imports:
+  - Removed dead imports (run_mutation_scan, write_behavior_report, write_preboost_threat_card).
+  - Standardized SPS imports:
+      from sps_mutation_watcher import run_sps_immunity_scan
+      from system_integrity_report import generate_system_integrity_report
+
+• Cleaned CLI handlers:
+  - Option 51: now correctly runs SPS – System Immunity Scan using run_sps_immunity_scan(), printing JSON summary.
+  - Option 52: generates System Integrity Report via generate_system_integrity_report(), writing src/docs/system_integrity_report.txt and printing summary counts.
+  - Options 60/61 converted to safe “under development” placeholders to avoid broken references.
+
+• Sanity checks:
+  - ghost_cli.py launches cleanly.
+  - SPS options 51 and 52 execute without error.
+  - SPS immunity + integrity reporting are now stable interface points instead of brittle stubs.
+
+Operational impact:
+  - GLL’s self-protection layer (SPS) is now callable, inspectable, and safe from missing-function crashes.
+  - CLI is hardened for demos and SBIR-style evaluations.
+  - Integrity reporting is a real artifact, not just a concept.
+
