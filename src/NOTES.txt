@@ -2322,3 +2322,112 @@ Day 67 – Impact Module 4: Hybrid Fusion Scenario Engine with Difficulty Levels
       • Difficulty-aware assessment (beginner to war-room).
       • Integrated with persistent training history.
   - This is a credible Tech School / Goodfellow / AFTAC training aid, not a toy demo.
+Day 67 – SPS Immunity Layer v2 (Integrity + Reports)
+
+• Fixed ghost_cli.py json error by:
+  - Adding global  at top.
+  - Removing branch-level  to avoid UnboundLocalError.
+
+• Added sps_mutation_watcher.py:
+  - SPS Module 2 – Mutation Watcher v2.
+  - Tracks SHA-256 hashes of mission-critical modules:
+      • core fusion files, mission brief stack, dashboard API,
+        training engines, CLI, and key GUI apps.
+  - Stores baseline in src/docs/sps_integrity_baseline.json.
+  - check_integrity():
+      • Returns per-file status: CLEAN / MODIFIED / MISSING / UNTRACKED_BASELINE.
+  - run_sps_immunity_scan():
+      • Aggregates summary (clean/modified/missing/untracked/total_tracked).
+
+• Added system_integrity_report.py:
+  - Generates src/docs/system_integrity_report.txt.
+  - Includes summary counts and per-file status lines.
+  - Provides a commander-ready integrity snapshot citing baseline path.
+
+• Updated ghost_cli.py:
+  - Option 50: SPS – System Immunity Scan – prints JSON summary of integrity.
+  - Option 51: SPS – System Integrity Report – writes and reports path to TXT report.
+
+• Optional GUI integration:
+  - apps/gui/app.py now supports an SPS – System Immunity tile
+    showing clean/modified/missing/total tracked counts.
+
+Operational impact:
+  - GLL now has a concrete immune system for code integrity.
+  - CLI and GUI can expose integrity status for demos, SBIR pitches,
+    and instructor/commander trust.
+  - This moves GLL closer to a real, production-hardened ISR platform,
+    not just a fusion toy.
+Day 67 – SPS Immunity Layer v2 (Integrity + Reports)
+
+• Fixed ghost_cli.py json error by:
+  - Adding global  at top.
+  - Removing branch-level  to avoid UnboundLocalError.
+
+• Added sps_mutation_watcher.py:
+  - SPS Module 2 – Mutation Watcher v2.
+  - Tracks SHA-256 hashes of mission-critical modules:
+      • core fusion files, mission brief stack, dashboard API,
+        training engines, CLI, and key GUI apps.
+  - Stores baseline in src/docs/sps_integrity_baseline.json.
+  - check_integrity():
+      • Returns per-file status: CLEAN / MODIFIED / MISSING / UNTRACKED_BASELINE.
+  - run_sps_immunity_scan():
+      • Aggregates summary (clean/modified/missing/untracked/total_tracked).
+
+• Added system_integrity_report.py:
+  - Generates src/docs/system_integrity_report.txt.
+  - Includes summary counts and per-file status lines.
+  - Provides a commander-ready integrity snapshot citing baseline path.
+
+• Updated ghost_cli.py:
+  - Option 50: SPS – System Immunity Scan – prints JSON summary of integrity.
+  - Option 51: SPS – System Integrity Report – writes and reports path to TXT report.
+
+• Optional GUI integration:
+  - apps/gui/app.py now supports an SPS – System Immunity tile
+    showing clean/modified/missing/total tracked counts.
+
+Operational impact:
+  - GLL now has a concrete immune system for code integrity.
+  - CLI and GUI can expose integrity status for demos, SBIR pitches,
+    and instructor/commander trust.
+  - This moves GLL closer to a real, production-hardened ISR platform,
+    not just a fusion toy.
+Day 67 – SPS Immunity Layer v2 (Integrity + Reports)
+
+• Fixed ghost_cli.py json error by:
+  - Adding global `import json` at top.
+  - Removing branch-level `import json` to avoid UnboundLocalError.
+
+• Added sps_mutation_watcher.py:
+  - SPS Module 2 – Mutation Watcher v2.
+  - Tracks SHA-256 hashes of mission-critical modules:
+      • core fusion files, mission brief stack, dashboard API,
+        training engines, CLI, and key GUI apps.
+  - Stores baseline in src/docs/sps_integrity_baseline.json.
+  - check_integrity():
+      • Returns per-file status: CLEAN / MODIFIED / MISSING / UNTRACKED_BASELINE.
+  - run_sps_immunity_scan():
+      • Aggregates summary (clean/modified/missing/untracked/total_tracked).
+
+• Added system_integrity_report.py:
+  - Generates src/docs/system_integrity_report.txt.
+  - Includes summary counts and per-file status lines.
+  - Provides a commander-ready integrity snapshot citing baseline path.
+
+• Updated ghost_cli.py:
+  - Option 50: "SPS – System Immunity Scan" – prints JSON summary of integrity.
+  - Option 51: "SPS – System Integrity Report" – writes and reports path to TXT report.
+
+• Optional GUI integration:
+  - apps/gui/app.py now supports an SPS – System Immunity tile
+    showing clean/modified/missing/total tracked counts.
+
+Operational impact:
+  - GLL now has a concrete "immune system" for code integrity.
+  - CLI and GUI can expose integrity status for demos, SBIR pitches,
+    and instructor/commander trust.
+  - This moves GLL closer to a real, production-hardened ISR platform,
+    not just a fusion toy.
+

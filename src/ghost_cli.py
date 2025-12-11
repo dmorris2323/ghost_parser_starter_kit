@@ -52,6 +52,9 @@ Menu options:
  47) Defensive Cyber Intelligence Report
  48) Foreign Language Interpreter
  49) SPS Mutation Watcher Report
+ 50) Training Curve / AGI SUmmary
+ 51) SPS-System Immunity Scan
+ 52) SPS-System Integrity Report
  60) SPS Behavioral Integrity Monitor (Module 3)
  61) Pre-Boost Threat Card (Nuclear Early-Warning Fusion)
 """
@@ -494,7 +497,6 @@ def main() -> int:
                 print(f"TXT  → {out['txt_path']}")
 
         elif choice == "47":
-            import json
             result = analyze_defensive_cyber_intel()
             print(json.dumps(result, indent=2))
 
@@ -512,6 +514,30 @@ def main() -> int:
             print("SPS Mutation Watcher report written:")
             print(f"  JSON: {result['json_path']}")
             print(f"  TXT:  {result['txt_path']}")
+
+        elif choice == "50":
+            print("Running GLL System Immunity Scan (Mutation Watcher)...")
+            from sps_mutation_watcher import check_integrity
+            result = check_integrity()
+            print(json.dumps(result, indent=2))
+        elif choice == "51":
+            print("Running SPS – System Immunity Scan...")
+            from sps_mutation_watcher import run_sps_immunity_scan
+            result = run_sps_immunity_scan()
+            print(json.dumps(result, indent=2))
+
+        elif choice == "52":
+            print("Generating System Integrity Report...")
+            from system_integrity_report import generate_system_integrity_report
+            result = generate_system_integrity_report()
+            print(f"System Integrity Report written to: {result['report_path']}")
+            summary = result["summary"]
+            print(
+                f"Summary – Clean: {summary['clean']}, "
+                f"Modified: {summary['modified']}, "
+                f"Missing: {summary['missing']}, "
+                f"Untracked: {summary['untracked_baseline']}"
+        )
 
         elif choice == "60":
             print("Running SPS Module 3 – Behavioral Integrity Monitor...")
