@@ -2218,3 +2218,35 @@ Day 67 – SPS Module 3: Behavioral Integrity Monitor
 • Operational impact:
   - SPS now has a third leg: not just guardrail doctrine (Module 1) and file mutation tracking (Module 2), but a behavioral monitor (Module 3) that looks at how the system has been acting and flags risky periods.
   - This is exactly the kind of self-preservation and safety story AFWERX/SBIR reviewers and Tech School instructors expect from a serious AI/ISR platform.
+Day 67 – Impact Module 2: Training Dashboard – Instructor Mode
+
+• Replaced apps/gui/training_dashboard_app.py with a full Trainee + Instructor dashboard:
+  - Trainee View:
+      • Select trainee name from stored sessions.
+      • See total sessions, average score, latest score.
+      • Obasi coach panel tied to latest score (with safe fallback).
+      • Score trend line chart (per trainee).
+      • Recent sessions table (last 10).
+  - Instructor Mode:
+      • Rubric-based evaluation form:
+          - Analysis Quality (0–5)
+          - Fusion Thinking (0–5)
+          - Nuclear/ISR Relevance (0–5)
+          - Reporting Discipline (0–5)
+      • Composite score computed (0–100) with ISR-weighted weights.
+      • Evaluations stored in src/docs/training_sessions.json.
+      • Training overview:
+          - Total sessions
+          - Overall average score
+          - Latest score
+      • Recent evaluations table (last 15).
+      • Per-trainee averages table (sessions, avg score, latest score).
+
+• Storage:
+  - All training sessions stored locally in src/docs/training_sessions.json.
+  - No external network or databases used.
+
+• Impact:
+  - GLL is now a true ISR training tool, not just an analysis engine.
+  - Instructors can grade, track, and trend performance over time.
+  - Trainees can see their curve and receive Obasi guidance.
