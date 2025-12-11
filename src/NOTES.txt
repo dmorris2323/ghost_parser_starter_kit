@@ -1958,3 +1958,32 @@ git add .
 git commit -m "GUI L2 – Spectral Command Center dashboard upgrade"
 git push
 
+Day 71 – GLL Fortification Suite (Full 20× Hardening Block)
+
+• Added gll_fortification_suite.py as a read-only integrity and consistency checker for Ghost Lantern Labs.
+• The suite runs six hardening passes:
+  1) GLL Schema Sentinel:
+     - Checks presence and JSON/text parseability of key docs artifacts (golden_dome_daily_watch.json, defensive_cyber_intel_report.json, joint_readiness_board.json, gui_minimap.json, gui_sos_overlay.json, base_defense_storyboard.json, scenario_pack_latest.json, treaty_evidence_bundle.json, run_history.json, daily_mission_brief.txt, nuclear_decision_card.txt, golden_dome_daily_watch.txt).
+     - Flags missing or malformed files and summarizes them in a single report.
+  2) Nuclear Pipeline Integrity Check:
+     - Validates Golden Dome Daily Watch, prelaunch_watchboard.json, treaty_evidence_bundle.json, and nuclear_decision_card.txt.
+     - Extracts nuclear level, nuclear score, drift index, and temporal volatility and reports any gaps in the nuclear early-warning artifact chain.
+  3) Joint Readiness Consistency Scanner:
+     - Compares nuclear posture (from Golden Dome) vs joint_readiness_board.json and flags contradictions (e.g., nuclear RED while joint readiness is GREEN, or vice versa).
+  4) DCIM Integrity Filter:
+     - Ensures defensive_cyber_intel_report.json contains the required top-level fields and all expected category_scores (beaconing, auth anomalies, inbound threats, tampering, config drift).
+  5) GUI Safety Scan:
+     - Verifies gui_minimap.json and gui_sos_overlay.json exist and are valid JSON so the Spectral Command Center UI doesn’t break during demos.
+  6) Operator Safety Merge:
+     - Fuses Fusion Trust, Nuclear score/level, Cyber threat posture, and Joint readiness into a single “overall_system_posture” for commander-grade triage.
+
+• The suite writes:
+  - docs/gll_fortification_suite.json
+  - docs/gll_fortification_suite.txt
+  giving a single operator-facing snapshot of where GLL is strong and where docs need to be regenerated or hardened.
+• No existing modules were changed; this is a pure stability and integrity layer on top of the docs outputs.
+
+Vital to commit to git. Recommended commit:
+git add .
+git commit -m Day 71 – GLL Fortification Suite for nuclear, cyber, GUI, and readiness integrity
+git push

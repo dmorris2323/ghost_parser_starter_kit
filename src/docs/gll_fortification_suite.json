@@ -1,0 +1,124 @@
+{
+  "generated_at": "2025-12-11T09:44:09.900838Z",
+  "module": "gll_fortification_suite",
+  "module_results": [
+    {
+      "json_files": [
+        {
+          "exists": true,
+          "file": "golden_dome_daily_watch.json",
+          "json_parse_ok": true
+        },
+        {
+          "exists": true,
+          "file": "defensive_cyber_intel_report.json",
+          "json_parse_ok": true
+        },
+        {
+          "exists": true,
+          "file": "joint_readiness_board.json",
+          "json_parse_ok": true
+        },
+        {
+          "exists": false,
+          "file": "gui_minimap.json",
+          "json_parse_ok": false
+        },
+        {
+          "exists": false,
+          "file": "gui_sos_overlay.json",
+          "json_parse_ok": false
+        },
+        {
+          "exists": true,
+          "file": "base_defense_storyboard.json",
+          "json_parse_ok": true
+        },
+        {
+          "exists": true,
+          "file": "scenario_pack_latest.json",
+          "json_parse_ok": true
+        },
+        {
+          "exists": true,
+          "file": "treaty_evidence_bundle.json",
+          "json_parse_ok": true
+        },
+        {
+          "exists": false,
+          "file": "run_history.json",
+          "json_parse_ok": false
+        }
+      ],
+      "module": "schema_sentinel",
+      "notes": [
+        "Missing JSON docs: gui_minimap.json, gui_sos_overlay.json, run_history.json"
+      ],
+      "status": "AMBER",
+      "text_files": [
+        {
+          "exists": true,
+          "file": "daily_mission_brief.txt",
+          "text_read_ok": true
+        },
+        {
+          "exists": true,
+          "file": "nuclear_decision_card.txt",
+          "text_read_ok": true
+        },
+        {
+          "exists": true,
+          "file": "golden_dome_daily_watch.txt",
+          "text_read_ok": true
+        }
+      ]
+    },
+    {
+      "drift_index": 0.0,
+      "issues": [
+        "prelaunch_watchboard.json missing or malformed."
+      ],
+      "module": "nuclear_pipeline_integrity",
+      "nuclear_level": "UNKNOWN",
+      "nuclear_score": 0.0,
+      "status": "AMBER",
+      "temporal_volatility": 0.0
+    },
+    {
+      "inconsistencies": [],
+      "joint_readiness_level": "GREEN",
+      "joint_readiness_score": 90.0,
+      "module": "joint_readiness_consistency",
+      "nuclear_level": "UNKNOWN",
+      "nuclear_score": 0.0,
+      "status": "GREEN"
+    },
+    {
+      "issues": [],
+      "module": "dcim_integrity_filter",
+      "status": "GREEN"
+    },
+    {
+      "issues": [
+        "gui_minimap.json missing or malformed.",
+        "gui_sos_overlay.json missing or malformed."
+      ],
+      "module": "gui_sanity_scan",
+      "status": "AMBER"
+    },
+    {
+      "cyber_posture_level": "GREEN",
+      "cyber_threat_score": 0.0,
+      "fusion_posture_level": "UNKNOWN",
+      "fusion_trust_score": 0.0,
+      "joint_readiness_level": "GREEN",
+      "joint_readiness_score": 90.0,
+      "module": "operator_safety_merge",
+      "nuclear_level": "UNKNOWN",
+      "nuclear_score": 0.0,
+      "overall_system_posture": "GREEN",
+      "status": "GREEN"
+    }
+  ],
+  "overall_posture": "AMBER"
+}
