@@ -2485,3 +2485,44 @@ Operational impact:
     in one place.
   - This strengthens the “GLL as training tool + real product” narrative for SBIR/AFWERX.
 
+Day 67 – Nuclear/AFTAC 20× Block – Nuclear Signal Fusion + Treaty Bundle v2
+
+• Added nuclear_signal_fusion.py:
+  - Fuses nuclear early-warning context from:
+      • src/docs/prelaunch_watchboard.json
+      • src/docs/golden_dome_daily_watch.json
+  - Extracts:
+      • Prelaunch alert level + hot sectors
+      • Golden Dome readiness level + drift status + fusion trust (when present)
+  - Computes an explainable overall nuclear risk level (LOW/MEDIUM/HIGH) with explicit reasons.
+  - Writes:
+      • src/docs/nuclear_signal_fusion.json
+      • src/docs/nuclear_signal_fusion.txt
+  - Designed as an AFTAC/ICADS-style summary a commander can actually read and brief.
+
+• Upgraded treaty_evidence_bundle.py to v2:
+  - Now searches both src/docs and docs for key artifacts:
+      • Daily mission briefs (HTML/TXT)
+      • Golden Dome drift and daily watch
+      • Nuclear decision card
+      • Prelaunch watchboard
+      • Nuclear Signal Fusion (JSON/TXT)
+      • GLL readiness + system integrity report
+      • scenario_pack_latest.json
+  - Outputs:
+      • src/docs/treaty_evidence_bundle.json
+  - Includes a structured missing_artifacts list for quick gap analysis.
+
+• ghost_cli.py:
+  - Added import: from nuclear_signal_fusion import build_nuclear_signal_fusion
+  - New menu option 53) Nuclear Signal Fusion Summary
+  - New handler runs build_nuclear_signal_fusion() and prints JSON/TXT paths.
+
+Operational impact:
+  - GLL now produces a single, fused nuclear early-warning summary product, tying together
+    pre-launch watchboard and Golden Dome daily watch into an explainable risk assessment.
+  - Treaty Evidence Bundle now includes this fusion product and is more robust to file layout
+    differences, making it usable in real treaty, audit, and investigation contexts.
+  - Nuclear/AFTAC stack is deeper and more coherent for future AFTAC/ICADS, AFWERX, or
+    investor briefings.
+

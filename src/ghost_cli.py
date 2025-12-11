@@ -55,6 +55,7 @@ Menu options:
  50) Training Curve / AGI SUmmary
  51) SPS-System Immunity Scan
  52) SPS-System Integrity Report
+ 53) Nuclear Signal Fusion Summary
  60) SPS Behavioral Integrity Monitor (Module 3)
  61) Pre-Boost Threat Card (Nuclear Early-Warning Fusion)
 """
@@ -73,6 +74,7 @@ from language_interpreter import run_language_interpreter
 # SPS – Self-Protection System
 from sps_mutation_watcher import run_sps_immunity_scan
 from system_integrity_report import generate_system_integrity_report
+from nuclear_signal_fusion import build_nuclear_signal_fusion
 
 
 BASE_DIR = Path(__file__).resolve().parent
@@ -541,6 +543,12 @@ def main() -> int:
                 f"Missing: {summary['missing']}, "
                 f"Untracked: {summary['untracked_baseline']}"
             )
+        elif choice == "53":
+            print("Running Nuclear Signal Fusion Summary...")
+            result = build_nuclear_signal_fusion()
+            print("Nuclear Signal Fusion written:")
+            print(f"  JSON: {result['json_path']}")
+            print(f"  TXT:  {result['txt_path']}")
 
         elif choice == "60":
             print("SPS Module 3 – Behavioral Integrity Monitor is under development. No action taken.")
