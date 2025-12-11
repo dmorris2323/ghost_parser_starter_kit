@@ -1,6 +1,6 @@
 Joint Readiness Scorecard – Ghost Lantern Labs
 ==============================================
-Generated at (UTC): 2025-12-11T02:58:07.854232Z
+Generated at (UTC): 2025-12-11T03:04:41.860775Z
 
 JOINT READINESS: GREEN  (90.0/100)
 

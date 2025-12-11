@@ -1911,3 +1911,13 @@ Vital to commit to git. Recommended commit:
 git add .
 git commit -m Day 67 – Joint nuclear + base-defense readiness board and risk register
 git push
+Day 68 – Joint Readiness Briefing Layer
+
+• Added joint_readiness_html_brief.py to render the Joint Readiness Board, Scorecard, and Risk Register into a single HTML brief (joint_readiness_brief.html) with a clean commander-facing layout covering joint score, nuclear posture, base-defense posture, sensor outage risk, fusion health, and top risks.
+• Added joint_readiness_voice_script.py to generate an Obasi-style voice script for the joint readiness picture, producing both JSON and TXT outputs that can be fed into a future TTS/IMF-style pipeline (joint_readiness_voice_script.json/.txt).
+• This block turns the joint nuclear + base-defense math into actual war-room briefing products: a visual HTML summary for commanders/AFWERX demos and a ready-made voice script for Obasi and future IMF-style briefs.
+
+Vital to commit to git. Recommended commit:
+git add .
+git commit -m Day 68 – Joint readiness HTML brief and Obasi voice script
+git push
