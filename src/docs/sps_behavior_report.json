@@ -1,0 +1,33 @@
+{
+  "title": "Ghost Lantern Labs \u2013 SPS Module 3 \u2013 Behavioral Integrity Monitor",
+  "generated_at": "2025-12-11T14:00:01Z",
+  "notes_path": "/Users/dextermorris/ghost/parser_starter_kit/src/NOTES.txt",
+  "mutation_report_path": "/Users/dextermorris/ghost/parser_starter_kit/src/docs/sps_mutation_report.json",
+  "status": {
+    "level": "RED",
+    "summary": "Behavioral integrity is in a RED state \u2013 SPS has critical alerts and/or zero-byte files, and the system should NOT be trusted for serious ISR/nuclear/base-defense analysis until resolved.",
+    "reasons": [
+      "SPS Mutation Watcher found 2 zero-byte files."
+    ]
+  },
+  "notes_analysis": {
+    "lines_analyzed": 160,
+    "negatives_found": [],
+    "cautions_found": [],
+    "positives_found": [
+      "stable",
+      "green"
+    ]
+  },
+  "mutation_summary": {
+    "mode": "DIFF",
+    "critical_alerts": [],
+    "zero_byte_files": [
+      "src/__init__.py",
+      "src/cloud/__init__.py"
+    ],
+    "changed_files": [],
+    "removed_files": [],
+    "new_files": []
+  }
+}

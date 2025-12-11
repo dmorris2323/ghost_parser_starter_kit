@@ -1,0 +1,37 @@
+Ghost Lantern Labs – Self-Preservation Shield (SPS)
+Module 3 – Behavioral Integrity Monitor
+========================================================================
+
+Generated at       : 2025-12-11T14:00:01Z
+NOTES.txt path     : /Users/dextermorris/ghost/parser_starter_kit/src/NOTES.txt
+Mutation report    : /Users/dextermorris/ghost/parser_starter_kit/src/docs/sps_mutation_report.json
+
+Behavioral Status
+-----------------
+Level   : RED
+Summary : Behavioral integrity is in a RED state – SPS has critical alerts and/or zero-byte files, and the system should NOT be trusted for serious ISR/nuclear/base-defense analysis until resolved.
+Reasons :
+  - SPS Mutation Watcher found 2 zero-byte files.
+
+Recent NOTES.txt Analysis
+-------------------------
+Lines analyzed   : 160
+Negative markers : []
+Caution markers  : []
+Positive markers : ['green', 'stable']
+
+SPS Mutation Summary (from last report)
+---------------------------------------
+Mode            : DIFF
+Critical alerts : 0
+Zero-byte files : 2
+Changed files   : 0
+Removed files   : 0
+New files       : 0
+
+Recommended Use
+----------------
+• Use this report before major demos, training exercises, or AFWERX/SBIR reviews to demonstrate that GLL's behavior is being monitored and assessed, not just its files.
+• Treat RED as a hard stop for serious ISR/nuclear/base-defense use until issues are resolved.
+• Treat AMBER as a caution flag – investigate NOTES.txt and SPS mutation reports before trusting analysis.
+• Treat GREEN as 'stable enough for training and demos' but still under human supervision.

@@ -2194,3 +2194,27 @@ Day 67 – Cyber Resilience & SPS tile wired into Spectral Command Center
   - Shows the latest daily_mission_brief.txt if present.
   - Shows prelaunch_watchboard.json if present.
   - Surfaces system self-preservation posture visually for commanders/instructors.
+Day 67 – SPS Module 3: Behavioral Integrity Monitor
+
+• Added sps_behavior_monitor.py:
+  - Reads the last ~160 lines of NOTES.txt and scans for:
+      • severe negatives (errors, crash, rollback, do not use, etc.)
+      • caution markers (TODO, BUG, HACK, temporary fix, etc.)
+      • positive stability markers (stable, passed, clean run, ready for demo).
+  - Loads the last SPS mutation report from docs/sps_mutation_report.json (if present).
+  - Computes a GREEN / AMBER / RED behavioral integrity status based on:
+      • critical SPS alerts
+      • zero-byte files
+      • volume of changed/removed files
+      • presence of severe/caution markers in NOTES.txt.
+  - Writes:
+      • docs/sps_behavior_report.json
+      • docs/sps_behavior_report.txt
+
+• Optional CLI hook:
+  - Added Option 60) SPS Behavioral Integrity Monitor (Module 3) in ghost_cli.py.
+  - Running this option generates the behavioral integrity report and prints the JSON/TXT paths.
+
+• Operational impact:
+  - SPS now has a third leg: not just guardrail doctrine (Module 1) and file mutation tracking (Module 2), but a behavioral monitor (Module 3) that looks at how the system has been acting and flags risky periods.
+  - This is exactly the kind of self-preservation and safety story AFWERX/SBIR reviewers and Tech School instructors expect from a serious AI/ISR platform.

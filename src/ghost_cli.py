@@ -52,6 +52,7 @@ Menu options:
  47) Defensive Cyber Intelligence Report
  48) Foreign Language Interpreter
  49) SPS Mutation Watcher Report
+ 60) SPS Behavioral Integrity Monitor (Module 3)
 """
 
 import sys
@@ -61,6 +62,7 @@ from pathlib import Path
 from defensive_cyber_intel_module import analyze_defensive_cyber_intel
 from language_interpreter import run_language_interpreter
 from sps_mutation_watcher import write_mutation_report
+from sps_behavior_monitor import write_behavior_report
 
 
 BASE_DIR = Path(__file__).resolve().parent
@@ -506,6 +508,13 @@ def main() -> int:
             print("Running SPS Module 2 – Mutation Watcher...")
             result = write_mutation_report()
             print("SPS Mutation Watcher report written:")
+            print(f"  JSON: {result['json_path']}")
+            print(f"  TXT:  {result['txt_path']}")
+
+        elif choice == "60":
+            print("Running SPS Module 3 – Behavioral Integrity Monitor...")
+            result = write_behavior_report()
+            print("SPS Behavioral Integrity report written:")
             print(f"  JSON: {result['json_path']}")
             print(f"  TXT:  {result['txt_path']}")
 
