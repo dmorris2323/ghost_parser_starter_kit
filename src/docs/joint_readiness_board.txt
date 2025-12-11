@@ -1,6 +1,6 @@
 GLL Joint Readiness Board – Nuclear + Base Defense
 ==================================================
-Generated at (UTC): 2025-12-11T03:04:41.860775Z
+Generated at (UTC): 2025-12-11T03:09:55.790041Z
 
 Joint Readiness Score: 90.0/100
 Joint Readiness Level: GREEN

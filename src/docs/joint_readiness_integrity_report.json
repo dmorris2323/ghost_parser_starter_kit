@@ -1,0 +1,98 @@
+{
+  "checks": [
+    {
+      "component": "nuclear_early_warning_summary.json",
+      "message": "Core nuclear summary keys present.",
+      "status": "OK"
+    },
+    {
+      "component": "nuclear_early_warning_summary.json",
+      "message": "Nuclear early-warning score in range: 0.0/100.",
+      "status": "OK"
+    },
+    {
+      "component": "installation_threat_map.json",
+      "message": "overall_threat_score out of [0,100] range or missing: -1.",
+      "status": "WARN"
+    },
+    {
+      "component": "installation_threat_map.json",
+      "message": "'sectors' is not a list; unexpected structure.",
+      "status": "WARN"
+    },
+    {
+      "component": "sensor_outage_predictor.json",
+      "message": "File missing or unreadable.",
+      "status": "ERROR"
+    },
+    {
+      "component": "distributed_readiness_snapshot.json",
+      "message": "fusion_trust_score out of [0,100] range or missing: -1.",
+      "status": "WARN"
+    },
+    {
+      "component": "distributed_readiness_snapshot.json",
+      "message": "average_reliability out of [0,100] range or missing: -1.",
+      "status": "WARN"
+    },
+    {
+      "component": "distributed_readiness_snapshot.json",
+      "message": "No 'units' or 'elements' array; distributed readiness granularity missing.",
+      "status": "WARN"
+    },
+    {
+      "component": "base_defense_storyboard.json",
+      "message": "No 'phases' key; storyboard may not be structured.",
+      "status": "WARN"
+    },
+    {
+      "component": "joint_readiness_board.json",
+      "message": "Joint readiness score in range: 90.0/100.",
+      "status": "OK"
+    },
+    {
+      "component": "joint_risk_register.json",
+      "message": "1 risks recorded in joint risk register.",
+      "status": "OK"
+    },
+    {
+      "component": "joint_readiness_voice_script.json",
+      "message": "voice_profile set to Obasi as expected.",
+      "status": "OK"
+    },
+    {
+      "component": "joint_readiness_voice_script.json",
+      "message": "full_script length looks reasonable (175 words).",
+      "status": "OK"
+    },
+    {
+      "component": "joint_readiness_voice_script.json",
+      "message": "All expected voice script segments present.",
+      "status": "OK"
+    },
+    {
+      "component": "joint_readiness_scorecard.txt",
+      "message": "Scorecard header detected.",
+      "status": "OK"
+    },
+    {
+      "component": "joint_readiness_scorecard.txt",
+      "message": "Scorecard includes both nuclear and base-defense sections.",
+      "status": "OK"
+    },
+    {
+      "component": "joint_readiness_brief.html",
+      "message": "HTML brief title present.",
+      "status": "OK"
+    },
+    {
+      "component": "joint_readiness_brief.html",
+      "message": "HTML brief includes key sections for risks and scorecard.",
+      "status": "OK"
+    }
+  ],
+  "component": "joint_readiness_stack",
+  "generated_at": "2025-12-11T03:10:03.261268Z",
+  "health_level": "AMBER",
+  "health_score": 70.0
+}

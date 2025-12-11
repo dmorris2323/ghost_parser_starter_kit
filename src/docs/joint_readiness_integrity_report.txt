@@ -1,0 +1,26 @@
+GLL Joint Readiness Integrity Report
+====================================
+Generated at (UTC): 2025-12-11T03:10:03.261268Z
+
+Overall Health Score: 70.0/100
+Health Level: AMBER
+
+Check Results:
+- [OK] nuclear_early_warning_summary.json: Core nuclear summary keys present.
+- [OK] nuclear_early_warning_summary.json: Nuclear early-warning score in range: 0.0/100.
+- [WARN] installation_threat_map.json: overall_threat_score out of [0,100] range or missing: -1.
+- [WARN] installation_threat_map.json: 'sectors' is not a list; unexpected structure.
+- [ERROR] sensor_outage_predictor.json: File missing or unreadable.
+- [WARN] distributed_readiness_snapshot.json: fusion_trust_score out of [0,100] range or missing: -1.
+- [WARN] distributed_readiness_snapshot.json: average_reliability out of [0,100] range or missing: -1.
+- [WARN] distributed_readiness_snapshot.json: No 'units' or 'elements' array; distributed readiness granularity missing.
+- [WARN] base_defense_storyboard.json: No 'phases' key; storyboard may not be structured.
+- [OK] joint_readiness_board.json: Joint readiness score in range: 90.0/100.
+- [OK] joint_risk_register.json: 1 risks recorded in joint risk register.
+- [OK] joint_readiness_voice_script.json: voice_profile set to Obasi as expected.
+- [OK] joint_readiness_voice_script.json: full_script length looks reasonable (175 words).
+- [OK] joint_readiness_voice_script.json: All expected voice script segments present.
+- [OK] joint_readiness_scorecard.txt: Scorecard header detected.
+- [OK] joint_readiness_scorecard.txt: Scorecard includes both nuclear and base-defense sections.
+- [OK] joint_readiness_brief.html: HTML brief title present.
+- [OK] joint_readiness_brief.html: HTML brief includes key sections for risks and scorecard.

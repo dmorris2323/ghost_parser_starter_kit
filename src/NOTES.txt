@@ -1921,3 +1921,15 @@ Vital to commit to git. Recommended commit:
 git add .
 git commit -m Day 68 – Joint readiness HTML brief and Obasi voice script
 git push
+Day 69 – Joint Readiness Integrity Hardening
+
+• Added joint_readiness_integrity_guard.py as a pure hardening module to validate the entire joint nuclear + base-defense readiness stack without changing any upstream behavior.
+• The integrity guard inspects nuclear_early_warning_summary, installation_threat_map, sensor_outage_predictor, distributed_readiness_snapshot, base_defense_storyboard, joint_readiness_board, joint_risk_register, joint_readiness_scorecard, joint_readiness_brief, and joint_readiness_voice_script.
+• For each artifact it checks presence, basic schema, and key value ranges (0–100 scores, expected sections, Obasi voice profile, etc.), then computes an overall health_score (0–100) and health_level (GREEN/AMBER/RED).
+• Outputs docs/joint_readiness_integrity_report.json and docs/joint_readiness_integrity_report.txt, giving a commander- and evaluator-friendly view of structural health for the joint readiness stack.
+• This is pure hardening: aggregation-only, no side effects on existing modules, designed to catch silent schema drift or missing products before a demo or brief.
+
+Vital to commit to git. Recommended commit:
+git add .
+git commit -m Day 69 – Joint readiness integrity guard hardening
+git push
