@@ -1,0 +1,26 @@
+Ghost Lantern Labs – Defensive Cyber Intelligence Report
+=======================================================
+Generated at (UTC): 2025-12-11T04:20:15.807049Z
+
+Overall Cyber Threat Score: 0.0 / 100
+Cyber Posture Level: GREEN
+Assessment Confidence: 50.0 / 100
+
+Category Scores:
+  • Beaconing / C2 suspicion: 0.0 / 100
+  • Auth & identity anomalies: 0.0 / 100
+  • Inbound threat pressure:  0.0 / 100
+  • Sensor tampering signals: 0.0 / 100
+  • Config / posture drift:   0.0 / 100
+
+MITRE ATT&CK–style Tactics Suspected: None confidently indicated.
+
+Integrity Hints:
+  • Recent anomaly runs (last 20): 0
+  • Total runs in history:         0
+  • Integrity flags / issues: None recorded.
+
+Interpretation:
+  This report reflects defensive cyber intelligence derived from internal GLL telemetry.
+  It does not rely on any active scanning, exploitation, or offensive cyber actions.
+  It is suitable for ISR, DCO, and commander-facing briefs.

@@ -92,7 +92,7 @@
     }
   ],
   "component": "joint_readiness_stack",
-  "generated_at": "2025-12-11T03:10:03.261268Z",
+  "generated_at": "2025-12-11T03:58:49.076149Z",
   "health_level": "AMBER",
   "health_score": 70.0
 }

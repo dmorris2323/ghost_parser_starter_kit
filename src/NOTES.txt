@@ -1933,3 +1933,15 @@ Vital to commit to git. Recommended commit:
 git add .
 git commit -m Day 69 – Joint readiness integrity guard hardening
 git push
+DCIM Sprint – Defensive Cyber Intelligence Module
+
+• Added defensive_cyber_intel_module.py as a passive Defensive Cyber Intelligence Module (DCIM) on top of the existing GLL fusion pipeline.
+• DCIM reads scored_output.csv or fused_output.csv (if present) plus run_history.json and system_integrity_report.json (when available) and derives five key category scores: beaconing/C2 suspicion, auth & identity anomalies, inbound threat pressure, sensor tampering signals, and configuration/posture drift.
+• It aggregates these into a single cyber_threat_score (0–100), assigns a cyber_posture_level (GREEN/AMBER/RED), and computes a basic confidence score based on data richness and history.
+• DCIM maps the category scores into a simple MITRE ATT&CK-style tactic list (e.g., C2, Reconnaissance, Credential Access, Defense Evasion) to give commanders and reviewers a recognizable frame without performing any offensive actions.
+• Outputs docs/defensive_cyber_intel_report.json and docs/defensive_cyber_intel_report.txt, providing a commander-ready, doctrine-safe defensive cyber intelligence view for nuclear/base-defense/joint readiness briefs. No port scanning, no exploitation, no external effects — strictly defensive intel.
+
+Vital to commit to git. Recommended commit:
+git add .
+git commit -m DCIM – Defensive Cyber Intelligence Module for GLL
+git push

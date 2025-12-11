@@ -49,12 +49,14 @@ Menu options:
  44) Golden Dome Nuclear Brief Pack
  45) Base Defense Hotspots
  46) Strategic Readiness Index
+ 47) Defensive Cyber Intelligence Report
 """
 
 import sys
 import subprocess
 import json
 from pathlib import Path
+from defensive_cyber_intel_module import analyze_defensive_cyber_intel
 
 
 BASE_DIR = Path(__file__).resolve().parent
@@ -482,6 +484,11 @@ def main() -> int:
                 print("=== STRATEGIC READINESS INDEX BUILT ===")
                 print(f"JSON → {out['json_path']}")
                 print(f"TXT  → {out['txt_path']}")
+
+        elif choice == "47":
+            import json
+            result = analyze_defensive_cyber_intel()
+            print(json.dumps(result, indent=2))
 
         else:
             print("Invalid option. Try again.")

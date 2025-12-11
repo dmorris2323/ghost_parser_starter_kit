@@ -1,0 +1,20 @@
+{
+  "category_scores": {
+    "auth_anomaly_score": 0.0,
+    "beaconing_score": 0.0,
+    "config_drift_score": 0.0,
+    "inbound_threat_score": 0.0,
+    "tamper_score": 0.0
+  },
+  "confidence": 50.0,
+  "cyber_posture_level": "GREEN",
+  "cyber_threat_score": 0.0,
+  "generated_at": "2025-12-11T04:20:15.807049Z",
+  "integrity_hints": {
+    "integrity_flags": [],
+    "recent_anomaly_runs": 0,
+    "total_runs": 0
+  },
+  "mitre_tactics_suspected": [],
+  "module": "defensive_cyber_intel_module"
+}

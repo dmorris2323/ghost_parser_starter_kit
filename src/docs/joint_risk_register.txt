@@ -1,6 +1,6 @@
 GLL Joint Risk Register
 =======================
-Generated at (UTC): 2025-12-11T03:09:55.837679Z
+Generated at (UTC): 2025-12-11T03:58:49.049105Z
 
 Joint Readiness: GREEN (90.0/100)
 
