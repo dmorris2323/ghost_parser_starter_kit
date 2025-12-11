@@ -1781,3 +1781,14 @@ Vital to commit to git. Recommended commit:
 git add .
 git commit -m Day 66 – Pre-launch early warning hardening and scorecard
 git push
+Day 70 – Joint Readiness Dashboard (Obasi Console)
+
+• Added apps/gui/joint_readiness_app.py as a dedicated Streamlit “Joint Readiness Console” for Obasi and commanders. This UI reads the joint readiness board, risk register, integrity report, and Obasi voice script from docs/ and presents them as a nuclear + base-defense command console.
+• The console shows joint readiness score/level, joint integrity health score/level, nuclear posture, base-defense posture, sensor outage risk, fusion health, and top risks in a commander-readable layout.
+• The sidebar includes a “Rebuild joint readiness products” button that calls build_joint_readiness_board, build_joint_readiness_scorecard, build_joint_risk_register, build_joint_readiness_voice_script, and run_joint_readiness_integrity_guard to refresh outputs from the latest upstream data.
+• The dashboard includes an Obasi voice script panel that surfaces the full joint readiness script and structured segments, along with the full integrity check list from the integrity guard, so a commander or reviewer can see both the narrative and the underlying structural health.
+
+Vital to commit to git. Recommended commit:
+git add .
+git commit -m Day 70 – Joint readiness console dashboard for Obasi
+git push
