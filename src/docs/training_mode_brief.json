@@ -1,0 +1,39 @@
+{
+  "base_defense_note": "Base-defense storyboard not present or has no phases.",
+  "generated_at": "2025-12-11T09:51:22.983105Z",
+  "module": "gll_training_mode_brief",
+  "overall_posture": "GREEN",
+  "prelaunch_note": "Pre-launch watchboard not available.",
+  "scenario_summary": {
+    "keys_present": [
+      "generated_at",
+      "base_dir",
+      "fusion_trust",
+      "operator_safety_layer",
+      "minimap",
+      "sos_overlay"
+    ],
+    "scenario_count": 0
+  },
+  "scores": {
+    "cyber_posture_level": "GREEN",
+    "cyber_threat_score": 0.0,
+    "drift_index": 0.0,
+    "fusion_posture_level": "UNKNOWN",
+    "fusion_trust_score": 0.0,
+    "joint_readiness_level": "GREEN",
+    "joint_readiness_score": 90.0,
+    "nuclear_level": "UNKNOWN",
+    "nuclear_score": 0.0,
+    "temporal_volatility": 0.0
+  },
+  "student_prompts": [
+    "1) Based on the nuclear score and level, would you characterize the current nuclear environment as stable, elevated, or critical? Defend your answer using drift and temporal volatility.",
+    "2) Look at the cyber threat score and posture. Which MITRE ATT&CK-style tactics appear most likely, and what additional collection would you request?",
+    "3) Joint readiness vs nuclear posture: do they agree on the level of concern? If not, which one would you brief as the primary driver and why?",
+    "4) If a commander asked you, 'Is my base more threatened from the air, the network, or the nuclear domain today?', how would you answer in one paragraph?",
+    "5) Assume this scenario is a training inject for a 1N0X1/1A8X2 team. What three follow-on products would you build from GLL (e.g., mission brief, base-defense storyboard, treaty evidence bundle) to support decision-making?"
+  ],
+  "training_focus": "GENERAL_FUSION",
+  "training_focus_reason": "No single domain heavily elevated; trainee should practice synthesizing fusion trust, nuclear, cyber, and joint readiness into a single narrative."
+}

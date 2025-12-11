@@ -1,0 +1,33 @@
+Ghost Lantern Labs – Training Mode Student Brief
+================================================
+Generated at (UTC): 2025-12-11T09:51:22.983105Z
+
+Training Focus: GENERAL_FUSION
+Why this focus: No single domain heavily elevated; trainee should practice synthesizing fusion trust, nuclear, cyber, and joint readiness into a single narrative.
+
+Overall Posture (worst of fusion/nuclear/cyber/joint): GREEN
+
+Key Scores
+----------
+Fusion Trust:       0.0 (UNKNOWN)
+Nuclear Score:      0.0 (UNKNOWN)
+  • Drift Index:    0.0
+  • Volatility:     0.0
+Cyber Threat:       0.0 (GREEN)
+Joint Readiness:    90.0 (GREEN)
+
+Context Notes
+-------------
+- Scenario Pack:    {'keys_present': ['generated_at', 'base_dir', 'fusion_trust', 'operator_safety_layer', 'minimap', 'sos_overlay'], 'scenario_count': 0}
+- Base-Defense:     Base-defense storyboard not present or has no phases.
+- Pre-launch:       Pre-launch watchboard not available.
+
+Student Prompts
+---------------
+1) Based on the nuclear score and level, would you characterize the current nuclear environment as stable, elevated, or critical? Defend your answer using drift and temporal volatility.
+2) Look at the cyber threat score and posture. Which MITRE ATT&CK-style tactics appear most likely, and what additional collection would you request?
+3) Joint readiness vs nuclear posture: do they agree on the level of concern? If not, which one would you brief as the primary driver and why?
+4) If a commander asked you, 'Is my base more threatened from the air, the network, or the nuclear domain today?', how would you answer in one paragraph?
+5) Assume this scenario is a training inject for a 1N0X1/1A8X2 team. What three follow-on products would you build from GLL (e.g., mission brief, base-defense storyboard, treaty evidence bundle) to support decision-making?
+
+Instructor Note: This brief is generated from GLL artifacts and is not an authoritative real-world product. It is designed for training, simulation, and rehearsal only.

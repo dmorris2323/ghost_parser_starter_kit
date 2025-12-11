@@ -1987,3 +1987,28 @@ Vital to commit to git. Recommended commit:
 git add .
 git commit -m Day 71 – GLL Fortification Suite for nuclear, cyber, GUI, and readiness integrity
 git push
+Day 7x – GLL Training Mode Student Brief (20× Training Block)
+
+• Added gll_training_mode_brief.py as a read-only Training Mode wrapper that turns existing GLL outputs into a single trainee-facing scenario brief.
+• The module ingests:
+  - golden_dome_daily_watch.json (nuclear posture, drift, temporal volatility, fusion trust)
+  - defensive_cyber_intel_report.json (DCIM cyber threat posture and scores)
+  - joint_readiness_board.json (joint/base-defense readiness)
+  - base_defense_storyboard.json (if present)
+  - prelaunch_watchboard.json (if present)
+  - scenario_pack_latest.json (if present)
+• It synthesizes:
+  - Fusion Trust, Nuclear Score/Level, Drift Index, Temporal Volatility
+  - Cyber Threat Score/Posture
+  - Joint Readiness Score/Level
+  into a single overall_posture using a worst-of RED/AMBER/GREEN posture rule.
+• The module chooses a primary Training Focus (NUCLEAR_EARLY_WARNING, DEFENSIVE_CYBER_INTEL, JOINT_BASE_DEFENSE, or GENERAL_FUSION) based on the most stressed domain and explains why, in plain language, for the trainee.
+• It outputs:
+  - docs/training_mode_brief.json (machine-readable training brief)
+  - docs/training_mode_brief.txt (student-facing scenario brief with scores, context notes, and five structured questions for the trainee to answer like a tech school / ISR exercise).
+• This turns GLL from a pure analysis platform into a configurable training/simulation tool without touching the core fusion pipeline, making it ideal for tech school, master’s-level labs, and future training products for 1N0X1/AFR/Space-ISR units.
+
+Vital to commit to git. Recommended commit:
+git add .
+git commit -m Training Mode – student scenario brief generator for nuclear/cyber/joint ISR practice
+git push
