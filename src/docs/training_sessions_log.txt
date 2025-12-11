@@ -1,0 +1,26 @@
+Ghost Lantern Labs – Training Session Log
+========================================
+Total Sessions: 1
+
+Session #1
+----------
+Timestamp (UTC): 2025-12-11T09:57:11.862381Z
+Trainee:         Morris
+Session ID:      4545
+Training Focus:  GENERAL_FUSION
+Overall Posture: GREEN
+
+Scores Snapshot:
+  Fusion Trust:    0.0 (UNKNOWN)
+  Nuclear Score:   0.0 (UNKNOWN)
+  Cyber Threat:    0.0 (GREEN)
+  Joint Readiness: 90.0 (GREEN)
+
+Self-Confidence: 95.0 / 100
+Situation Summary:
+  The ICBM at Iran has just launched.
+
+Lessons Learned:
+  I need to do better.
+
+-----

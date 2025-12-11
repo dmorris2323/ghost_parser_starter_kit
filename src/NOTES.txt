@@ -2012,3 +2012,23 @@ Vital to commit to git. Recommended commit:
 git add .
 git commit -m Training Mode – student scenario brief generator for nuclear/cyber/joint ISR practice
 git push
+Day 7x – GLL Training Session Logger (20× Training Block)
+
+• Added gll_training_session_logger.py as an interactive training logger for Ghost Lantern Labs.
+• The logger reads docs/training_mode_brief.json (if available) to pull the current Training Focus, overall posture, and nuclear/cyber/joint/fusion scores.
+• It then prompts the trainee for:
+  - name / callsign
+  - optional session label/ID
+  - self-assessed confidence (0–100)
+  - a short situation summary (2–3 sentences)
+  - key lessons learned (1–3 takeaways)
+• Each run appends a new record to:
+  - docs/training_sessions_log.json (machine-readable session history)
+  - docs/training_sessions_log.txt (human-readable training log)
+• The scores snapshot preserves Fusion Trust, Nuclear Score/Level, Cyber Threat Score/Level, and Joint Readiness at the time of the session, making this useful for tech school-style exercises, master’s-level labs, and future squadron training pilots.
+• This module does not modify any pipeline configs or core fusion logic – it is a pure training/documentation layer that turns GLL into a trackable ISR training platform.
+
+Vital to commit to git. Recommended commit:
+git add .
+git commit -m Training Mode – interactive session logger and history for GLL training platform
+git push

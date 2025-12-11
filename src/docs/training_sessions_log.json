@@ -1,0 +1,22 @@
+[
+  {
+    "lessons_learned": "I need to do better.",
+    "overall_posture": "GREEN",
+    "scores_snapshot": {
+      "cyber_posture_level": "GREEN",
+      "cyber_threat_score": 0.0,
+      "fusion_posture_level": "UNKNOWN",
+      "fusion_trust_score": 0.0,
+      "joint_readiness_level": "GREEN",
+      "joint_readiness_score": 90.0,
+      "nuclear_level": "UNKNOWN",
+      "nuclear_score": 0.0
+    },
+    "self_confidence": 95.0,
+    "session_id": "4545",
+    "situation_summary": "The ICBM at Iran has just launched.",
+    "timestamp_utc": "2025-12-11T09:57:11.862381Z",
+    "trainee_name": "Morris",
+    "training_focus": "GENERAL_FUSION"
+  }
+]
