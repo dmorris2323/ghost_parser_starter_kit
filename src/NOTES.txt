@@ -2250,3 +2250,31 @@ Day 67 – Impact Module 2: Training Dashboard – Instructor Mode
   - GLL is now a true ISR training tool, not just an analysis engine.
   - Instructors can grade, track, and trend performance over time.
   - Trainees can see their curve and receive Obasi guidance.
+
+Day 67 – Impact Module 3: Nuclear Early-Warning – Pre-Boost Threat Card
+
+• Added prelaunch_signals_analyzer.py:
+  - Reads existing GLL nuclear/base-defense artifacts:
+      • src/docs/prelaunch_watchboard.json (ISR pre-launch board)
+      • src/docs/golden_dome_daily_watch.json (nuclear readiness + Golden Dome)
+      • src/docs/sps_behavior_report.json (SPS Module 3 – behavior)
+  - Uses heuristic scoring to build a 0–100 pre-boost risk score:
+      • critical/high/missile language from prelaunch_watchboard
+      • RED/AMBER posture from Golden Dome daily watch
+      • SPS behavioral level as a confidence modifier
+  - Maps score to bands:
+      • LOW / GUARDED / ELEVATED / CRITICAL
+  - Writes a commander-facing Pre-Boost Threat Card:
+      • src/docs/preboost_threat_card.json
+      • src/docs/preboost_threat_card.txt
+
+• CLI integration:
+  - Added Option 61) Pre-Boost Threat Card (Nuclear Early-Warning Fusion) in ghost_cli.py.
+  - Selecting 61 runs the analyzer and prints JSON/TXT output paths.
+
+• Operational impact:
+  - GLL can now answer: "Given what we know right now, how worried should we be
+    about a pre-launch environment, and how confident are we in that assessment?"
+  - This ties together nuclear readiness (Golden Dome), ISR watchboard, and SPS
+    system behavior into one quick decision aid for commanders and reviewers.
+

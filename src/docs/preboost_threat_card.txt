@@ -1,0 +1,32 @@
+Ghost Lantern Labs – Pre-Boost Threat Card
+========================================================================
+
+Generated at : 2025-12-11T14:37:38Z
+
+Status
+------
+Risk band      : LOW
+Risk summary   : Pre-boost threat currently assessed as LOW. Maintain routine watch, but no immediate launch environment indicators are dominant.
+SPS behavior   : RED
+
+Score Breakdown
+----------------
+Combined risk score     : 0.0
+SPS confidence modifier : -15.0
+
+Inputs Used
+-----------
+Prelaunch watchboard JSON : None
+Golden Dome daily watch   : /Users/dextermorris/ghost/parser_starter_kit/src/docs/golden_dome_daily_watch.json
+SPS behavior report       : /Users/dextermorris/ghost/parser_starter_kit/src/docs/sps_behavior_report.json
+
+Reasons / Indicators
+--------------------
+- No prelaunch_watchboard.json found – cannot leverage pre-launch ISR board.
+- Golden Dome daily watch indicates AMBER/watch posture (2 hits).
+- SPS Behavioral Monitor is RED – internal system behavior is risky; treat any pre-boost assessment as degraded and verify manually.
+
+Caveats
+-------
+- This card is generated from available GLL artifacts only; it is UNCLASSIFIED and should not be used as a substitute for DCGS/USNDS/ICADS.
+- Treat this as a training and demonstration aid unless validated and accredited for operational use.

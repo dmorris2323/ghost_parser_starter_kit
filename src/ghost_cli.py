@@ -53,6 +53,7 @@ Menu options:
  48) Foreign Language Interpreter
  49) SPS Mutation Watcher Report
  60) SPS Behavioral Integrity Monitor (Module 3)
+ 61) Pre-Boost Threat Card (Nuclear Early-Warning Fusion)
 """
 
 import sys
@@ -63,6 +64,7 @@ from defensive_cyber_intel_module import analyze_defensive_cyber_intel
 from language_interpreter import run_language_interpreter
 from sps_mutation_watcher import write_mutation_report
 from sps_behavior_monitor import write_behavior_report
+from prelaunch_signals_analyzer import write_preboost_threat_card
 
 
 BASE_DIR = Path(__file__).resolve().parent
@@ -515,6 +517,13 @@ def main() -> int:
             print("Running SPS Module 3 – Behavioral Integrity Monitor...")
             result = write_behavior_report()
             print("SPS Behavioral Integrity report written:")
+            print(f"  JSON: {result['json_path']}")
+            print(f"  TXT:  {result['txt_path']}")
+
+        elif choice == "61":
+            print("Running Pre-Boost Threat Card analysis...")
+            result = write_preboost_threat_card()
+            print("Pre-Boost Threat Card written:")
             print(f"  JSON: {result['json_path']}")
             print(f"  TXT:  {result['txt_path']}")
 
