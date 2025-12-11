@@ -2066,3 +2066,79 @@ Vital to commit to git. Recommended commit:
 git add .
 git commit -m Training Mode – instructor report and Training Dashboard GUI with confidence progress and domain coverage
 git push
+Day 7x – Obasi Training Coach + Training Dashboard v2 (20× Training UI Block)
+
+• Added obasi_training_coach.py as a dedicated Obasi Training Coach module.
+  - Reads training_instructor_report.json and training_mode_brief.json.
+  - Produces a coaching payload with:
+    • headline (how many reps / what stage we’re in)
+    • trend summary (confidence + engagement trends)
+    • domain coverage notes (over-trained vs under-trained domains)
+    • suggested next rep (what to run next)
+    • warning flags (confidence drop, engagement drop, single-domain bias)
+    • encouragement line in Obasi’s voice.
+
+• Upgraded apps/gui/training_dashboard_app.py to Training Dashboard v2:
+  - Added a training_focus filter (All vs specific domain) for the chart + recent sessions.
+  - Confidence-over-time chart now respects the chosen focus.
+  - Domain coverage table shows how many sessions per training_focus.
+  - Added an 🦉 Obasi – Training Coach panel:
+    • Displays Obasi’s headline, subtext, suggested next rep, warning flags, and encouragement.
+  - Recent sessions table now aligns with the selected filter, giving a focused view on the current training axis.
+
+• This block makes the Training Dashboard look and feel more like a real training console:
+  - Interactive filtering
+  - Clear trend visualization
+  - Embedded AI coach (Obasi) guiding reps and domain balance
+  - Still fully read-only against the fusion pipeline and core ISR logic.
+
+Vital to commit to git. Recommended commit:
+git add .
+git commit -m Training Mode – Obasi coach integration and Training Dashboard v2 with filters and progress coaching
+git push
+Day 67 – Cyber Fusion Resilience Block (DoS + Azure Scaffold)
+
+• Added anti_dos_guard.py:
+  - Read-only DoS / ingest stress analyzer for GLL.
+  - Reads docs/run_history.json if present.
+  - Computes total events, unique sensors, time span, avg events/minute, and a simple burst_level (LOW / MEDIUM / HIGH / NO_DATA).
+  - Produces human-readable findings and recommendations for rate limits, ingest playbooks, and burst handling.
+  - Does NOT modify the fusion pipeline; diagnostic-only.
+
+• Added azure_ingest_adapter.py:
+  - Azure / cloud ingest scaffold and config inspector.
+  - Examines config/azure_ingest_config.json if present.
+  - Reports status (NOT_CONFIGURED / PARTIAL / READY), mode (blob/eventhub/etc.), and any config issues.
+  - Provides a default config template to use when wiring up real Azure telemetry.
+  - No network calls; safe placeholder for future cloud integration.
+
+• Added cyber_resilience_summary.py:
+  - Combines anti_dos_guard + azure_ingest_adapter into a single report.
+  - Writes docs/cyber_resilience_summary.json and docs/cyber_resilience_summary.txt.
+  - Suitable for commanders, instructors, or investors as a snapshot of GLL’s current cyber-fusion resilience posture.
+
+• This block moves GLL closer to a real DoD-ready cyber fusion platform:
+  - We now have a named module that can speak to DoS/ingest stress.
+  - We have a clear Azure/cloud ingest readiness story without touching production logic.
+  - We produce an exportable summary that can slot directly into SBIR/AFWERX briefs and training packets.
+
+Vital to commit to git. Recommended commit:
+git add .
+git commit -m Cyber Fusion Resilience – DoS surface analyzer, Azure ingest scaffold, and unified cyber_resilience_summary
+git push
+Day 67 – Self-Preservation Shield (SPS) – Module 1
+
+• Added sps_guardrail_engine.py:
+  - Encodes GLL’s self-preservation doctrine (no scope creep, no self-destruction, copy–paste–replace only, git as safety, Ghost as operator of record).
+  - Runs non-destructive integrity checks on critical modules (ghost_cli, fusion pipeline, nuclear/base-defense modules, SPS engine itself).
+  - Builds a structured JSON payload and a human-readable TXT report:
+      • docs/sps_guardrails_status.json
+      • docs/sps_guardrails_status.txt
+  - Documents self-sabotage risks (social engineering, prompt injection, bad overwrites) and concrete mitigations (review code, reject destructive prompts, rely on git, maintain NOTES.txt/SITREPs).
+
+• This module does NOT alter any runtime behavior:
+  - No deletes, no writes outside docs/, no network calls.
+  - Pure doctrine + integrity snapshot for AFWERX/SBIR, Tech School, and internal design reviews.
+
+• Net effect:
+  - GLL now has a formal “Self-Preservation Shield – Module 1” that proves we are thinking about sabotage, guardrails, and AI-safe development as first-class design concerns.

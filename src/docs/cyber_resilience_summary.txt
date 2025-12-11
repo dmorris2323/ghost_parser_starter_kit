@@ -1,0 +1,47 @@
+Ghost Lantern Labs – Cyber Fusion Resilience Summary
+================================================================
+
+1) Ingest / DoS Stress Analysis
+----------------------------------------
+Status: NO_DATA
+Message: run_history.json not found or empty – cannot assess DoS surface yet.
+Total events: 0
+Unique sensors: 0
+Time span (minutes): None
+Avg events/minute: None
+Burst level: NO_DATA
+
+Findings:
+  - No run history available; DoS/ingest stress cannot yet be assessed.
+  - Once GLL has more runs, this module will compute basic burst and sensor-load metrics.
+
+Recommendations:
+  - Continue running fusion_ingest and mission flows to build up run_history.
+  - Ensure run_history.json is being written as part of normal GLL executions.
+
+2) Azure / Cloud Ingest Readiness
+----------------------------------------
+Status: NOT_CONFIGURED
+Message: Azure ingest config not found; this is expected until cloud integration is enabled.
+Config path: /Users/dextermorris/ghost/parser_starter_kit/src/config/azure_ingest_config.json
+Enabled: False
+Mode: None
+
+Config Issues:
+  - Azure ingest is currently disabled / not configured.
+  - Create azure_ingest_config.json using the default template when you are ready to attach cloud telemetry.
+
+Storage Account (if applicable):
+  - Name: None
+  - Container: None
+
+Event Hub (if applicable):
+  - Namespace: None
+  - Name: None
+
+3) Next Steps (High-Level)
+----------------------------------------
+  - Current ingest behavior does not show clear DoS signs, but you should still plan for rate-limiting and burst handling.
+  - Azure ingest has not been configured yet – this is acceptable at this phase. Use the provided template when you're ready to attach cloud sources.
+
+This document is suitable for: cyber/ISR design reviews, training briefs, or early-stage investor / SBIR conversations about GLL's resilience posture.

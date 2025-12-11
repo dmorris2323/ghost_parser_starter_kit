@@ -9,13 +9,14 @@ Purpose:
     Provide a Streamlit UI for:
 
         - Training summary tiles (sessions, averages, domain coverage)
-        - Simple progress chart (self-confidence over time)
-        - Quick view of latest training focus and posture
+        - Confidence-over-time progress chart (with focus filter)
+        - Recent sessions table
+        - Obasi Training Coach panel (guidance based on trends & coverage)
 
 Inputs:
     - docs/training_sessions_log.json
-    - docs/training_instructor_report.json (if already generated)
-    - docs/training_mode_brief.json (optional, for extra context)
+    - docs/training_instructor_report.json
+    - docs/training_mode_brief.json
 
 Usage:
     From repo root:
@@ -25,13 +26,26 @@ Usage:
 
 import json
 import os
+import sys
 from typing import Any, Dict, List, Optional
 
 import streamlit as st
 import pandas as pd
 
+# -------------------------------------------------------------------
+# Ensure src/ is on sys.path so we can import obasi_training_coach
+# -------------------------------------------------------------------
 
-BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
+CURRENT_DIR = os.path.dirname(__file__)
+SRC_DIR = os.path.abspath(os.path.join(CURRENT_DIR, "..", ".."))
+if SRC_DIR not in sys.path:
+    sys.path.append(SRC_DIR)
+
+from obasi_training_coach import build_obasi_training_coach_speech  # noqa: E402
+
+
+# Resolve base paths
+BASE_DIR = SRC_DIR
 DOCS_DIR = os.path.join(BASE_DIR, "docs")
 
 SESSIONS_JSON = os.path.join(DOCS_DIR, "training_sessions_log.json")
@@ -73,7 +87,6 @@ def _clip_0_100(x: float) -> float:
 def load_sessions() -> List[Dict[str, Any]]:
     data = _safe_read_json(SESSIONS_JSON)
     if isinstance(data, list):
-        # Sort by timestamp for chart
         def _ts(s: Dict[str, Any]) -> str:
             return str(s.get("timestamp_utc", ""))
         return sorted(data, key=_ts)
@@ -108,24 +121,33 @@ def main() -> None:
     sessions = load_sessions()
     report = load_instructor_report()
     brief = load_latest_brief()
+    obasi = build_obasi_training_coach_speech()
 
     total_sessions = len(sessions)
 
-    # Top-level status
+    # ------------------------------
+    # Top metrics row
+    # ------------------------------
     col1, col2, col3, col4 = st.columns(4)
 
-    # Total sessions tile
     with col1:
         st.subheader("Total Sessions")
         st.metric(label="Logged", value=total_sessions)
 
-    # Average confidence
     avg_conf = None
     conf_trend = "NO_DATA"
+    avg_eng = None
+    eng_trend = "NO_DATA"
+    domain_counts: Dict[str, int] = {}
+
     if report:
         progress = report.get("progress_summary", {})
         avg_conf = progress.get("average_confidence")
         conf_trend = progress.get("confidence_trend", "NO_DATA")
+        avg_eng = progress.get("average_engagement_chars")
+        eng_trend = progress.get("engagement_trend", "NO_DATA")
+        domain_counts = progress.get("domain_counts", {}) or {}
+
     with col2:
         st.subheader("Average Confidence")
         if avg_conf is None:
@@ -133,13 +155,6 @@ def main() -> None:
         else:
             st.metric(label="Self-assessed", value=f"{avg_conf:.1f} / 100", delta=conf_trend)
 
-    # Engagement
-    avg_eng = None
-    eng_trend = "NO_DATA"
-    if report:
-        progress = report.get("progress_summary", {})
-        avg_eng = progress.get("average_engagement_chars")
-        eng_trend = progress.get("engagement_trend", "NO_DATA")
     with col3:
         st.subheader("Engagement")
         if avg_eng is None:
@@ -147,7 +162,6 @@ def main() -> None:
         else:
             st.metric(label="Chars per session", value=f"{avg_eng:.0f}", delta=eng_trend)
 
-    # Latest posture
     latest_focus = brief.get("training_focus", "UNKNOWN") if brief else "UNKNOWN"
     latest_posture = brief.get("overall_posture", "UNKNOWN") if brief else "UNKNOWN"
     with col4:
@@ -160,17 +174,33 @@ def main() -> None:
 
     st.markdown("---")
 
-    # Progress chart & domain coverage
+    # ------------------------------
+    # Filter + Confidence chart + Domain coverage
+    # ------------------------------
     left, right = st.columns([2, 1])
+
+    unique_focuses = sorted({s.get("training_focus", "UNKNOWN") for s in sessions}) if sessions else []
+    filter_options = ["All"] + unique_focuses if unique_focuses else ["All"]
+    selected_focus = left.selectbox(
+        "Filter sessions by training focus",
+        filter_options,
+        index=0,
+    )
+
+    if selected_focus == "All":
+        filtered_sessions = sessions
+    else:
+        filtered_sessions = [
+            s for s in sessions if s.get("training_focus", "UNKNOWN") == selected_focus
+        ]
 
     with left:
         st.subheader("Confidence Over Time")
-        if not sessions:
-            st.info("No training sessions logged yet. Run the Training Session Logger first.")
+        if not filtered_sessions:
+            st.info("No training sessions match this filter yet. Log a session or change the filter.")
         else:
-            # Build DataFrame for chart
             chart_data = []
-            for s in sessions:
+            for s in filtered_sessions:
                 ts = s.get("timestamp_utc", "")
                 conf = _clip_0_100(_fmt_float(s.get("self_confidence", 0.0), 0.0))
                 chart_data.append({"timestamp": ts, "self_confidence": conf})
@@ -180,44 +210,61 @@ def main() -> None:
 
     with right:
         st.subheader("Domain Coverage")
-        if report:
-            progress = report.get("progress_summary", {})
-            dom_counts = progress.get("domain_counts", {})
-            if dom_counts:
-                dom_rows = [{"training_focus": k, "sessions": v} for k, v in dom_counts.items()]
-                df_dom = pd.DataFrame(dom_rows)
-                st.table(df_dom)
-            else:
-                st.info("No domain coverage data yet.")
+        if domain_counts:
+            dom_rows = [{"training_focus": k, "sessions": v} for k, v in domain_counts.items()]
+            df_dom = pd.DataFrame(dom_rows)
+            st.table(df_dom)
         else:
-            st.info("Run the Instructor Mode report once to populate domain coverage.")
+            st.info("No domain coverage data yet. Log a few sessions to see spread across domains.")
 
     st.markdown("---")
 
-    # Recent sessions table
-    st.subheader("Recent Sessions")
-    if not sessions:
-        st.info("No sessions to display.")
-    else:
-        # Show most recent 10
-        recent = sessions[-10:]
-        rows = []
-        for s in recent:
-            scores = s.get("scores_snapshot", {})
-            rows.append(
-                {
-                    "Time (UTC)": s.get("timestamp_utc", ""),
-                    "Trainee": s.get("trainee_name", ""),
-                    "Focus": s.get("training_focus", ""),
-                    "Posture": s.get("overall_posture", ""),
-                    "Confidence": _clip_0_100(_fmt_float(s.get("self_confidence", 0.0), 0.0)),
-                    "Nuclear Score": scores.get("nuclear_score", ""),
-                    "Cyber Score": scores.get("cyber_threat_score", ""),
-                    "Joint Score": scores.get("joint_readiness_score", ""),
-                }
-            )
-        df_recent = pd.DataFrame(rows)
-        st.dataframe(df_recent, use_container_width=True)
+    # ------------------------------
+    # Obasi Coach + Recent Sessions
+    # ------------------------------
+    coach_col, table_col = st.columns([1, 2])
+
+    with coach_col:
+        st.subheader("🦉 Obasi – Training Coach")
+        st.markdown(f"**{obasi.get('headline', '')}**")
+        st.write(obasi.get("subtext", ""))
+
+        if obasi.get("suggested_next_rep"):
+            st.markdown("**Suggested Next Rep**")
+            st.code(obasi["suggested_next_rep"])
+
+        if obasi.get("warning_flags"):
+            st.markdown("**Watch Items**")
+            for w in obasi["warning_flags"]:
+                st.warning(w)
+
+        if obasi.get("encouragement"):
+            st.markdown("**Encouragement**")
+            st.info(obasi["encouragement"])
+
+    with table_col:
+        st.subheader("Recent Sessions")
+        if not filtered_sessions:
+            st.info("No sessions to display under this filter.")
+        else:
+            recent = filtered_sessions[-10:]
+            rows = []
+            for s in recent:
+                scores = s.get("scores_snapshot", {})
+                rows.append(
+                    {
+                        "Time (UTC)": s.get("timestamp_utc", ""),
+                        "Trainee": s.get("trainee_name", ""),
+                        "Focus": s.get("training_focus", ""),
+                        "Posture": s.get("overall_posture", ""),
+                        "Confidence": _clip_0_100(_fmt_float(s.get("self_confidence", 0.0), 0.0)),
+                        "Nuclear Score": scores.get("nuclear_score", ""),
+                        "Cyber Score": scores.get("cyber_threat_score", ""),
+                        "Joint Score": scores.get("joint_readiness_score", ""),
+                    }
+                )
+            df_recent = pd.DataFrame(rows)
+            st.dataframe(df_recent, use_container_width=True)
 
 
 if __name__ == "__main__":

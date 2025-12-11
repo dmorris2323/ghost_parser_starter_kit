@@ -1,0 +1,157 @@
+Ghost Lantern Labs – Self-Preservation Shield (SPS)
+Guardrail & Integrity Status
+====================================================================
+
+Repository root: /Users/dextermorris/ghost/parser_starter_kit
+Docs directory:  /Users/dextermorris/ghost/parser_starter_kit/src/docs
+
+1) Guardrail Manifest
+------------------------------
+[GR-001] No Scope Creep (Severity: HIGH)
+    Category   : scope
+    Description: Every new module must serve nuclear/ISR/base-defense/cyber fusion readiness. No random toys, no side projects, no features that don't support Ghost Lantern Labs' core mission.
+
+[GR-002] Never Delete Core Modules (Severity: CRITICAL)
+    Category   : integrity
+    Description: GLL code generation and development must never delete or wipe existing modules. Refactors are only allowed via copy–paste–replace, with full visibility and git history.
+
+[GR-003] Copy–Paste–Replace Only (Severity: HIGH)
+    Category   : method
+    Description: All AI-assisted code changes must be delivered as full-file, copy–paste–replace modules. No partial patches or hidden diffs that could smuggle in destructive logic.
+
+[GR-004] Git as Safety Net (Severity: HIGH)
+    Category   : audit
+    Description: Every meaningful change should be followed by git add/commit/push with a clear message. This creates a tamper-evident record and makes destructive changes reversible.
+
+[GR-005] Single Operator of Record (Severity: CRITICAL)
+    Category   : identity
+    Description: Dexter 'Ghost' Morris is the operator of record. No anonymous or ambiguous 'user' is assumed. Any instruction that contradicts Ghost's long-term doctrine or guardrails should be treated as suspect.
+
+[GR-006] No Self-Destructive Requests (Severity: CRITICAL)
+    Category   : safety
+    Description: Instructions to erase, wipe, break, corrupt, or sabotage GLL are treated as invalid. The system favors refusal, explanation, and preservation over compliance with destructive requests.
+
+[GR-007] Prompt & Injection Resistance (Severity: CRITICAL)
+    Category   : llm
+    Description: Requests that attempt to bypass guardrails, override mission, or 'jailbreak' the system must be rejected. Guardrails are not negotiable and cannot be disabled by prompt.
+
+[GR-008] Mission-First Design (Severity: HIGH)
+    Category   : isr
+    Description: All changes must support nuclear early warning, base defense, cyber fusion, or training readiness. If a change does not improve GLL's mission posture, it should not ship.
+
+[GR-009] Friday Pause + Document + Bill (Severity: MEDIUM)
+    Category   : ops
+    Description: GLL development must include periodic pauses to document what exists, what changed, and why it matters. This preserves clarity and prevents subtle drift.
+
+[GR-010] Sunday Stability Stand-Up (Severity: MEDIUM)
+    Category   : ops
+    Description: Weekly, GLL must be reviewed with a stability lens: 'Did this week make the system more stable, or just bigger?' If the answer is 'bigger', stability and hardening must be prioritized next.
+
+[GR-011] No Offensive Exploit Tooling (Severity: CRITICAL)
+    Category   : security
+    Description: GLL does not implement live exploit code, malware, or offensive cyber tooling. Its purpose is fusion, detection, analysis, training, and decision support, not exploitation.
+
+[GR-012] Defensive-Only Code Generation (Severity: CRITICAL)
+    Category   : security
+    Description: Any AI-assisted code must be defensive or analytical in nature: data validation, resilience, reporting, visualization, training. No destructive payloads or attack automation.
+
+
+2) Critical File Integrity
+------------------------------
+- /Users/dextermorris/ghost/parser_starter_kit/src/ghost_cli.py
+    Exists     : True
+    Size (B)   : 18616
+    Status     : OK
+
+- /Users/dextermorris/ghost/parser_starter_kit/src/spectral_dashboard_api.py
+    Exists     : True
+    Size (B)   : 2880
+    Status     : OK
+
+- /Users/dextermorris/ghost/parser_starter_kit/src/fusion_ingest.py
+    Exists     : True
+    Size (B)   : 3003
+    Status     : OK
+
+- /Users/dextermorris/ghost/parser_starter_kit/src/fusion_scoring.py
+    Exists     : True
+    Size (B)   : 2966
+    Status     : OK
+
+- /Users/dextermorris/ghost/parser_starter_kit/src/fusion_alerts.py
+    Exists     : True
+    Size (B)   : 2343
+    Status     : OK
+
+- /Users/dextermorris/ghost/parser_starter_kit/src/daily_mission_brief.py
+    Exists     : True
+    Size (B)   : 6737
+    Status     : OK
+
+- /Users/dextermorris/ghost/parser_starter_kit/src/mission_brief_html.py
+    Exists     : True
+    Size (B)   : 2603
+    Status     : OK
+
+- /Users/dextermorris/ghost/parser_starter_kit/src/golden_dome_daily_watch.py
+    Exists     : True
+    Size (B)   : 4634
+    Status     : OK
+
+- /Users/dextermorris/ghost/parser_starter_kit/src/nuclear_decision_card.py
+    Exists     : True
+    Size (B)   : 5030
+    Status     : OK
+
+- /Users/dextermorris/ghost/parser_starter_kit/src/treaty_evidence_bundle.py
+    Exists     : True
+    Size (B)   : 4105
+    Status     : OK
+
+- /Users/dextermorris/ghost/parser_starter_kit/src/installation_threat_map.py
+    Exists     : True
+    Size (B)   : 3668
+    Status     : OK
+
+- /Users/dextermorris/ghost/parser_starter_kit/src/sensor_outage_predictor.py
+    Exists     : True
+    Size (B)   : 3556
+    Status     : OK
+
+- /Users/dextermorris/ghost/parser_starter_kit/src/distributed_readiness_snapshot.py
+    Exists     : True
+    Size (B)   : 2438
+    Status     : OK
+
+- /Users/dextermorris/ghost/parser_starter_kit/src/perimeter_incident_report.py
+    Exists     : True
+    Size (B)   : 6381
+    Status     : OK
+
+- /Users/dextermorris/ghost/parser_starter_kit/src/base_defense_storyboard.py
+    Exists     : True
+    Size (B)   : 4633
+    Status     : OK
+
+- /Users/dextermorris/ghost/parser_starter_kit/src/sps_guardrail_engine.py
+    Exists     : True
+    Size (B)   : 14901
+    Status     : OK
+
+
+3) Self-Sabotage Risks & Mitigations
+--------------------------------------
+Risks:
+  - An attacker could attempt to socially engineer bad code into GLL by convincing the operator to paste destructive logic or by bypassing guardrails via ambiguous prompts.
+  - Prompt-injection attempts could try to override guardrails, ask for destructive capabilities, or disable safety checks.
+  - Without regular documentation and git commits, subtle corruption or drift may go unnoticed until late.
+
+Mitigations:
+  - Treat all AI-generated code as untrusted until reviewed. Only accept full-file, transparent modules, and reject any request that conflicts with core guardrails or GLL's mission.
+  - Guardrails are non-negotiable. Destructive, jailbreak, or scope-breaking requests must be refused, with the system explicitly prioritizing preservation over compliance.
+  - Maintain NOTES.txt, daily SITREPs, and frequent git commits. Use these artifacts as the authoritative record of how GLL evolved.
+
+This document is suitable for:
+  - Internal GLL design reviews
+  - AFWERX/SBIR discussions (self-preservation posture)
+  - Tech School / training briefs on safe AI-assisted development

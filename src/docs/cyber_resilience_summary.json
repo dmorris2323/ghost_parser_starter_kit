@@ -1,0 +1,60 @@
+{
+  "title": "Ghost Lantern Labs \u2013 Cyber Fusion Resilience Summary",
+  "dos_analysis": {
+    "status": "NO_DATA",
+    "message": "run_history.json not found or empty \u2013 cannot assess DoS surface yet.",
+    "total_events": 0,
+    "unique_sensors": 0,
+    "time_span_minutes": null,
+    "avg_events_per_minute": null,
+    "burst_level": "NO_DATA",
+    "findings": [
+      "No run history available; DoS/ingest stress cannot yet be assessed.",
+      "Once GLL has more runs, this module will compute basic burst and sensor-load metrics."
+    ],
+    "recommendations": [
+      "Continue running fusion_ingest and mission flows to build up run_history.",
+      "Ensure run_history.json is being written as part of normal GLL executions."
+    ]
+  },
+  "azure_ingest_status": {
+    "status": "NOT_CONFIGURED",
+    "message": "Azure ingest config not found; this is expected until cloud integration is enabled.",
+    "config_path": "/Users/dextermorris/ghost/parser_starter_kit/src/config/azure_ingest_config.json",
+    "enabled": false,
+    "mode": null,
+    "issues": [
+      "Azure ingest is currently disabled / not configured.",
+      "Create azure_ingest_config.json using the default template when you are ready to attach cloud telemetry."
+    ],
+    "suggested_template": {
+      "enabled": false,
+      "subscription_id": "YOUR_SUBSCRIPTION_ID",
+      "resource_group": "YOUR_RESOURCE_GROUP",
+      "workspace_name": "YOUR_WORKSPACE_OR_NAMESPACE",
+      "mode": "blob|eventhub|queue|custom",
+      "storage_account": {
+        "name": "yourstorageaccount",
+        "container": "telemetry",
+        "connection_string": "UseAzureIdentityOrKeyVaultInRealDeployments"
+      },
+      "event_hub": {
+        "namespace": "youreventhubns",
+        "name": "gll-telemetry",
+        "connection_string": "UseAzureIdentityOrKeyVaultInRealDeployments"
+      },
+      "ingest_mapping": {
+        "blob": {
+          "format": "jsonl|csv|custom",
+          "path_schema_hint": "folder/year=/month=/day=/"
+        },
+        "common_fields": {
+          "timestamp_field": "timestamp_utc",
+          "sensor_id_field": "sensor_id",
+          "payload_field": "payload"
+        }
+      },
+      "notes": "This is a scaffold template; do NOT commit secrets here."
+    }
+  }
+}
