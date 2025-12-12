@@ -1,75 +1,41 @@
-#!/usr/bin/env python3
-"""
-obasi_training_coach.py
+# apps/gui/obasi_training_coach.py
+# Obasi Coaching (SAFE) – accepts flexible inputs to avoid signature mismatches.
 
-Ghost Lantern Labs – Obasi Training Coach
-
-Purpose:
-    Provide short, tactical guidance messages for trainees based on their
-    latest composite training score. This is UI-only logic – no network,
-    no external calls.
-
-API:
-    build_obasi_training_coach_speech(latest_score: float | None) -> str
-
-    - If latest_score is None:
-        Returns a general encouragement / guidance message.
-    - If latest_score is provided (0–100):
-        Returns a message tailored to that band.
-"""
-
-from typing import Optional
+from __future__ import annotations
 
 
-def build_obasi_training_coach_speech(latest_score: Optional[float] = None) -> str:
+def build_obasi_training_coach_speech(*args, **kwargs) -> str:
     """
-    Build a short guidance message from Obasi, the spectral owl,
-    tailored to the trainee's latest performance.
+    Flexible signature to prevent Streamlit crashes when callers change.
 
-    Score bands (0–100):
-        0–49   : Recovery mode – focus on fundamentals.
-        50–69  : Building phase – tighten discipline and repetition.
-        70–84  : Strong – refine nuclear/ISR fusion and reporting.
-        85–100 : Elite – push edge cases and leadership-level thinking.
+    Expected (optional) kwargs:
+      - trainee_name
+      - difficulty
+      - agi
+      - avg_score
+      - volatility
+      - message_mode ("coach"|"instructor")
     """
-    if latest_score is None:
-        return (
-            "Obasi: No score yet – treat this as a blank slate. Start with one solid "
-            "rep today: clean analysis, clear fusion logic, and a short, sharp report. "
-            "Consistency beats intensity."
-        )
+    trainee = kwargs.get("trainee_name", "Trainee")
+    difficulty = kwargs.get("difficulty", "ANALYST")
+    agi = kwargs.get("agi", None)
+    avg = kwargs.get("avg_score", None)
+    vol = kwargs.get("volatility", None)
+    mode = kwargs.get("message_mode", "coach")
 
-    try:
-        s = float(latest_score)
-    except (TypeError, ValueError):
-        return (
-            "Obasi: Score data looks odd – ignore the number and focus on the craft. "
-            "Walk through your last scenario and ask: Did I answer the commander’s "
-            "real question, or just repeat data?"
-        )
+    lines = []
+    if mode == "instructor":
+        lines.append(f"OBASI (Instructor): {trainee} current track: {difficulty}.")
+        if agi is not None:
+            lines.append(f"AGI={agi}. Average={avg}. Volatility={vol}.")
+        lines.append("Focus: consistency first. Promote difficulty only when volatility drops.")
+        return "\n".join(lines)
 
-    if s < 50:
-        return (
-            "Obasi: This was a rough rep, and that’s fine. Strip it back to basics – "
-            "what was the mission, what did the sensors say, and what did it mean "
-            "for the commander? One clean, simple story beats a messy clever one."
-        )
-    if s < 70:
-        return (
-            "Obasi: You’re in the grind zone – not failing, not elite yet. Tighten "
-            "your structure: situation, indicators, assessment, and recommendation. "
-            "Focus on removing friction and confusion from your briefing."
-        )
-    if s < 85:
-        return (
-            "Obasi: Strong work. Now sharpen the nuclear/ISR edge. For each scenario, "
-            "ask: what’s the early-warning angle, what’s the base-defense angle, and "
-            "what do we tell leadership in one sentence if time runs out?"
-        )
-
-    return (
-        "Obasi: This is elite territory. Don’t get comfortable. Push yourself into "
-        "edge cases – ambiguous signals, degraded sensors, conflicting reports. "
-        "Practice making clear, defensible calls under uncertainty."
-    )
+    # Coach mode
+    lines.append(f"OBASI: {trainee}, you’re operating at **{difficulty}**.")
+    if agi is not None:
+        lines.append(f"Training status: AGI={agi}, Avg={avg}, Volatility={vol}.")
+    lines.append("Rule: stabilize your judgment before you chase harder scenarios.")
+    lines.append("Next rep: identify patterns fast, then write a clean commander summary.")
+    return "\n".join(lines)
 
