@@ -1,9 +1,8 @@
 # apps/gui/mission_scenario_app.py
-# War Room Mission Scenario GUI (SAFE)
+# War Room Mission Scenario GUI (SAFE) — Module 5 adds AAR generation.
 import sys
 from pathlib import Path
 
-# Ensure src is on path when running streamlit from repo root
 SRC = Path(__file__).resolve().parents[2]
 if str(SRC) not in sys.path:
     sys.path.insert(0, str(SRC))
@@ -12,6 +11,14 @@ import streamlit as st  # noqa: E402
 
 from difficulty_scaling_engine import compute_difficulty_profile  # noqa: E402
 from scenario_engine import generate_scenario, grade_scenario_result, rubric_autograde_and_log  # noqa: E402
+from aar_generator import build_aar, write_aar_files  # noqa: E402
+from instructor_rubric_autograder import write_grade_report  # noqa: E402
+
+
+def _load_json(path: str) -> dict:
+    import json
+    with open(path, "r") as f:
+        return json.load(f)
 
 
 def main():
@@ -40,7 +47,8 @@ def main():
         if st.button("Generate mission scenario", type="primary"):
             result = generate_scenario(difficulty=difficulty, seed=int(seed) if use_seed else None)
             st.session_state["scenario"] = result
-            st.session_state["grading_mode"] = "Rubric Auto-Grade"
+            st.session_state.pop("last_grade", None)
+            st.session_state.pop("last_aar", None)
 
     st.divider()
 
@@ -84,7 +92,7 @@ def main():
             st.code(log["json_path"])
         return
 
-    # Rubric auto-grade
+    # Rubric auto-grade inputs
     st.markdown("### Rubric Auto-Grader (Instructor Mode)")
 
     left, right = st.columns([1, 1])
@@ -97,7 +105,10 @@ def main():
             default=["drift"],
         )
         osl = st.selectbox("OSL posture", ["GREEN", "AMBER", "RED"], index=1)
-        analyst_notes = st.text_input("Analyst notes (short)", value="Validated baseline; cross-checked sensor consistency; cautious confidence.")
+        analyst_notes = st.text_input(
+            "Analyst notes (short)",
+            value="Validated baseline; cross-checked sensor consistency; cautious confidence."
+        )
 
     with right:
         commander_summary = st.text_area(
@@ -119,11 +130,43 @@ def main():
             analyst_notes=analyst_notes,
             trainee=trainee,
         )
-        st.success(f"Rubric score: {result['score']}/100")
-        st.write("Subscores:", result["subscores"])
-        st.write("Instructor feedback:", result["feedback"])
-        st.code(result["grade_report"]["json_path"])
-        st.code(result["training_log"]["json_path"])
+        st.session_state["last_grade"] = result
+
+    last_grade = st.session_state.get("last_grade")
+    if last_grade:
+        st.success(f"Rubric score: {last_grade['score']}/100")
+        st.write("Subscores:", last_grade["subscores"])
+        st.write("Instructor feedback:", last_grade["feedback"])
+        st.code(last_grade["grade_report"]["json_path"])
+        st.code(last_grade["training_log"]["json_path"])
+
+        st.divider()
+        st.subheader("Module 5 — AAR Generator")
+
+        if st.button("Generate AAR (one-page)", type="secondary"):
+            # Load scenario + grade json for full AAR context
+            scenario_packet = _load_json(scenario["scenario_json_path"])
+            grade_packet = _load_json(last_grade["grade_report"]["json_path"])
+
+            trainee_payload = {
+                "trainee": trainee,
+                "called_patterns": list(called_patterns),
+                "osl": osl,
+                "commander_summary": commander_summary,
+                "analyst_notes": analyst_notes,
+                "scenario_json_path": scenario["scenario_json_path"],
+            }
+
+            aar = build_aar(scenario_packet, grade_packet, trainee_payload)
+            paths = write_aar_files(aar)
+            st.session_state["last_aar"] = paths
+
+        last_aar = st.session_state.get("last_aar")
+        if last_aar:
+            st.success("AAR written.")
+            st.code(last_aar["json_path"])
+            st.code(last_aar["txt_path"])
+            st.code(last_aar["latest_json_path"])
 
 
 if __name__ == "__main__":
