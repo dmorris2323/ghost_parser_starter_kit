@@ -1,5 +1,5 @@
 # apps/gui/mission_scenario_app.py
-# War Room Mission Scenario GUI (SAFE) — Module 5 adds AAR generation.
+# War Room Mission Scenario GUI (SAFE) — Module 6 adds Instructor Pack Export.
 import sys
 from pathlib import Path
 
@@ -12,7 +12,7 @@ import streamlit as st  # noqa: E402
 from difficulty_scaling_engine import compute_difficulty_profile  # noqa: E402
 from scenario_engine import generate_scenario, grade_scenario_result, rubric_autograde_and_log  # noqa: E402
 from aar_generator import build_aar, write_aar_files  # noqa: E402
-from instructor_rubric_autograder import write_grade_report  # noqa: E402
+from instructor_pack_export import export_instructor_packet  # noqa: E402
 
 
 def _load_json(path: str) -> dict:
@@ -49,6 +49,7 @@ def main():
             st.session_state["scenario"] = result
             st.session_state.pop("last_grade", None)
             st.session_state.pop("last_aar", None)
+            st.session_state.pop("last_pack", None)
 
     st.divider()
 
@@ -131,6 +132,7 @@ def main():
             trainee=trainee,
         )
         st.session_state["last_grade"] = result
+        st.session_state.pop("last_pack", None)
 
     last_grade = st.session_state.get("last_grade")
     if last_grade:
@@ -144,7 +146,6 @@ def main():
         st.subheader("Module 5 — AAR Generator")
 
         if st.button("Generate AAR (one-page)", type="secondary"):
-            # Load scenario + grade json for full AAR context
             scenario_packet = _load_json(scenario["scenario_json_path"])
             grade_packet = _load_json(last_grade["grade_report"]["json_path"])
 
@@ -160,13 +161,37 @@ def main():
             aar = build_aar(scenario_packet, grade_packet, trainee_payload)
             paths = write_aar_files(aar)
             st.session_state["last_aar"] = paths
+            st.session_state.pop("last_pack", None)
 
         last_aar = st.session_state.get("last_aar")
         if last_aar:
             st.success("AAR written.")
             st.code(last_aar["json_path"])
             st.code(last_aar["txt_path"])
-            st.code(last_aar["latest_json_path"])
+
+        st.divider()
+        st.subheader("Module 6 — Instructor Pack Export")
+
+        include_optional = st.checkbox("Include optional artifacts (best-effort)", value=True)
+
+        if st.button("Export Instructor Pack (manifest)", type="secondary"):
+            grade_json_path = last_grade["grade_report"]["json_path"]
+            aar_json_path = (last_aar or {}).get("json_path")
+
+            export = export_instructor_packet(
+                scenario_json_path=scenario["scenario_json_path"],
+                grade_json_path=grade_json_path,
+                aar_json_path=aar_json_path,
+                trainee=trainee,
+                include_optional_artifacts=include_optional,
+            )
+            st.session_state["last_pack"] = export
+
+        last_pack = st.session_state.get("last_pack")
+        if last_pack:
+            st.success("Instructor packet exported.")
+            st.code(last_pack["packet_path"])
+            st.code(last_pack["latest_path"])
 
 
 if __name__ == "__main__":
