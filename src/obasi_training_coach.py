@@ -1,68 +1,85 @@
 # src/obasi_training_coach.py
 from __future__ import annotations
 
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List
 
 
-def build_obasi_training_coach_speech(*args: Any, **kwargs: Any):
+def _safe_num(v: Any, default: float = 0.0) -> float:
+    try:
+        if v is None:
+            return float(default)
+        return float(v)
+    except Exception:
+        return float(default)
+
+
+def build_obasi_training_coach_speech(**payload: Any) -> str:
     """
-    Backward-compatible coach interface.
+    Stable coach interface.
 
-    - Old behavior: some code imported this and expected Dict output with zero args.
-    - New behavior: training apps call with kwargs (trainee_name, difficulty, curve, sessions, gate, etc.)
-      and expect a STRING.
-
-    This function supports BOTH:
-      • If called with no args/kwargs -> returns Dict[str, Any]
-      • Otherwise -> returns str
+    MUST:
+    - accept any kwargs (future-proof)
+    - return a STRING (never dict)
+    - never raise on missing keys
     """
-    if not args and not kwargs:
-        return {
-            "message": "Obasi online. Provide trainee_name/difficulty/curve/sessions for coaching output.",
-            "version": 2,
-        }
+    trainee = str(payload.get("trainee_name") or payload.get("trainee") or "Operator")
 
-    trainee = (kwargs.get("trainee_name") or kwargs.get("operator") or "Trainee")
-    difficulty = (kwargs.get("difficulty") or "INTERMEDIATE")
-    curve = kwargs.get("curve") or {}
-    gate = kwargs.get("gate") or {}
-    sessions = kwargs.get("sessions") or []
+    difficulty = str(payload.get("difficulty") or payload.get("difficulty_level") or "INTERMEDIATE").upper()
 
-    agi = curve.get("AGI", curve.get("agi", None))
-    slope = curve.get("improvement_slope", None)
-    vol = curve.get("volatility_index", None)
+    curve = payload.get("curve") or {}
+    if not isinstance(curve, dict):
+        curve = {}
 
-    gate_status = gate.get("status", "UNKNOWN")
-    counted = gate.get("counted_for_agi", False)
+    agi = _safe_num(curve.get("AGI"), 0.0)
+    slope = _safe_num(curve.get("improvement_slope"), 0.0)
+    volatility = _safe_num(curve.get("volatility_index"), 0.0)
 
-    # Short, coach-style guidance
-    lines: List[str] = []
-    lines.append(f"🦉 Obasi Coach — {trainee}")
-    lines.append(f"Difficulty: {difficulty}")
-    lines.append(f"Gate: {gate_status} | Counted for AGI: {'YES' if counted else 'NO'}")
+    gate = payload.get("gate") or {}
+    if not isinstance(gate, dict):
+        gate = {}
+    gate_status = str(gate.get("status") or "UNKNOWN")
+    counted = bool(gate.get("counted_for_agi", False))
 
-    if agi is not None:
-        lines.append(f"AGI: {agi}")
-    if slope is not None:
-        lines.append(f"Slope: {slope}")
-    if vol is not None:
-        lines.append(f"Volatility: {vol}")
-
-    # Coaching logic
-    if gate_status != "PASS":
-        lines.append("")
-        lines.append("Action: run integrity/SPS checks until GREEN. Don’t train on a dirty system.")
+    # Tone rules (simple + consistent)
+    if gate_status.upper() != "PASS":
+        headline = "⚠️ HOLD. Integrity gate is not GREEN."
+        action = "Run SIS/SPS checks, fix RED/AMBER items, then log training again."
     else:
-        lines.append("")
-        if slope is not None and slope < 0:
-            lines.append("You’re slipping slightly. Slow down, focus accuracy + tradecraft this session.")
-        elif slope is not None and slope >= 0:
-            lines.append("Momentum is positive. Increase difficulty when you can hold consistency.")
-        else:
-            lines.append("Build 3–5 clean sessions at this difficulty before stepping up.")
+        headline = "🟢 GREEN. Training counts."
+        action = "Push one clean rep. Then increase difficulty only after stability holds."
 
-    lines.append("")
-    lines.append(f"Sessions logged: {len(sessions)}")
+    # Difficulty coaching
+    if difficulty == "BEGINNER":
+        diff_msg = "Beginner mode: focus on clean fundamentals and correct callouts."
+    elif difficulty == "ADVERSARIAL":
+        diff_msg = "Adversarial mode: expect deception, cross-domain noise, and pressure."
+    else:
+        diff_msg = "Intermediate mode: balance speed with defensible tradecraft."
 
-    return "\n".join(lines)
+    # Curve coaching
+    if slope < 0:
+        curve_msg = "Your slope is negative. That usually means inconsistency or difficulty spikes too soon."
+    elif slope > 0:
+        curve_msg = "Your slope is positive. That means consistency is compounding."
+    else:
+        curve_msg = "Your slope is flat. That’s fine—stability first, then deliberate increase."
+
+    msg_lines: List[str] = []
+    msg_lines.append(f"🦉 Obasi Coach — {trainee}")
+    msg_lines.append(f"Difficulty: {difficulty}")
+    msg_lines.append("")
+    msg_lines.append(headline)
+    msg_lines.append(f"Gate: {gate_status} | Counted for AGI: {counted}")
+    msg_lines.append("")
+    msg_lines.append(diff_msg)
+    msg_lines.append(curve_msg)
+    msg_lines.append("")
+    msg_lines.append("Live Metrics:")
+    msg_lines.append(f"• AGI: {agi:.1f}")
+    msg_lines.append(f"• Improvement slope: {slope:.2f}")
+    msg_lines.append(f"• Volatility index: {volatility:.3f}")
+    msg_lines.append("")
+    msg_lines.append(f"Next action: {action}")
+
+    return "\n".join(msg_lines)
 

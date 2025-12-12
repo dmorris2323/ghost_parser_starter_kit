@@ -1,219 +1,108 @@
 # src/training_validation_gate.py
 from __future__ import annotations
 
-import json
 from dataclasses import dataclass, asdict
-from datetime import datetime, timezone
-from pathlib import Path
-from typing import Any, Dict, Optional, Tuple, List
-
-
-DOC_CANDIDATES = [
-    # System integrity
-    "src/docs/system_integrity_report.json",
-    "src/docs/system_integrity_report.txt",
-    "docs/system_integrity_report.json",
-    "docs/system_integrity_report.txt",
-    # SPS behavioral monitor outputs (if present)
-    "src/docs/sps_behavior_report.json",
-    "src/docs/sps_behavior_report.txt",
-    "docs/sps_behavior_report.json",
-    "docs/sps_behavior_report.txt",
-    # OSL / trust outputs (optional)
-    "src/docs/operator_safety_layer.json",
-    "src/docs/operator_safety_layer.txt",
-    "docs/operator_safety_layer.json",
-    "docs/operator_safety_layer.txt",
-    "src/docs/fusion_trust.json",
-    "src/docs/fusion_trust.txt",
-    "docs/fusion_trust.json",
-    "docs/fusion_trust.txt",
-]
-
-
-def _utc_now() -> str:
-    return datetime.now(timezone.utc).isoformat()
-
-
-def _repo_root() -> Path:
-    # This file lives in src/, so repo root is parent
-    return Path(__file__).resolve().parent.parent
-
-
-def _try_read_json(path: Path) -> Optional[Dict[str, Any]]:
-    try:
-        return json.loads(path.read_text(encoding="utf-8"))
-    except Exception:
-        return None
-
-
-def _try_read_text(path: Path) -> Optional[str]:
-    try:
-        return path.read_text(encoding="utf-8", errors="ignore")
-    except Exception:
-        return None
-
-
-def _find_first_existing(paths: List[str]) -> List[Path]:
-    root = _repo_root()
-    found: List[Path] = []
-    for rel in paths:
-        p = (root / rel).resolve()
-        if p.exists() and p.is_file():
-            found.append(p)
-    return found
-
-
-def _infer_pass_from_json(obj: Dict[str, Any]) -> Optional[bool]:
-    """
-    Attempts to infer PASS/FAIL from common JSON patterns.
-    """
-    # Common keys
-    for key in ["status", "verdict", "result", "overall_status", "gate_status"]:
-        if key in obj and isinstance(obj[key], str):
-            v = obj[key].strip().upper()
-            if v in ["PASS", "GREEN", "OK"]:
-                return True
-            if v in ["FAIL", "RED", "ERROR"]:
-                return False
-
-    # Nested patterns
-    for key in ["system_integrity", "integrity", "sps", "osl", "fusion_trust"]:
-        if key in obj and isinstance(obj[key], dict):
-            inner = _infer_pass_from_json(obj[key])
-            if inner is not None:
-                return inner
-
-    return None
-
-
-def _infer_pass_from_text(txt: str) -> Optional[bool]:
-    t = txt.upper()
-    # Strong signals
-    if "STATUS: PASS" in t or "VERDICT: PASS" in t or "PASS" in t and "FAIL" not in t:
-        return True
-    if "STATUS: FAIL" in t or "VERDICT: FAIL" in t or "FAIL" in t or "ERROR" in t:
-        return False
-    if "GREEN" in t and "RED" not in t:
-        return True
-    if "RED" in t:
-        return False
-    return None
+from typing import Any, Dict, Optional
 
 
 @dataclass
-class GateCheck:
-    name: str
-    file: Optional[str]
-    observed: str
-    passed: Optional[bool]
-
-
-@dataclass
-class GateVerdict:
-    gate_version: int
-    generated_at: str
-    status: str  # PASS/WARN/FAIL
+class TrainingGate:
+    status: str               # PASS / FAIL
     counted_for_agi: bool
     message: str
-    checks: List[GateCheck]
-    files_seen: List[str]
+    details: Dict[str, Any]
 
 
-def evaluate_training_gate(require_all_green: bool = True) -> GateVerdict:
+def _safe_call(fn, default=None):
+    try:
+        return fn()
+    except Exception as e:
+        return default, str(e)
+
+
+def evaluate_training_gate(require_all_green: bool = True) -> TrainingGate:
     """
-    Option B gate: read artifacts that already exist. No imports of fragile modules.
-    Rule:
-      - If we cannot find ANY integrity/monitoring files, gate is FAIL (not counted).
-      - If we find files and can infer PASS/FAIL:
-          - PASS => counted
-          - FAIL => not counted
-      - If inference is ambiguous (no clear PASS/FAIL):
-          - WARN => not counted if require_all_green=True
+    Gate logic:
+    - Prefer existing SIS/SPS/OSL modules if present.
+    - If modules missing, degrade safely to FAIL when require_all_green=True.
     """
-    files = _find_first_existing(DOC_CANDIDATES)
-    files_seen = [str(p) for p in files]
+    details: Dict[str, Any] = {}
 
-    checks: List[GateCheck] = []
+    # Operator Safety Layer
+    osl_ok = False
+    try:
+        import operator_safety_layer as osl_mod  # type: ignore
 
-    if not files:
-        return GateVerdict(
-            gate_version=1,
-            generated_at=_utc_now(),
-            status="FAIL",
-            counted_for_agi=False,
-            message="No integrity/SPS/OSL artifacts found. Run system integrity + SPS monitor first.",
-            checks=[],
-            files_seen=[],
-        )
-
-    any_fail = False
-    any_pass = False
-    any_unknown = False
-
-    for p in files:
-        obs = ""
-        passed: Optional[bool] = None
-
-        if p.suffix.lower() == ".json":
-            obj = _try_read_json(p)
-            if obj is None:
-                obs = "json_parse_error"
-                passed = None
-            else:
-                obs = "json_ok"
-                passed = _infer_pass_from_json(obj)
+        fn = None
+        for cand in ("compute_osl", "compute_operator_safety_layer", "evaluate_osl"):
+            if hasattr(osl_mod, cand):
+                fn = getattr(osl_mod, cand)
+                break
+        if fn:
+            res = fn()
+            details["operator_safety_layer"] = res
+            # Accept common fields
+            status = str((res or {}).get("osl_status") or (res or {}).get("status") or "").upper()
+            osl_ok = status in ("GREEN", "PASS", "OK")
         else:
-            txt = _try_read_text(p) or ""
-            obs = "txt_ok" if txt else "txt_empty"
-            passed = _infer_pass_from_text(txt) if txt else None
+            details["operator_safety_layer_error"] = "MissingFunction"
+    except Exception as e:
+        details["operator_safety_layer_error"] = str(e)
 
-        checks.append(
-            GateCheck(
-                name=p.name,
-                file=str(p),
-                observed=obs,
-                passed=passed,
-            )
-        )
+    # System Integrity (SIS)
+    sis_ok = False
+    try:
+        import system_integrity_report as sis_mod  # type: ignore
 
-        if passed is True:
-            any_pass = True
-        elif passed is False:
-            any_fail = True
+        fn = None
+        for cand in ("generate_system_integrity_report", "run_system_integrity", "build_system_integrity"):
+            if hasattr(sis_mod, cand):
+                fn = getattr(sis_mod, cand)
+                break
+        if fn:
+            res = fn()
+            details["system_integrity"] = res
+            # Heuristic: accept if no "FAIL"/"RED" flags
+            txt = str(res).upper()
+            sis_ok = ("FAIL" not in txt) and ("RED" not in txt)
         else:
-            any_unknown = True
+            details["system_integrity_error"] = "MissingFunction"
+    except Exception as e:
+        details["system_integrity_error"] = str(e)
 
-    if any_fail:
-        status = "FAIL"
-        counted = False
-        msg = "One or more integrity/SPS/OSL checks indicate FAIL/RED."
+    # SPS (mutation / behavioral checks)
+    sps_ok = False
+    try:
+        import sps_behavior_monitor as sps_b  # type: ignore
+
+        fn = None
+        for cand in ("write_behavior_report", "run_behavior_monitor", "behavior_scan"):
+            if hasattr(sps_b, cand):
+                fn = getattr(sps_b, cand)
+                break
+        if fn:
+            res = fn()
+            details["sps_behavior"] = res
+            txt = str(res).upper()
+            sps_ok = ("FAIL" not in txt) and ("RED" not in txt)
+        else:
+            details["sps_behavior_error"] = "MissingFunction"
+    except Exception as e:
+        details["sps_behavior_error"] = str(e)
+
+    all_ok = osl_ok and sis_ok and sps_ok
+    if require_all_green:
+        status = "PASS" if all_ok else "FAIL"
+        counted = bool(all_ok)
     else:
-        if any_unknown:
-            status = "WARN"
-            counted = False if require_all_green else bool(any_pass)
-            msg = "Integrity/SPS/OSL artifacts found but verdict ambiguous. Not counted (strict mode)."
-        else:
-            status = "PASS"
-            counted = True
-            msg = "All observed artifacts indicate PASS/GREEN."
+        # permissive: count if at least OSL is green
+        status = "PASS" if osl_ok else "FAIL"
+        counted = bool(osl_ok)
 
-    return GateVerdict(
-        gate_version=1,
-        generated_at=_utc_now(),
-        status=status,
-        counted_for_agi=counted,
-        message=msg,
-        checks=checks,
-        files_seen=files_seen,
-    )
+    msg = "GREEN gate satisfied." if counted else "Gate not satisfied. Fix integrity posture before counting training."
+    return TrainingGate(status=status, counted_for_agi=counted, message=msg, details=details)
 
 
-def gate_to_dict(v: GateVerdict) -> Dict[str, Any]:
-    return asdict(v)
-
-
-if __name__ == "__main__":
-    v = evaluate_training_gate(require_all_green=True)
-    print(json.dumps(gate_to_dict(v), indent=2))
+def gate_to_dict(g: TrainingGate) -> Dict[str, Any]:
+    return asdict(g)
 

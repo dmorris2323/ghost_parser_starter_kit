@@ -1,110 +1,117 @@
+# src/training_curve_engine.py
 from __future__ import annotations
 
-import json
-from dataclasses import dataclass
 from datetime import datetime, timezone
-from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
+import math
 
-from difficulty_scaling_engine import difficulty_weight
-from training_session_store import load_sessions, training_dir
+from training_session_store import load_sessions
+from training_difficulty_engine import normalize_difficulty
 
 
-def _utc_now_iso() -> str:
+def _utc_now() -> str:
     return datetime.now(timezone.utc).isoformat()
 
 
-def _safe_float(x: Any, default: float = 0.0) -> float:
-    try:
-        return float(x)
-    except Exception:
-        return float(default)
+def _extract_weighted_grade(session: Dict[str, Any]) -> float:
+    # Prefer auto_grade weighted_grade
+    ag = session.get("auto_grade") or {}
+    if isinstance(ag, dict):
+        wg = ag.get("weighted_grade") or {}
+        if isinstance(wg, dict) and "weighted_grade" in wg:
+            try:
+                return float(wg["weighted_grade"])
+            except Exception:
+                pass
+        # Some sessions store grade directly
+        if "weighted_grade" in ag:
+            try:
+                return float(ag["weighted_grade"])
+            except Exception:
+                pass
+
+    # Fallback: compute from raw_scores crudely
+    rs = session.get("raw_scores") or {}
+    if isinstance(rs, dict):
+        a = float(rs.get("accuracy", 0.0))
+        s = float(rs.get("speed", 0.0))
+        t = float(rs.get("tradecraft", 0.0))
+        a = max(0.0, min(1.0, a))
+        s = max(0.0, min(1.0, s))
+        t = max(0.0, min(1.0, t))
+        return (0.5 * a + 0.2 * s + 0.3 * t) * 100.0
+
+    return 0.0
 
 
-def _stdev(vals: List[float]) -> float:
-    if len(vals) < 2:
-        return 0.0
-    mean = sum(vals) / len(vals)
-    var = sum((v - mean) ** 2 for v in vals) / (len(vals) - 1)
-    return var ** 0.5
-
-
-def _linear_slope(points: List[Tuple[float, float]]) -> float:
+def compute_training_curve(difficulty_filter: Optional[str] = None) -> Dict[str, Any]:
     """
-    Simple least-squares slope for (x, y).
+    Reads training sessions and computes:
+    - AGI (0-100): mean of counted weighted grades
+    - improvement_slope: simple linear slope over session index
+    - difficulty_weighted_average: same as AGI for now (placeholder)
+    - volatility_index: stdev / 100
     """
-    n = len(points)
-    if n < 2:
-        return 0.0
-    xs = [p[0] for p in points]
-    ys = [p[1] for p in points]
-    x_mean = sum(xs) / n
-    y_mean = sum(ys) / n
-    num = sum((xs[i] - x_mean) * (ys[i] - y_mean) for i in range(n))
-    den = sum((xs[i] - x_mean) ** 2 for i in range(n))
-    if den == 0:
-        return 0.0
-    return num / den
-
-
-def compute_training_curve() -> Dict[str, Any]:
     sessions = load_sessions()
 
-    # Only sessions marked counted=True contribute to AGI math.
-    counted = [s for s in sessions if bool(s.get("counted", True))]
+    d_filter = normalize_difficulty(difficulty_filter) if difficulty_filter else None
 
-    scores = [_safe_float(s.get("score", 0.0)) for s in counted]
-    diffs = [str(s.get("difficulty", "INTERMEDIATE")).upper() for s in counted]
+    # Only counted sessions contribute to AGI
+    counted: List[Dict[str, Any]] = []
+    for s in sessions:
+        if not isinstance(s, dict):
+            continue
+        if not bool(s.get("counted_for_agi", False)):
+            continue
+        if d_filter and normalize_difficulty(str(s.get("difficulty", ""))) != d_filter:
+            continue
+        counted.append(s)
 
-    # Difficulty-weighted average
-    if scores:
-        weights = [difficulty_weight(d) for d in diffs]
-        denom = sum(weights) if sum(weights) != 0 else 1.0
-        dwa = sum(scores[i] * weights[i] for i in range(len(scores))) / denom
-    else:
-        dwa = 0.0
+    grades = [float(_extract_weighted_grade(s)) for s in counted]
+    n = len(grades)
 
-    # AGI: keep it simple and explainable: difficulty-weighted average clipped to 0-100
-    agi = max(0.0, min(100.0, dwa))
+    if n == 0:
+        return {
+            "curve_version": 3,
+            "generated_at": _utc_now(),
+            "difficulty_filter": d_filter or "ALL",
+            "total_sessions": 0,
+            "AGI": 0.0,
+            "improvement_slope": 0.0,
+            "difficulty_weighted_average": 0.0,
+            "volatility_index": 0.0,
+        }
 
-    # Improvement slope: slope over session index vs score
-    points = [(float(i + 1), _safe_float(counted[i].get("score", 0.0))) for i in range(len(counted))]
-    slope = _linear_slope(points)
+    agi = sum(grades) / n
 
-    # Volatility: standard deviation of scores
-    vol = _stdev(scores)
+    # Slope on index 1..n
+    xs = list(range(1, n + 1))
+    x_mean = sum(xs) / n
+    y_mean = agi
+    # Proper y mean from grades
+    y_mean = sum(grades) / n
+    num = sum((x - x_mean) * (y - y_mean) for x, y in zip(xs, grades))
+    den = sum((x - x_mean) ** 2 for x in xs) or 1.0
+    slope = num / den
 
-    curve = {
-        "generated_at": _utc_now_iso(),
-        "sessions_total": len(sessions),
-        "sessions_counted": len(counted),
-        "AGI": round(float(agi), 2),
-        "improvement_slope": round(float(slope), 3),
-        "difficulty_weighted_average": round(float(dwa), 2),
-        "volatility_index": round(float(vol), 3),
+    # Volatility: stddev normalized
+    var = sum((g - agi) ** 2 for g in grades) / max(1, n - 1)
+    stdev = math.sqrt(var)
+    volatility = stdev / 100.0
+
+    return {
+        "curve_version": 3,
+        "generated_at": _utc_now(),
+        "difficulty_filter": d_filter or "ALL",
+        "total_sessions": n,
+        "AGI": round(agi, 1),
+        "improvement_slope": round(slope, 2),
+        "difficulty_weighted_average": round(agi, 1),
+        "volatility_index": round(volatility, 3),
     }
-
-    # Write latest curve file for GUI tiles/command center
-    out_dir = training_dir()
-    out_dir.mkdir(parents=True, exist_ok=True)
-    out_path = out_dir / "training_curve_latest.json"
-    out_path.write_text(json.dumps(curve, indent=2))
-
-    return curve
-
-
-def main() -> None:
-    curve = compute_training_curve()
-    print("Training curve written:")
-    print(f"  JSON: src/docs/training/training_curve_latest.json")
-    print(f"  Total sessions: {curve['sessions_total']}")
-    print(f"  Counted sessions: {curve['sessions_counted']}")
-    print(f"  AGI: {curve['AGI']}")
-    print(f"  Improvement slope: {curve['improvement_slope']}")
-    print(f"  Difficulty-weighted avg: {curve['difficulty_weighted_average']}")
-    print(f"  Volatility index: {curve['volatility_index']}")
 
 
 if __name__ == "__main__":
-    main()
+    import json
+    print(json.dumps(compute_training_curve(), indent=2))
 

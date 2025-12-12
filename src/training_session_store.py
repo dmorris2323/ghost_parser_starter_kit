@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import json
+from dataclasses import dataclass
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Dict, List, Optional
@@ -12,46 +13,55 @@ def _utc_now() -> str:
 
 
 def _repo_root() -> Path:
-    return Path(__file__).resolve().parent.parent
+    # src/ -> repo root
+    return Path(__file__).resolve().parents[1]
 
 
-def _training_dir() -> Path:
-    d = _repo_root() / "src" / "docs" / "training"
-    d.mkdir(parents=True, exist_ok=True)
-    return d
+def _sessions_path() -> Path:
+    # Keep all training artifacts under src/docs/training
+    return _repo_root() / "src" / "docs" / "training" / "training_sessions.json"
 
 
-def sessions_path() -> Path:
-    return _training_dir() / "training_sessions.json"
+def ensure_training_dirs() -> None:
+    p = _sessions_path()
+    p.parent.mkdir(parents=True, exist_ok=True)
 
 
 def load_sessions() -> List[Dict[str, Any]]:
-    p = sessions_path()
+    ensure_training_dirs()
+    p = _sessions_path()
     if not p.exists():
         return []
     try:
-        raw = json.loads(p.read_text(encoding="utf-8"))
-        if isinstance(raw, dict) and isinstance(raw.get("sessions"), list):
-            return raw["sessions"]
-        if isinstance(raw, list):
-            return raw
+        raw = json.loads(p.read_text())
+        sessions = raw.get("sessions", [])
+        if isinstance(sessions, list):
+            return sessions
         return []
     except Exception:
         return []
 
 
-def save_sessions(sessions: List[Dict[str, Any]]) -> None:
-    p = sessions_path()
-    payload = {"version": 1, "updated_at": _utc_now(), "sessions": sessions}
-    p.write_text(json.dumps(payload, indent=2), encoding="utf-8")
+def write_sessions(sessions: List[Dict[str, Any]]) -> Dict[str, Any]:
+    ensure_training_dirs()
+    p = _sessions_path()
+    payload = {
+        "version": 1,
+        "updated_at": _utc_now(),
+        "sessions": sessions,
+    }
+    p.write_text(json.dumps(payload, indent=2))
+    return {"path": str(p), "count": len(sessions)}
 
 
 def append_session(session: Dict[str, Any]) -> Dict[str, Any]:
     sessions = load_sessions()
-    session = dict(session)
-    session.setdefault("session_id", f"sess_{len(sessions)+1:04d}")
-    session.setdefault("timestamp", _utc_now())
-    sessions.append(session)
-    save_sessions(sessions)
-    return session
+    sid = f"TS-{len(sessions)+1:05d}"
+    stamped = dict(session)
+    stamped["session_id"] = sid
+    stamped.setdefault("created_at", _utc_now())
+    sessions.append(stamped)
+    meta = write_sessions(sessions)
+    stamped["store_path"] = meta["path"]
+    return stamped
 
