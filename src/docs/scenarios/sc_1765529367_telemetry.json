@@ -1,0 +1,493 @@
+{
+  "generated_at": "2025-12-12T03:49:27.975576",
+  "optical": [
+    {
+      "timestamp": "2025-12-12T03:49:27.975584",
+      "brightness": 0.3163285507464092,
+      "motion_index": 1.2459673998429257
+    },
+    {
+      "timestamp": "2025-12-12T03:49:26.975601",
+      "brightness": 0.6794118352147818,
+      "motion_index": 1.4888453313438617
+    },
+    {
+      "timestamp": "2025-12-12T03:49:25.975608",
+      "brightness": 0.5084819774991834,
+      "motion_index": 0.6457261867774446
+    },
+    {
+      "timestamp": "2025-12-12T03:49:24.975613",
+      "brightness": 0.46044695961178067,
+      "motion_index": 0.4650491156399066
+    },
+    {
+      "timestamp": "2025-12-12T03:49:23.975618",
+      "brightness": 0.873858565417351,
+      "motion_index": 0.4452681497374128
+    },
+    {
+      "timestamp": "2025-12-12T03:49:22.975623",
+      "brightness": 0.7398577994620842,
+      "motion_index": 0.4079905911724328
+    },
+    {
+      "timestamp": "2025-12-12T03:49:21.975627",
+      "brightness": 0.5643274354652703,
+      "motion_index": 0.6801947229940164
+    },
+    {
+      "timestamp": "2025-12-12T03:49:20.975632",
+      "brightness": 0.8626632106978909,
+      "motion_index": 1.2114454918601882
+    },
+    {
+      "timestamp": "2025-12-12T03:49:19.975636",
+      "brightness": 0.2529143677011745,
+      "motion_index": 0.49408361462374895
+    },
+    {
+      "timestamp": "2025-12-12T03:49:18.975641",
+      "brightness": 0.4528163136006106,
+      "motion_index": 1.4419827132034446
+    },
+    {
+      "timestamp": "2025-12-12T03:49:17.975645",
+      "brightness": 0.7488932800932365,
+      "motion_index": 1.2178496849040494
+    },
+    {
+      "timestamp": "2025-12-12T03:49:16.975649",
+      "brightness": 0.8387994262853917,
+      "motion_index": 1.2167109699775056
+    },
+    {
+      "timestamp": "2025-12-12T03:49:15.975654",
+      "brightness": 1.140635426411499,
+      "motion_index": 1.2648463085421733
+    },
+    {
+      "timestamp": "2025-12-12T03:49:14.975658",
+      "brightness": 0.5603931543999329,
+      "motion_index": 1.530967174943811
+    },
+    {
+      "timestamp": "2025-12-12T03:49:13.975662",
+      "brightness": 0.6142718446669488,
+      "motion_index": 1.4304791396509935
+    },
+    {
+      "timestamp": "2025-12-12T03:49:12.975667",
+      "brightness": 0.7798631759391499,
+      "motion_index": 0.7895807387593945
+    },
+    {
+      "timestamp": "2025-12-12T03:49:11.975671",
+      "brightness": 0.4697980929719272,
+      "motion_index": 0.7830554696278924
+    },
+    {
+      "timestamp": "2025-12-12T03:49:10.975675",
+      "brightness": 0.6216235951454314,
+      "motion_index": 0.33704654170511283
+    },
+    {
+      "timestamp": "2025-12-12T03:49:09.975680",
+      "brightness": 0.8138866544188578,
+      "motion_index": 1.3100591604777203
+    },
+    {
+      "timestamp": "2025-12-12T03:49:08.975684",
+      "brightness": 1.0313763265291702,
+      "motion_index": 1.0935995093083617
+    }
+  ],
+  "seismic": [
+    {
+      "timestamp": "2025-12-12T03:49:27.975690",
+      "microtremor_level": 0.02771131791591229,
+      "vibration_score": 0.1496822982835091
+    },
+    {
+      "timestamp": "2025-12-12T03:49:26.975696",
+      "microtremor_level": 0.00674268805994826,
+      "vibration_score": 0.13536431301973617
+    },
+    {
+      "timestamp": "2025-12-12T03:49:25.975701",
+      "microtremor_level": 0.02216999774276314,
+      "vibration_score": 0.03532674952344237
+    },
+    {
+      "timestamp": "2025-12-12T03:49:24.975705",
+      "microtremor_level": 0.010131331600029748,
+      "vibration_score": 0.10453866028226684
+    },
+    {
+      "timestamp": "2025-12-12T03:49:23.975709",
+      "microtremor_level": 0.012665587801900736,
+      "vibration_score": 0.09189180472755772
+    },
+    {
+      "timestamp": "2025-12-12T03:49:22.975714",
+      "microtremor_level": 0.03027493889634932,
+      "vibration_score": 0.07915147377441441
+    },
+    {
+      "timestamp": "2025-12-12T03:49:21.975718",
+      "microtremor_level": 0.006539048096985556,
+      "vibration_score": 0.0981714271754421
+    },
+    {
+      "timestamp": "2025-12-12T03:49:20.975723",
+      "microtremor_level": 0.011772349687425987,
+      "vibration_score": 0.04713566584381637
+    },
+    {
+      "timestamp": "2025-12-12T03:49:19.975727",
+      "microtremor_level": 0.00972344752458721,
+      "vibration_score": 0.0732879819439372
+    },
+    {
+      "timestamp": "2025-12-12T03:49:18.975731",
+      "microtremor_level": 0.003663788896195902,
+      "vibration_score": 0.13024635408682517
+    },
+    {
+      "timestamp": "2025-12-12T03:49:17.975735",
+      "microtremor_level": 0.04768330211328469,
+      "vibration_score": 0.07793775201168807
+    },
+    {
+      "timestamp": "2025-12-12T03:49:16.975740",
+      "microtremor_level": 0.03594409950983351,
+      "vibration_score": 0.18659556339309233
+    },
+    {
+      "timestamp": "2025-12-12T03:49:15.975744",
+      "microtremor_level": 0.0021604270580801335,
+      "vibration_score": 0.02834911271635776
+    },
+    {
+      "timestamp": "2025-12-12T03:49:14.975749",
+      "microtremor_level": 0.04030476387520529,
+      "vibration_score": 0.16762907571363028
+    },
+    {
+      "timestamp": "2025-12-12T03:49:13.975753",
+      "microtremor_level": 0.03195277573678617,
+      "vibration_score": 0.03195134361557899
+    },
+    {
+      "timestamp": "2025-12-12T03:49:12.975757",
+      "microtremor_level": 0.020674545219635722,
+      "vibration_score": 0.17364830412161014
+    },
+    {
+      "timestamp": "2025-12-12T03:49:11.975761",
+      "microtremor_level": 0.044309621214851574,
+      "vibration_score": 0.1606344243147841
+    },
+    {
+      "timestamp": "2025-12-12T03:49:10.975766",
+      "microtremor_level": 0.010152914637846223,
+      "vibration_score": 0.17073084358945223
+    },
+    {
+      "timestamp": "2025-12-12T03:49:09.975770",
+      "microtremor_level": 0.018737812161577168,
+      "vibration_score": 0.1433022181046899
+    },
+    {
+      "timestamp": "2025-12-12T03:49:08.975775",
+      "microtremor_level": 0.006850375198363973,
+      "vibration_score": 0.19426065788254235
+    }
+  ],
+  "ems": [
+    {
+      "timestamp": "2025-12-12T03:49:27.975780",
+      "signal_variance": 0.6035000029031871,
+      "bandwidth_load": 0.6059000212508535
+    },
+    {
+      "timestamp": "2025-12-12T03:49:26.975785",
+      "signal_variance": 0.21171568976023003,
+      "bandwidth_load": 0.5320683474078348
+    },
+    {
+      "timestamp": "2025-12-12T03:49:25.975790",
+      "signal_variance": 0.5808745525911077,
+      "bandwidth_load": 0.5138574885357428
+    },
+    {
+      "timestamp": "2025-12-12T03:49:24.975794",
+      "signal_variance": 0.3593511401342244,
+      "bandwidth_load": 0.6093855038204898
+    },
+    {
+      "timestamp": "2025-12-12T03:49:23.975798",
+      "signal_variance": 0.3413338898282574,
+      "bandwidth_load": 0.3067275504396273
+    },
+    {
+      "timestamp": "2025-12-12T03:49:22.975803",
+      "signal_variance": 0.1644834338680018,
+      "bandwidth_load": 0.5788218922071529
+    },
+    {
+      "timestamp": "2025-12-12T03:49:21.975813",
+      "signal_variance": 0.11226017699105972,
+      "bandwidth_load": 0.25789018733151114
+    },
+    {
+      "timestamp": "2025-12-12T03:49:20.975817",
+      "signal_variance": 0.06914392433423655,
+      "bandwidth_load": 0.5504687630875305
+    },
+    {
+      "timestamp": "2025-12-12T03:49:19.975821",
+      "signal_variance": 0.556152990512616,
+      "bandwidth_load": 0.48032091622509276
+    },
+    {
+      "timestamp": "2025-12-12T03:49:18.975826",
+      "signal_variance": 0.038827493571539695,
+      "bandwidth_load": 0.40771342126838506
+    },
+    {
+      "timestamp": "2025-12-12T03:49:17.975830",
+      "signal_variance": 0.34305905286291205,
+      "bandwidth_load": 0.16486335000850239
+    },
+    {
+      "timestamp": "2025-12-12T03:49:16.975834",
+      "signal_variance": 0.00297454093757632,
+      "bandwidth_load": 0.7985396408841808
+    },
+    {
+      "timestamp": "2025-12-12T03:49:15.975839",
+      "signal_variance": 0.12151619350943055,
+      "bandwidth_load": 0.31105217959519726
+    },
+    {
+      "timestamp": "2025-12-12T03:49:14.975843",
+      "signal_variance": 0.268944319822206,
+      "bandwidth_load": 0.5180812358059403
+    },
+    {
+      "timestamp": "2025-12-12T03:49:13.975847",
+      "signal_variance": 0.07742728247048869,
+      "bandwidth_load": 0.42892336149076327
+    },
+    {
+      "timestamp": "2025-12-12T03:49:12.975852",
+      "signal_variance": 0.36669774988019255,
+      "bandwidth_load": 0.6841523678977012
+    },
+    {
+      "timestamp": "2025-12-12T03:49:11.975856",
+      "signal_variance": 0.0057159760570856255,
+      "bandwidth_load": 0.33432693860340457
+    },
+    {
+      "timestamp": "2025-12-12T03:49:10.975860",
+      "signal_variance": 0.4965591174346231,
+      "bandwidth_load": 0.7788511177371201
+    },
+    {
+      "timestamp": "2025-12-12T03:49:09.975865",
+      "signal_variance": 0.5166865350629684,
+      "bandwidth_load": 0.43195562329990467
+    },
+    {
+      "timestamp": "2025-12-12T03:49:08.975869",
+      "signal_variance": 0.6695020065249957,
+      "bandwidth_load": 0.30758925869439524
+    }
+  ],
+  "radiation": [
+    {
+      "timestamp": "2025-12-12T03:49:27.975874",
+      "background_uSv": 0.05317397667182068
+    },
+    {
+      "timestamp": "2025-12-12T03:49:26.975879",
+      "background_uSv": 0.1001376693801759
+    },
+    {
+      "timestamp": "2025-12-12T03:49:25.975884",
+      "background_uSv": 0.14104016211411208
+    },
+    {
+      "timestamp": "2025-12-12T03:49:24.975888",
+      "background_uSv": 0.12383733626184391
+    },
+    {
+      "timestamp": "2025-12-12T03:49:23.975892",
+      "background_uSv": 0.07583148883682558
+    },
+    {
+      "timestamp": "2025-12-12T03:49:22.975896",
+      "background_uSv": 0.11840476529612466
+    },
+    {
+      "timestamp": "2025-12-12T03:49:21.975900",
+      "background_uSv": 0.13491187335191035
+    },
+    {
+      "timestamp": "2025-12-12T03:49:20.975904",
+      "background_uSv": 0.07585475103918565
+    },
+    {
+      "timestamp": "2025-12-12T03:49:19.975926",
+      "background_uSv": 0.10880118924063986
+    },
+    {
+      "timestamp": "2025-12-12T03:49:18.975930",
+      "background_uSv": 0.08555647192367272
+    },
+    {
+      "timestamp": "2025-12-12T03:49:17.975934",
+      "background_uSv": 0.07442581772214957
+    },
+    {
+      "timestamp": "2025-12-12T03:49:16.975938",
+      "background_uSv": 0.07873539211443693
+    },
+    {
+      "timestamp": "2025-12-12T03:49:15.975942",
+      "background_uSv": 0.0703847398167135
+    },
+    {
+      "timestamp": "2025-12-12T03:49:14.975946",
+      "background_uSv": 0.08508193301068274
+    },
+    {
+      "timestamp": "2025-12-12T03:49:13.975950",
+      "background_uSv": 0.053810700265268976
+    },
+    {
+      "timestamp": "2025-12-12T03:49:12.975954",
+      "background_uSv": 0.089763454691076
+    },
+    {
+      "timestamp": "2025-12-12T03:49:11.975957",
+      "background_uSv": 0.05867570047719624
+    },
+    {
+      "timestamp": "2025-12-12T03:49:10.975962",
+      "background_uSv": 0.12581463757575176
+    },
+    {
+      "timestamp": "2025-12-12T03:49:09.975965",
+      "background_uSv": 0.10998090052701573
+    },
+    {
+      "timestamp": "2025-12-12T03:49:08.975969",
+      "background_uSv": 0.05040957529346666
+    }
+  ],
+  "comms": [
+    {
+      "timestamp": "2025-12-12T03:49:27.975979",
+      "channel_state": "GREEN",
+      "latency_ms": 109.24874993678453
+    },
+    {
+      "timestamp": "2025-12-12T03:49:26.975997",
+      "channel_state": "AMBER",
+      "latency_ms": 162.73421466513406
+    },
+    {
+      "timestamp": "2025-12-12T03:49:25.976004",
+      "channel_state": "AMBER",
+      "latency_ms": 130.06793295016064
+    },
+    {
+      "timestamp": "2025-12-12T03:49:24.976010",
+      "channel_state": "GREEN",
+      "latency_ms": 122.95879207370267
+    },
+    {
+      "timestamp": "2025-12-12T03:49:23.976015",
+      "channel_state": "GREEN",
+      "latency_ms": 116.40800333487816
+    },
+    {
+      "timestamp": "2025-12-12T03:49:22.976020",
+      "channel_state": "GREEN",
+      "latency_ms": 89.86207846963035
+    },
+    {
+      "timestamp": "2025-12-12T03:49:21.976025",
+      "channel_state": "GREEN",
+      "latency_ms": 103.94299724110311
+    },
+    {
+      "timestamp": "2025-12-12T03:49:20.976030",
+      "channel_state": "GREEN",
+      "latency_ms": 133.25660929005767
+    },
+    {
+      "timestamp": "2025-12-12T03:49:19.976041",
+      "channel_state": "GREEN",
+      "latency_ms": 104.31900994246563
+    },
+    {
+      "timestamp": "2025-12-12T03:49:18.976046",
+      "channel_state": "GREEN",
+      "latency_ms": 111.85506595573668
+    },
+    {
+      "timestamp": "2025-12-12T03:49:17.976051",
+      "channel_state": "AMBER",
+      "latency_ms": 96.69937403226368
+    },
+    {
+      "timestamp": "2025-12-12T03:49:16.976055",
+      "channel_state": "GREEN",
+      "latency_ms": 136.14780602997104
+    },
+    {
+      "timestamp": "2025-12-12T03:49:15.976060",
+      "channel_state": "GREEN",
+      "latency_ms": 111.26546856353696
+    },
+    {
+      "timestamp": "2025-12-12T03:49:14.976065",
+      "channel_state": "GREEN",
+      "latency_ms": 109.6760349442753
+    },
+    {
+      "timestamp": "2025-12-12T03:49:13.976069",
+      "channel_state": "GREEN",
+      "latency_ms": 109.2697741947492
+    },
+    {
+      "timestamp": "2025-12-12T03:49:12.976074",
+      "channel_state": "GREEN",
+      "latency_ms": 126.75171595994195
+    },
+    {
+      "timestamp": "2025-12-12T03:49:11.976079",
+      "channel_state": "GREEN",
+      "latency_ms": 170.7104519355464
+    },
+    {
+      "timestamp": "2025-12-12T03:49:10.976084",
+      "channel_state": "GREEN",
+      "latency_ms": 81.17047925712993
+    },
+    {
+      "timestamp": "2025-12-12T03:49:09.976089",
+      "channel_state": "GREEN",
+      "latency_ms": 69.26993744657867
+    },
+    {
+      "timestamp": "2025-12-12T03:49:08.976101",
+      "channel_state": "GREEN",
+      "latency_ms": 118.72922162780073
+    }
+  ]
+}

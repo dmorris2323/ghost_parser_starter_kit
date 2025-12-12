@@ -1,0 +1,130 @@
+{
+  "report_version": 3,
+  "generated_at": "2025-12-12T10:17:49.090018+00:00",
+  "safe_notice": "This report is generated from synthetic telemetry and is safe for training/demos.",
+  "inputs": {
+    "difficulty": "ADVERSARIAL",
+    "seed": 99,
+    "pattern_id": "CROSS_DOMAIN_CONFUSION",
+    "pattern_seed": 99,
+    "baseline_bundle_paths": {
+      "latest": "/Users/dextermorris/ghost/parser_starter_kit/src/docs/synthetic/synthetic_fusion_bundle.json",
+      "stamped": "/Users/dextermorris/ghost/parser_starter_kit/src/docs/synthetic/synthetic_fusion_bundle_20251212_101749.json"
+    },
+    "injected_bundle_paths": {
+      "latest": "/Users/dextermorris/ghost/parser_starter_kit/src/docs/synthetic/synthetic_fusion_bundle.json",
+      "stamped": "/Users/dextermorris/ghost/parser_starter_kit/src/docs/synthetic/synthetic_fusion_bundle_20251212_101749.json"
+    }
+  },
+  "baseline_metrics": {
+    "trust_proxy": 81.39,
+    "risk_score": 31.8,
+    "alerts": {
+      "total": 101,
+      "crit": 0,
+      "high": 5,
+      "attack_like": 13,
+      "anomaly": 37
+    }
+  },
+  "injected_metrics": {
+    "trust_proxy": 73.71,
+    "risk_score": 49.74,
+    "alerts": {
+      "total": 101,
+      "crit": 3,
+      "high": 10,
+      "attack_like": 20,
+      "anomaly": 48
+    }
+  },
+  "delta_vs_baseline": {
+    "trust_proxy_delta": -7.68,
+    "risk_score_delta": 17.94,
+    "alerts_delta": {
+      "crit": 3,
+      "high": 5,
+      "attack_like": 7,
+      "anomaly": 11,
+      "total": 0
+    }
+  },
+  "pattern_injection": {
+    "count": 1,
+    "items": [
+      {
+        "pattern_id": "CROSS_DOMAIN_CONFUSION",
+        "label": "Cross-Domain Confusion",
+        "domains": [
+          "EMS",
+          "COMMS",
+          "CYBER"
+        ],
+        "intensity": 0.92,
+        "expected_effects": [
+          "Multiple domains spike within a short window",
+          "Higher volatility and alert pressure"
+        ],
+        "injected_events": 18
+      }
+    ],
+    "pattern_requested": "CROSS_DOMAIN_CONFUSION",
+    "pattern_seed": 99,
+    "pattern_error": null
+  },
+  "verdict": {
+    "status": "PASS",
+    "message": "Controlled environment for this difficulty."
+  },
+  "real_module_attempts": {
+    "attempted": {
+      "fusion_trust": "compute_trust",
+      "operator_safety_layer": "compute_osl",
+      "crisis_mode_flag": null,
+      "training_curve_engine": "compute_training_curve"
+    },
+    "results": {
+      "fusion_trust": {
+        "fusion_trust": 92,
+        "factors": {
+          "outliers": 0,
+          "drift": {
+            "status": "no_data",
+            "message": "docs/golden_dome_status.txt not found",
+            "drift_score": 0
+          },
+          "reliability": {
+            "sensors": {
+              "global": 100.0,
+              "optical": 90.0,
+              "seismic": 90.0,
+              "ems": 90.0,
+              "radiation": 90.0
+            },
+            "avg_reliability": 92.0
+          },
+          "crisis_mode": "OFF"
+        }
+      },
+      "operator_safety_layer": {
+        "osl_status": "GREEN",
+        "trust_score": 92,
+        "message": "System stable."
+      },
+      "training_curve": {
+        "AGI": 65.1,
+        "improvement_slope": -3.6,
+        "difficulty_weighted_average": 75.0,
+        "volatility_index": 12.728
+      }
+    },
+    "errors": {
+      "crisis_mode_flag": "MissingFunction: none of ['read_crisis_mode', 'get_crisis_mode', 'is_crisis_mode', 'crisis_mode_status'] found in crisis_mode_flag"
+    }
+  },
+  "recommendations": [
+    "If ADVERSARIAL is WARN with bounded deltas, that\u2019s acceptable training stress.",
+    "If baseline is FAIL, freeze changes and run system integrity before adding features.",
+    "Use delta_vs_baseline to validate that injections change the system in expected directions."
+  ]
+}

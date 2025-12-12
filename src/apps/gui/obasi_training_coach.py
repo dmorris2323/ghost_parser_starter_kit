@@ -1,41 +1,70 @@
-# apps/gui/obasi_training_coach.py
-# Obasi Coaching (SAFE) – accepts flexible inputs to avoid signature mismatches.
+"""
+src/apps/gui/obasi_training_coach.py
+
+Forward-compatible Obasi coach builder.
+Must never break callers (accept any args/kwargs).
+"""
 
 from __future__ import annotations
+from typing import Any
 
 
-def build_obasi_training_coach_speech(*args, **kwargs) -> str:
-    """
-    Flexible signature to prevent Streamlit crashes when callers change.
+def build_obasi_training_coach_speech(*args: Any, **kwargs: Any) -> str:
+    # Grab commonly passed fields (optional)
+    trainee = str(kwargs.get("trainee_name") or kwargs.get("operator") or "Trainee")
+    difficulty = str(kwargs.get("difficulty") or "INTERMEDIATE").upper()
 
-    Expected (optional) kwargs:
-      - trainee_name
-      - difficulty
-      - agi
-      - avg_score
-      - volatility
-      - message_mode ("coach"|"instructor")
-    """
-    trainee = kwargs.get("trainee_name", "Trainee")
-    difficulty = kwargs.get("difficulty", "ANALYST")
-    agi = kwargs.get("agi", None)
-    avg = kwargs.get("avg_score", None)
-    vol = kwargs.get("volatility", None)
-    mode = kwargs.get("message_mode", "coach")
+    agi = _sf(kwargs.get("agi"))
+    slope = _sf(kwargs.get("improvement_slope"))
+    vol = _sf(kwargs.get("volatility_index"))
+    last = _sf(kwargs.get("last_score"))
+    dwa = _sf(kwargs.get("difficulty_weighted_average"))
+    notes = str(kwargs.get("notes") or "").strip()
 
-    lines = []
-    if mode == "instructor":
-        lines.append(f"OBASI (Instructor): {trainee} current track: {difficulty}.")
-        if agi is not None:
-            lines.append(f"AGI={agi}. Average={avg}. Volatility={vol}.")
-        lines.append("Focus: consistency first. Promote difficulty only when volatility drops.")
-        return "\n".join(lines)
+    trend = "flat"
+    if slope > 0.5:
+        trend = "up"
+    elif slope < -0.5:
+        trend = "down"
 
-    # Coach mode
-    lines.append(f"OBASI: {trainee}, you’re operating at **{difficulty}**.")
-    if agi is not None:
-        lines.append(f"Training status: AGI={agi}, Avg={avg}, Volatility={vol}.")
-    lines.append("Rule: stabilize your judgment before you chase harder scenarios.")
-    lines.append("Next rep: identify patterns fast, then write a clean commander summary.")
+    stability = "stable"
+    if vol >= 12:
+        stability = "volatile"
+    elif 7 <= vol < 12:
+        stability = "mixed"
+
+    lines = [
+        f"🦉 Obasi Coach — {trainee}",
+        f"Difficulty: {difficulty}",
+    ]
+
+    if agi > 0:
+        lines.append(f"AGI: {agi:.1f} | DWA: {dwa:.1f} | Last: {last:.1f}")
+        lines.append(f"Trend: {trend} (slope {slope:.2f}) | Stability: {stability} (vol {vol:.2f})")
+    else:
+        lines.append("AGI: insufficient sessions. Run a few reps to establish baseline.")
+
+    if trend == "down":
+        lines.append("Directive: tighten evidence discipline. Win the process, then speed up.")
+    elif trend == "flat":
+        lines.append("Directive: change ONE lever—raise difficulty OR raise clarity. Not both.")
+    else:
+        lines.append("Directive: keep pressure on. Raise difficulty gradually; protect consistency.")
+
+    if stability == "volatile":
+        lines.append("Stability fix: reduce randomness. Use checklists. Explain why each alert matters.")
+    elif stability == "mixed":
+        lines.append("Stability fix: focus on repeatable steps. Your output should look the same every rep.")
+
+    if notes:
+        lines.append(f"Note: {notes}")
+
     return "\n".join(lines)
+
+
+def _sf(v: Any) -> float:
+    try:
+        return 0.0 if v is None else float(v)
+    except Exception:
+        return 0.0
 

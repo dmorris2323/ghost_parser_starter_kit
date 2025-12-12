@@ -1,0 +1,26 @@
+{
+  "inputs": {
+    "prelaunch_watchboard_present": false,
+    "golden_dome_daily_watch_present": true,
+    "prelaunch_watchboard_path": "/Users/dextermorris/ghost/parser_starter_kit/src/docs/prelaunch_watchboard.json",
+    "golden_dome_daily_watch_path": "/Users/dextermorris/ghost/parser_starter_kit/src/docs/golden_dome_daily_watch.json"
+  },
+  "prelaunch_signals": {
+    "present": false,
+    "overall_alert_level": "UNKNOWN",
+    "hot_sectors": [],
+    "total_sectors": 0
+  },
+  "golden_dome_signals": {
+    "present": true,
+    "readiness_level": "UNKNOWN",
+    "drift_status": "UNKNOWN",
+    "fusion_trust": null
+  },
+  "overall_assessment": {
+    "risk_level": "LOW",
+    "reasons": [
+      "No strong warning indicators detected in current nuclear products."
+    ]
+  }
+}

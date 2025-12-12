@@ -1,0 +1,13 @@
+GLL Instructor Rubric Report (v1)
+Scenario: sc_1765530057
+Difficulty: CADET
+Score: 93.0/100
+
+Subscores:
+  - pattern_identification: 36.0
+  - osl_posture: 20.0
+  - commander_summary: 30.0
+  - discipline: 7.0
+
+Instructor feedback:
+  • Solid run. Promote difficulty only if consistency stays high across multiple sessions.

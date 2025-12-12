@@ -1,0 +1,29 @@
+{
+  "scenario_id": "sc_1765530289",
+  "generated_at": "2025-12-12T04:04:49.688404",
+  "difficulty_used": "CADET",
+  "difficulty_recommended": "CADET",
+  "difficulty_config": {
+    "description": "Entry-level training. Low noise, simple synthetic anomalies.",
+    "max_patterns": 1,
+    "noise_factor": 0.3,
+    "time_pressure": "LOW",
+    "min_sessions_before_promotion": 5,
+    "recommended_for": "New trainees or early tech school phase."
+  },
+  "patterns_used": [
+    "latency"
+  ],
+  "pattern_evidence": [
+    "src/docs/patterns/latency_pattern_1765530289.684803.json"
+  ],
+  "noise_factor_note": "noise_factor=0.3 is a synthetic tuning knob only.",
+  "tasking": [
+    "1) Identify the dominant anomaly pattern(s).",
+    "2) State whether this is likely sensor fault vs multi-sensor event (synthetic-only).",
+    "3) Decide OSL posture (GREEN/AMBER/RED) and justify.",
+    "4) Write a 5-sentence commander summary."
+  ],
+  "telemetry_json_path": "src/docs/scenarios/sc_1765530289_telemetry.json",
+  "safe_notice": "Synthetic-only training scenario. No real-world signals."
+}

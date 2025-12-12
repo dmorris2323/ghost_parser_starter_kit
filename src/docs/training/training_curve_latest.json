@@ -1,0 +1,14 @@
+{
+  "generated_at": "2025-12-12T11:46:39.402343+00:00",
+  "total_sessions": 5,
+  "AGI": 73.323,
+  "improvement_slope": -2.308,
+  "difficulty_weighted_average": 74.377,
+  "volatility_index": 11.429,
+  "last_session": {
+    "ts_utc": "2025-12-12T11:06:09.194418+00:00",
+    "difficulty": "ADVERSARIAL",
+    "difficulty_weight": 1.3,
+    "score": 72.46
+  }
+}

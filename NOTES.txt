@@ -1792,3 +1792,20 @@ Vital to commit to git. Recommended commit:
 git add .
 git commit -m Day 70 – Joint readiness console dashboard for Obasi
 git push
+Day 68 — Synthetic Validation Hardening (Pattern Injection + Baseline Delta)
+- Hardened training_curve_engine to use repo-root-safe paths so it works from root/src/Streamlit consistently.
+- Updated fusion_validation_harness to:
+  • Normalize risk score (rate-based) so ADVERSARIAL doesn’t auto-peg at 100.
+  • Add baseline-vs-injected delta to quantify pattern impact.
+  • Make verdict difficulty-aware (ADVERSARIAL expects stress; WARN is acceptable if bounded).
+  • Make “real module hooks” resilient by discovering available function names dynamically.
+- Result: validation is now a real regression harness (baseline vs injected) suitable for instructor grading + SPS hardening loops.
+Module 3 — Difficulty Scaling Engine (Wired)
+- Implemented difficulty_scaling_engine as the single source of truth for difficulty profiles + weights (BEGINNER/INTERMEDIATE/ADVANCED/ADVERSARIAL).
+- Wired difficulty into training sessions via training_session_store:
+  • sessions now store difficulty + difficulty_weight + score + rubric payload.
+- Wired difficulty into scenario_engine:
+  • scenarios now generate with difficulty profile metadata + objectives + prompts + optional pattern injection.
+- Wired difficulty into instructor_rubric_autograder:
+  • rubric scores now apply difficulty_weight consistently (harder reps get appropriate weighting).
+- Updated training_curve_engine to use the same difficulty scaling weights for stable, consistent curve math across the system.

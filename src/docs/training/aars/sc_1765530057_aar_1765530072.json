@@ -1,0 +1,53 @@
+{
+  "aar_version": 1,
+  "generated_at": "2025-12-12T04:01:12.094495",
+  "scenario": {
+    "scenario_id": "sc_1765530057",
+    "difficulty_used": "CADET",
+    "patterns_truth": [
+      "outage"
+    ],
+    "telemetry_json_path": "src/docs/scenarios/sc_1765530057_telemetry.json",
+    "scenario_json_path": "src/docs/scenarios/sc_1765530057_scenario.json",
+    "safe_notice": "Synthetic-only training scenario. No real-world signals."
+  },
+  "trainee": {
+    "name": "Ghost",
+    "called_patterns": [
+      "drift",
+      "outage"
+    ],
+    "osl": "AMBER",
+    "commander_summary": "Observed synthetic anomalies consistent with drift/latency patterns. Operational impact is moderate due to reduced confidence in sensor stability. Assessment remains likely synthetic sensor behavior rather than a single-point fault. Recommend cross-checking sensor baselines and monitoring for escalation or outages. Maintain AMBER posture until consistency returns or patterns converge.",
+    "analyst_notes": "Validated baseline; cross-checked sensor consistency; cautious confidence."
+  },
+  "grading": {
+    "score": 93.0,
+    "subscores": {
+      "pattern_identification": 36.0,
+      "osl_posture": 20.0,
+      "commander_summary": 30.0,
+      "discipline": 7.0
+    },
+    "pattern_results": {
+      "correct": [
+        "outage"
+      ],
+      "missed": [],
+      "extras": [
+        "drift"
+      ]
+    },
+    "instructor_feedback": [
+      "Solid run. Promote difficulty only if consistency stays high across multiple sessions."
+    ]
+  },
+  "analysis": {
+    "what_happened": "Synthetic scenario generated with patterns: outage at difficulty CADET.",
+    "what_you_did_well": "Correctly identified: outage",
+    "what_to_fix": "Missed: none | Extras: drift",
+    "next_reps": [
+      "Rep: maintain consistency across 3 runs; then promote difficulty one tier."
+    ]
+  }
+}

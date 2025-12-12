@@ -1,0 +1,72 @@
+{
+  "scenario_version": 1,
+  "generated_at": "2025-12-12T11:06:02.247417+00:00",
+  "difficulty": "ADVERSARIAL",
+  "difficulty_profile": {
+    "weight": 1.3,
+    "noise": 0.45,
+    "anomaly_rate": 0.34,
+    "attack_like_rate": 0.22,
+    "crit_rate": 0.06,
+    "pattern_intensity_boost": 1.15
+  },
+  "seed": 7,
+  "pattern_id": "CROSS_DOMAIN_CONFUSION",
+  "training_objectives": [
+    "Operate under adversarial pressure without losing process discipline.",
+    "Minimize false confidence; demand corroboration.",
+    "Recommend containment actions and define success criteria."
+  ],
+  "operator_prompts": [
+    "What would you brief a commander in 30 seconds?",
+    "Summarize what\u2019s happening in 3 bullets.",
+    "Assume deception: what could be misleading here?",
+    "What\u2019s your top risk and why?",
+    "What is one thing you would verify next?"
+  ],
+  "bundle_paths": {
+    "latest": "/Users/dextermorris/ghost/parser_starter_kit/src/docs/synthetic/synthetic_fusion_bundle.json",
+    "stamped": "/Users/dextermorris/ghost/parser_starter_kit/src/docs/synthetic/synthetic_fusion_bundle_20251212_110602.json"
+  },
+  "bundle_stats": {
+    "total_events": 102,
+    "anomaly_events": 49,
+    "attack_like_events": 21,
+    "crit_events": 4,
+    "domains": [
+      "COMMS",
+      "CYBER",
+      "EMS",
+      "LATENCY",
+      "OPTICAL",
+      "RADIATION",
+      "SEISMIC"
+    ],
+    "domain_counts": {
+      "COMMS": 10,
+      "CYBER": 23,
+      "EMS": 24,
+      "LATENCY": 8,
+      "OPTICAL": 12,
+      "RADIATION": 11,
+      "SEISMIC": 14
+    }
+  },
+  "injections": [
+    {
+      "pattern_id": "CROSS_DOMAIN_CONFUSION",
+      "label": "Cross-Domain Confusion",
+      "domains": [
+        "EMS",
+        "COMMS",
+        "CYBER"
+      ],
+      "intensity": 0.92,
+      "expected_effects": [
+        "Multiple domains spike within a short window",
+        "Higher volatility and alert pressure"
+      ],
+      "injected_events": 24
+    }
+  ]
+}

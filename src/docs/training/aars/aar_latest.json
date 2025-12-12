@@ -1,0 +1,52 @@
+{
+  "aar_version": 1,
+  "generated_at": "2025-12-12T04:05:00.487717",
+  "scenario": {
+    "scenario_id": "sc_1765530289",
+    "difficulty_used": "CADET",
+    "patterns_truth": [
+      "latency"
+    ],
+    "telemetry_json_path": "src/docs/scenarios/sc_1765530289_telemetry.json",
+    "scenario_json_path": "src/docs/scenarios/sc_1765530289_scenario.json",
+    "safe_notice": "Synthetic-only training scenario. No real-world signals."
+  },
+  "trainee": {
+    "name": "Ghost",
+    "called_patterns": [
+      "drift"
+    ],
+    "osl": "AMBER",
+    "commander_summary": "Observed synthetic anomalies consistent with drift/latency patterns. Operational impact is moderate due to reduced confidence in sensor stability. Assessment remains likely synthetic sensor behavior rather than a single-point fault. Recommend cross-checking sensor baselines and monitoring for escalation or outages. Maintain AMBER posture until consistency returns or patterns converge.",
+    "analyst_notes": "Validated baseline; cross-checked sensor consistency; cautious confidence."
+  },
+  "grading": {
+    "score": 57.0,
+    "subscores": {
+      "pattern_identification": 0.0,
+      "osl_posture": 20.0,
+      "commander_summary": 30.0,
+      "discipline": 7.0
+    },
+    "pattern_results": {
+      "correct": [],
+      "missed": [
+        "latency"
+      ],
+      "extras": [
+        "drift"
+      ]
+    },
+    "instructor_feedback": [
+      "Pattern calls need tightening: reduce extras; hit the true anomalies first."
+    ]
+  },
+  "analysis": {
+    "what_happened": "Synthetic scenario generated with patterns: latency at difficulty CADET.",
+    "what_you_did_well": "Correctly identified: none",
+    "what_to_fix": "Missed: latency | Extras: drift",
+    "next_reps": [
+      "Rep: call fewer patterns. Anchor on the strongest signal first; then expand."
+    ]
+  }
+}

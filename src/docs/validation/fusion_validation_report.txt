@@ -1,0 +1,35 @@
+GLL — Synthetic Fusion Validation Report (SAFE)
+============================================================
+Generated:   2025-12-12T10:23:33.642444+00:00
+Difficulty:  ADVERSARIAL
+Seed:        99
+Pattern:     CROSS_DOMAIN_CONFUSION
+
+Baseline Metrics
+------------------------------------------------------------
+Trust Proxy: 81.39    Risk: 31.8
+Alerts: CRIT=0 HIGH=5 ATTACK=13 ANOM=37 TOTAL=101
+
+Injected Metrics
+------------------------------------------------------------
+Trust Proxy: 73.71    Risk: 49.74
+Alerts: CRIT=3 HIGH=10 ATTACK=20 ANOM=48 TOTAL=101
+
+Delta vs Baseline
+------------------------------------------------------------
+Trust Δ: -7.68    Risk Δ: 17.94
+Alerts Δ: {'crit': 3, 'high': 5, 'attack_like': 7, 'anomaly': 11, 'total': 0}
+
+Pattern Injection
+------------------------------------------------------------
+Injections: 1
+Example: CROSS_DOMAIN_CONFUSION — Cross-Domain Confusion (injected_events=18)
+
+Verdict
+------------------------------------------------------------
+PASS: Controlled environment for this difficulty.
+
+Notes
+------------------------------------------------------------
+• This is synthetic telemetry only (safe).
+• Use delta_vs_baseline to confirm patterns move metrics in expected directions.

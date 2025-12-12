@@ -58,6 +58,10 @@ Menu options:
  53) Nuclear Signal Fusion Summary
  60) SPS Behavioral Integrity Monitor (Module 3)
  61) Pre-Boost Threat Card (Nuclear Early-Warning Fusion)
+ 62) Synthetic Fusion Validation Run (SAFE)
+ 67) Generate Synthetic Fusion Signals
+ 68) Inject Synthetic Pattern (War Room Mode)
+ 69) Difficulty Profile & Recommendation
 """
 
 import sys
@@ -556,9 +560,71 @@ def main() -> int:
         elif choice == "61":
             print("Pre-Boost Threat Card module is under development. No action taken.")
 
+        elif choice == "62":
+            from fusion_validation_harness import run_synthetic_fusion_validation
+            import json
+            print("Running Synthetic Fusion Validation (SAFE)...")
+            result = run_synthetic_fusion_validation(difficulty="INTERMEDIATE", seed=42, write=True)
+            print(json.dumps(result.get("verdict", {}), indent=2))
+            paths = result.get("paths", {})
+            print("Artifacts written:")
+            print(f"  JSON: {paths.get('json_latest')}")
+            print(f"  TXT:  {paths.get('txt')}")
+
+        elif choice == "67":
+            from synthetic_signal_generator import build_synthetic_fusion_bundle
+            print("Generating SAFE synthetic fusion telemetry...")
+            result = build_synthetic_fusion_bundle()
+            print("Synthetic telemetry written:")
+            print(f"  JSON: {result['json_path']}")
+            print(f"  CSV:  {result['csv_path']}")
+        elif choice == "68":
+            from synthetic_signal_generator import build_synthetic_fusion_bundle
+            from pattern_injection_engine import inject_pattern
+            import json
+
+            print("Generating synthetic fusion bundle...")
+            base = build_synthetic_fusion_bundle()
+
+            print("Inject which pattern?")
+            print("  drift | latency | outage | storm | cross")
+            pattern = input("Enter pattern: ").strip()
+
+            # Load the generated bundle
+            import json
+            with open(base["json_path"], "r") as f:
+                data = json.load(f)
+
+            modified, record = inject_pattern(pattern, data)
+
+            out_path = "src/docs/synthetic/synthetic_fusion_modified.json"
+            with open(out_path, "w") as f:
+                json.dump(modified, f, indent=2)
+
+            print("\nPattern injected.")
+            print(f"Modified bundle saved to: {out_path}")
+            print(f"Pattern evidence saved to: {record}")
+
+        elif choice == "69":
+            from difficulty_scaling_engine import compute_difficulty_profile
+            print("Computing GLL difficulty profile and recommendation...")
+            result = compute_difficulty_profile()
+            rec = result["recommendation"]
+            print("\nDifficulty profile written:")
+            print(f"  JSON: {result['json_path']}")
+            print("\nRecommendation:")
+            print(f"  Level: {rec['recommended_level']}")
+            print(f"  AGI: {rec['agi']}")
+            print(f"  Slope: {rec['slope']:.3f}")
+            print(f"  Volatility: {rec['volatility']:.3f}")
+            print(f"  Sessions: {rec['session_count']}")
+            print(f"  Rationale: {rec['rationale']}")
+
+
         else:
             print("Invalid option. Try again.")
     return 0
+
 
 
 if __name__ == "__main__":

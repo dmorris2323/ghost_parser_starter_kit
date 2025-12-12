@@ -1,0 +1,75 @@
+{
+  "report_version": 2,
+  "generated_at": "2025-12-12T10:11:41.103586",
+  "safe_notice": "This report is generated from synthetic telemetry and is safe for training/demos.",
+  "inputs": {
+    "difficulty": "ADVERSARIAL",
+    "seed": 99,
+    "pattern_id": "CROSS_DOMAIN_CONFUSION",
+    "pattern_seed": 99,
+    "bundle_paths": {
+      "latest": "/Users/dextermorris/ghost/parser_starter_kit/src/docs/synthetic/synthetic_fusion_bundle.json",
+      "stamped": "/Users/dextermorris/ghost/parser_starter_kit/src/docs/synthetic/synthetic_fusion_bundle_20251212_101141.json"
+    }
+  },
+  "synthetic_metrics": {
+    "trust_proxy": 73.71,
+    "risk_score": 100.0,
+    "alerts": {
+      "crit": 3,
+      "high": 10,
+      "attack_like": 20,
+      "anomaly": 48
+    }
+  },
+  "pattern_injection": {
+    "count": 1,
+    "items": [
+      {
+        "pattern_id": "CROSS_DOMAIN_CONFUSION",
+        "label": "Cross-Domain Confusion",
+        "domains": [
+          "EMS",
+          "COMMS",
+          "CYBER"
+        ],
+        "intensity": 0.92,
+        "expected_effects": [
+          "Multiple domains spike within a short window",
+          "Higher volatility and alert pressure"
+        ],
+        "injected_events": 18
+      }
+    ],
+    "pattern_requested": "CROSS_DOMAIN_CONFUSION",
+    "pattern_seed": 99,
+    "pattern_error": null
+  },
+  "verdict": {
+    "status": "FAIL",
+    "message": "Synthetic environment indicates instability. Investigate scoring/trust/alerts behavior."
+  },
+  "real_module_attempts": {
+    "attempted": [
+      "training_curve_engine.compute_training_curve()"
+    ],
+    "results": {
+      "training_curve": {
+        "AGI": 76.0,
+        "improvement_slope": -3.6,
+        "difficulty_weighted_average": 75.0,
+        "volatility_index": 14.697
+      }
+    },
+    "errors": {
+      "fusion_trust": "ImportError: cannot import name 'compute_fusion_trust' from 'fusion_trust' (/Users/dextermorris/ghost/parser_starter_kit/src/fusion_trust.py)",
+      "operator_safety_layer": "ImportError: cannot import name 'compute_operator_safety_layer' from 'operator_safety_layer' (/Users/dextermorris/ghost/parser_starter_kit/src/operator_safety_layer.py)",
+      "crisis_mode_flag": "ImportError: cannot import name 'read_crisis_mode' from 'crisis_mode_flag' (/Users/dextermorris/ghost/parser_starter_kit/src/crisis_mode_flag.py)"
+    }
+  },
+  "recommendations": [
+    "Use INTERMEDIATE without injection for baseline regression.",
+    "Use ADVERSARIAL + injection to test SPS defenses and operator coaching.",
+    "If baseline FAIL occurs, freeze changes and run integrity checks before adding features."
+  ]
+}

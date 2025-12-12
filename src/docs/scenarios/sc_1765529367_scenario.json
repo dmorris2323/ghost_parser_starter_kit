@@ -1,0 +1,30 @@
+{
+  "scenario_id": "sc_1765529367",
+  "generated_at": "2025-12-12T03:49:27.984047",
+  "difficulty_used": "ANALYST",
+  "difficulty_recommended": "CADET",
+  "difficulty_config": {
+    "description": "Core analyst mode. Moderate synthetic anomalies, cross-sensor interactions.",
+    "max_patterns": 2,
+    "noise_factor": 0.6,
+    "time_pressure": "MEDIUM",
+    "min_sessions_before_promotion": 10,
+    "recommended_for": "Baseline working analyst / BMC-ready 1N0X1."
+  },
+  "patterns_used": [
+    "latency",
+    "drift"
+  ],
+  "pattern_evidence": [
+    "src/docs/patterns/latency_pattern_1765529367.980623.json",
+    "src/docs/patterns/drift_pattern_1765529367.981492.json"
+  ],
+  "noise_factor_note": "noise_factor=0.6 is a synthetic tuning knob only.",
+  "tasking": [
+    "1) Identify the dominant anomaly pattern(s).",
+    "2) State whether this is likely sensor fault vs multi-sensor event (synthetic-only).",
+    "3) Decide OSL posture (GREEN/AMBER/RED) and justify.",
+    "4) Write a 5-sentence commander summary."
+  ],
+  "telemetry_json_path": "src/docs/scenarios/sc_1765529367_telemetry.json"
+}

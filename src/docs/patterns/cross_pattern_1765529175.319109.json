@@ -1,0 +1,13 @@
+{
+  "pattern_name": "cross",
+  "generated_at": "2025-12-12T03:46:15.319144",
+  "notes": "Synthetic fictional anomaly pattern for training only.",
+  "bundle_keys": [
+    "generated_at",
+    "optical",
+    "seismic",
+    "ems",
+    "radiation",
+    "comms"
+  ]
+}

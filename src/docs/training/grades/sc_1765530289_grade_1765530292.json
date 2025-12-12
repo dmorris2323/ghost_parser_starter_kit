@@ -1,0 +1,43 @@
+{
+  "rubric_version": 1,
+  "graded_at": "2025-12-12T04:04:52.834138",
+  "scenario_id": "sc_1765530289",
+  "difficulty": "CADET",
+  "subscores": {
+    "pattern_identification": 0.0,
+    "osl_posture": 20.0,
+    "commander_summary": 30.0,
+    "discipline": 7.0
+  },
+  "details": {
+    "pattern_details": {
+      "correct": [],
+      "missed": [
+        "latency"
+      ],
+      "extras": [
+        "drift"
+      ]
+    },
+    "osl_details": {
+      "expected": "AMBER",
+      "note": "OSL matches scenario complexity."
+    },
+    "commander_summary_details": {
+      "word_count": 51,
+      "sentence_count": 5,
+      "has_whats_happening": true,
+      "has_impact": true,
+      "has_confidence": true,
+      "has_action": true,
+      "overclaim_penalty": 0.0
+    },
+    "discipline_details": {
+      "note": "Discipline is about validation and controlled confidence."
+    }
+  },
+  "score": 57.0,
+  "instructor_feedback": [
+    "Pattern calls need tightening: reduce extras; hit the true anomalies first."
+  ]
+}

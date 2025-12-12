@@ -16,5 +16,41 @@
     "scenario_id": "HYBRID_FUSION_01",
     "scenario_type": "HYBRID_FUSION",
     "difficulty": "ANALYST"
+  },
+  {
+    "id": 2,
+    "trainee_name": "Ghost",
+    "scenario": "Hybrid Fusion \u2013 Missile Prep, Drone Probe, Cyber Beacon (Analyst)",
+    "session_date": "2025-12-11",
+    "created_at": "2025-12-11T17:59:11Z",
+    "rubric": {
+      "analysis_quality": 5,
+      "fusion_thinking": 5,
+      "nuclear_relevance": 5,
+      "reporting_discipline": 5
+    },
+    "composite_score": 100.0,
+    "mode": "SCENARIO",
+    "scenario_id": "HYBRID_FUSION_01",
+    "scenario_type": "HYBRID_FUSION",
+    "difficulty": "ANALYST"
+  },
+  {
+    "id": 3,
+    "trainee_name": "Ghost",
+    "scenario": "Hybrid Fusion \u2013 Missile Prep, Drone Probe, Cyber Beacon (Analyst)",
+    "session_date": "2025-12-11",
+    "created_at": "2025-12-11T18:26:22Z",
+    "rubric": {
+      "analysis_quality": 5,
+      "fusion_thinking": 5,
+      "nuclear_relevance": 5,
+      "reporting_discipline": 5
+    },
+    "composite_score": 100.0,
+    "mode": "SCENARIO",
+    "scenario_id": "HYBRID_FUSION_01",
+    "scenario_type": "HYBRID_FUSION",
+    "difficulty": "ANALYST"
   }
 ]

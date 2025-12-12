@@ -1,0 +1,40 @@
+{
+  "curve_version": 1,
+  "generated_at": "2025-12-12T10:11:49.582534",
+  "sessions_path": "src/docs/training/training_sessions.json",
+  "window": 5,
+  "AGI": 0.0,
+  "improvement_slope": 0.0,
+  "improvement_slope_window": 2,
+  "difficulty_weighted_average": 0.0,
+  "volatility_index": 0.0,
+  "volatility_window": 2,
+  "summary": {
+    "total_sessions": 0,
+    "avg_score": 0.0,
+    "avg_recent": 0.0,
+    "best": 0.0,
+    "worst": 0.0,
+    "streak_80": 0,
+    "streak_90": 0,
+    "recommendation": "DROP_DIFFICULTY_OR_REP_FOUNDATIONS",
+    "agi_explainer": "AGI = 0.7*avg_recent + 0.3*avg_score + reps_bonus (max +5), clamped 0\u2013100.",
+    "slope_explainer": "improvement_slope = linear slope of score over last N sessions (positive = improving).",
+    "dwa_explainer": "difficulty_weighted_average = sum(score*weight)/sum(weight), weight by difficulty tier.",
+    "vol_explainer": "volatility_index = stddev of recent scores (0\u2013100), higher = less consistent.",
+    "difficulty_weights": {
+      "CADET": 0.9,
+      "BEGINNER": 0.9,
+      "ANALYST": 1.0,
+      "MODERATE": 1.0,
+      "SENIOR": 1.1,
+      "ADVANCED": 1.1,
+      "EXPERT": 1.2,
+      "HARD": 1.2,
+      "UNKNOWN": 1.0
+    }
+  },
+  "points": [],
+  "moving_average": [],
+  "safe_notice": "Synthetic training curve derived from your logged sessions; no real telemetry."
+}

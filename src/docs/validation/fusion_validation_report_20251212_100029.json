@@ -1,0 +1,50 @@
+{
+  "report_version": 1,
+  "generated_at": "2025-12-12T10:00:29.876903",
+  "safe_notice": "This report is generated from synthetic telemetry and is safe for training/demos.",
+  "inputs": {
+    "difficulty": "ADVERSARIAL",
+    "seed": 99,
+    "bundle_paths": {
+      "latest": "/Users/dextermorris/ghost/parser_starter_kit/src/docs/synthetic/synthetic_fusion_bundle.json",
+      "stamped": "/Users/dextermorris/ghost/parser_starter_kit/src/docs/synthetic/synthetic_fusion_bundle_20251212_100029.json"
+    }
+  },
+  "synthetic_metrics": {
+    "trust_proxy": 81.39,
+    "risk_score": 100.0,
+    "alerts": {
+      "crit": 0,
+      "high": 5,
+      "attack_like": 13,
+      "anomaly": 37
+    }
+  },
+  "verdict": {
+    "status": "FAIL",
+    "message": "Synthetic environment indicates instability. Investigate scoring/trust/alerts behavior."
+  },
+  "real_module_attempts": {
+    "attempted": [
+      "training_curve_engine.compute_training_curve()"
+    ],
+    "results": {
+      "training_curve": {
+        "AGI": 0.0,
+        "improvement_slope": 0.0,
+        "difficulty_weighted_average": 0.0,
+        "volatility_index": 0.0
+      }
+    },
+    "errors": {
+      "fusion_trust": "ImportError: cannot import name 'compute_fusion_trust' from 'fusion_trust' (/Users/dextermorris/ghost/parser_starter_kit/src/fusion_trust.py)",
+      "operator_safety_layer": "ImportError: cannot import name 'compute_operator_safety_layer' from 'operator_safety_layer' (/Users/dextermorris/ghost/parser_starter_kit/src/operator_safety_layer.py)",
+      "crisis_mode_flag": "ImportError: cannot import name 'read_crisis_mode' from 'crisis_mode_flag' (/Users/dextermorris/ghost/parser_starter_kit/src/crisis_mode_flag.py)"
+    }
+  },
+  "recommendations": [
+    "Use BEGINNER/INTERMEDIATE for baseline regression runs.",
+    "Use ADVERSARIAL to test drift/resilience and SPS defenses.",
+    "If FAIL occurs repeatedly on baseline, lock pipeline and run integrity checks."
+  ]
+}

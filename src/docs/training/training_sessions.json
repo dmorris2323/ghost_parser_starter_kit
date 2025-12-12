@@ -1,0 +1,92 @@
+{
+  "version": 1,
+  "created_at": "2025-12-12T03:46:05.463087",
+  "sessions": [
+    {
+      "session_id": "ts_1765529371",
+      "recorded_at": "2025-12-12T03:49:31.488008",
+      "scenario_id": "sc_1765529367",
+      "difficulty": "ANALYST",
+      "score": 75.0,
+      "trainee": "Ghost",
+      "notes": "Ran scenario, identified patterns, wrote summary.",
+      "source": "war_room_scenario_engine"
+    },
+    {
+      "session_id": "ts_1765529399",
+      "recorded_at": "2025-12-12T03:49:59.871311",
+      "score": 75.0,
+      "difficulty": "CADET",
+      "trainee": "Ghost",
+      "notes": "Manual rep logged.",
+      "source": "training_dashboard_manual"
+    },
+    {
+      "session_id": "ts_1765530067",
+      "recorded_at": "2025-12-12T04:01:07.874619",
+      "scenario_id": "sc_1765530057",
+      "difficulty": "CADET",
+      "score": 93.0,
+      "trainee": "Ghost",
+      "notes": "Validated baseline; cross-checked sensor consistency; cautious confidence.",
+      "source": "war_room_rubric_autograder",
+      "rubric": {
+        "pattern_identification": 36.0,
+        "osl_posture": 20.0,
+        "commander_summary": 30.0,
+        "discipline": 7.0
+      },
+      "grade_report_json": "src/docs/training/grades/sc_1765530057_grade_1765530067.json",
+      "grade_report_txt": "src/docs/training/grades/sc_1765530057_grade_1765530067.txt"
+    },
+    {
+      "session_id": "ts_1765530292",
+      "recorded_at": "2025-12-12T04:04:52.835440",
+      "scenario_id": "sc_1765530289",
+      "difficulty": "CADET",
+      "score": 57.0,
+      "trainee": "Ghost",
+      "notes": "Validated baseline; cross-checked sensor consistency; cautious confidence.",
+      "source": "war_room_rubric_autograder",
+      "rubric": {
+        "pattern_identification": 0.0,
+        "osl_posture": 20.0,
+        "commander_summary": 30.0,
+        "discipline": 7.0
+      },
+      "grade_report_json": "src/docs/training/grades/sc_1765530289_grade_1765530292.json",
+      "grade_report_txt": "src/docs/training/grades/sc_1765530289_grade_1765530292.txt"
+    },
+    {
+      "ts_utc": "2025-12-12T11:06:09.194418+00:00",
+      "difficulty": "ADVERSARIAL",
+      "difficulty_weight": 1.3,
+      "score": 72.46,
+      "scenario_id": "/Users/dextermorris/ghost/parser_starter_kit/src/docs/scenarios/scenario_20251212_110609.json",
+      "rubric": {
+        "difficulty": "ADVERSARIAL",
+        "difficulty_weight": 1.3,
+        "rubric_weights": {
+          "situation_awareness": 0.25,
+          "evidence_handling": 0.25,
+          "decision_quality": 0.25,
+          "communication": 0.15,
+          "discipline_under_pressure": 0.1
+        },
+        "raw_scores": {
+          "situation_awareness": 72.0,
+          "evidence_handling": 70.0,
+          "decision_quality": 68.0,
+          "communication": 75.0,
+          "discipline_under_pressure": 66.0
+        },
+        "base_score": 70.35,
+        "final_score": 72.46,
+        "scenario_id": "/Users/dextermorris/ghost/parser_starter_kit/src/docs/scenarios/scenario_20251212_110609.json"
+      },
+      "notes": "Module 3 difficulty wiring test"
+    }
+  ],
+  "schema_version": 1,
+  "generated_at": "2025-12-12T11:06:09.194444+00:00"
+}

@@ -1,0 +1,83 @@
+{
+  "instructor_packet_version": 1,
+  "generated_at": "2025-12-12T04:04:56.590783",
+  "trainee": "Ghost",
+  "scenario": {
+    "scenario_id": "sc_1765530289",
+    "difficulty": "CADET",
+    "patterns_truth": [
+      "latency"
+    ],
+    "scenario_json": {
+      "exists": true,
+      "path": "src/docs/scenarios/sc_1765530289_scenario.json",
+      "bytes": 1078,
+      "sha256": "b1263816e82a550fccbca6a6e05325daf291532022fc5fee57e6ae129f3d5e87",
+      "modified_utc": "2025-12-12T04:04:49.689010"
+    },
+    "telemetry_json": {
+      "exists": true,
+      "path": "src/docs/scenarios/sc_1765530289_telemetry.json",
+      "bytes": 13912,
+      "sha256": "8d0ba273e20b293ac2a9aaed87a048c334a7e98c82413cc8c0917af2912805cc",
+      "modified_utc": "2025-12-12T04:04:49.688019"
+    }
+  },
+  "grading": {
+    "grade_report_json": {
+      "exists": true,
+      "path": "src/docs/training/grades/sc_1765530289_grade_1765530292.json",
+      "bytes": 1008,
+      "sha256": "a3ac45e414054a514b3a3517b4ba47b4c77712fa24d28f4e2f4a71fc1d81a351",
+      "modified_utc": "2025-12-12T04:04:52.834671"
+    }
+  },
+  "aar": {
+    "aar_json": {
+      "exists": false,
+      "path": null
+    }
+  },
+  "training_log": {
+    "exists": true,
+    "path": "src/docs/training/training_sessions.json",
+    "bytes": 2049,
+    "sha256": "60643746b68e21fa44dab57ff64b1495def12cd59e20ca5fa5a9b1409f45d1bc",
+    "modified_utc": "2025-12-12T04:04:52.835678"
+  },
+  "optional_artifacts": {
+    "latest_grade": {
+      "exists": true,
+      "path": "src/docs/training/grades/rubric_latest.json",
+      "bytes": 1008,
+      "sha256": "a3ac45e414054a514b3a3517b4ba47b4c77712fa24d28f4e2f4a71fc1d81a351",
+      "modified_utc": "2025-12-12T04:04:52.835236"
+    },
+    "latest_aar": {
+      "exists": true,
+      "path": "src/docs/training/aars/aar_latest.json",
+      "bytes": 1863,
+      "sha256": "08f8ca82b311d71c66995603e4438335679b5db0c7171c76323cac34188380da",
+      "modified_utc": "2025-12-12T04:01:12.096311"
+    },
+    "latest_scenario": {
+      "exists": true,
+      "path": "src/docs/scenarios/scenario_latest.json",
+      "bytes": 1078,
+      "sha256": "b1263816e82a550fccbca6a6e05325daf291532022fc5fee57e6ae129f3d5e87",
+      "modified_utc": "2025-12-12T04:04:49.689433"
+    },
+    "spectral_dashboard_bundle": {
+      "exists": true,
+      "path": "outputs/spectral_dashboard.json",
+      "bytes": 2771,
+      "sha256": "a034dc5e87825a6633b62e216d4ea9137a6358f08c66d6ade3756dd772fe0b4c",
+      "modified_utc": "2025-12-11T22:01:28.070745"
+    },
+    "training_curve_latest": {
+      "exists": false,
+      "path": "src/docs/training/training_curve_latest.json"
+    }
+  },
+  "safe_notice": "Synthetic-only training packet. No real-world sensitive telemetry."
+}

@@ -1,0 +1,45 @@
+{
+  "generated_at": "2025-12-12T04:05:02.807826",
+  "difficulty_config": {
+    "CADET": {
+      "description": "Entry-level training. Low noise, simple synthetic anomalies.",
+      "max_patterns": 1,
+      "noise_factor": 0.3,
+      "time_pressure": "LOW",
+      "min_sessions_before_promotion": 5,
+      "recommended_for": "New trainees or early tech school phase."
+    },
+    "ANALYST": {
+      "description": "Core analyst mode. Moderate synthetic anomalies, cross-sensor interactions.",
+      "max_patterns": 2,
+      "noise_factor": 0.6,
+      "time_pressure": "MEDIUM",
+      "min_sessions_before_promotion": 10,
+      "recommended_for": "Baseline working analyst / BMC-ready 1N0X1."
+    },
+    "SENIOR": {
+      "description": "Senior analyst mode. Multi-domain synthetic stress, drift plus outages.",
+      "max_patterns": 3,
+      "noise_factor": 1.0,
+      "time_pressure": "HIGH",
+      "min_sessions_before_promotion": 15,
+      "recommended_for": "Flight leads, instructors, or advanced trainees."
+    },
+    "EXPERT": {
+      "description": "Expert mode. High-noise synthetic chaos to stress-test judgment and discipline.",
+      "max_patterns": 4,
+      "noise_factor": 1.4,
+      "time_pressure": "VERY_HIGH",
+      "min_sessions_before_promotion": 20,
+      "recommended_for": "Senior NCO / staff-level ISR leads and weapons-school style reps."
+    }
+  },
+  "recommendation": {
+    "recommended_level": "CADET",
+    "agi": 70,
+    "slope": -4.5,
+    "volatility": 0.1273,
+    "session_count": 4,
+    "rationale": "Limited training history or low AGI; stay in CADET mode to stabilize fundamentals."
+  }
+}

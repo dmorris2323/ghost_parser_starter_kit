@@ -1,0 +1,13 @@
+{
+  "pattern_name": "latency",
+  "generated_at": "2025-12-12T03:49:27.980778",
+  "notes": "Synthetic fictional anomaly pattern for training only.",
+  "bundle_keys": [
+    "generated_at",
+    "optical",
+    "seismic",
+    "ems",
+    "radiation",
+    "comms"
+  ]
+}

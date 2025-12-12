@@ -1,80 +1,114 @@
 {
-  "product_type": "Treaty Evidence Bundle",
-  "generated_at": "2025-12-10T16:56:41.950088Z",
-  "evidence_items": [
+  "description": "GLL Treaty Evidence Bundle \u2013 key artifacts for nuclear/treaty/audit work.",
+  "doc_roots": {
+    "src_docs": "/Users/dextermorris/ghost/parser_starter_kit/src/docs",
+    "root_docs": "/Users/dextermorris/ghost/parser_starter_kit/docs"
+  },
+  "artifacts": [
     {
-      "name": "golden_dome_daily_watch",
+      "key": "daily_mission_brief_html",
+      "label": "Daily Mission Brief (HTML)",
+      "path": "/Users/dextermorris/ghost/parser_starter_kit/src/docs/daily_mission_brief.html",
+      "exists": true,
+      "filenames_considered": [
+        "daily_mission_brief.html"
+      ]
+    },
+    {
+      "key": "daily_mission_brief_txt",
+      "label": "Daily Mission Brief (TXT)",
+      "path": "/Users/dextermorris/ghost/parser_starter_kit/src/docs/daily_mission_brief.txt",
+      "exists": true,
+      "filenames_considered": [
+        "daily_mission_brief.txt"
+      ]
+    },
+    {
+      "key": "golden_dome_drift_report",
+      "label": "Golden Dome Drift Report",
+      "path": "/Users/dextermorris/ghost/parser_starter_kit/src/docs/golden_dome_drift_report.txt",
+      "exists": true,
+      "filenames_considered": [
+        "golden_dome_drift_report.txt"
+      ]
+    },
+    {
+      "key": "golden_dome_daily_watch",
+      "label": "Golden Dome Daily Watch (JSON)",
       "path": "/Users/dextermorris/ghost/parser_starter_kit/src/docs/golden_dome_daily_watch.json",
       "exists": true,
-      "status": "NORMAL",
-      "summary": {
-        "nuclear_threat_level": "NORMAL",
-        "product_type": "Golden Dome Daily Watch"
-      }
+      "filenames_considered": [
+        "golden_dome_daily_watch.json"
+      ]
     },
     {
-      "name": "nuclear_decision_card",
-      "path": "/Users/dextermorris/ghost/parser_starter_kit/src/docs/nuclear_decision_card.json",
+      "key": "golden_dome_snapshot",
+      "label": "Golden Dome Snapshot",
+      "path": "/Users/dextermorris/ghost/parser_starter_kit/src/docs/golden_dome_snapshot.json",
       "exists": true,
-      "status": "NORMAL",
-      "summary": {
-        "nuclear_threat_level": "NORMAL",
-        "product_type": "Nuclear Decision Card"
-      }
+      "filenames_considered": [
+        "golden_dome_snapshot.json"
+      ]
     },
     {
-      "name": "installation_threat_map",
-      "path": "/Users/dextermorris/ghost/parser_starter_kit/src/docs/installation_threat_map.json",
+      "key": "nuclear_decision_card",
+      "label": "Nuclear Decision Card",
+      "path": "/Users/dextermorris/ghost/parser_starter_kit/src/docs/nuclear_decision_card.txt",
       "exists": true,
-      "status": "GREEN",
-      "summary": {
-        "product_type": "Installation Threat Map"
-      }
+      "filenames_considered": [
+        "nuclear_decision_card.txt"
+      ]
     },
     {
-      "name": "sensor_outage_prediction",
-      "path": "/Users/dextermorris/ghost/parser_starter_kit/src/docs/sensor_outage_prediction.json",
+      "key": "prelaunch_watchboard",
+      "label": "Prelaunch ISR Watchboard",
+      "path": "/Users/dextermorris/ghost/parser_starter_kit/docs/prelaunch_watchboard.json",
       "exists": true,
-      "status": "UNKNOWN",
-      "summary": {
-        "product_type": "Sensor Outage Predictor"
-      }
+      "filenames_considered": [
+        "prelaunch_watchboard.json"
+      ]
     },
     {
-      "name": "distributed_readiness_snapshot",
-      "path": "/Users/dextermorris/ghost/parser_starter_kit/src/docs/distributed_readiness_snapshot.json",
+      "key": "nuclear_signal_fusion",
+      "label": "Nuclear Signal Fusion Summary",
+      "path": "/Users/dextermorris/ghost/parser_starter_kit/src/docs/nuclear_signal_fusion.json",
       "exists": true,
-      "status": "READY",
-      "summary": {
-        "readiness": "READY",
-        "product_type": "Distributed Readiness Snapshot"
-      }
+      "filenames_considered": [
+        "nuclear_signal_fusion.json"
+      ]
     },
     {
-      "name": "perimeter_incident_report",
-      "path": "/Users/dextermorris/ghost/parser_starter_kit/src/docs/perimeter_incident_report.json",
-      "exists": true,
-      "status": "UNKNOWN",
-      "summary": {
-        "product_type": "Perimeter Incident Report"
-      }
+      "key": "gll_readiness",
+      "label": "GLL Readiness Report",
+      "path": null,
+      "exists": false,
+      "filenames_considered": [
+        "gll_readiness.txt"
+      ]
     },
     {
-      "name": "base_defense_storyboard",
-      "path": "/Users/dextermorris/ghost/parser_starter_kit/src/docs/base_defense_storyboard.json",
+      "key": "system_integrity_report",
+      "label": "System Integrity Report",
+      "path": "/Users/dextermorris/ghost/parser_starter_kit/src/docs/system_integrity_report.txt",
       "exists": true,
-      "status": "UNKNOWN",
-      "summary": {
-        "installation_threat_status": "GREEN",
-        "outage_posture": "STABLE",
-        "readiness": "READY",
-        "total_perimeter_incidents": 0,
-        "product_type": "Base Defense Storyboard"
-      }
+      "filenames_considered": [
+        "system_integrity_report.txt"
+      ]
+    },
+    {
+      "key": "scenario_pack_latest",
+      "label": "Scenario Pack (Latest)",
+      "path": "/Users/dextermorris/ghost/parser_starter_kit/src/docs/scenario_pack_latest.json",
+      "exists": true,
+      "filenames_considered": [
+        "scenario_pack_latest.json"
+      ]
     }
   ],
-  "notes": [
-    "This bundle is intended for treaty, audit, or oversight workflows.",
-    "Each item records existence, path, and a light summary at generation time."
+  "missing_artifacts": [
+    {
+      "key": "gll_readiness",
+      "label": "GLL Readiness Report"
+    }
   ]
 }

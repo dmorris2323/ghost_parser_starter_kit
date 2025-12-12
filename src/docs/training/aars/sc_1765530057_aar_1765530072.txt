@@ -1,0 +1,35 @@
+GLL AFTER ACTION REVIEW (AAR)
+Scenario: sc_1765530057 | Difficulty: CADET
+Trainee: Ghost
+Score: 93.0/100
+
+TRUTH PATTERNS:
+  outage
+CALLED PATTERNS:
+  drift, outage
+OSL: AMBER
+
+SUBSCORES:
+  - pattern_identification: 36.0
+  - osl_posture: 20.0
+  - commander_summary: 30.0
+  - discipline: 7.0
+
+INSTRUCTOR FEEDBACK:
+  • Solid run. Promote difficulty only if consistency stays high across multiple sessions.
+
+COMMANDER SUMMARY (TRAINEE):
+Observed synthetic anomalies consistent with drift/latency patterns. Operational impact is moderate due to reduced confidence in sensor stability. Assessment remains likely synthetic sensor behavior rather than a single-point fault. Recommend cross-checking sensor baselines and monitoring for escalation or outages. Maintain AMBER posture until consistency returns or patterns converge.
+
+WHAT HAPPENED:
+Synthetic scenario generated with patterns: outage at difficulty CADET.
+WHAT YOU DID WELL:
+Correctly identified: outage
+WHAT TO FIX:
+Missed: none | Extras: drift
+
+NEXT REPS:
+  • Rep: maintain consistency across 3 runs; then promote difficulty one tier.
+
+SAFE NOTICE:
+Synthetic-only training scenario. No real-world signals.

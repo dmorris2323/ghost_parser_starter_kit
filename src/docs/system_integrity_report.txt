@@ -1,83 +1,30 @@
-=== GLL SYSTEM INTEGRITY REPORT ===
-Status: GREEN
+Ghost Lantern Labs – System Integrity Report
+------------------------------------------------
+Generated at (UTC): 2025-12-11T18:24:03.019946Z
 
-All critical checked items present.
+Summary:
+  Total tracked:      15
+  Clean:              14
+  Modified:           1
+  Missing:            0
+  Untracked baseline: 0
 
-Raw JSON:
-{
-  "status": "GREEN",
-  "missing_items": [],
-  "checks": {
-    "dirs": {
-      "src": {
-        "path": "/Users/dextermorris/ghost/parser_starter_kit/src",
-        "exists": true,
-        "items": 221
-      },
-      "data": {
-        "path": "/Users/dextermorris/ghost/parser_starter_kit/src/data",
-        "exists": true,
-        "items": 14
-      },
-      "docs": {
-        "path": "/Users/dextermorris/ghost/parser_starter_kit/src/docs",
-        "exists": true,
-        "items": 71
-      },
-      "config": {
-        "path": "/Users/dextermorris/ghost/parser_starter_kit/src/config",
-        "exists": true,
-        "items": 3
-      }
-    },
-    "data_files": {
-      "fused_output.csv": {
-        "path": "/Users/dextermorris/ghost/parser_starter_kit/src/data/fused_output.csv",
-        "exists": true,
-        "size_bytes": 144
-      },
-      "scored_output.csv": {
-        "path": "/Users/dextermorris/ghost/parser_starter_kit/src/data/scored_output.csv",
-        "exists": true,
-        "size_bytes": 23
-      },
-      "run_history.csv": {
-        "path": "/Users/dextermorris/ghost/parser_starter_kit/src/data/run_history.csv",
-        "exists": true,
-        "size_bytes": 3781
-      },
-      "sensor_ingest.csv": {
-        "path": "/Users/dextermorris/ghost/parser_starter_kit/src/data/sensor_ingest.csv",
-        "exists": true,
-        "size_bytes": 263
-      }
-    },
-    "docs_files": {
-      "daily_mission_brief.txt": {
-        "path": "/Users/dextermorris/ghost/parser_starter_kit/src/docs/daily_mission_brief.txt",
-        "exists": true,
-        "size_bytes": 6114
-      },
-      "daily_mission_brief.html": {
-        "path": "/Users/dextermorris/ghost/parser_starter_kit/src/docs/daily_mission_brief.html",
-        "exists": true,
-        "size_bytes": 7361
-      },
-      "gll_readiness.json": {
-        "path": "/Users/dextermorris/ghost/parser_starter_kit/src/docs/gll_readiness.json",
-        "exists": true,
-        "size_bytes": 252
-      }
-    },
-    "sensor_manifest": {
-      "path": "/Users/dextermorris/ghost/parser_starter_kit/src/sensor_manifest.json",
-      "exists": true,
-      "size_bytes": 105
-    },
-    "sensor_profiles_dir": {
-      "path": "/Users/dextermorris/ghost/parser_starter_kit/src/sensor_profiles",
-      "exists": true,
-      "items": 4
-    }
-  }
-}
+Per-file status:
+  - apps/gui/app.py: CLEAN
+  - apps/gui/joint_readiness_app.py: CLEAN
+  - apps/gui/mission_scenario_app.py: CLEAN
+  - apps/gui/training_dashboard_app.py: CLEAN
+  - daily_mission_brief.py: CLEAN
+  - fusion_alerts.py: CLEAN
+  - fusion_ingest.py: CLEAN
+  - fusion_sanitizer.py: CLEAN
+  - fusion_scoring.py: CLEAN
+  - ghost_cli.py: MODIFIED
+  - mission_brief_html.py: CLEAN
+  - scenario_engine.py: CLEAN
+  - shari_legal_pack.py: CLEAN
+  - spectral_dashboard_api.py: CLEAN
+  - training_curve_engine.py: CLEAN
+
+Baseline file: /Users/dextermorris/ghost/parser_starter_kit/src/docs/sps_integrity_baseline.json
+If files are MODIFIED or MISSING, investigate before using GLL for critical work.
