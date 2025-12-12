@@ -1,147 +1,110 @@
-"""
-training_curve_engine.py
-
-Hardening:
-- Works from repo root, src/, Streamlit, CLI (stable repo-root resolution).
-- Reads sessions from: src/docs/training/training_sessions.json
-- Writes curve to:     src/docs/training/training_curve_latest.json
-
-Single source of truth for difficulty weights:
-- imports from difficulty_scaling_engine
-"""
-
 from __future__ import annotations
 
 import json
-import math
+from dataclasses import dataclass
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Any, Dict, List
+from typing import Any, Dict, List, Optional, Tuple
 
-from difficulty_scaling_engine import normalize_difficulty, get_weight
-
-
-def _repo_root() -> Path:
-    return Path(__file__).resolve().parent.parent
+from difficulty_scaling_engine import difficulty_weight
+from training_session_store import load_sessions, training_dir
 
 
-def _docs_training_dir() -> Path:
-    return _repo_root() / "src" / "docs" / "training"
-
-
-def _sessions_path() -> Path:
-    return _docs_training_dir() / "training_sessions.json"
-
-
-def _utc_iso() -> str:
+def _utc_now_iso() -> str:
     return datetime.now(timezone.utc).isoformat()
 
 
-def _safe_mkdir(p: Path) -> None:
-    p.mkdir(parents=True, exist_ok=True)
-
-
-def _clamp(v: float, lo: float, hi: float) -> float:
-    return max(lo, min(hi, v))
-
-
-def _std(vals: List[float]) -> float:
-    if not vals:
-        return 0.0
-    m = sum(vals) / len(vals)
-    var = sum((x - m) ** 2 for x in vals) / len(vals)
-    return math.sqrt(var)
-
-
-def load_sessions() -> List[Dict[str, Any]]:
-    p = _sessions_path()
-    if not p.exists():
-        return []
+def _safe_float(x: Any, default: float = 0.0) -> float:
     try:
-        raw = json.loads(p.read_text())
-        sessions = raw.get("sessions", [])
-        if isinstance(sessions, list):
-            return sessions
-        return []
+        return float(x)
     except Exception:
-        return []
+        return float(default)
+
+
+def _stdev(vals: List[float]) -> float:
+    if len(vals) < 2:
+        return 0.0
+    mean = sum(vals) / len(vals)
+    var = sum((v - mean) ** 2 for v in vals) / (len(vals) - 1)
+    return var ** 0.5
+
+
+def _linear_slope(points: List[Tuple[float, float]]) -> float:
+    """
+    Simple least-squares slope for (x, y).
+    """
+    n = len(points)
+    if n < 2:
+        return 0.0
+    xs = [p[0] for p in points]
+    ys = [p[1] for p in points]
+    x_mean = sum(xs) / n
+    y_mean = sum(ys) / n
+    num = sum((xs[i] - x_mean) * (ys[i] - y_mean) for i in range(n))
+    den = sum((xs[i] - x_mean) ** 2 for i in range(n))
+    if den == 0:
+        return 0.0
+    return num / den
 
 
 def compute_training_curve() -> Dict[str, Any]:
     sessions = load_sessions()
-    if not sessions:
-        curve = {
-            "generated_at": _utc_iso(),
-            "total_sessions": 0,
-            "AGI": 0.0,
-            "improvement_slope": 0.0,
-            "difficulty_weighted_average": 0.0,
-            "volatility_index": 0.0,
-            "paths": {},
-        }
-        _write_curve(curve)
-        return curve
 
-    # Sort by ts_utc if present
-    sessions = sorted(sessions, key=lambda s: str(s.get("ts_utc", "")))
+    # Only sessions marked counted=True contribute to AGI math.
+    counted = [s for s in sessions if bool(s.get("counted", True))]
 
-    scores = [float(s.get("score", 0.0)) for s in sessions]
-    diffs = [normalize_difficulty(str(s.get("difficulty", "INTERMEDIATE"))) for s in sessions]
-    weights = [float(s.get("difficulty_weight") or get_weight(d)) for d, s in zip(diffs, sessions)]
+    scores = [_safe_float(s.get("score", 0.0)) for s in counted]
+    diffs = [str(s.get("difficulty", "INTERMEDIATE")).upper() for s in counted]
 
-    wsum = sum(weights) or 1.0
-    dwa = sum(sc * w for sc, w in zip(scores, weights)) / wsum
-
-    last = scores[-1]
-    agi = (0.55 * last) + (0.45 * dwa)
-    agi = _clamp(agi, 0.0, 100.0)
-
-    n = len(scores)
-    if n >= 2:
-        xs = list(range(n))
-        xmean = sum(xs) / n
-        ymean = sum(scores) / n
-        num = sum((x - xmean) * (y - ymean) for x, y in zip(xs, scores))
-        den = sum((x - xmean) ** 2 for x in xs) or 1.0
-        slope = num / den
+    # Difficulty-weighted average
+    if scores:
+        weights = [difficulty_weight(d) for d in diffs]
+        denom = sum(weights) if sum(weights) != 0 else 1.0
+        dwa = sum(scores[i] * weights[i] for i in range(len(scores))) / denom
     else:
-        slope = 0.0
+        dwa = 0.0
 
-    vol = _std(scores[-10:])
+    # AGI: keep it simple and explainable: difficulty-weighted average clipped to 0-100
+    agi = max(0.0, min(100.0, dwa))
+
+    # Improvement slope: slope over session index vs score
+    points = [(float(i + 1), _safe_float(counted[i].get("score", 0.0))) for i in range(len(counted))]
+    slope = _linear_slope(points)
+
+    # Volatility: standard deviation of scores
+    vol = _stdev(scores)
 
     curve = {
-        "generated_at": _utc_iso(),
-        "total_sessions": len(scores),
-        "AGI": round(float(agi), 3),
+        "generated_at": _utc_now_iso(),
+        "sessions_total": len(sessions),
+        "sessions_counted": len(counted),
+        "AGI": round(float(agi), 2),
         "improvement_slope": round(float(slope), 3),
-        "difficulty_weighted_average": round(float(dwa), 3),
+        "difficulty_weighted_average": round(float(dwa), 2),
         "volatility_index": round(float(vol), 3),
-        "last_session": {
-            "ts_utc": sessions[-1].get("ts_utc"),
-            "difficulty": diffs[-1],
-            "difficulty_weight": weights[-1],
-            "score": scores[-1],
-        },
     }
-    _write_curve(curve)
+
+    # Write latest curve file for GUI tiles/command center
+    out_dir = training_dir()
+    out_dir.mkdir(parents=True, exist_ok=True)
+    out_path = out_dir / "training_curve_latest.json"
+    out_path.write_text(json.dumps(curve, indent=2))
+
     return curve
 
 
-def _write_curve(curve: Dict[str, Any]) -> None:
-    out_dir = _docs_training_dir()
-    _safe_mkdir(out_dir)
-    out_path = out_dir / "training_curve_latest.json"
-    out_path.write_text(json.dumps(curve, indent=2))
-    curve["paths"] = {"json": str(out_path)}
+def main() -> None:
+    curve = compute_training_curve()
+    print("Training curve written:")
+    print(f"  JSON: src/docs/training/training_curve_latest.json")
+    print(f"  Total sessions: {curve['sessions_total']}")
+    print(f"  Counted sessions: {curve['sessions_counted']}")
+    print(f"  AGI: {curve['AGI']}")
+    print(f"  Improvement slope: {curve['improvement_slope']}")
+    print(f"  Difficulty-weighted avg: {curve['difficulty_weighted_average']}")
+    print(f"  Volatility index: {curve['volatility_index']}")
 
 
 if __name__ == "__main__":
-    c = compute_training_curve()
-    print("Training curve written:")
-    print(f"  JSON: {c.get('paths', {}).get('json')}")
-    print(f"  Total sessions: {c.get('total_sessions')}")
-    print(f"  AGI: {c.get('AGI')}")
-    print(f"  Improvement slope: {c.get('improvement_slope')}")
-    print(f"  Difficulty-weighted avg: {c.get('difficulty_weighted_average')}")
-    print(f"  Volatility index: {c.get('volatility_index')}")
+    main()
 

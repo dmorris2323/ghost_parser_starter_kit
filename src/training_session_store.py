@@ -1,63 +1,67 @@
-"""
-training_session_store.py
-
-Persistent store for training sessions.
-Difficulty is first-class and enforced via training_config.
-"""
+from __future__ import annotations
 
 import json
-from datetime import datetime, UTC
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Dict, List
 
-from difficulty_control_engine import get_difficulty_profile
-from training_config import effective_difficulty, load_training_config
 
-STORE_PATH = Path("src/docs/training/training_sessions.json")
-STORE_PATH.parent.mkdir(parents=True, exist_ok=True)
+def _utc_now_iso() -> str:
+    return datetime.now(timezone.utc).isoformat()
+
+
+def _repo_root() -> Path:
+    # src/training_session_store.py -> parents[1] == src, parents[2] == repo root
+    return Path(__file__).resolve().parents[1].parent
+
+
+def training_dir() -> Path:
+    return _repo_root() / "src" / "docs" / "training"
+
+
+def sessions_path() -> Path:
+    return training_dir() / "training_sessions.json"
+
+
+def ensure_training_store() -> None:
+    d = training_dir()
+    d.mkdir(parents=True, exist_ok=True)
+    p = sessions_path()
+    if not p.exists():
+        p.write_text(json.dumps({"schema_version": 1, "created_at": _utc_now_iso(), "sessions": []}, indent=2))
 
 
 def load_sessions() -> List[Dict[str, Any]]:
-    if not STORE_PATH.exists():
-        return []
+    ensure_training_store()
+    p = sessions_path()
     try:
-        data = json.loads(STORE_PATH.read_text())
-        return data if isinstance(data, list) else []
+        raw = json.loads(p.read_text())
+        sessions = raw.get("sessions", [])
+        if isinstance(sessions, list):
+            return sessions
+        return []
     except Exception:
         return []
 
 
-def append_training_session(session: Dict[str, Any], gate: bool = True) -> Dict[str, Any]:
+def write_sessions(sessions: List[Dict[str, Any]]) -> None:
+    ensure_training_store()
+    payload = {"schema_version": 1, "updated_at": _utc_now_iso(), "sessions": sessions}
+    sessions_path().write_text(json.dumps(payload, indent=2))
+
+
+def append_session(session: Dict[str, Any]) -> Dict[str, Any]:
+    """
+    Appends a session and returns the stored record (with id/timestamps).
+    """
+    ensure_training_store()
     sessions = load_sessions()
 
-    requested = session.get("difficulty", "INTERMEDIATE")
-    enforced = effective_difficulty(requested)
-    profile = get_difficulty_profile(enforced)
+    rec = dict(session)
+    rec.setdefault("created_at", _utc_now_iso())
+    rec.setdefault("session_id", f"sess_{len(sessions) + 1:05d}")
 
-    cfg = load_training_config()
-    source = "manual"
-    if cfg.get("instructor_lock"):
-        source = "locked"
-    if session.get("difficulty_source"):
-        source = str(session.get("difficulty_source"))
-
-    record = {
-        "timestamp": datetime.now(UTC).isoformat(),
-        "difficulty": profile.name,
-        "difficulty_source": source,
-        "mode": session.get("mode", "training"),
-        "score": float(session.get("score", 0.0)),
-        "notes": (session.get("notes") or "").strip(),
-        "grading_expectation": profile.grading_expectation,
-    }
-
-    sessions.append(record)
-    STORE_PATH.write_text(json.dumps(sessions, indent=2))
-
-    return {
-        "count": len(sessions),
-        "difficulty": profile.name,
-        "difficulty_source": source,
-        "path": str(STORE_PATH),
-    }
+    sessions.append(rec)
+    write_sessions(sessions)
+    return rec
 

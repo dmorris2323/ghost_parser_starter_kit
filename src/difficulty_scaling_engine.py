@@ -1,74 +1,99 @@
-"""
-difficulty_scaling_engine.py
-
-Single source of truth for difficulty behavior across:
-- training sessions (stored difficulty + weight)
-- scenario engine (parameter scaling)
-- instructor grading weights (difficulty multiplier)
-
-Difficulties:
-BEGINNER, INTERMEDIATE, ADVANCED, ADVERSARIAL
-"""
-
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Dict, Any
+from typing import Dict, List, Tuple
 
 
-VALID_DIFFICULTIES = ("BEGINNER", "INTERMEDIATE", "ADVANCED", "ADVERSARIAL")
+DIFFICULTY_LEVELS: List[str] = ["BEGINNER", "INTERMEDIATE", "ADVERSARIAL"]
 
 
 @dataclass(frozen=True)
 class DifficultyProfile:
     name: str
-    weight: float                 # used for instructor grading + training curve weighting
-    noise: float                  # used by scenarios: randomness/entropy
-    anomaly_rate: float           # scenario: probability of anomaly flags
-    attack_like_rate: float       # scenario: probability of attack_like flags
-    crit_rate: float              # scenario: probability of CRIT severity
-    pattern_intensity_boost: float # scenario: how “strong” injected patterns appear
-
-
-_PROFILES: Dict[str, DifficultyProfile] = {
-    "BEGINNER": DifficultyProfile(
-        name="BEGINNER", weight=0.85, noise=0.15, anomaly_rate=0.10, attack_like_rate=0.05, crit_rate=0.01, pattern_intensity_boost=0.70
-    ),
-    "INTERMEDIATE": DifficultyProfile(
-        name="INTERMEDIATE", weight=1.00, noise=0.25, anomaly_rate=0.18, attack_like_rate=0.10, crit_rate=0.02, pattern_intensity_boost=0.85
-    ),
-    "ADVANCED": DifficultyProfile(
-        name="ADVANCED", weight=1.15, noise=0.35, anomaly_rate=0.26, attack_like_rate=0.16, crit_rate=0.04, pattern_intensity_boost=1.00
-    ),
-    "ADVERSARIAL": DifficultyProfile(
-        name="ADVERSARIAL", weight=1.30, noise=0.45, anomaly_rate=0.34, attack_like_rate=0.22, crit_rate=0.06, pattern_intensity_boost=1.15
-    ),
-}
+    # How much this difficulty should count in curve math.
+    weight: float
+    # Passing threshold expectation (score floor).
+    score_floor: float
+    # Rubric weight emphasis per difficulty
+    rubric_weights: Dict[str, float]
 
 
 def normalize_difficulty(difficulty: str) -> str:
-    d = (difficulty or "").strip().upper()
-    return d if d in _PROFILES else "INTERMEDIATE"
+    if not isinstance(difficulty, str):
+        return "INTERMEDIATE"
+    d = difficulty.strip().upper()
+    return d if d in DIFFICULTY_LEVELS else "INTERMEDIATE"
 
 
-def get_profile(difficulty: str) -> DifficultyProfile:
-    return _PROFILES[normalize_difficulty(difficulty)]
+def get_difficulty_profile(difficulty: str) -> DifficultyProfile:
+    d = normalize_difficulty(difficulty)
+
+    # Rubric keys must match instructor_autograder keys.
+    if d == "BEGINNER":
+        # Emphasize fundamentals + safe reasoning over speed.
+        return DifficultyProfile(
+            name=d,
+            weight=0.80,
+            score_floor=60.0,
+            rubric_weights={
+                "accuracy": 0.30,
+                "discipline": 0.30,
+                "timeliness": 0.15,
+                "comms_clarity": 0.15,
+                "procedure": 0.10,
+            },
+        )
+    if d == "ADVERSARIAL":
+        # Emphasize discipline + accuracy under pressure.
+        return DifficultyProfile(
+            name=d,
+            weight=1.25,
+            score_floor=70.0,
+            rubric_weights={
+                "accuracy": 0.30,
+                "discipline": 0.25,
+                "procedure": 0.20,
+                "timeliness": 0.15,
+                "comms_clarity": 0.10,
+            },
+        )
+
+    # INTERMEDIATE baseline
+    return DifficultyProfile(
+        name=d,
+        weight=1.00,
+        score_floor=65.0,
+        rubric_weights={
+            "accuracy": 0.28,
+            "discipline": 0.22,
+            "procedure": 0.18,
+            "timeliness": 0.17,
+            "comms_clarity": 0.15,
+        },
+    )
 
 
-def get_weight(difficulty: str) -> float:
-    return float(get_profile(difficulty).weight)
+def difficulty_weight(difficulty: str) -> float:
+    return float(get_difficulty_profile(difficulty).weight)
 
 
-def profiles_summary() -> Dict[str, Any]:
-    return {
-        k: {
-            "weight": v.weight,
-            "noise": v.noise,
-            "anomaly_rate": v.anomaly_rate,
-            "attack_like_rate": v.attack_like_rate,
-            "crit_rate": v.crit_rate,
-            "pattern_intensity_boost": v.pattern_intensity_boost,
-        }
-        for k, v in _PROFILES.items()
-    }
+def rubric_weights(difficulty: str) -> Dict[str, float]:
+    return dict(get_difficulty_profile(difficulty).rubric_weights)
+
+
+def score_floor(difficulty: str) -> float:
+    return float(get_difficulty_profile(difficulty).score_floor)
+
+
+def list_difficulties() -> List[str]:
+    return list(DIFFICULTY_LEVELS)
+
+
+def explain_difficulty(difficulty: str) -> Tuple[str, str]:
+    d = normalize_difficulty(difficulty)
+    if d == "BEGINNER":
+        return ("BEGINNER", "Fundamentals first. Lower pressure; grading rewards safe procedure and clarity.")
+    if d == "ADVERSARIAL":
+        return ("ADVERSARIAL", "High pressure. Grading rewards discipline, procedure, and accuracy under stress.")
+    return ("INTERMEDIATE", "Balanced difficulty. Grading balances accuracy, discipline, timeliness, and clarity.")
 
