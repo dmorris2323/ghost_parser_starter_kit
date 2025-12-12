@@ -1,149 +1,107 @@
+# src/apps/gui/training_dashboard_app.py
 from __future__ import annotations
 
 import sys
 from pathlib import Path
-from typing import Any, Dict
-
 import streamlit as st
-
 
 # Ensure repo/src is importable when running streamlit from repo root
 REPO_ROOT = Path(__file__).resolve().parents[3]
-SRC_DIR = REPO_ROOT / "src"
-if str(SRC_DIR) not in sys.path:
-    sys.path.insert(0, str(SRC_DIR))
+SRC_PATH = str((REPO_ROOT / "src").resolve())
+if SRC_PATH not in sys.path:
+    sys.path.insert(0, SRC_PATH)
 
-from difficulty_scaling_engine import explain_difficulty, list_difficulties  # noqa: E402
-from instructor_autograder import grade_session  # noqa: E402
-from obasi_training_coach import build_obasi_training_coach_speech  # noqa: E402
-from training_curve_engine import compute_training_curve  # noqa: E402
-from training_session_store import append_session, load_sessions  # noqa: E402
+from training_session_store import load_sessions, append_session
+from training_validation_gate import evaluate_training_gate, gate_to_dict
+from training_difficulty_engine import get_profile, compute_weighted_grade
+from obasi_training_coach import build_obasi_training_coach_speech
 
-
-st.set_page_config(page_title="GLL Training Dashboard", layout="wide")
-
-
-def _ui_rubric_inputs() -> Dict[str, float]:
-    c1, c2, c3, c4, c5 = st.columns(5)
-    with c1:
-        accuracy = st.slider("Accuracy", 0, 100, 75)
-    with c2:
-        discipline = st.slider("Discipline", 0, 100, 75)
-    with c3:
-        procedure = st.slider("Procedure", 0, 100, 75)
-    with c4:
-        timeliness = st.slider("Timeliness", 0, 100, 70)
-    with c5:
-        comms_clarity = st.slider("Comms clarity", 0, 100, 75)
-    return {
-        "accuracy": float(accuracy),
-        "discipline": float(discipline),
-        "procedure": float(procedure),
-        "timeliness": float(timeliness),
-        "comms_clarity": float(comms_clarity),
-    }
+# Optional curve engine (don’t hard-fail if missing)
+try:
+    from training_curve_engine import compute_training_curve
+except Exception:
+    compute_training_curve = None  # type: ignore
 
 
-def main() -> None:
-    st.title("🦉 GLL Training Dashboard")
-    st.caption("Difficulty-aware session logging + live AGI / slope / volatility updates.")
+def _safe_curve() -> dict:
+    if compute_training_curve is None:
+        return {"AGI": 0.0, "improvement_slope": 0.0, "difficulty_weighted_average": 0.0, "volatility_index": 0.0}
+    try:
+        return compute_training_curve()
+    except Exception:
+        return {"AGI": 0.0, "improvement_slope": 0.0, "difficulty_weighted_average": 0.0, "volatility_index": 0.0}
 
-    with st.sidebar:
-        st.header("Controls")
-        trainee_name = st.text_input("Trainee name", value="Ghost")
 
-        difficulty = st.selectbox("Difficulty", options=list_difficulties(), index=1)
-        d_name, d_desc = explain_difficulty(difficulty)
-        st.info(f"**{d_name}** — {d_desc}")
+def main():
+    st.set_page_config(page_title="GLL Training Dashboard", layout="wide")
+    st.title("GLL Training Dashboard")
+    st.caption("Training-only. Uses synthetic data + validation gates. Sessions count toward AGI only when system is GREEN.")
 
-        gate_green = st.checkbox("SIS/SPS Gate GREEN (counts toward AGI)", value=True)
-        notes = st.text_area("Notes (optional)", value="", height=100)
+    left, right = st.columns([1, 2])
 
-    st.subheader("Rubric inputs (0–100)")
-    rubric = _ui_rubric_inputs()
-
-    # Live grading preview
-    result = grade_session(
-        difficulty=difficulty,
-        accuracy=rubric["accuracy"],
-        timeliness=rubric["timeliness"],
-        discipline=rubric["discipline"],
-        comms_clarity=rubric["comms_clarity"],
-        procedure=rubric["procedure"],
-        gate_green=gate_green,
-    )
-
-    left, right = st.columns([1, 1])
     with left:
-        st.subheader("Auto-grade (preview)")
-        st.metric("Score", result["score"])
-        st.metric("Pass threshold", result["score_floor"])
-        st.metric("Passed", "YES" if result["passed"] else "NO")
-        st.metric("Counts toward AGI", "YES" if result["counted"] else "NO")
-        st.json({"weights": result["grader_weights"], "inputs": result["inputs"]})
+        trainee_name = st.text_input("Trainee name", value="Ghost")
+        difficulty = st.selectbox("Difficulty", ["BEGINNER", "INTERMEDIATE", "ADVERSARIAL"], index=1)
+        profile = get_profile(difficulty)
+
+        st.subheader("Difficulty expectations")
+        st.json(profile)
+
+        st.subheader("Raw scoring (0–1)")
+        acc = st.slider("Accuracy", 0.0, 1.0, 0.75, 0.01)
+        spd = st.slider("Speed", 0.0, 1.0, 0.65, 0.01)
+        trd = st.slider("Tradecraft", 0.0, 1.0, 0.60, 0.01)
+
+        grade = compute_weighted_grade({"accuracy": acc, "speed": spd, "tradecraft": trd}, difficulty)
+        st.subheader("Difficulty-weighted grade")
+        st.json(grade)
+
+        st.subheader("Validation Gate (counts→AGI only if PASS)")
+        gate = evaluate_training_gate(require_all_green=True)
+        gate_dict = gate_to_dict(gate)
+        st.json({"status": gate.status, "counted_for_agi": gate.counted_for_agi, "message": gate.message})
+
+        if st.button("Log Session"):
+            session = {
+                "trainee_name": trainee_name,
+                "difficulty": difficulty,
+                "difficulty_profile": profile,
+                "raw_scores": {"accuracy": acc, "speed": spd, "tradecraft": trd},
+                "grade": grade,
+                "gate": gate_dict,
+                "counted_for_agi": bool(gate.counted_for_agi),
+            }
+            saved = append_session(session)
+            st.success(f"Session logged: {saved.get('session_id')} | Counted for AGI: {saved.get('counted_for_agi')}")
 
     with right:
-        st.subheader("Obasi coach (preview)")
+        sessions = load_sessions()
+        curve = _safe_curve()
+
+        c1, c2, c3, c4 = st.columns(4)
+        c1.metric("AGI (0–100)", curve.get("AGI", 0.0))
+        c2.metric("Improvement Slope", curve.get("improvement_slope", 0.0))
+        c3.metric("Difficulty-Weighted Avg", curve.get("difficulty_weighted_average", 0.0))
+        c4.metric("Volatility Index", curve.get("volatility_index", 0.0))
+
+        st.subheader("Obasi Coach Panel")
         coach_msg = build_obasi_training_coach_speech(
             trainee_name=trainee_name,
             difficulty=difficulty,
-            agi=0,  # will be replaced after logging / curve compute
-            improvement_slope=0,
-            volatility_index=0,
-            notes=("Gate GREEN" if gate_green else "Gate RED") + (f" | {notes}" if notes else ""),
+            curve=curve,
+            sessions=sessions,
+            gate=gate_to_dict(evaluate_training_gate(require_all_green=True)),
         )
-        st.text_area("Coach message", value=coach_msg, height=240)
+        st.code(coach_msg)
 
-    st.divider()
+        st.subheader("Recent Sessions")
+        if sessions:
+            st.dataframe(list(reversed(sessions))[:25], use_container_width=True)
+        else:
+            st.info("No sessions yet. Log your first session on the left.")
 
-    colA, colB, colC = st.columns([1, 1, 2])
-    with colA:
-        if st.button("✅ Log session", use_container_width=True):
-            stored = append_session(
-                {
-                    "difficulty": result["difficulty"],
-                    "score": result["score"],
-                    "passed": result["passed"],
-                    "gate_green": result["gate_green"],
-                    "counted": result["counted"],
-                    "grader_weights": result["grader_weights"],
-                    "rubric_inputs": result["inputs"],
-                    "trainee_name": trainee_name,
-                    "notes": notes,
-                }
-            )
-            curve = compute_training_curve()
-            st.success(f"Session logged: {stored.get('session_id')} | Counted: {stored.get('counted')}")
-            st.session_state["curve"] = curve
-
-    with colB:
-        if st.button("🔄 Recompute curve", use_container_width=True):
-            curve = compute_training_curve()
-            st.session_state["curve"] = curve
-            st.info("Curve recomputed.")
-
-    with colC:
-        curve = st.session_state.get("curve") or compute_training_curve()
-        st.subheader("Training curve (live)")
-        c1, c2, c3, c4 = st.columns(4)
-        c1.metric("AGI (0–100)", curve.get("AGI", 0.0))
-        c2.metric("Slope", curve.get("improvement_slope", 0.0))
-        c3.metric("Volatility", curve.get("volatility_index", 0.0))
-        c4.metric("Diff-weighted avg", curve.get("difficulty_weighted_average", 0.0))
-
-    st.divider()
-    st.subheader("Recent sessions")
-    sessions = load_sessions()
-    sessions = list(reversed(sessions))[:10]
-    if not sessions:
-        st.write("No sessions logged yet.")
-        return
-
-    for s in sessions:
-        st.write(
-            f"- **{s.get('session_id')}** | {s.get('created_at')} | "
-            f"{s.get('difficulty')} | score={s.get('score')} | counted={s.get('counted')}"
-        )
+        st.subheader("Gate Evidence (files seen)")
+        st.write(gate_dict.get("files_seen", []))
 
 
 if __name__ == "__main__":
