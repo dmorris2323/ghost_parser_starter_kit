@@ -2526,3 +2526,11 @@ Operational impact:
   - Nuclear/AFTAC stack is deeper and more coherent for future AFTAC/ICADS, AFWERX, or
     investor briefings.
 
+Day 68 — Synthetic Fusion Validation Block (SAFE)
+- Added synthetic_signal_generator.py to produce training-safe fusion telemetry bundles (BEGINNER/INTERMEDIATE/ADVANCED/ADVERSARIAL).
+  Outputs: src/docs/synthetic/synthetic_fusion_bundle.json (+ timestamped copy)
+- Added fusion_validation_harness.py to run repeatable regression validation on synthetic telemetry:
+  - Computes trust_proxy, risk_score, alert counts, PASS/WARN/FAIL verdict
+  - Writes src/docs/validation/fusion_validation_report.json + .txt (+ timestamped copy)
+  - Best-effort calls into existing real modules (fusion_trust, operator_safety_layer, crisis_mode_flag, training_curve_engine) without breaking if missing
+- Purpose: prove GLL stability under controlled stress, enable training + SBIR demos without any sensitive real-world data.
