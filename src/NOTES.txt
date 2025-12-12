@@ -2534,3 +2534,10 @@ Day 68 — Synthetic Fusion Validation Block (SAFE)
   - Writes src/docs/validation/fusion_validation_report.json + .txt (+ timestamped copy)
   - Best-effort calls into existing real modules (fusion_trust, operator_safety_layer, crisis_mode_flag, training_curve_engine) without breaking if missing
 - Purpose: prove GLL stability under controlled stress, enable training + SBIR demos without any sensitive real-world data.
+Day 68 — Synthetic Validation (SUCCESS)
+- Synthetic validation harness now produces clean baseline vs injected delta measurements.
+- CROSS_DOMAIN_CONFUSION injection behaved correctly:
+  • Trust proxy dropped (-7.68), risk increased (+17.94), and alert pressure rose (+3 CRIT, +7 attack_like, +11 anomalies) with total events unchanged.
+- Verdict PASSED under ADVERSARIAL with bounded stress, proving the harness can measure “controlled chaos” instead of pegging risk at 100.
+- Real module hooks successfully discovered fusion_trust.compute_trust and operator_safety_layer.compute_osl dynamically (resilient API discovery).
+- Next hardening: add crisis_mode_flag.read_crisis_mode() stable API so validation + GUI can always read crisis status without import/name mismatch.

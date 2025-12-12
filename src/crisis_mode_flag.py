@@ -34,3 +34,26 @@ if __name__ == "__main__":
     print(disable())
     print("Final:", status())
 
+def read_crisis_mode() -> str:
+    """
+    Stable API for other modules (validation harness, dashboards, briefs).
+    Returns "ON" or "OFF".
+    """
+    try:
+        # If your module already has a canonical file path, reuse it.
+        # Otherwise fall back to config/crisis_mode.txt (common pattern).
+        from pathlib import Path
+        base = Path(__file__).resolve().parent
+        candidates = [
+            base / "config" / "crisis_mode.txt",
+            base.parent / "config" / "crisis_mode.txt",
+            base / "crisis_mode.txt",
+        ]
+        for p in candidates:
+            if p.exists():
+                v = p.read_text().strip().upper()
+                return "ON" if v in {"ON", "TRUE", "1", "YES"} else "OFF"
+    except Exception:
+        pass
+    return "OFF"
+
