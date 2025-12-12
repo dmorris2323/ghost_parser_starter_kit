@@ -1,91 +1,63 @@
 """
 training_session_store.py
 
-Creates/updates the canonical training sessions file:
-  src/docs/training/training_sessions.json
-
-Each session stores:
-- difficulty (string)
-- difficulty_weight (float, from difficulty_scaling_engine)
-- score (0–100)
-- rubric breakdown (optional)
+Persistent store for training sessions.
+Difficulty is first-class and enforced via training_config.
 """
 
-from __future__ import annotations
-
 import json
-from datetime import datetime, timezone
+from datetime import datetime, UTC
 from pathlib import Path
-from typing import Any, Dict, Optional
+from typing import Any, Dict, List
 
-from difficulty_scaling_engine import normalize_difficulty, get_weight
+from difficulty_control_engine import get_difficulty_profile
+from training_config import effective_difficulty, load_training_config
 
-
-def _repo_root() -> Path:
-    return Path(__file__).resolve().parent.parent
-
-
-def _sessions_path() -> Path:
-    return _repo_root() / "src" / "docs" / "training" / "training_sessions.json"
+STORE_PATH = Path("src/docs/training/training_sessions.json")
+STORE_PATH.parent.mkdir(parents=True, exist_ok=True)
 
 
-def _safe_mkdir(p: Path) -> None:
-    p.mkdir(parents=True, exist_ok=True)
-
-
-def _utc_iso() -> str:
-    return datetime.now(timezone.utc).isoformat()
-
-
-def load_sessions() -> Dict[str, Any]:
-    p = _sessions_path()
-    if not p.exists():
-        return {"schema_version": 1, "generated_at": _utc_iso(), "sessions": []}
+def load_sessions() -> List[Dict[str, Any]]:
+    if not STORE_PATH.exists():
+        return []
     try:
-        return json.loads(p.read_text())
+        data = json.loads(STORE_PATH.read_text())
+        return data if isinstance(data, list) else []
     except Exception:
-        return {"schema_version": 1, "generated_at": _utc_iso(), "sessions": []}
+        return []
 
 
-def append_training_session(
-    difficulty: str,
-    score: float,
-    scenario_id: Optional[str] = None,
-    rubric: Optional[Dict[str, Any]] = None,
-    notes: str = "",
-) -> Dict[str, Any]:
-    d = normalize_difficulty(difficulty)
-    w = float(get_weight(d))
+def append_training_session(session: Dict[str, Any], gate: bool = True) -> Dict[str, Any]:
+    sessions = load_sessions()
 
-    payload = load_sessions()
-    sessions = payload.get("sessions", [])
-    if not isinstance(sessions, list):
-        sessions = []
+    requested = session.get("difficulty", "INTERMEDIATE")
+    enforced = effective_difficulty(requested)
+    profile = get_difficulty_profile(enforced)
 
-    entry: Dict[str, Any] = {
-        "ts_utc": _utc_iso(),
-        "difficulty": d,
-        "difficulty_weight": w,
-        "score": float(score),
-        "scenario_id": scenario_id or "UNKNOWN",
-        "rubric": rubric or {},
-        "notes": notes,
+    cfg = load_training_config()
+    source = "manual"
+    if cfg.get("instructor_lock"):
+        source = "locked"
+    if session.get("difficulty_source"):
+        source = str(session.get("difficulty_source"))
+
+    record = {
+        "timestamp": datetime.now(UTC).isoformat(),
+        "difficulty": profile.name,
+        "difficulty_source": source,
+        "mode": session.get("mode", "training"),
+        "score": float(session.get("score", 0.0)),
+        "notes": (session.get("notes") or "").strip(),
+        "grading_expectation": profile.grading_expectation,
     }
-    sessions.append(entry)
 
-    payload["schema_version"] = 1
-    payload["generated_at"] = _utc_iso()
-    payload["sessions"] = sessions
+    sessions.append(record)
+    STORE_PATH.write_text(json.dumps(sessions, indent=2))
 
-    out_path = _sessions_path()
-    _safe_mkdir(out_path.parent)
-    out_path.write_text(json.dumps(payload, indent=2))
-    return {"json_path": str(out_path), "total_sessions": len(sessions), "last_session": entry}
-
-
-if __name__ == "__main__":
-    r = append_training_session("INTERMEDIATE", 75.0, scenario_id="SMOKE_TEST", rubric={"example": 1}, notes="manual test")
-    print("Training sessions updated:")
-    print(f"  JSON: {r['json_path']}")
-    print(f"  Total sessions: {r['total_sessions']}")
+    return {
+        "count": len(sessions),
+        "difficulty": profile.name,
+        "difficulty_source": source,
+        "path": str(STORE_PATH),
+    }
 
