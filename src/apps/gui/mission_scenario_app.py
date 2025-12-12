@@ -1,197 +1,85 @@
-# apps/gui/mission_scenario_app.py
-# War Room Mission Scenario GUI (SAFE) — Module 6 adds Instructor Pack Export.
+# src/apps/gui/mission_scenario_app.py
+from __future__ import annotations
+
 import sys
 from pathlib import Path
+import streamlit as st
 
-SRC = Path(__file__).resolve().parents[2]
-if str(SRC) not in sys.path:
-    sys.path.insert(0, str(SRC))
+REPO_ROOT = Path(__file__).resolve().parents[3]
+SRC_PATH = str((REPO_ROOT / "src").resolve())
+if SRC_PATH not in sys.path:
+    sys.path.insert(0, SRC_PATH)
 
-import streamlit as st  # noqa: E402
-
-from difficulty_scaling_engine import compute_difficulty_profile  # noqa: E402
-from scenario_engine import generate_scenario, grade_scenario_result, rubric_autograde_and_log  # noqa: E402
-from aar_generator import build_aar, write_aar_files  # noqa: E402
-from instructor_pack_export import export_instructor_packet  # noqa: E402
-
-
-def _load_json(path: str) -> dict:
-    import json
-    with open(path, "r") as f:
-        return json.load(f)
+from scenario_engine import build_training_scenario
+from training_validation_gate import evaluate_training_gate, gate_to_dict
+from instructor_autograder import auto_grade_session
+from training_session_store import append_session, load_sessions
 
 
 def main():
-    st.set_page_config(page_title="GLL War Room – Mission Scenarios", layout="wide")
-    st.title("🛰️ GLL War Room – Mission Scenario Engine")
-    st.caption("SAFE synthetic-only training scenarios. No real-world signatures.")
+    st.set_page_config(page_title="GLL Mission Scenario (Training)", layout="wide")
+    st.title("GLL Mission Scenario App (Training)")
+    st.caption("Synthetic, training-only scenarios. Difficulty changes inject pressure + grading expectations.")
 
-    prof = compute_difficulty_profile()
-    rec = prof["recommendation"]["recommended_level"]
-
-    col1, col2 = st.columns([1, 1])
-
-    with col1:
-        st.subheader("Difficulty")
-        mode = st.radio("Difficulty mode", ["Auto (recommended)", "Manual override"], horizontal=True)
-        difficulty = rec
-        if mode == "Manual override":
-            difficulty = st.selectbox("Choose difficulty", ["CADET", "ANALYST", "SENIOR", "EXPERT"], index=1)
-        st.info(f"Recommended: **{rec}**")
-
-    with col2:
-        st.subheader("Generate Scenario")
-        seed = st.number_input("Seed (optional)", min_value=0, value=0, step=1)
-        use_seed = st.checkbox("Use seed", value=False)
-
-        if st.button("Generate mission scenario", type="primary"):
-            result = generate_scenario(difficulty=difficulty, seed=int(seed) if use_seed else None)
-            st.session_state["scenario"] = result
-            st.session_state.pop("last_grade", None)
-            st.session_state.pop("last_aar", None)
-            st.session_state.pop("last_pack", None)
-
-    st.divider()
-
-    scenario = st.session_state.get("scenario")
-    if not scenario:
-        st.caption("Generate a scenario to begin.")
-        return
-
-    st.subheader("Scenario Output")
-    st.write(scenario)
-
-    st.divider()
-    st.subheader("Scoring")
-
-    grading_mode = st.radio(
-        "Scoring mode",
-        ["Rubric Auto-Grade (recommended)", "Manual score only"],
-        horizontal=True,
-        index=0,
-    )
-
-    if grading_mode == "Manual score only":
-        st.markdown("### Manual Scoring (log a run)")
-        c1, c2, c3 = st.columns([1, 2, 1])
-        with c1:
-            score = st.slider("Score (0–100)", 0, 100, 75)
-        with c2:
-            notes = st.text_input("Notes (short)", value="Ran scenario, identified patterns, wrote summary.")
-        with c3:
-            trainee = st.text_input("Trainee", value="Ghost")
-
-        if st.button("Log training session (manual)", type="secondary"):
-            log = grade_scenario_result(
-                scenario_id=scenario["scenario_id"],
-                difficulty_used=scenario["difficulty_used"],
-                score=float(score),
-                notes=notes,
-                trainee=trainee,
-            )
-            st.success(f"Logged. Session ID: {log['session_id']}")
-            st.code(log["json_path"])
-        return
-
-    # Rubric auto-grade inputs
-    st.markdown("### Rubric Auto-Grader (Instructor Mode)")
-
-    left, right = st.columns([1, 1])
+    left, right = st.columns([1, 2])
 
     with left:
         trainee = st.text_input("Trainee", value="Ghost")
-        called_patterns = st.multiselect(
-            "Which patterns do you call?",
-            ["drift", "latency", "outage", "storm", "cross"],
-            default=["drift"],
-        )
-        osl = st.selectbox("OSL posture", ["GREEN", "AMBER", "RED"], index=1)
-        analyst_notes = st.text_input(
-            "Analyst notes (short)",
-            value="Validated baseline; cross-checked sensor consistency; cautious confidence."
-        )
+        difficulty = st.selectbox("Difficulty", ["BEGINNER", "INTERMEDIATE", "ADVERSARIAL"], index=1)
+        seed = st.number_input("Scenario seed", min_value=1, max_value=999999, value=99, step=1)
+
+        st.subheader("Integrity Gate (counts → AGI only if PASS)")
+        gate = evaluate_training_gate(require_all_green=True)
+        st.json({"status": gate.status, "counted_for_agi": gate.counted_for_agi, "message": gate.message})
+
+        st.subheader("Quick Scores (0–1)")
+        acc = st.slider("Accuracy", 0.0, 1.0, 0.75, 0.01)
+        spd = st.slider("Speed", 0.0, 1.0, 0.65, 0.01)
+        trd = st.slider("Tradecraft", 0.0, 1.0, 0.60, 0.01)
+
+        if st.button("Generate Scenario"):
+            scenario = build_training_scenario(difficulty=difficulty, seed=int(seed))
+            st.session_state["scenario"] = scenario
+
+        if st.button("Log Scenario Session"):
+            scenario = st.session_state.get("scenario") or build_training_scenario(difficulty=difficulty, seed=int(seed))
+            grade = auto_grade_session(
+                trainee_name=trainee,
+                difficulty=difficulty,
+                raw_scores={"accuracy": acc, "speed": spd, "tradecraft": trd},
+            )
+
+            session = {
+                "trainee_name": trainee,
+                "difficulty": difficulty,
+                "session_type": "scenario",
+                "scenario": scenario,
+                "raw_scores": {"accuracy": acc, "speed": spd, "tradecraft": trd},
+                "auto_grade": grade,
+                "gate": gate_to_dict(gate),
+                "counted_for_agi": bool(gate.counted_for_agi),
+            }
+            saved = append_session(session)
+            st.success(f"Logged {saved.get('session_id')} | Passed: {grade.get('passed')} | Counted: {saved.get('counted_for_agi')}")
 
     with right:
-        commander_summary = st.text_area(
-            "Commander Summary (target ~5 sentences)",
-            height=180,
-            value="Observed synthetic anomalies consistent with drift/latency patterns. "
-                  "Operational impact is moderate due to reduced confidence in sensor stability. "
-                  "Assessment remains likely synthetic sensor behavior rather than a single-point fault. "
-                  "Recommend cross-checking sensor baselines and monitoring for escalation or outages. "
-                  "Maintain AMBER posture until consistency returns or patterns converge.",
-        )
+        scenario = st.session_state.get("scenario")
+        if not scenario:
+            scenario = build_training_scenario(difficulty=difficulty, seed=int(seed))
+            st.session_state["scenario"] = scenario
 
-    if st.button("Auto-grade + log session", type="primary"):
-        result = rubric_autograde_and_log(
-            scenario_json_path=scenario["scenario_json_path"],
-            called_patterns=list(called_patterns),
-            osl=osl,
-            commander_summary=commander_summary,
-            analyst_notes=analyst_notes,
-            trainee=trainee,
-        )
-        st.session_state["last_grade"] = result
-        st.session_state.pop("last_pack", None)
+        st.subheader("Scenario")
+        st.json(scenario)
 
-    last_grade = st.session_state.get("last_grade")
-    if last_grade:
-        st.success(f"Rubric score: {last_grade['score']}/100")
-        st.write("Subscores:", last_grade["subscores"])
-        st.write("Instructor feedback:", last_grade["feedback"])
-        st.code(last_grade["grade_report"]["json_path"])
-        st.code(last_grade["training_log"]["json_path"])
+        st.subheader("Timeline")
+        st.dataframe(scenario.get("timeline", []), use_container_width=True)
 
-        st.divider()
-        st.subheader("Module 5 — AAR Generator")
-
-        if st.button("Generate AAR (one-page)", type="secondary"):
-            scenario_packet = _load_json(scenario["scenario_json_path"])
-            grade_packet = _load_json(last_grade["grade_report"]["json_path"])
-
-            trainee_payload = {
-                "trainee": trainee,
-                "called_patterns": list(called_patterns),
-                "osl": osl,
-                "commander_summary": commander_summary,
-                "analyst_notes": analyst_notes,
-                "scenario_json_path": scenario["scenario_json_path"],
-            }
-
-            aar = build_aar(scenario_packet, grade_packet, trainee_payload)
-            paths = write_aar_files(aar)
-            st.session_state["last_aar"] = paths
-            st.session_state.pop("last_pack", None)
-
-        last_aar = st.session_state.get("last_aar")
-        if last_aar:
-            st.success("AAR written.")
-            st.code(last_aar["json_path"])
-            st.code(last_aar["txt_path"])
-
-        st.divider()
-        st.subheader("Module 6 — Instructor Pack Export")
-
-        include_optional = st.checkbox("Include optional artifacts (best-effort)", value=True)
-
-        if st.button("Export Instructor Pack (manifest)", type="secondary"):
-            grade_json_path = last_grade["grade_report"]["json_path"]
-            aar_json_path = (last_aar or {}).get("json_path")
-
-            export = export_instructor_packet(
-                scenario_json_path=scenario["scenario_json_path"],
-                grade_json_path=grade_json_path,
-                aar_json_path=aar_json_path,
-                trainee=trainee,
-                include_optional_artifacts=include_optional,
-            )
-            st.session_state["last_pack"] = export
-
-        last_pack = st.session_state.get("last_pack")
-        if last_pack:
-            st.success("Instructor packet exported.")
-            st.code(last_pack["packet_path"])
-            st.code(last_pack["latest_path"])
+        st.subheader("Recent Sessions")
+        sessions = load_sessions()
+        if sessions:
+            st.dataframe(list(reversed(sessions))[:20], use_container_width=True)
+        else:
+            st.info("No sessions yet.")
 
 
 if __name__ == "__main__":

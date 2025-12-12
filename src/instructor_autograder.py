@@ -1,70 +1,83 @@
+# src/instructor_autograder.py
 from __future__ import annotations
 
-from typing import Any, Dict, Tuple
+from dataclasses import dataclass, asdict
+from datetime import datetime, timezone
+from typing import Any, Dict
 
-from difficulty_scaling_engine import normalize_difficulty, rubric_weights, score_floor
-
-
-def _clamp(v: float, lo: float = 0.0, hi: float = 100.0) -> float:
-    try:
-        x = float(v)
-    except Exception:
-        return lo
-    return max(lo, min(hi, x))
+from training_difficulty_engine import normalize_difficulty, get_profile, compute_weighted_grade
 
 
-def grade_session(
-    *,
+def _utc_now() -> str:
+    return datetime.now(timezone.utc).isoformat()
+
+
+@dataclass
+class AutoGradeResult:
+    grader_version: int
+    generated_at: str
+    difficulty: str
+    trainee_name: str
+    weighted_grade: Dict[str, Any]
+    pass_threshold: float
+    passed: bool
+    notes: str
+
+
+def auto_grade_session(
+    trainee_name: str,
     difficulty: str,
-    accuracy: float,
-    timeliness: float,
-    discipline: float,
-    comms_clarity: float,
-    procedure: float,
-    gate_green: bool = True,
+    raw_scores: Dict[str, float],
 ) -> Dict[str, Any]:
     """
-    Difficulty-aware auto-grader.
-    All inputs are 0-100.
-    Returns: score (0-100), pass/fail, breakdown, and counted flag.
+    Auto-grader: difficulty changes weights AND expectations.
+    raw_scores: accuracy/speed/tradecraft in 0..1
     """
     d = normalize_difficulty(difficulty)
-    w = rubric_weights(d)
+    prof = get_profile(d)
+    grade = compute_weighted_grade(raw_scores, d)
 
-    acc = _clamp(accuracy)
-    tim = _clamp(timeliness)
-    dis = _clamp(discipline)
-    com = _clamp(comms_clarity)
-    pro = _clamp(procedure)
+    # Pass thresholds scale with difficulty (stricter as difficulty increases)
+    if d == "BEGINNER":
+        threshold = 60.0
+    elif d == "ADVERSARIAL":
+        threshold = 75.0
+    else:
+        threshold = 68.0
 
-    weighted = (
-        acc * w["accuracy"]
-        + dis * w["discipline"]
-        + tim * w["timeliness"]
-        + com * w["comms_clarity"]
-        + pro * w["procedure"]
+    passed = float(grade["weighted_grade"]) >= threshold
+
+    notes = (
+        "PASS means performance meets difficulty expectations. "
+        "If FAIL, focus the lowest contributing category and rerun at same difficulty."
     )
 
-    floor = score_floor(d)
-    passed = bool(weighted >= floor)
+    res = AutoGradeResult(
+        grader_version=1,
+        generated_at=_utc_now(),
+        difficulty=d,
+        trainee_name=trainee_name or "Trainee",
+        weighted_grade=grade,
+        pass_threshold=threshold,
+        passed=passed,
+        notes=notes,
+    )
+    out = asdict(res)
+    out["difficulty_profile"] = prof
+    return out
 
-    # Gate controls whether this session counts toward AGI.
-    counted = bool(gate_green) and passed
 
-    return {
-        "difficulty": d,
-        "grader_weights": w,
-        "score": round(float(weighted), 2),
-        "score_floor": float(floor),
-        "passed": passed,
-        "gate_green": bool(gate_green),
-        "counted": counted,
-        "inputs": {
-            "accuracy": acc,
-            "timeliness": tim,
-            "discipline": dis,
-            "comms_clarity": com,
-            "procedure": pro,
-        },
-    }
+if __name__ == "__main__":
+    import json
+
+    print(
+        json.dumps(
+            auto_grade_session(
+                trainee_name="Ghost",
+                difficulty="INTERMEDIATE",
+                raw_scores={"accuracy": 0.78, "speed": 0.62, "tradecraft": 0.66},
+            ),
+            indent=2,
+        )
+    )
 
