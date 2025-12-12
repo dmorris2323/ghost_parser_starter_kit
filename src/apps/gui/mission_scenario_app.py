@@ -11,7 +11,7 @@ if str(SRC) not in sys.path:
 import streamlit as st  # noqa: E402
 
 from difficulty_scaling_engine import compute_difficulty_profile  # noqa: E402
-from scenario_engine import generate_scenario, grade_scenario_result  # noqa: E402
+from scenario_engine import generate_scenario, grade_scenario_result, rubric_autograde_and_log  # noqa: E402
 
 
 def main():
@@ -30,7 +30,6 @@ def main():
         difficulty = rec
         if mode == "Manual override":
             difficulty = st.selectbox("Choose difficulty", ["CADET", "ANALYST", "SENIOR", "EXPERT"], index=1)
-
         st.info(f"Recommended: **{rec}**")
 
     with col2:
@@ -41,15 +40,30 @@ def main():
         if st.button("Generate mission scenario", type="primary"):
             result = generate_scenario(difficulty=difficulty, seed=int(seed) if use_seed else None)
             st.session_state["scenario"] = result
+            st.session_state["grading_mode"] = "Rubric Auto-Grade"
 
     st.divider()
 
     scenario = st.session_state.get("scenario")
-    if scenario:
-        st.subheader("Scenario Output")
-        st.write(scenario)
+    if not scenario:
+        st.caption("Generate a scenario to begin.")
+        return
 
-        st.markdown("### Trainee Scoring (log a run)")
+    st.subheader("Scenario Output")
+    st.write(scenario)
+
+    st.divider()
+    st.subheader("Scoring")
+
+    grading_mode = st.radio(
+        "Scoring mode",
+        ["Rubric Auto-Grade (recommended)", "Manual score only"],
+        horizontal=True,
+        index=0,
+    )
+
+    if grading_mode == "Manual score only":
+        st.markdown("### Manual Scoring (log a run)")
         c1, c2, c3 = st.columns([1, 2, 1])
         with c1:
             score = st.slider("Score (0–100)", 0, 100, 75)
@@ -58,7 +72,7 @@ def main():
         with c3:
             trainee = st.text_input("Trainee", value="Ghost")
 
-        if st.button("Log training session", type="secondary"):
+        if st.button("Log training session (manual)", type="secondary"):
             log = grade_scenario_result(
                 scenario_id=scenario["scenario_id"],
                 difficulty_used=scenario["difficulty_used"],
@@ -68,6 +82,48 @@ def main():
             )
             st.success(f"Logged. Session ID: {log['session_id']}")
             st.code(log["json_path"])
+        return
+
+    # Rubric auto-grade
+    st.markdown("### Rubric Auto-Grader (Instructor Mode)")
+
+    left, right = st.columns([1, 1])
+
+    with left:
+        trainee = st.text_input("Trainee", value="Ghost")
+        called_patterns = st.multiselect(
+            "Which patterns do you call?",
+            ["drift", "latency", "outage", "storm", "cross"],
+            default=["drift"],
+        )
+        osl = st.selectbox("OSL posture", ["GREEN", "AMBER", "RED"], index=1)
+        analyst_notes = st.text_input("Analyst notes (short)", value="Validated baseline; cross-checked sensor consistency; cautious confidence.")
+
+    with right:
+        commander_summary = st.text_area(
+            "Commander Summary (target ~5 sentences)",
+            height=180,
+            value="Observed synthetic anomalies consistent with drift/latency patterns. "
+                  "Operational impact is moderate due to reduced confidence in sensor stability. "
+                  "Assessment remains likely synthetic sensor behavior rather than a single-point fault. "
+                  "Recommend cross-checking sensor baselines and monitoring for escalation or outages. "
+                  "Maintain AMBER posture until consistency returns or patterns converge.",
+        )
+
+    if st.button("Auto-grade + log session", type="primary"):
+        result = rubric_autograde_and_log(
+            scenario_json_path=scenario["scenario_json_path"],
+            called_patterns=list(called_patterns),
+            osl=osl,
+            commander_summary=commander_summary,
+            analyst_notes=analyst_notes,
+            trainee=trainee,
+        )
+        st.success(f"Rubric score: {result['score']}/100")
+        st.write("Subscores:", result["subscores"])
+        st.write("Instructor feedback:", result["feedback"])
+        st.code(result["grade_report"]["json_path"])
+        st.code(result["training_log"]["json_path"])
 
 
 if __name__ == "__main__":
