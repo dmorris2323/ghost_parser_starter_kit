@@ -1,0 +1,22 @@
+GLL OPERATOR CERTIFICATION STATUS
+Generated: 2025-12-13T11:27:44.824117+00:00
+
+Operator: Ghost
+Target difficulty: ADVERSARIAL
+Required streak: 7
+Current streak: 0
+Certified: False
+
+Lock state:
+{
+  "enabled": false,
+  "locked_difficulty": null,
+  "updated_at": null
+}
+
+Sessions source: /Users/dextermorris/ghost/parser_starter_kit/src/docs/training/training_sessions.json
+
+Notes:
+- Only counts sessions with GREEN gates (or equivalent) and PASS (or score threshold).
+- Streak is evaluated from most recent backward.
+- This is training-only; it does not change scoring or simulation behavior.

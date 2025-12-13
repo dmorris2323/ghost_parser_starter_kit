@@ -1,0 +1,27 @@
+{
+  "generated_at": "2025-12-13T19:02:01.556721+00:00",
+  "inputs": {
+    "current_difficulty": "INTERMEDIATE",
+    "validation_verdict": "PASS",
+    "cert_highest_track": "NONE"
+  },
+  "observations": {
+    "AGI": 0.0,
+    "improvement_slope": 0.0,
+    "volatility_index": 0.0,
+    "difficulty_weighted_average": 0.0
+  },
+  "recommendation": {
+    "next_difficulty": "INTERMEDIATE",
+    "next_pattern_id": null,
+    "note": "You are not yet certified beyond BEGINNER; consider locking reps to BEGINNER until streak achieved."
+  },
+  "reasons": [
+    "Maintain current difficulty and continue building baseline reps.",
+    "Certification state suggests more BEGINNER reps before progressing."
+  ],
+  "coach": [
+    "Keep sessions consistent. Stability beats flashy features right now."
+  ],
+  "safety_notice": "Recorded recommendation only. Not enforced."
+}

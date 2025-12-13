@@ -1,0 +1,25 @@
+{
+  "version": 1,
+  "generated_at": "2025-12-12T12:06:28.723408+00:00",
+  "count": 2,
+  "sessions": [
+    {
+      "difficulty": "INTERMEDIATE",
+      "mode": "training",
+      "score": 88,
+      "notes": "first gated rep",
+      "session_id": "sess_1",
+      "recorded_at": "2025-12-12T12:00:06.118127+00:00",
+      "safe_notice": "Synthetic/training record. No sensitive real-world telemetry."
+    },
+    {
+      "difficulty": "INTERMEDIATE",
+      "mode": "training",
+      "score": 85,
+      "notes": "dashboard sanity rep",
+      "session_id": "sess_2",
+      "recorded_at": "2025-12-12T12:06:28.723404+00:00",
+      "safe_notice": "Synthetic/training record. No sensitive real-world telemetry."
+    }
+  ]
+}

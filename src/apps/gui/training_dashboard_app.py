@@ -1,138 +1,137 @@
-# src/apps/gui/training_dashboard_app.py
 from __future__ import annotations
 
-# --- Streamlit path bootstrap (REQUIRED) ---
 import sys
 from pathlib import Path
-
-REPO_ROOT = Path(__file__).resolve().parents[3]
-SRC_DIR = REPO_ROOT / "src"
-if str(SRC_DIR) not in sys.path:
-    sys.path.insert(0, str(SRC_DIR))
-# ------------------------------------------
-
 import streamlit as st
 
+# Ensure src/ is importable when running streamlit from repo root
+ROOT = Path(__file__).resolve().parents[3]  # .../parser_starter_kit
+SRC = ROOT / "src"
+if str(SRC) not in sys.path:
+    sys.path.insert(0, str(SRC))
+
 from training_session_store import load_sessions, append_session
-from training_feedback_store import load_latest_feedback
-from obasi_training_coach import build_obasi_training_coach_speech
-
-from difficulty_profiles import as_dict as difficulty_as_dict
-from instructor_grader import grade_session
-from operator_certification_mode import compute_certification_status
-
-try:
-    from training_curve_engine import compute_training_curve
-except Exception:
-    compute_training_curve = None
+from training_curve_engine import compute_training_curve
+from training_feedback_engine import recommend_next_training, write_latest_feedback
 
 
-def main() -> None:
-    st.set_page_config(page_title="GLL Training Dashboard", layout="wide")
-    st.title("GLL Training Dashboard")
-    st.caption("Difficulty-aware training + grading + certification (training-safe).")
+st.set_page_config(page_title="GLL Training Dashboard", layout="wide")
+
+
+def _safe_str(x, default=""):
+    try:
+        return str(x)
+    except Exception:
+        return default
+
+
+def _call_obasi(payload: dict) -> str:
+    """
+    Defensive adapter: obasi_training_coach may have different signatures.
+    Always returns a STRING for display.
+    """
+    try:
+        import inspect
+        import obasi_training_coach as coach
+
+        fn = getattr(coach, "build_obasi_training_coach_speech", None)
+        if fn is None:
+            return "Obasi coach module not available."
+
+        sig = inspect.signature(fn)
+        # If it takes kwargs, pass payload. If it takes none, call bare.
+        if len(sig.parameters) == 0:
+            res = fn()
+        else:
+            res = fn(**payload)
+
+        if isinstance(res, str):
+            return res
+        if isinstance(res, dict):
+            # render dict as readable text
+            return "\n".join([f"- {k}: {res[k]}" for k in res.keys()])
+        return _safe_str(res, "Obasi coach generated an unsupported response.")
+    except Exception as e:
+        return f"Obasi coach unavailable: {e.__class__.__name__}: {e}"
+
+
+def main():
+    st.title("🦉 GLL Training Dashboard")
 
     sessions = load_sessions()
-    feedback = load_latest_feedback()
 
-    left, right = st.columns([1, 2], gap="large")
-
-    with left:
-        st.subheader("Log a Training Session")
-        trainee = st.text_input("Trainee name", value="Ghost")
-
+    colA, colB = st.columns([1, 1])
+    with colA:
+        st.subheader("Log a Training Session (Synthetic / Safe)")
         difficulty = st.selectbox("Difficulty", ["BEGINNER", "INTERMEDIATE", "ADVERSARIAL"], index=1)
-        dmeta = difficulty_as_dict(difficulty)
-
-        with st.expander("🎚️ Difficulty Expectations + Grader Weights", expanded=True):
-            st.json(dmeta)
-
-        score = st.number_input("Score", value=75.0, step=1.0)
-        max_score = st.number_input("Max score", value=100.0, step=1.0)
-
-        procedure_ok = st.checkbox("Procedure OK", value=True)
-        safety_ok = st.checkbox("Safety OK", value=True)
-        explanation_quality = st.slider("Explanation Quality (0..1)", min_value=0.0, max_value=1.0, value=0.7, step=0.05)
+        verdict = st.selectbox("Validation Verdict", ["PASS", "WARN", "FAIL"], index=0)
+        score = st.slider("Session Score (0–100)", 0, 100, 75)
+        pattern = st.text_input("Pattern ID (optional)", value="").strip() or None
         notes = st.text_area("Notes", value="", height=90)
 
-        if st.button("Append Session", type="primary"):
-            # record the session (store also captures the extra rubric fields)
+        if st.button("✅ Append Session"):
+            # This session append is "raw". Gate enforcement can be added later at the logging point.
             s = append_session(
-                trainee_name=trainee,
-                difficulty=difficulty,
-                score=float(score),
-                max_score=float(max_score),
-                notes=notes,
-                procedure_ok=procedure_ok,
-                safety_ok=safety_ok,
-                explanation_quality=float(explanation_quality),
+                {
+                    "difficulty": difficulty,
+                    "verdict": verdict,
+                    "score": float(score),
+                    "pattern_id": pattern,
+                    "notes": notes,
+                    # default until gate wiring is added at logging time
+                    "counts_toward_agi": True,
+                }
             )
+            st.success(f"Appended session: {s['session_id']}")
 
-            g = grade_session(
-                difficulty=difficulty,
-                score=float(score),
-                max_score=float(max_score),
-                procedure_ok=procedure_ok,
-                safety_ok=safety_ok,
-                explanation_quality=float(explanation_quality),
+    with colB:
+        st.subheader("Live Curve + Recommendation")
+        curve = compute_training_curve()
+        st.metric("AGI (0–100)", curve["AGI"])
+        st.metric("Improvement slope", curve["improvement_slope"])
+        st.metric("Volatility index", curve["volatility_index"])
+        st.metric("Counted sessions", curve["counted_sessions"])
+
+        fb = recommend_next_training(
+            training_curve=curve,
+            current_difficulty="INTERMEDIATE",
+            validation_verdict="PASS",
+        )
+        write_latest_feedback(fb)
+
+        with st.expander("🧭 Next Training Recommendation", expanded=True):
+            st.json(fb)
+
+        with st.expander("🦉 Obasi Coach", expanded=True):
+            msg = _call_obasi(
+                {
+                    "trainee_name": "Ghost",
+                    "agi": curve["AGI"],
+                    "slope": curve["improvement_slope"],
+                    "volatility": curve["volatility_index"],
+                    "counted_sessions": curve["counted_sessions"],
+                }
             )
+            st.write(msg)
 
-            st.success("Session appended + graded.")
-            st.json({"session": s, "grade": g})
-            st.rerun()
+    st.divider()
+    st.subheader("Sessions (Normalized)")
 
-        st.divider()
-        st.subheader("🧭 Next Training Recommendation")
-        st.json(feedback)
-
-        st.divider()
-        st.subheader("🎖️ Operator Certification Mode (training)")
-        target = st.selectbox("Target Difficulty", ["BEGINNER", "INTERMEDIATE", "ADVERSARIAL"], index=2)
-        streak = st.number_input("Required PASS streak", value=5, min_value=2, max_value=20, step=1)
-        require_no_safety = st.checkbox("Require NO safety flags", value=True)
-
-        cert = compute_certification_status(
-            sessions=sessions,
-            target_difficulty=target,
-            required_pass_streak=int(streak),
-            require_no_safety_flags=require_no_safety,
+    # Render stable table (no KeyError)
+    rows = []
+    for s in sessions:
+        rows.append(
+            {
+                "session_id": s.get("session_id", ""),
+                "timestamp": s.get("timestamp", ""),
+                "difficulty": s.get("difficulty", ""),
+                "score": s.get("score", 0.0),
+                "verdict": s.get("verdict", ""),
+                "counts_toward_agi": s.get("counts_toward_agi", False),
+                "pattern_id": s.get("pattern_id", None),
+            }
         )
-        st.json(cert)
-
-    with right:
-        st.subheader("Progress Metrics")
-
-        curve = {}
-        if compute_training_curve is not None:
-            try:
-                curve = compute_training_curve()
-            except Exception as e:
-                st.error(f"training_curve_engine failed: {e}")
-
-        c1, c2, c3, c4 = st.columns(4)
-        c1.metric("AGI", curve.get("AGI", 0.0))
-        c2.metric("Slope", curve.get("improvement_slope", 0.0))
-        c3.metric("Difficulty Avg", curve.get("difficulty_weighted_average", 0.0))
-        c4.metric("Volatility", curve.get("volatility_index", 0.0))
-
-        st.divider()
-        st.subheader("🦉 Obasi Coach")
-        msg = build_obasi_training_coach_speech(
-            trainee_name=trainee,
-            difficulty=curve.get("latest_difficulty", difficulty),
-            AGI=curve.get("AGI", 0.0),
-            improvement_slope=curve.get("improvement_slope", 0.0),
-            volatility_index=curve.get("volatility_index", 0.0),
-        )
-        st.text(msg)
-
-        st.divider()
-        st.subheader("Sessions")
-        st.write(f"Total sessions: {len(sessions)}")
-        if sessions:
-            st.dataframe(sessions, use_container_width=True)
-        else:
-            st.info("No sessions logged yet.")
+    st.dataframe(rows, use_container_width=True)
 
 
 if __name__ == "__main__":

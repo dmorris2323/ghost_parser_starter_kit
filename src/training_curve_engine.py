@@ -1,109 +1,121 @@
-# src/training_curve_engine.py
+"""
+training_curve_engine.py
+
+Computes training curve metrics from training sessions.
+
+Counts only sessions where:
+  counts_toward_agi == True
+"""
+
 from __future__ import annotations
 
 import json
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Any, Dict, List, Tuple
+from typing import Any, Dict, List
+
+from training_session_store import load_sessions
 
 
-def _utc_now() -> str:
+TRAINING_DIR = Path("docs") / "training"
+CURVE_PATH = TRAINING_DIR / "training_curve_latest.json"
+
+
+def _utc_now_iso() -> str:
     return datetime.now(timezone.utc).isoformat()
 
 
-def _repo_root() -> Path:
-    return Path(__file__).resolve().parents[1]
+def _safe_mkdir(p: Path) -> None:
+    p.mkdir(parents=True, exist_ok=True)
 
 
-def _sessions_path() -> Path:
-    return _repo_root() / "src" / "docs" / "training" / "training_sessions.json"
+def _write_json(path: Path, obj: Any) -> None:
+    _safe_mkdir(path.parent)
+    path.write_text(json.dumps(obj, indent=2), encoding="utf-8")
 
 
-def _curve_path() -> Path:
-    p = _repo_root() / "src" / "docs" / "training" / "training_curve_latest.json"
-    p.parent.mkdir(parents=True, exist_ok=True)
-    return p
-
-
-def _load_sessions() -> List[Dict[str, Any]]:
-    p = _sessions_path()
-    if not p.exists():
-        return []
+def _as_float(x: Any, default: float = 0.0) -> float:
     try:
-        raw = json.loads(p.read_text())
-        sessions = raw.get("sessions", [])
-        return sessions if isinstance(sessions, list) else []
+        return float(x)
     except Exception:
-        return []
+        return default
 
 
-def _linear_slope(points: List[Tuple[float, float]]) -> float:
-    # Simple least-squares slope
-    if len(points) < 2:
-        return 0.0
-    xs = [p[0] for p in points]
-    ys = [p[1] for p in points]
-    x_mean = sum(xs) / len(xs)
-    y_mean = sum(ys) / len(ys)
-    num = sum((x - x_mean) * (y - y_mean) for x, y in points)
-    den = sum((x - x_mean) ** 2 for x in xs)
-    return float(num / den) if den != 0 else 0.0
-
-
-def _volatility(values: List[float]) -> float:
-    if len(values) < 2:
-        return 0.0
-    mean = sum(values) / len(values)
-    var = sum((v - mean) ** 2 for v in values) / (len(values) - 1)
-    return float(var ** 0.5)
+def _difficulty_weight(diff: str) -> float:
+    diff = (diff or "INTERMEDIATE").upper()
+    if diff == "BEGINNER":
+        return 0.8
+    if diff == "ADVERSARIAL":
+        return 1.2
+    return 1.0
 
 
 def compute_training_curve() -> Dict[str, Any]:
-    sessions = _load_sessions()
-    valid = [s for s in sessions if s.get("session_valid") is True]
+    sessions = load_sessions()
 
-    # Default empty curve
-    curve: Dict[str, Any] = {
-        "curve_version": 2,
-        "generated_at": _utc_now(),
+    counted = [s for s in sessions if isinstance(s, dict) and bool(s.get("counts_toward_agi", False))]
+
+    # If nothing counted yet, return zeros (but stable keys)
+    if not counted:
+        result = {
+            "generated_at": _utc_now_iso(),
+            "total_sessions": len(sessions),
+            "counted_sessions": 0,
+            "AGI": 0.0,
+            "improvement_slope": 0.0,
+            "difficulty_weighted_average": 0.0,
+            "volatility_index": 0.0,
+        }
+        _write_json(CURVE_PATH, result)
+        return result
+
+    scores = [_as_float(s.get("score", 0.0)) for s in counted]
+    diffs = [str(s.get("difficulty", "INTERMEDIATE")).upper() for s in counted]
+
+    # AGI proxy: average score (0-100 assumed)
+    agi = sum(scores) / max(1, len(scores))
+
+    # improvement slope: last minus first normalized by count
+    slope = (scores[-1] - scores[0]) / max(1, (len(scores) - 1))
+
+    # difficulty-weighted average
+    weighted_sum = 0.0
+    weights_sum = 0.0
+    for sc, df in zip(scores, diffs):
+        w = _difficulty_weight(df)
+        weighted_sum += sc * w
+        weights_sum += w
+    dwa = weighted_sum / max(1e-9, weights_sum)
+
+    # volatility index: mean absolute change
+    if len(scores) == 1:
+        vol = 0.0
+    else:
+        deltas = [abs(scores[i] - scores[i - 1]) for i in range(1, len(scores))]
+        vol = sum(deltas) / max(1, len(deltas))
+
+    result = {
+        "generated_at": _utc_now_iso(),
         "total_sessions": len(sessions),
-        "valid_sessions": len(valid),
-        "AGI": 0.0,
-        "improvement_slope": 0.0,
-        "difficulty_weighted_average": 0.0,
-        "volatility_index": 0.0,
-        "note": "Only valid sessions (SIS+SPS GREEN and Validation PASS/WARN) count toward metrics.",
+        "counted_sessions": len(counted),
+        "AGI": round(agi, 2),
+        "improvement_slope": round(slope, 2),
+        "difficulty_weighted_average": round(dwa, 2),
+        "volatility_index": round(vol, 3),
     }
 
-    if not valid:
-        _curve_path().write_text(json.dumps(curve, indent=2))
-        return curve
-
-    # Use weighted_score for training performance
-    scores = [float(s.get("weighted_score", 0.0)) for s in valid]
-    curve["AGI"] = round(sum(scores) / len(scores), 2)
-
-    # Difficulty-weighted average = same as AGI here, but kept explicit for UI tiles
-    curve["difficulty_weighted_average"] = curve["AGI"]
-
-    # Improvement slope over time index (1..n)
-    pts = [(float(i + 1), scores[i]) for i in range(len(scores))]
-    curve["improvement_slope"] = round(_linear_slope(pts), 3)
-
-    # Volatility index = std dev of scores
-    curve["volatility_index"] = round(_volatility(scores), 3)
-
-    _curve_path().write_text(json.dumps(curve, indent=2))
-    return curve
+    _write_json(CURVE_PATH, result)
+    return result
 
 
 if __name__ == "__main__":
-    c = compute_training_curve()
+    r = compute_training_curve()
     print("Training curve written:")
-    print(f"  JSON: {_curve_path()}")
-    print(f"  Total sessions: {c['total_sessions']}")
-    print(f"  Valid sessions: {c['valid_sessions']}")
-    print(f"  AGI: {c['AGI']}")
-    print(f"  Improvement slope: {c['improvement_slope']}")
-    print(f"  Volatility index: {c['volatility_index']}")
+    print(f"  JSON: {CURVE_PATH}")
+    print(f"  Total sessions: {r['total_sessions']}")
+    print(f"  Counted sessions: {r['counted_sessions']}")
+    print(f"  AGI: {r['AGI']}")
+    print(f"  Improvement slope: {r['improvement_slope']}")
+    print(f"  Difficulty-weighted avg: {r['difficulty_weighted_average']}")
+    print(f"  Volatility index: {r['volatility_index']}")
 
