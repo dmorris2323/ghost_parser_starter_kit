@@ -85,8 +85,69 @@
         "scenario_id": "/Users/dextermorris/ghost/parser_starter_kit/src/docs/scenarios/scenario_20251212_110609.json"
       },
       "notes": "Module 3 difficulty wiring test"
+    },
+    {
+      "session_id": "20251213_033038_5343",
+      "created_at": "2025-12-13T03:30:38.682419+00:00",
+      "trainee_name": "Ghost",
+      "difficulty": "BEGINNER",
+      "scenario_id": "SANITY",
+      "pattern_id": null,
+      "pattern_seed": null,
+      "rubric": {
+        "accuracy": 80.0,
+        "reasoning": 70.0,
+        "stability": 85.0,
+        "speed": 60.0
+      },
+      "difficulty_profile": {
+        "volatility_tolerance": 20.0,
+        "score_multiplier": 0.9
+      },
+      "gates": {
+        "allowed": true,
+        "reason": "Session accepted (gates satisfied).",
+        "sis_status": "GREEN",
+        "sps_status": "GREEN",
+        "validation_verdict": "PASS",
+        "decided_at": "2025-12-13T03:30:38.681858+00:00"
+      },
+      "session_valid": true,
+      "invalid_reason": null,
+      "extra": {}
+    },
+    {
+      "session_id": "20251213_033142_9308",
+      "created_at": "2025-12-13T03:31:42.864310+00:00",
+      "trainee_name": "Ghost",
+      "difficulty": "ADVERSARIAL",
+      "scenario_id": "GATE_TEST",
+      "pattern_id": null,
+      "pattern_seed": null,
+      "rubric": {
+        "accuracy": 90.0,
+        "reasoning": 80.0,
+        "stability": 70.0,
+        "speed": 60.0
+      },
+      "difficulty_profile": {
+        "volatility_tolerance": 10.0,
+        "score_multiplier": 1.1
+      },
+      "gates": {
+        "allowed": false,
+        "reason": "SPS not GREEN (got RED)",
+        "sis_status": "GREEN",
+        "sps_status": "RED",
+        "validation_verdict": "PASS",
+        "decided_at": "2025-12-13T03:31:42.863935+00:00"
+      },
+      "session_valid": false,
+      "invalid_reason": "SPS not GREEN (got RED)",
+      "extra": {}
     }
   ],
   "schema_version": 1,
-  "generated_at": "2025-12-12T11:06:09.194444+00:00"
+  "generated_at": "2025-12-12T11:06:09.194444+00:00",
+  "updated_at": "2025-12-13T03:31:42.864524+00:00"
 }

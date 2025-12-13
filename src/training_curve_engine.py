@@ -2,118 +2,128 @@
 from __future__ import annotations
 
 import json
-from dataclasses import dataclass, asdict
+from dataclasses import dataclass
 from datetime import datetime, timezone
+from math import sqrt
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any, Dict, List, Optional
 
-from difficulty_scaling_engine import get_profile, normalize_difficulty
-from training_session_store import load_sessions, training_dir
+from training_grading_weights import normalize_difficulty, get_profile
+from training_session_store import load_sessions, DEFAULT_SESSIONS_PATH
+from training_grading_weights import compute_weighted_score
 
 
-def _utc_now_iso() -> str:
+OUTPUT_LATEST = Path("src/docs/training/training_curve_latest.json")
+
+
+def _utc_now() -> str:
     return datetime.now(timezone.utc).isoformat()
 
 
-def _safe_float(x: Any, default: float = 0.0) -> float:
-    try:
-        return float(x)
-    except Exception:
-        return default
+def _mean(xs: List[float]) -> float:
+    if not xs:
+        return 0.0
+    return sum(xs) / float(len(xs))
+
+
+def _std(xs: List[float]) -> float:
+    if len(xs) < 2:
+        return 0.0
+    m = _mean(xs)
+    var = sum((x - m) ** 2 for x in xs) / float(len(xs) - 1)
+    return sqrt(var)
 
 
 def _linear_slope(y: List[float]) -> float:
     """
-    Simple slope vs index using least squares.
+    Simple slope of y over evenly spaced x = 0..n-1
+    Returns 0 if insufficient points.
     """
     n = len(y)
     if n < 2:
         return 0.0
-    xs = list(range(n))
-    x_mean = sum(xs) / n
-    y_mean = sum(y) / n
-    num = sum((xs[i] - x_mean) * (y[i] - y_mean) for i in range(n))
-    den = sum((xs[i] - x_mean) ** 2 for i in range(n))
-    if den == 0:
+    x = list(range(n))
+    x_mean = _mean([float(i) for i in x])
+    y_mean = _mean(y)
+    num = sum((float(x[i]) - x_mean) * (y[i] - y_mean) for i in range(n))
+    den = sum((float(x[i]) - x_mean) ** 2 for i in range(n))
+    if den == 0.0:
         return 0.0
     return num / den
 
 
-def _stdev(vals: List[float]) -> float:
-    n = len(vals)
-    if n < 2:
-        return 0.0
-    m = sum(vals) / n
-    var = sum((v - m) ** 2 for v in vals) / (n - 1)
-    return var ** 0.5
+def _session_score(session: Dict[str, Any]) -> float:
+    rub = session.get("rubric", {}) or {}
+    difficulty = normalize_difficulty(session.get("difficulty"))
+    base = compute_weighted_score(
+        accuracy=float(rub.get("accuracy", 0.0)),
+        reasoning=float(rub.get("reasoning", 0.0)),
+        stability=float(rub.get("stability", 0.0)),
+        speed=float(rub.get("speed", 0.0)),
+        difficulty=difficulty,
+    )
+    return float(base)
 
 
-def _difficulty_weighted_average(scores: List[float], diffs: List[str]) -> float:
-    if not scores or not diffs or len(scores) != len(diffs):
-        return 0.0
-    num = 0.0
-    den = 0.0
-    for s, d in zip(scores, diffs):
+def compute_training_curve(
+    *,
+    sessions_path: Path = DEFAULT_SESSIONS_PATH,
+    output_path: Path = OUTPUT_LATEST,
+) -> Dict[str, Any]:
+    sessions = load_sessions(sessions_path)
+
+    valid = [s for s in sessions if bool(s.get("session_valid"))]
+
+    scores = [_session_score(s) for s in valid]
+    difficulties = [normalize_difficulty(s.get("difficulty")) for s in valid]
+
+    agi = round(_mean(scores), 2)
+    slope = round(_linear_slope(scores), 3)
+    volatility = round(_std(scores), 3)
+
+    # difficulty-weighted average (using score_multiplier)
+    weighted_scores = []
+    weights = []
+    for sc, d in zip(scores, difficulties):
         prof = get_profile(d)
-        w = prof.weight_scalar
-        num += s * w
-        den += w
-    return (num / den) if den > 0 else 0.0
+        w = float(prof.score_multiplier)
+        weighted_scores.append(sc * w)
+        weights.append(w)
 
-
-def compute_training_curve(max_sessions: int = 50, only_gated: bool = False) -> Dict[str, Any]:
-    sessions = load_sessions()
-
-    # Filter
-    usable: List[Dict[str, Any]] = []
-    for s in sessions:
-        if only_gated and s.get("gate_passed") is not True:
-            continue
-        usable.append(s)
-
-    usable = usable[-max_sessions:] if max_sessions > 0 else usable
-
-    scores: List[float] = []
-    diffs: List[str] = []
-    for s in usable:
-        scores.append(_safe_float(s.get("final_score"), 0.0))
-        diffs.append(normalize_difficulty(s.get("difficulty", "INTERMEDIATE")))
-
-    agi = sum(scores) / len(scores) if scores else 0.0
-    slope = _linear_slope(scores)
-    volatility = _stdev(scores)
-    dwa = _difficulty_weighted_average(scores, diffs)
+    dwa = 0.0
+    if weights and sum(weights) > 0:
+        dwa = round(sum(weighted_scores) / sum(weights), 2)
 
     curve = {
-        "version": 2,
-        "generated_at": _utc_now_iso(),
-        "total_sessions": len(sessions),
-        "used_sessions": len(usable),
-        "AGI": round(agi, 1),
-        "improvement_slope": round(slope, 2),
-        "volatility_index": round(volatility, 3),
-        "difficulty_weighted_average": round(dwa, 1),
-        "only_gated": bool(only_gated),
+        "version": 3,
+        "generated_at": _utc_now(),
+        "sessions_total": len(sessions),
+        "sessions_valid": len(valid),
+        # Keys your GUI expects:
+        "AGI": agi,
+        "improvement_slope": slope,
+        "difficulty_weighted_average": dwa,
+        "volatility_index": volatility,
     }
+
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+    output_path.write_text(json.dumps(curve, indent=2))
     return curve
 
 
-def write_training_curve_json(max_sessions: int = 50, only_gated: bool = False) -> Tuple[str, Dict[str, Any]]:
-    training_dir().mkdir(parents=True, exist_ok=True)
-    curve = compute_training_curve(max_sessions=max_sessions, only_gated=only_gated)
-
-    out = training_dir() / "training_curve_latest.json"
-    out.write_text(json.dumps(curve, indent=2))
-    return str(out), curve
-
-
-if __name__ == "__main__":
-    path, curve = write_training_curve_json()
+def main() -> int:
+    curve = compute_training_curve()
     print("Training curve written:")
-    print(f"  JSON: {path}")
-    print(f"  Total sessions: {curve['total_sessions']}")
+    print(f"  JSON: {OUTPUT_LATEST}")
+    print(f"  Total sessions: {curve['sessions_total']}")
+    print(f"  Valid sessions: {curve['sessions_valid']}")
     print(f"  AGI: {curve['AGI']}")
     print(f"  Improvement slope: {curve['improvement_slope']}")
     print(f"  Difficulty-weighted avg: {curve['difficulty_weighted_average']}")
     print(f"  Volatility index: {curve['volatility_index']}")
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
 
