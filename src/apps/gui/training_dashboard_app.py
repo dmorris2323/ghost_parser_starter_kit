@@ -1,144 +1,97 @@
 # src/apps/gui/training_dashboard_app.py
 from __future__ import annotations
 
-import sys
-from pathlib import Path
 import streamlit as st
 
-THIS_FILE = Path(__file__).resolve()
-REPO_ROOT = THIS_FILE.parents[3]
-SRC_DIR = REPO_ROOT / "src"
-if str(SRC_DIR) not in sys.path:
-    sys.path.insert(0, str(SRC_DIR))
+from training_session_store import load_sessions, append_session
+from training_feedback_store import load_latest_feedback
+from obasi_training_coach import build_obasi_training_coach_speech
 
-from gll_status_probe import probe_latest_status  # type: ignore
-from training_session_store import append_session, load_sessions  # type: ignore
-from training_curve_engine import compute_training_curve  # type: ignore
-from training_grading_weights import weights_as_dict  # type: ignore
-from training_validation_gate import summarize_gate, decide_training_gate  # type: ignore
-from obasi_training_coach import build_obasi_training_coach_speech  # type: ignore
+try:
+    from training_curve_engine import compute_training_curve
+except Exception:
+    compute_training_curve = None
 
 
-def _index(options: list[str], value: str) -> int:
+def _safe_float(x, default=0.0) -> float:
     try:
-        return options.index(value)
+        return float(x)
     except Exception:
-        return 0
+        return default
 
 
 def main() -> None:
     st.set_page_config(page_title="GLL Training Dashboard", layout="wide")
+
     st.title("GLL Training Dashboard")
-    st.caption("Difficulty → session log → gates → AGI/slope/volatility (live). Sessions count only when gated GREEN.")
+    st.caption("Sessions, progress curve, and next-step recommendations (read-only).")
 
-    st.sidebar.header("Session Controls")
-    trainee_name = st.sidebar.text_input("Trainee name", value="Ghost")
-    difficulty = st.sidebar.selectbox("Difficulty", ["BEGINNER", "INTERMEDIATE", "ADVERSARIAL"], index=1)
-    scenario_id = st.sidebar.text_input("Scenario ID", value="TRAINING_RUN")
-    pattern_id = st.sidebar.text_input("Pattern ID (optional)", value="")
-    pattern_seed = st.sidebar.number_input("Pattern seed (optional)", value=0, step=1)
+    sessions = load_sessions()
+    feedback = load_latest_feedback()
 
-    # --- Auto-probe current system status ---
-    probe = probe_latest_status()
-    sis_default = probe.get("sis", "UNKNOWN")
-    sps_default = probe.get("sps", "UNKNOWN")
-    val_default = probe.get("validation", "UNKNOWN")
+    # Left: session capture
+    left, right = st.columns([1, 2], gap="large")
 
-    st.sidebar.subheader("Gate Inputs (auto-probed; you can override)")
-    sis_opts = ["GREEN", "YELLOW", "RED", "UNKNOWN"]
-    sps_opts = ["GREEN", "YELLOW", "RED", "UNKNOWN"]
-    val_opts = ["PASS", "WARN", "FAIL", "UNKNOWN"]
+    with left:
+        st.subheader("Log a Training Session")
+        trainee = st.text_input("Trainee name", value="Ghost")
+        difficulty = st.selectbox("Difficulty", ["BEGINNER", "INTERMEDIATE", "ADVERSARIAL"], index=1)
+        score = st.number_input("Score", value=75.0, step=1.0)
+        max_score = st.number_input("Max score", value=100.0, step=1.0)
+        notes = st.text_area("Notes", value="", height=80)
 
-    sis_status = st.sidebar.selectbox("SIS status", sis_opts, index=_index(sis_opts, sis_default))
-    sps_status = st.sidebar.selectbox("SPS status", sps_opts, index=_index(sps_opts, sps_default))
-    validation_verdict = st.sidebar.selectbox("Validation verdict", val_opts, index=_index(val_opts, val_default))
-
-    st.sidebar.subheader("Rubric (0–100)")
-    accuracy = st.sidebar.slider("Accuracy", 0, 100, 80)
-    reasoning = st.sidebar.slider("Reasoning", 0, 100, 75)
-    stability = st.sidebar.slider("Stability", 0, 100, 80)
-    speed = st.sidebar.slider("Speed", 0, 100, 65)
-
-    prof = weights_as_dict(difficulty)
-    st.sidebar.markdown("### Difficulty profile")
-    st.sidebar.json(prof)
-
-    colA, colB = st.columns([1.2, 1])
-
-    with colA:
-        st.subheader("Log a Session")
-        clicked = st.button("✅ Log Session & Recompute Curve", use_container_width=True)
-
-        last_result = None
-        last_gate_summary = None
-
-        if clicked:
-            gate = decide_training_gate(sis_status=sis_status, sps_status=sps_status, validation_verdict=validation_verdict)
-            last_gate_summary = summarize_gate(gate)
-
-            last_result = append_session(
-                trainee_name=trainee_name,
+        if st.button("Append Session", type="primary"):
+            s = append_session(
+                trainee_name=trainee,
                 difficulty=difficulty,
-                rubric={"accuracy": accuracy, "reasoning": reasoning, "stability": stability, "speed": speed},
-                scenario_id=scenario_id,
-                pattern_id=(pattern_id.strip() or None),
-                pattern_seed=(int(pattern_seed) if pattern_seed else None),
-                sis_status=sis_status,
-                sps_status=sps_status,
-                validation_verdict=validation_verdict,
-                extra={"ui": "training_dashboard_app"},
+                score=_safe_float(score),
+                max_score=_safe_float(max_score, 100.0),
+                notes=notes,
             )
-            st.success(
-                f"Session stored. Total: {last_result['total_sessions']} | Valid: {last_result['valid_sessions']} "
-                f"| Store: {last_result['store_path']}"
-            )
-
-        curve = compute_training_curve()
-
-        m1, m2, m3, m4 = st.columns(4)
-        m1.metric("AGI (0–100)", curve["AGI"])
-        m2.metric("Improvement slope", curve["improvement_slope"])
-        m3.metric("Difficulty-weighted avg", curve["difficulty_weighted_average"])
-        m4.metric("Volatility index", curve["volatility_index"])
+            st.success("Session appended.")
+            st.json(s)
+            st.rerun()
 
         st.divider()
-        st.subheader("Obasi Coach Panel")
+        st.subheader("🧭 Next Training Recommendation")
+        st.json(feedback)
 
-        last_session = (last_result or {}).get("session", {})
-        coach_msg = build_obasi_training_coach_speech(
-            trainee_name=trainee_name,
-            difficulty=difficulty,
-            curve=curve,
-            last_session=last_session,
-            gate_summary=last_gate_summary,
+    # Right: metrics + sessions
+    with right:
+        st.subheader("Progress Metrics")
+
+        curve = {}
+        if compute_training_curve is not None:
+            try:
+                curve = compute_training_curve()
+            except Exception as e:
+                st.error(f"training_curve_engine failed: {e}")
+
+        c1, c2, c3, c4 = st.columns(4)
+        c1.metric("AGI", curve.get("AGI", 0.0))
+        c2.metric("Slope", curve.get("improvement_slope", 0.0))
+        c3.metric("Difficulty Avg", curve.get("difficulty_weighted_average", 0.0))
+        c4.metric("Volatility", curve.get("volatility_index", 0.0))
+
+        st.divider()
+
+        st.subheader("🦉 Obasi Coach")
+        msg = build_obasi_training_coach_speech(
+            trainee_name="Ghost",
+            difficulty=curve.get("latest_difficulty", "INTERMEDIATE"),
+            AGI=curve.get("AGI", 0.0),
+            improvement_slope=curve.get("improvement_slope", 0.0),
+            volatility_index=curve.get("volatility_index", 0.0),
         )
-        st.markdown(coach_msg)
+        st.text(msg)
 
-    with colB:
-        st.subheader("Recent Sessions")
-        sessions = load_sessions()
-        sessions = list(reversed(sessions))[:30]
-        if not sessions:
-            st.info("No sessions yet. Log one on the left.")
+        st.divider()
+        st.subheader("Sessions")
+        st.write(f"Total sessions: {len(sessions)}")
+        if sessions:
+            st.dataframe(sessions, use_container_width=True)
         else:
-            st.dataframe(
-                [
-                    {
-                        "time": s.get("created_at"),
-                        "difficulty": s.get("difficulty"),
-                        "scenario": s.get("scenario_id"),
-                        "valid": s.get("session_valid"),
-                        "reason": s.get("invalid_reason"),
-                        "weighted_score": s.get("weighted_score"),
-                        "sis": s.get("sis_status"),
-                        "sps": s.get("sps_status"),
-                        "val": s.get("validation_verdict"),
-                    }
-                    for s in sessions
-                ],
-                use_container_width=True,
-                height=560,
-            )
+            st.info("No sessions logged yet.")
 
 
 if __name__ == "__main__":

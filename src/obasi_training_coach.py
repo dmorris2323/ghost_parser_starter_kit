@@ -1,80 +1,61 @@
 # src/obasi_training_coach.py
 from __future__ import annotations
 
-from typing import Any, Dict, Optional
+from typing import Any, Dict
 
 
 def build_obasi_training_coach_speech(**payload: Any) -> str:
     """
-    Stable public contract:
-      - Accepts ANY keyword arguments (future-proof)
-      - Returns a STRING (never dict), so Streamlit can render without type errors
+    Stable, kwargs-based interface used by Streamlit training apps.
 
-    Expected (optional) fields:
-      trainee_name: str
-      difficulty: str
-      curve: dict with AGI / improvement_slope / volatility_index
-      last_session: dict with session_valid + invalid_reason
-      gate_summary: str
+    Always returns a STRING (never a dict) so the UI can render it safely.
+    Safe to call even with missing fields.
     """
-    trainee = str(payload.get("trainee_name") or "Operator").strip()
-    difficulty = str(payload.get("difficulty") or "INTERMEDIATE").upper().strip()
-
-    curve = payload.get("curve") or {}
-    agi = curve.get("AGI", 0.0)
-    slope = curve.get("improvement_slope", 0.0)
-    vol = curve.get("volatility_index", 0.0)
-
-    last_session = payload.get("last_session") or {}
-    valid = bool(last_session.get("session_valid", False))
-    invalid_reason = last_session.get("invalid_reason")
-
-    gate_summary = payload.get("gate_summary")
-
-    # Tone logic (simple, reliable)
-    if valid:
-        gate_line = "✅ Session counted toward AGI."
-    else:
-        gate_line = f"⛔ Session blocked (did not count). Reason: {invalid_reason or 'Gate failure/unknown'}"
-
-    # Coaching based on slope + volatility
-    if slope > 0.5:
-        trend = "Trend: improving. Keep pressure on."
-    elif slope < -0.5:
-        trend = "Trend: regressing. Slow down, tighten process, eliminate noise."
-    else:
-        trend = "Trend: flat. Increase reps or raise difficulty gradually."
-
-    if vol >= 15:
-        stability = "Stability: volatile. Standardize your workflow and reduce randomness."
-    elif vol >= 8:
-        stability = "Stability: moderate variance. Good — tighten a few weak points."
-    else:
-        stability = "Stability: controlled. You’re building consistency."
+    trainee = str(payload.get("trainee_name", "Operator")).strip() or "Operator"
+    difficulty = str(payload.get("difficulty", "INTERMEDIATE")).strip()
+    agi = payload.get("AGI", payload.get("agi", None))
+    slope = payload.get("improvement_slope", payload.get("slope", None))
+    vol = payload.get("volatility_index", payload.get("volatility", None))
 
     lines = []
-    lines.append(f"🦉 **OBASI TRAINING COACH**")
-    lines.append(f"- Trainee: {trainee}")
-    lines.append(f"- Difficulty: {difficulty}")
-    if gate_summary:
-        lines.append(f"- Gate summary: {gate_summary}")
-    lines.append("")
-    lines.append(f"**Current Metrics**")
-    lines.append(f"- AGI: {agi}")
-    lines.append(f"- Improvement slope: {slope}")
-    lines.append(f"- Volatility: {vol}")
-    lines.append("")
-    lines.append(gate_line)
-    lines.append(trend)
-    lines.append(stability)
+    lines.append(f"🦉 Obasi Coaching — {trainee}")
+    lines.append(f"Difficulty: {difficulty}")
 
-    # One actionable next step
-    if not valid:
-        lines.append("")
-        lines.append("**Next action:** Get SIS+SPS GREEN and validation PASS/WARN, then rerun the same scenario at the same difficulty to prove stability.")
-    else:
-        lines.append("")
-        lines.append("**Next action:** Run 1 more session at the same difficulty, then 1 step harder. We want controlled deltas, not chaos.")
+    if agi is not None:
+        lines.append(f"AGI: {agi}")
+    if slope is not None:
+        lines.append(f"Improvement slope: {slope}")
+    if vol is not None:
+        lines.append(f"Volatility: {vol}")
+
+    # guidance logic (simple, non-hype, actionable)
+    if slope is not None:
+        try:
+            s = float(slope)
+            if s < 0:
+                lines.append("Recommendation: slow down and stabilize. Run 2 baseline sessions before going harder.")
+            elif s == 0:
+                lines.append("Recommendation: you’re flat. Increase repetitions at same difficulty to build consistency.")
+            else:
+                lines.append("Recommendation: trend is positive. Step difficulty up ONE level, not two.")
+        except Exception:
+            lines.append("Recommendation: keep sessions consistent and watch slope/volatility stabilize.")
+
+    if vol is not None:
+        try:
+            v = float(vol)
+            if v >= 15:
+                lines.append("Volatility is high. Your score is bouncing—tighten your process (same pattern, same difficulty, 3 reps).")
+        except Exception:
+            pass
 
     return "\n".join(lines)
+
+
+# Optional legacy helper (if any older code imported this)
+def build_obasi_training_coach_payload(**payload: Any) -> Dict[str, Any]:
+    """
+    Back-compat helper: returns a dict payload if any older code expects it.
+    """
+    return {"message": build_obasi_training_coach_speech(**payload), "payload": payload}
 
