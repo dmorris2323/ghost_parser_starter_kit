@@ -1,6 +1,16 @@
 # src/apps/gui/training_dashboard_app.py
 from __future__ import annotations
 
+# --- Streamlit path bootstrap (REQUIRED) ---
+import sys
+from pathlib import Path
+
+REPO_ROOT = Path(__file__).resolve().parents[3]  # .../parser_starter_kit
+SRC_DIR = REPO_ROOT / "src"
+if str(SRC_DIR) not in sys.path:
+    sys.path.insert(0, str(SRC_DIR))
+# ------------------------------------------
+
 import streamlit as st
 
 from training_session_store import load_sessions, append_session
@@ -29,7 +39,6 @@ def main() -> None:
     sessions = load_sessions()
     feedback = load_latest_feedback()
 
-    # Left: session capture
     left, right = st.columns([1, 2], gap="large")
 
     with left:
@@ -56,7 +65,6 @@ def main() -> None:
         st.subheader("🧭 Next Training Recommendation")
         st.json(feedback)
 
-    # Right: metrics + sessions
     with right:
         st.subheader("Progress Metrics")
 
@@ -74,10 +82,10 @@ def main() -> None:
         c4.metric("Volatility", curve.get("volatility_index", 0.0))
 
         st.divider()
-
         st.subheader("🦉 Obasi Coach")
+
         msg = build_obasi_training_coach_speech(
-            trainee_name="Ghost",
+            trainee_name=trainee if "trainee" in locals() else "Ghost",
             difficulty=curve.get("latest_difficulty", "INTERMEDIATE"),
             AGI=curve.get("AGI", 0.0),
             improvement_slope=curve.get("improvement_slope", 0.0),

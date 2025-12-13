@@ -1,6 +1,16 @@
 # src/apps/gui/training_command_center_app.py
 from __future__ import annotations
 
+# --- Streamlit path bootstrap (REQUIRED) ---
+import sys
+from pathlib import Path
+
+REPO_ROOT = Path(__file__).resolve().parents[3]  # .../parser_starter_kit
+SRC_DIR = REPO_ROOT / "src"
+if str(SRC_DIR) not in sys.path:
+    sys.path.insert(0, str(SRC_DIR))
+# ------------------------------------------
+
 import streamlit as st
 
 from training_session_store import load_sessions
