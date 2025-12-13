@@ -3,114 +3,131 @@ from __future__ import annotations
 
 import sys
 from pathlib import Path
-
 import streamlit as st
 
-# Ensure src/ imports work when streamlit runs from repo root
-REPO_ROOT = Path(__file__).resolve().parents[3]
+# ---- Path bootstrap (Streamlit runs from repo root, but we make it bulletproof) ----
+THIS_FILE = Path(__file__).resolve()
+REPO_ROOT = THIS_FILE.parents[3]           # .../parser_starter_kit
 SRC_DIR = REPO_ROOT / "src"
 if str(SRC_DIR) not in sys.path:
     sys.path.insert(0, str(SRC_DIR))
 
-from difficulty_scaling_engine import list_difficulties, get_profile, normalize_difficulty
-from instructor_grading_weights import CATEGORIES, score_session, expectation_band, get_weights_for_difficulty
-from training_session_store import build_session, append_session, load_sessions
-from training_curve_engine import write_training_curve_json
-from obasi_training_coach import build_obasi_training_coach_speech
-
-
-def _metric_row(curve: dict) -> None:
-    c1, c2, c3, c4 = st.columns(4)
-    c1.metric("AGI (0–100)", curve.get("AGI", 0.0))
-    c2.metric("Slope", curve.get("improvement_slope", 0.0))
-    c3.metric("Difficulty Avg", curve.get("difficulty_weighted_average", 0.0))
-    c4.metric("Volatility", curve.get("volatility_index", 0.0))
+from training_session_store import append_session, load_sessions  # type: ignore
+from training_curve_engine import compute_training_curve          # type: ignore
+from training_grading_weights import weights_as_dict              # type: ignore
+from training_validation_gate import summarize_gate, decide_training_gate  # type: ignore
+from obasi_training_coach import build_obasi_training_coach_speech         # type: ignore
 
 
 def main() -> None:
     st.set_page_config(page_title="GLL Training Dashboard", layout="wide")
-    st.title("🎯 GLL Training Dashboard")
-    st.caption("Tracks sessions → rubric score → difficulty weighting → AGI / slope / volatility. Synthetic/training-safe.")
 
-    with st.sidebar:
-        st.header("Session Controls")
-        trainee_name = st.text_input("Trainee name", value="Ghost")
-        difficulty = st.selectbox("Difficulty", options=list_difficulties(), index=1)
-        scenario_id = st.text_input("Scenario ID", value="WARGAME_SYNTH")
-        pattern_id = st.text_input("Pattern ID (optional)", value="")
-        notes = st.text_area("Notes (optional)", value="", height=90)
+    st.title("GLL Training Dashboard")
+    st.caption("Difficulty → session log → gates → AGI/slope/volatility (live).")
+
+    # Sidebar controls
+    st.sidebar.header("Session Controls")
+    trainee_name = st.sidebar.text_input("Trainee name", value="Ghost")
+    difficulty = st.sidebar.selectbox("Difficulty", ["BEGINNER", "INTERMEDIATE", "ADVERSARIAL"], index=1)
+    scenario_id = st.sidebar.text_input("Scenario ID", value="TRAINING_RUN")
+    pattern_id = st.sidebar.text_input("Pattern ID (optional)", value="")
+    pattern_seed = st.sidebar.number_input("Pattern seed (optional)", value=0, step=1)
+
+    st.sidebar.subheader("Gate Inputs (manual for now)")
+    sis_status = st.sidebar.selectbox("SIS status", ["GREEN", "YELLOW", "RED", "UNKNOWN"], index=0)
+    sps_status = st.sidebar.selectbox("SPS status", ["GREEN", "YELLOW", "RED", "UNKNOWN"], index=0)
+    validation_verdict = st.sidebar.selectbox("Validation verdict", ["PASS", "WARN", "FAIL", "UNKNOWN"], index=0)
+
+    st.sidebar.subheader("Rubric (0–100)")
+    accuracy = st.sidebar.slider("Accuracy", 0, 100, 80)
+    reasoning = st.sidebar.slider("Reasoning", 0, 100, 75)
+    stability = st.sidebar.slider("Stability", 0, 100, 80)
+    speed = st.sidebar.slider("Speed", 0, 100, 65)
+
+    # Show difficulty profile
+    prof = weights_as_dict(difficulty)
+    st.sidebar.markdown("### Difficulty profile")
+    st.sidebar.json(prof)
+
+    colA, colB = st.columns([1.2, 1])
+
+    with colA:
+        st.subheader("Log a Session")
+        clicked = st.button("✅ Log Session & Recompute Curve", use_container_width=True)
+
+        last_result = None
+        last_gate_summary = None
+
+        if clicked:
+            gate = decide_training_gate(
+                sis_status=sis_status,
+                sps_status=sps_status,
+                validation_verdict=validation_verdict,
+            )
+            last_gate_summary = summarize_gate(gate)
+
+            last_result = append_session(
+                trainee_name=trainee_name,
+                difficulty=difficulty,
+                rubric={"accuracy": accuracy, "reasoning": reasoning, "stability": stability, "speed": speed},
+                scenario_id=scenario_id,
+                pattern_id=(pattern_id.strip() or None),
+                pattern_seed=(int(pattern_seed) if pattern_seed else None),
+                sis_status=sis_status,
+                sps_status=sps_status,
+                validation_verdict=validation_verdict,
+                extra={"ui": "training_dashboard_app"},
+            )
+            st.success(f"Session stored. Total sessions: {last_result['total_sessions']} | Valid: {last_result['valid_sessions']}")
+
+        # Always recompute curve (safe) so UI shows latest
+        curve = compute_training_curve()
+
+        # Metrics row (these keys are guaranteed by your Day 68 curve engine)
+        m1, m2, m3, m4 = st.columns(4)
+        m1.metric("AGI (0–100)", curve["AGI"])
+        m2.metric("Improvement slope", curve["improvement_slope"])
+        m3.metric("Difficulty-weighted avg", curve["difficulty_weighted_average"])
+        m4.metric("Volatility index", curve["volatility_index"])
 
         st.divider()
-        st.subheader("Instructor Rubric (0–100 each)")
-        weights = get_weights_for_difficulty(difficulty)
-        rubric = {}
-        for k in CATEGORIES:
-            label = f"{k.replace('_',' ').title()} (wt {weights[k]:.2f})"
-            rubric[k] = st.slider(label, 0, 100, 75)
+        st.subheader("Obasi Coach Panel")
 
-        band = expectation_band(difficulty)
-        st.divider()
-        st.subheader("Difficulty Expectations")
-        st.write(
-            {
-                "expected_min": band["expected_min"],
-                "expected_target": band["expected_target"],
-                "expected_max": band["expected_max"],
-                "volatility_tolerance": band["volatility_tolerance"],
-                "weight_scalar": band["weight_scalar"],
-            }
-        )
-
-        commit_now = st.button("✅ Log Session (counts immediately)")
-
-    # Current curve
-    curve_path, curve = write_training_curve_json(max_sessions=50, only_gated=False)
-    _metric_row(curve)
-
-    # Obasi guidance
-    coach_msg = build_obasi_training_coach_speech(
-        trainee_name=trainee_name,
-        difficulty=difficulty,
-        agi=curve.get("AGI"),
-        improvement_slope=curve.get("improvement_slope"),
-        volatility_index=curve.get("volatility_index"),
-        sis_status=None,
-        sps_status=None,
-        notes="Training dashboard active. Log a session to move the curve.",
-    )
-    st.text_area("🦉 Obasi Coach (live)", value=coach_msg, height=160)
-
-    st.divider()
-    st.subheader("Log a new session")
-
-    if commit_now:
-        final, breakdown = score_session(rubric, difficulty)
-        srec = build_session(
+        last_session = (last_result or {}).get("session", {})
+        coach_msg = build_obasi_training_coach_speech(
             trainee_name=trainee_name,
-            difficulty=normalize_difficulty(difficulty),
-            scenario_id=scenario_id,
-            final_score=final,
-            rubric_scores=breakdown,
-            pattern_id=(pattern_id.strip() or None),
-            notes=notes,
-            # gates can be wired later; for now, leave None/True as you choose
-            gate_passed=True,
+            difficulty=difficulty,
+            curve=curve,
+            last_session=last_session,
+            gate_summary=last_gate_summary,
         )
-        append_session(srec)
+        st.markdown(coach_msg)
 
-        # recompute curve immediately
-        curve_path, curve = write_training_curve_json(max_sessions=50, only_gated=False)
-
-        st.success(f"Session logged. Final score: {final:.1f}")
-        _metric_row(curve)
-
-    st.divider()
-    st.subheader("Recent sessions (latest 12)")
-    sessions = load_sessions()[-12:]
-    sessions = list(reversed(sessions))
-    st.json(sessions)
-
-    st.caption(f"Curve JSON written to: {curve_path}")
+    with colB:
+        st.subheader("Recent Sessions")
+        sessions = load_sessions()
+        sessions = list(reversed(sessions))[:20]
+        if not sessions:
+            st.info("No sessions yet. Log one on the left.")
+        else:
+            st.dataframe(
+                [
+                    {
+                        "time": s.get("created_at"),
+                        "difficulty": s.get("difficulty"),
+                        "scenario": s.get("scenario_id"),
+                        "valid": s.get("session_valid"),
+                        "reason": s.get("invalid_reason"),
+                        "accuracy": (s.get("rubric") or {}).get("accuracy"),
+                        "reasoning": (s.get("rubric") or {}).get("reasoning"),
+                        "stability": (s.get("rubric") or {}).get("stability"),
+                        "speed": (s.get("rubric") or {}).get("speed"),
+                    }
+                    for s in sessions
+                ],
+                use_container_width=True,
+                height=520,
+            )
 
 
 if __name__ == "__main__":

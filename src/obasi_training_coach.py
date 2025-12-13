@@ -1,85 +1,80 @@
 # src/obasi_training_coach.py
 from __future__ import annotations
 
-from typing import Any, Dict, List
-
-
-def _safe_num(v: Any, default: float = 0.0) -> float:
-    try:
-        if v is None:
-            return float(default)
-        return float(v)
-    except Exception:
-        return float(default)
+from typing import Any, Dict, Optional
 
 
 def build_obasi_training_coach_speech(**payload: Any) -> str:
     """
-    Stable coach interface.
+    Stable public contract:
+      - Accepts ANY keyword arguments (future-proof)
+      - Returns a STRING (never dict), so Streamlit can render without type errors
 
-    MUST:
-    - accept any kwargs (future-proof)
-    - return a STRING (never dict)
-    - never raise on missing keys
+    Expected (optional) fields:
+      trainee_name: str
+      difficulty: str
+      curve: dict with AGI / improvement_slope / volatility_index
+      last_session: dict with session_valid + invalid_reason
+      gate_summary: str
     """
-    trainee = str(payload.get("trainee_name") or payload.get("trainee") or "Operator")
-
-    difficulty = str(payload.get("difficulty") or payload.get("difficulty_level") or "INTERMEDIATE").upper()
+    trainee = str(payload.get("trainee_name") or "Operator").strip()
+    difficulty = str(payload.get("difficulty") or "INTERMEDIATE").upper().strip()
 
     curve = payload.get("curve") or {}
-    if not isinstance(curve, dict):
-        curve = {}
+    agi = curve.get("AGI", 0.0)
+    slope = curve.get("improvement_slope", 0.0)
+    vol = curve.get("volatility_index", 0.0)
 
-    agi = _safe_num(curve.get("AGI"), 0.0)
-    slope = _safe_num(curve.get("improvement_slope"), 0.0)
-    volatility = _safe_num(curve.get("volatility_index"), 0.0)
+    last_session = payload.get("last_session") or {}
+    valid = bool(last_session.get("session_valid", False))
+    invalid_reason = last_session.get("invalid_reason")
 
-    gate = payload.get("gate") or {}
-    if not isinstance(gate, dict):
-        gate = {}
-    gate_status = str(gate.get("status") or "UNKNOWN")
-    counted = bool(gate.get("counted_for_agi", False))
+    gate_summary = payload.get("gate_summary")
 
-    # Tone rules (simple + consistent)
-    if gate_status.upper() != "PASS":
-        headline = "⚠️ HOLD. Integrity gate is not GREEN."
-        action = "Run SIS/SPS checks, fix RED/AMBER items, then log training again."
+    # Tone logic (simple, reliable)
+    if valid:
+        gate_line = "✅ Session counted toward AGI."
     else:
-        headline = "🟢 GREEN. Training counts."
-        action = "Push one clean rep. Then increase difficulty only after stability holds."
+        gate_line = f"⛔ Session blocked (did not count). Reason: {invalid_reason or 'Gate failure/unknown'}"
 
-    # Difficulty coaching
-    if difficulty == "BEGINNER":
-        diff_msg = "Beginner mode: focus on clean fundamentals and correct callouts."
-    elif difficulty == "ADVERSARIAL":
-        diff_msg = "Adversarial mode: expect deception, cross-domain noise, and pressure."
+    # Coaching based on slope + volatility
+    if slope > 0.5:
+        trend = "Trend: improving. Keep pressure on."
+    elif slope < -0.5:
+        trend = "Trend: regressing. Slow down, tighten process, eliminate noise."
     else:
-        diff_msg = "Intermediate mode: balance speed with defensible tradecraft."
+        trend = "Trend: flat. Increase reps or raise difficulty gradually."
 
-    # Curve coaching
-    if slope < 0:
-        curve_msg = "Your slope is negative. That usually means inconsistency or difficulty spikes too soon."
-    elif slope > 0:
-        curve_msg = "Your slope is positive. That means consistency is compounding."
+    if vol >= 15:
+        stability = "Stability: volatile. Standardize your workflow and reduce randomness."
+    elif vol >= 8:
+        stability = "Stability: moderate variance. Good — tighten a few weak points."
     else:
-        curve_msg = "Your slope is flat. That’s fine—stability first, then deliberate increase."
+        stability = "Stability: controlled. You’re building consistency."
 
-    msg_lines: List[str] = []
-    msg_lines.append(f"🦉 Obasi Coach — {trainee}")
-    msg_lines.append(f"Difficulty: {difficulty}")
-    msg_lines.append("")
-    msg_lines.append(headline)
-    msg_lines.append(f"Gate: {gate_status} | Counted for AGI: {counted}")
-    msg_lines.append("")
-    msg_lines.append(diff_msg)
-    msg_lines.append(curve_msg)
-    msg_lines.append("")
-    msg_lines.append("Live Metrics:")
-    msg_lines.append(f"• AGI: {agi:.1f}")
-    msg_lines.append(f"• Improvement slope: {slope:.2f}")
-    msg_lines.append(f"• Volatility index: {volatility:.3f}")
-    msg_lines.append("")
-    msg_lines.append(f"Next action: {action}")
+    lines = []
+    lines.append(f"🦉 **OBASI TRAINING COACH**")
+    lines.append(f"- Trainee: {trainee}")
+    lines.append(f"- Difficulty: {difficulty}")
+    if gate_summary:
+        lines.append(f"- Gate summary: {gate_summary}")
+    lines.append("")
+    lines.append(f"**Current Metrics**")
+    lines.append(f"- AGI: {agi}")
+    lines.append(f"- Improvement slope: {slope}")
+    lines.append(f"- Volatility: {vol}")
+    lines.append("")
+    lines.append(gate_line)
+    lines.append(trend)
+    lines.append(stability)
 
-    return "\n".join(msg_lines)
+    # One actionable next step
+    if not valid:
+        lines.append("")
+        lines.append("**Next action:** Get SIS+SPS GREEN and validation PASS/WARN, then rerun the same scenario at the same difficulty to prove stability.")
+    else:
+        lines.append("")
+        lines.append("**Next action:** Run 1 more session at the same difficulty, then 1 step harder. We want controlled deltas, not chaos.")
+
+    return "\n".join(lines)
 
