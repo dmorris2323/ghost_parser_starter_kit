@@ -5,7 +5,7 @@ from __future__ import annotations
 import sys
 from pathlib import Path
 
-REPO_ROOT = Path(__file__).resolve().parents[3]  # .../parser_starter_kit
+REPO_ROOT = Path(__file__).resolve().parents[3]
 SRC_DIR = REPO_ROOT / "src"
 if str(SRC_DIR) not in sys.path:
     sys.path.insert(0, str(SRC_DIR))
@@ -17,6 +17,8 @@ from training_session_store import load_sessions
 from training_feedback_store import load_latest_feedback
 from obasi_training_coach import build_obasi_training_coach_speech
 
+from operator_certification_mode import compute_certification_status
+
 try:
     from training_curve_engine import compute_training_curve
 except Exception:
@@ -26,7 +28,7 @@ except Exception:
 def main() -> None:
     st.set_page_config(page_title="GLL Training Command Center", layout="wide")
     st.title("GLL Training Command Center")
-    st.caption("Commander view: curve, volatility, last sessions, and next-step recommendation.")
+    st.caption("Commander view: curve + volatility + certification readiness.")
 
     sessions = load_sessions()
     feedback = load_latest_feedback()
@@ -49,6 +51,17 @@ def main() -> None:
     with left:
         st.subheader("🧭 Next Training Recommendation")
         st.json(feedback)
+
+        st.subheader("🎖️ Certification Readiness")
+        target = st.selectbox("Target Difficulty", ["BEGINNER", "INTERMEDIATE", "ADVERSARIAL"], index=2)
+        streak = st.number_input("Required PASS streak", value=5, min_value=2, max_value=20, step=1)
+        cert = compute_certification_status(
+            sessions=sessions,
+            target_difficulty=target,
+            required_pass_streak=int(streak),
+            require_no_safety_flags=True,
+        )
+        st.json(cert)
 
         st.subheader("🦉 Obasi Coach")
         msg = build_obasi_training_coach_speech(
