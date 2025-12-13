@@ -2,63 +2,39 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from datetime import datetime, timezone
-from typing import Dict, Any, Optional
+from typing import Dict
 
 
 @dataclass
 class GateDecision:
-    allowed: bool
+    ok: bool
     reason: str
-    sis_status: str
-    sps_status: str
-    validation_verdict: str
-    decided_at: str
-
-    def to_dict(self) -> Dict[str, Any]:
-        return {
-            "allowed": self.allowed,
-            "reason": self.reason,
-            "sis_status": self.sis_status,
-            "sps_status": self.sps_status,
-            "validation_verdict": self.validation_verdict,
-            "decided_at": self.decided_at,
-        }
+    sis: str
+    sps: str
+    validation: str
 
 
-def _utc_now() -> str:
-    return datetime.now(timezone.utc).isoformat()
-
-
-def decide_training_gate(
-    *,
-    sis_status: Optional[str],
-    sps_status: Optional[str],
-    validation_verdict: Optional[str],
-) -> GateDecision:
-    """
-    Rule set (simple + strict):
-      - SIS must be GREEN
-      - SPS must be GREEN
-      - validation verdict must be PASS or WARN
-    Any missing status => NOT allowed (fail closed).
-    """
-    sis = (sis_status or "UNKNOWN").strip().upper()
-    sps = (sps_status or "UNKNOWN").strip().upper()
-    vv = (validation_verdict or "UNKNOWN").strip().upper()
+def decide_training_gate(sis_status: str, sps_status: str, validation_verdict: str) -> GateDecision:
+    sis = (sis_status or "UNKNOWN").upper().strip()
+    sps = (sps_status or "UNKNOWN").upper().strip()
+    val = (validation_verdict or "UNKNOWN").upper().strip()
 
     if sis != "GREEN":
-        return GateDecision(False, f"SIS not GREEN (got {sis})", sis, sps, vv, _utc_now())
+        return GateDecision(False, f"SIS not GREEN ({sis})", sis, sps, val)
     if sps != "GREEN":
-        return GateDecision(False, f"SPS not GREEN (got {sps})", sis, sps, vv, _utc_now())
-    if vv not in ("PASS", "WARN"):
-        return GateDecision(False, f"Validation verdict not PASS/WARN (got {vv})", sis, sps, vv, _utc_now())
+        return GateDecision(False, f"SPS not GREEN ({sps})", sis, sps, val)
 
-    return GateDecision(True, "Session accepted (gates satisfied).", sis, sps, vv, _utc_now())
+    # Validation can be PASS or WARN. FAIL blocks.
+    if val not in {"PASS", "WARN"}:
+        return GateDecision(False, f"Validation not PASS/WARN ({val})", sis, sps, val)
+
+    return GateDecision(True, "All gates GREEN; validation PASS/WARN.", sis, sps, val)
 
 
-def summarize_gate(gate: GateDecision) -> str:
-    if gate.allowed:
-        return f"✅ ALLOWED — {gate.reason} | SIS={gate.sis_status} SPS={gate.sps_status} VALID={gate.validation_verdict}"
-    return f"⛔ BLOCKED — {gate.reason} | SIS={gate.sis_status} SPS={gate.sps_status} VALID={gate.validation_verdict}"
+def summarize_gate(g: GateDecision) -> str:
+    return f"{'GREEN' if g.ok else 'BLOCKED'} | SIS={g.sis} SPS={g.sps} VAL={g.validation} | {g.reason}"
+
+
+def gate_to_dict(g: GateDecision) -> Dict[str, str]:
+    return {"ok": str(g.ok), "reason": g.reason, "sis": g.sis, "sps": g.sps, "validation": g.validation}
 

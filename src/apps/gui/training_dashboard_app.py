@@ -5,27 +5,32 @@ import sys
 from pathlib import Path
 import streamlit as st
 
-# ---- Path bootstrap (Streamlit runs from repo root, but we make it bulletproof) ----
 THIS_FILE = Path(__file__).resolve()
-REPO_ROOT = THIS_FILE.parents[3]           # .../parser_starter_kit
+REPO_ROOT = THIS_FILE.parents[3]
 SRC_DIR = REPO_ROOT / "src"
 if str(SRC_DIR) not in sys.path:
     sys.path.insert(0, str(SRC_DIR))
 
+from gll_status_probe import probe_latest_status  # type: ignore
 from training_session_store import append_session, load_sessions  # type: ignore
-from training_curve_engine import compute_training_curve          # type: ignore
-from training_grading_weights import weights_as_dict              # type: ignore
+from training_curve_engine import compute_training_curve  # type: ignore
+from training_grading_weights import weights_as_dict  # type: ignore
 from training_validation_gate import summarize_gate, decide_training_gate  # type: ignore
-from obasi_training_coach import build_obasi_training_coach_speech         # type: ignore
+from obasi_training_coach import build_obasi_training_coach_speech  # type: ignore
+
+
+def _index(options: list[str], value: str) -> int:
+    try:
+        return options.index(value)
+    except Exception:
+        return 0
 
 
 def main() -> None:
     st.set_page_config(page_title="GLL Training Dashboard", layout="wide")
-
     st.title("GLL Training Dashboard")
-    st.caption("Difficulty → session log → gates → AGI/slope/volatility (live).")
+    st.caption("Difficulty → session log → gates → AGI/slope/volatility (live). Sessions count only when gated GREEN.")
 
-    # Sidebar controls
     st.sidebar.header("Session Controls")
     trainee_name = st.sidebar.text_input("Trainee name", value="Ghost")
     difficulty = st.sidebar.selectbox("Difficulty", ["BEGINNER", "INTERMEDIATE", "ADVERSARIAL"], index=1)
@@ -33,10 +38,20 @@ def main() -> None:
     pattern_id = st.sidebar.text_input("Pattern ID (optional)", value="")
     pattern_seed = st.sidebar.number_input("Pattern seed (optional)", value=0, step=1)
 
-    st.sidebar.subheader("Gate Inputs (manual for now)")
-    sis_status = st.sidebar.selectbox("SIS status", ["GREEN", "YELLOW", "RED", "UNKNOWN"], index=0)
-    sps_status = st.sidebar.selectbox("SPS status", ["GREEN", "YELLOW", "RED", "UNKNOWN"], index=0)
-    validation_verdict = st.sidebar.selectbox("Validation verdict", ["PASS", "WARN", "FAIL", "UNKNOWN"], index=0)
+    # --- Auto-probe current system status ---
+    probe = probe_latest_status()
+    sis_default = probe.get("sis", "UNKNOWN")
+    sps_default = probe.get("sps", "UNKNOWN")
+    val_default = probe.get("validation", "UNKNOWN")
+
+    st.sidebar.subheader("Gate Inputs (auto-probed; you can override)")
+    sis_opts = ["GREEN", "YELLOW", "RED", "UNKNOWN"]
+    sps_opts = ["GREEN", "YELLOW", "RED", "UNKNOWN"]
+    val_opts = ["PASS", "WARN", "FAIL", "UNKNOWN"]
+
+    sis_status = st.sidebar.selectbox("SIS status", sis_opts, index=_index(sis_opts, sis_default))
+    sps_status = st.sidebar.selectbox("SPS status", sps_opts, index=_index(sps_opts, sps_default))
+    validation_verdict = st.sidebar.selectbox("Validation verdict", val_opts, index=_index(val_opts, val_default))
 
     st.sidebar.subheader("Rubric (0–100)")
     accuracy = st.sidebar.slider("Accuracy", 0, 100, 80)
@@ -44,7 +59,6 @@ def main() -> None:
     stability = st.sidebar.slider("Stability", 0, 100, 80)
     speed = st.sidebar.slider("Speed", 0, 100, 65)
 
-    # Show difficulty profile
     prof = weights_as_dict(difficulty)
     st.sidebar.markdown("### Difficulty profile")
     st.sidebar.json(prof)
@@ -59,11 +73,7 @@ def main() -> None:
         last_gate_summary = None
 
         if clicked:
-            gate = decide_training_gate(
-                sis_status=sis_status,
-                sps_status=sps_status,
-                validation_verdict=validation_verdict,
-            )
+            gate = decide_training_gate(sis_status=sis_status, sps_status=sps_status, validation_verdict=validation_verdict)
             last_gate_summary = summarize_gate(gate)
 
             last_result = append_session(
@@ -78,12 +88,13 @@ def main() -> None:
                 validation_verdict=validation_verdict,
                 extra={"ui": "training_dashboard_app"},
             )
-            st.success(f"Session stored. Total sessions: {last_result['total_sessions']} | Valid: {last_result['valid_sessions']}")
+            st.success(
+                f"Session stored. Total: {last_result['total_sessions']} | Valid: {last_result['valid_sessions']} "
+                f"| Store: {last_result['store_path']}"
+            )
 
-        # Always recompute curve (safe) so UI shows latest
         curve = compute_training_curve()
 
-        # Metrics row (these keys are guaranteed by your Day 68 curve engine)
         m1, m2, m3, m4 = st.columns(4)
         m1.metric("AGI (0–100)", curve["AGI"])
         m2.metric("Improvement slope", curve["improvement_slope"])
@@ -106,7 +117,7 @@ def main() -> None:
     with colB:
         st.subheader("Recent Sessions")
         sessions = load_sessions()
-        sessions = list(reversed(sessions))[:20]
+        sessions = list(reversed(sessions))[:30]
         if not sessions:
             st.info("No sessions yet. Log one on the left.")
         else:
@@ -118,15 +129,15 @@ def main() -> None:
                         "scenario": s.get("scenario_id"),
                         "valid": s.get("session_valid"),
                         "reason": s.get("invalid_reason"),
-                        "accuracy": (s.get("rubric") or {}).get("accuracy"),
-                        "reasoning": (s.get("rubric") or {}).get("reasoning"),
-                        "stability": (s.get("rubric") or {}).get("stability"),
-                        "speed": (s.get("rubric") or {}).get("speed"),
+                        "weighted_score": s.get("weighted_score"),
+                        "sis": s.get("sis_status"),
+                        "sps": s.get("sps_status"),
+                        "val": s.get("validation_verdict"),
                     }
                     for s in sessions
                 ],
                 use_container_width=True,
-                height=520,
+                height=560,
             )
 
 
