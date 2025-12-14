@@ -2541,3 +2541,103 @@ Day 68 — Synthetic Validation (SUCCESS)
 - Verdict PASSED under ADVERSARIAL with bounded stress, proving the harness can measure “controlled chaos” instead of pegging risk at 100.
 - Real module hooks successfully discovered fusion_trust.compute_trust and operator_safety_layer.compute_osl dynamically (resilient API discovery).
 - Next hardening: add crisis_mode_flag.read_crisis_mode() stable API so validation + GUI can always read crisis status without import/name mismatch.
+Day 68 — 20× Hardening Block: System Integrity + SPS
+
+- Added System Integrity Sentinel (SIS): src/system_integrity_sentinel.py
+  • Verifies critical GLL modules import cleanly
+  • Best-effort checks for expected functions (tolerant during refactors)
+  • Confirms core docs/ directories are writable
+  • Tracks SHA256 hashes for critical files and detects drift
+  • Outputs:
+    - src/docs/integrity/system_integrity_sentinel.json
+    - src/docs/integrity/system_integrity_sentinel.txt
+    - src/docs/integrity/baseline_hashes.json (first run baseline)
+
+- Added SPS Mutation Guard: src/sps_mutation_guard.py
+  • Filesystem drift scanner (allowlist roots, ignores noise)
+  • Detects added/removed/changed tracked files
+  • Verifies presence of critical system files
+  • Outputs:
+    - src/docs/integrity/sps_mutation_guard.json
+    - src/docs/integrity/sps_mutation_guard.txt
+    - src/docs/integrity/mutation_guard_baseline.json
+
+Purpose:
+- Prevent silent regressions while we accelerate training/validation/scenario features.
+- Adds “platform controls” expected by military buyers, SBIR reviewers, and investors.
+Day 68 — 20× Gates Wiring: SIS + SPS into Training + Validation
+
+- Added run-gate orchestrator:
+  • src/gll_run_gates.py
+  • Runs SIS + SPS for PRE and POST gates
+  • Writes gate reports to docs/integrity/run_gate_* and blocks PRE on FAIL
+
+- Training is now gated:
+  • src/training_session_store.py now runs:
+      PRE gate (blocks on FAIL)
+      writes docs/training/training_sessions.json
+      POST gate (logs drift)
+  • This prevents silent regressions from polluting training history.
+
+- Validation is now gated:
+  • src/fusion_validation_harness.py runs:
+      PRE gate (blocks on FAIL)
+      baseline synthetic bundle -> metrics
+      optional pattern injection -> injected metrics
+      delta vs baseline
+      POST gate (logs drift)
+  • Reports written to docs/validation/fusion_validation_report(.json/.txt)
+
+Value:
+- Converts GLL into a controlled, auditable platform (military/SBIR-grade behavior).
+- Stops quiet breakage while we accelerate difficulty, scenarios, and instructor tooling.
+Day 68 — 20× Training UI Stabilization (Obasi Coach Interface)
+
+- Standardized Obasi coach contract:
+  • build_obasi_training_coach_speech(...) now always returns STRING
+  • Accepts trainee_name/difficulty/AGI/slope/volatility/weighted_avg + **kwargs for forward compatibility
+  • Prevents Streamlit crashes from signature drift
+
+- Duplicated coach module for Streamlit import stability:
+  • src/apps/gui/obasi_training_coach.py
+  • apps/gui/obasi_training_coach.py
+  (kept identical so either launch path works)
+
+- Hardened Training Dashboard:
+  • src/apps/gui/training_dashboard_app.py
+  • Safe sys.path handling for src imports
+  • Loads sessions from training_session_store (SIS+SPS gated)
+  • Computes curve via training_curve_engine if available, else safe fallback
+  • Obasi panel never crashes even if coach returns non-string (forced to string)
+Day 68 — 20× Difficulty Control Pipeline
+
+- Added Difficulty Control Engine as single source of truth
+- Difficulty now propagates across:
+  • training session log
+  • scenario generation
+  • instructor grading expectations
+- Training stress is intentional, measurable, and comparable
+- Foundation laid for adaptive difficulty and instructor-controlled progression
+Day 68 — 30× Training System Control Stack (Lock → Adapt → Command Center)
+
+- Instructor Lock implemented (training_config):
+  • Central config: src/config/training_config.json
+  • Enforces locked difficulty for trainees
+  • Instructor can toggle lock + set locked difficulty + enable auto difficulty
+
+- Adaptive Difficulty Engine implemented:
+  • Deterministic recommend_difficulty() based on last sessions
+  • Promotion requires strong slope + controlled volatility
+  • Demotion triggers on sustained regression
+  • Prevents “random difficulty chaos” and supports military-style progression
+
+- Training Dashboard stabilized + upgraded:
+  • Difficulty enforcement via effective_difficulty()
+  • Instructor mode can apply recommendation with one click
+  • Session logs store difficulty_source (manual/locked)
+
+- Command Center Training Panel added:
+  • Live policy controls + metrics tile view
+  • Shows recommendation + reasoning
+  • Shows Obasi coaching output + sessions table
+Day 71 (Spectral Owl Hardening): added crisis_mode_flag stable API + owl_degraded_mode deterministic contract + owl_fallback_router routing plan + owl_memory_consistency checker artifacts.
