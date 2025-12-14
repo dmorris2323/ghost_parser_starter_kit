@@ -62,6 +62,9 @@ Menu options:
  67) Generate Synthetic Fusion Signals
  68) Inject Synthetic Pattern (War Room Mode)
  69) Difficulty Profile & Recommendation
+ 72) Degraded Fusion Validation (Resilience Test)MODULE 2 — CLI ENTRY (NO UI, NO DRAMA)
+ 73) Degraded Fusion Validation (SAFE)
+
 """
 
 import sys
@@ -619,6 +622,20 @@ def main() -> int:
             print(f"  Volatility: {rec['volatility']:.3f}")
             print(f"  Sessions: {rec['session_count']}")
             print(f"  Rationale: {rec['rationale']}")
+        elif choice == "72":
+            from fusion_degraded_validation import run_degraded_fusion_test
+            import json
+
+            print("Running Degraded Fusion Validation...")
+            result = run_degraded_fusion_test(difficulty="INTERMEDIATE")
+            print(json.dumps(result, indent=2))
+        elif choice == "73":
+            from fusion_degraded_validation import run_degraded_fusion_test
+            import json
+
+            print("Running Degraded Fusion Validation...")
+            result = run_degraded_fusion_test(difficulty="INTERMEDIATE")
+            print(json.dumps(result, indent=2))
 
 
         else:
