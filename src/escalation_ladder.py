@@ -1,233 +1,307 @@
-#!/usr/bin/env python3
 """
 escalation_ladder.py
 
-Day 66 – Ghost Lantern Labs
+Day 73 — Module 1: Nuclear/AFTAC Escalation Ladder Hardening
 
-Builds a simple, rule-based Nuclear Escalation Ladder assessment using
-signals derived from existing artifacts:
+Purpose
+- Provide a conservative, commander-trust escalation ladder that behaves
+  correctly under ambiguity, partial data, and sensor disagreement.
 
-- docs/nuclear_status_summary.json (primary)
-- docs/nuclear_decision_card.txt (fallback)
+Key properties
+- Monotonic escalation (no jumping to high levels without evidence)
+- Minimum evidence gates per rung
+- Explicit blocking factors explaining why escalation stopped
+- Safe defaults (missing data lowers confidence / blocks escalation)
 
-Outputs:
-- docs/escalation_ladder.json
-- docs/escalation_ladder.txt
-
-Ladder Levels:
-- STEADY
-- TENSE
-- BRINK
-- FLASHPOINT
-
-This is deliberately conservative and explainable: no ML, just clear
-rule-based thresholds based on crisis mode, fusion trust, and heat.
+This module is SAFE: it uses abstracted indicator scores, not real telemetry.
 """
 
-import json
-import os
-from datetime import datetime
-from typing import Any, Dict, Optional, Tuple
+from __future__ import annotations
 
-BASE_DIR = os.path.dirname(__file__)
-DOCS_DIR = os.path.join(BASE_DIR, "docs")
+from dataclasses import dataclass
+from typing import Any, Dict, List, Optional, Tuple
 
 
-def _safe_read_json(path: str) -> Optional[Any]:
-    try:
-        with open(path, "r", encoding="utf-8") as f:
-            return json.load(f)
-    except Exception:
-        return None
+# -----------------------------
+# Ladder definition
+# -----------------------------
+
+@dataclass(frozen=True)
+class LadderRung:
+    level: int
+    label: str
+    min_total_evidence: float
+    min_domains: int
+    min_reliability_avg: float
+    allow_single_domain: bool = False
 
 
-def _safe_read_text(path: str) -> Optional[str]:
-    try:
-        with open(path, "r", encoding="utf-8") as f:
-            return f.read()
-    except Exception:
-        return None
+DEFAULT_LADDER: List[LadderRung] = [
+    LadderRung(level=0, label="MONITOR",  min_total_evidence=0.0,  min_domains=0, min_reliability_avg=0.0),
+    LadderRung(level=1, label="WATCH",    min_total_evidence=25.0, min_domains=1, min_reliability_avg=50.0, allow_single_domain=True),
+    LadderRung(level=2, label="ELEVATED", min_total_evidence=45.0, min_domains=2, min_reliability_avg=60.0),
+    LadderRung(level=3, label="SERIOUS",  min_total_evidence=65.0, min_domains=2, min_reliability_avg=70.0),
+    LadderRung(level=4, label="CRITICAL", min_total_evidence=80.0, min_domains=3, min_reliability_avg=75.0),
+]
 
 
-def _parse_numeric_from_line(line: Optional[str]) -> Optional[float]:
-    if not line:
-        return None
-    # Grab the first number-like token we find.
-    import re
+# -----------------------------
+# Public API
+# -----------------------------
 
-    matches = re.findall(r"[-+]?\d+(\.\d+)?", line)
-    if not matches:
-        return None
-    try:
-        # Take the first full match
-        num_str = re.findall(r"[-+]?\d+(?:\.\d+)?", line)[0]
-        return float(num_str)
-    except Exception:
-        return None
-
-
-def _infer_crisis_and_scores(
-    status_summary: Optional[Dict[str, Any]],
-    decision_card_text: Optional[str],
-) -> Tuple[bool, Optional[float], Optional[float]]:
+def assess_escalation(
+    *,
+    indicators: Dict[str, Any],
+    ladder: Optional[List[LadderRung]] = None,
+    prior_level: int = 0,
+) -> Dict[str, Any]:
     """
-    Returns:
-        crisis_on (bool)
-        fusion_trust_score (0-100, optional)
-        fusion_heat_index (0-100+, optional)
+    Compute an escalation level conservatively based on abstract indicators.
+
+    indicators: dict keyed by domain name (e.g., "EMS", "CYBER", "COMMS", "SEISMIC", "RADIATION", "OPTICAL")
+      Each value may be:
+        - number score 0-100
+        - dict with:
+            score: 0-100
+            reliability: 0-100
+            status: optional str
+            notes: optional str
+
+    prior_level:
+      - used to enforce monotonic escalation (never drop below prior in this call)
+      - used to prevent sudden multi-step escalation without evidence
+
+    Returns a dict safe to embed in decision cards / briefs:
+      {
+        "escalation_level": int,
+        "escalation_label": str,
+        "blocking_factors": [..],
+        "evidence": { ... },
+        "confidence_floor_applied": bool
+      }
     """
-    crisis_on = False
-    fusion_trust_score: Optional[float] = None
-    fusion_heat_index: Optional[float] = None
+    ladder = ladder or DEFAULT_LADDER
 
-    # Try structured signals from status summary first
-    if status_summary:
-        signals = status_summary.get("nuclear_signals", {})
-        crisis_line = signals.get("crisis_mode_line")
-        trust_line = signals.get("fusion_trust_line")
-        heat_line = signals.get("fusion_heat_index_line")
+    # Normalize indicator inputs
+    norm = _normalize_indicators(indicators)
+    evidence = _compute_evidence(norm)
 
-        if crisis_line and "on" in crisis_line.lower():
-            crisis_on = True
+    # Determine highest rung we can justify
+    chosen = ladder[0]
+    blocking: List[str] = []
+    confidence_floor_applied = False
 
-        trust_val = _parse_numeric_from_line(trust_line)
-        heat_val = _parse_numeric_from_line(heat_line)
+    # We only allow moving up by at most +1 rung per evaluation unless
+    # there is strong multi-domain evidence (a "step-up proof").
+    step_up_proof = _step_up_proof(evidence)
 
-        if trust_val is not None:
-            fusion_trust_score = trust_val
-        if heat_val is not None:
-            fusion_heat_index = heat_val
+    for rung in ladder[1:]:
+        ok, reasons = _meets_rung(rung, evidence)
+        if not ok:
+            # stop at last chosen rung
+            blocking = reasons
+            break
 
-    # Fallback: parse directly from decision card text if necessary
-    if decision_card_text:
-        lines = decision_card_text.splitlines()
-        for line in lines:
-            lower = line.lower()
-            if "crisis mode" in lower and "on" in lower:
-                crisis_on = True
-            if fusion_trust_score is None and "fusion trust" in lower:
-                fusion_trust_score = _parse_numeric_from_line(line)
-            if fusion_heat_index is None and (
-                "fusion heat" in lower or "heat index" in lower
-            ):
-                fusion_heat_index = _parse_numeric_from_line(line)
+        # enforce monotonicity and anti-jump
+        if rung.level > prior_level + 1 and not step_up_proof:
+            blocking = [
+                f"Anti-jump rule: prior_level={prior_level} blocks escalation to {rung.label} without multi-domain proof.",
+                "Add corroboration across domains or improve reliability before escalating multiple rungs at once.",
+            ]
+            confidence_floor_applied = True
+            break
 
-    return crisis_on, fusion_trust_score, fusion_heat_index
+        chosen = rung
+        blocking = []
 
+    # Never drop below prior_level in this single assessment (monotonic)
+    if chosen.level < prior_level:
+        chosen = _get_rung_by_level(ladder, prior_level) or chosen
+        confidence_floor_applied = True
 
-def _determine_level(
-    crisis_on: bool,
-    trust: Optional[float],
-    heat: Optional[float],
-) -> Tuple[str, str]:
-    """
-    Returns (level, rationale)
-    """
-
-    # Defaults if we have almost no information
-    if trust is None and heat is None:
-        if crisis_on:
-            return (
-                "TENSE",
-                "Crisis mode is ON, but trust/heat scores are unavailable. Defaulting to TENSE.",
-            )
-        return (
-            "STEADY",
-            "No crisis flag and no quantitative scores available. Defaulting to STEADY.",
-        )
-
-    # Normalize defaults
-    t = trust if trust is not None else 70.0
-    h = heat if heat is not None else 50.0
-
-    # FLASHPOINT – worst conditions
-    if crisis_on and (t < 40 or h >= 85):
-        return (
-            "FLASHPOINT",
-            f"Crisis ON with low fusion trust ({t:.1f}) and/or high heat ({h:.1f}).",
-        )
-
-    # BRINK – dangerous but not fully escalated
-    if crisis_on and (40 <= t < 60 or 70 <= h < 85):
-        return (
-            "BRINK",
-            f"Crisis ON with mid-range trust ({t:.1f}) and elevated heat ({h:.1f}).",
-        )
-
-    # TENSE – elevated concern but not brinkmanship
-    if (not crisis_on and (t < 60 or h >= 60)) or (crisis_on and (t >= 60 and h < 70)):
-        return (
-            "TENSE",
-            f"Crisis flag = {crisis_on}, trust = {t:.1f}, heat = {h:.1f}. Elevated concern.",
-        )
-
-    # STEADY – conditions relatively calm
-    return (
-        "STEADY",
-        f"Crisis flag = {crisis_on}, trust = {t:.1f}, heat = {h:.1f}. Conditions appear stable.",
-    )
-
-
-def build_escalation_ladder() -> Dict[str, Any]:
-    os.makedirs(DOCS_DIR, exist_ok=True)
-
-    status_path = os.path.join(DOCS_DIR, "nuclear_status_summary.json")
-    decision_card_path = os.path.join(DOCS_DIR, "nuclear_decision_card.txt")
-
-    status_summary = _safe_read_json(status_path)
-    decision_card_text = _safe_read_text(decision_card_path)
-
-    crisis_on, trust, heat = _infer_crisis_and_scores(status_summary, decision_card_text)
-    level, rationale = _determine_level(crisis_on, trust, heat)
-
-    result: Dict[str, Any] = {
-        "generated_at": datetime.utcnow().isoformat() + "Z",
-        "crisis_mode_on": crisis_on,
-        "fusion_trust_score": trust,
-        "fusion_heat_index": heat,
-        "escalation_level": level,
-        "rationale": rationale,
-        "inputs": {
-            "nuclear_status_summary_present": status_summary is not None,
-            "nuclear_decision_card_present": decision_card_text is not None,
-        },
+    return {
+        "escalation_level": chosen.level,
+        "escalation_label": chosen.label,
+        "blocking_factors": blocking,
+        "evidence": evidence,
+        "confidence_floor_applied": bool(confidence_floor_applied),
     }
 
-    json_path = os.path.join(DOCS_DIR, "escalation_ladder.json")
-    txt_path = os.path.join(DOCS_DIR, "escalation_ladder.txt")
 
-    with open(json_path, "w", encoding="utf-8") as f_json:
-        json.dump(result, f_json, indent=2, sort_keys=True)
+# -----------------------------
+# Internal helpers
+# -----------------------------
 
-    lines = []
-    lines.append("GLL Nuclear Escalation Ladder")
-    lines.append("================================")
-    lines.append(f"Generated at (UTC): {result['generated_at']}")
-    lines.append("")
-    lines.append(f"Escalation Level: {level}")
-    lines.append(f"Rationale: {rationale}")
-    lines.append("")
-    lines.append(f"Crisis Mode ON: {crisis_on}")
-    lines.append(f"Fusion Trust Score: {trust if trust is not None else 'UNKNOWN'}")
-    lines.append(f"Fusion Heat Index: {heat if heat is not None else 'UNKNOWN'}")
-    lines.append("")
-    lines.append("Inputs:")
-    lines.append(
-        f"  Nuclear Status Summary present: {result['inputs']['nuclear_status_summary_present']}"
-    )
-    lines.append(
-        f"  Nuclear Decision Card present: {result['inputs']['nuclear_decision_card_present']}"
-    )
+def _normalize_indicators(indicators: Dict[str, Any]) -> Dict[str, Dict[str, Any]]:
+    norm: Dict[str, Dict[str, Any]] = {}
+    for domain, raw in (indicators or {}).items():
+        d = str(domain).strip().upper()
 
-    with open(txt_path, "w", encoding="utf-8") as f_txt:
-        f_txt.write("\n".join(lines))
+        score = 0.0
+        reliability = 0.0
+        status = "UNKNOWN"
+        notes = ""
 
-    return result
+        if isinstance(raw, (int, float)):
+            score = float(raw)
+            reliability = 70.0  # conservative default if only a score is given
+            status = "OK"
+        elif isinstance(raw, dict):
+            score = float(raw.get("score", raw.get("value", 0.0)) or 0.0)
+            reliability = float(raw.get("reliability", 0.0) or 0.0)
+            status = str(raw.get("status", "OK"))
+            notes = str(raw.get("notes", "")) if raw.get("notes") is not None else ""
+        else:
+            # unknown types -> treat as missing
+            score = 0.0
+            reliability = 0.0
+            status = "MISSING"
+
+        # clamp
+        score = max(0.0, min(100.0, score))
+        reliability = max(0.0, min(100.0, reliability))
+
+        norm[d] = {
+            "score": score,
+            "reliability": reliability,
+            "status": status,
+            "notes": notes,
+        }
+    return norm
+
+
+def _compute_evidence(norm: Dict[str, Dict[str, Any]]) -> Dict[str, Any]:
+    """
+    Evidence model (conservative):
+    - Domain evidence = score * (reliability/100)
+    - Total evidence = sum(domain evidence) / max(1, number_of_domains_present) * 1.2
+      (scaled modestly; still bounded)
+    - Domain count = domains with domain_evidence >= 15
+    - Reliability avg = mean reliability of present domains
+    - Disagreement penalty: if top score high but others near zero, reduce total evidence slightly
+    """
+    present = list(norm.keys())
+    if not present:
+        return {
+            "domains_present": 0,
+            "domains_contributing": 0,
+            "reliability_avg": 0.0,
+            "domain_evidence": {},
+            "total_evidence": 0.0,
+            "disagreement_penalty": 0.0,
+            "notes": ["No indicators provided."],
+        }
+
+    domain_evidence: Dict[str, float] = {}
+    reliabilities: List[float] = []
+    scores: List[float] = []
+
+    for d, v in norm.items():
+        s = float(v.get("score", 0.0) or 0.0)
+        r = float(v.get("reliability", 0.0) or 0.0)
+        scores.append(s)
+        reliabilities.append(r)
+        domain_evidence[d] = round(s * (r / 100.0), 2)
+
+    reliability_avg = sum(reliabilities) / max(1, len(reliabilities))
+    raw_total = sum(domain_evidence.values()) / max(1, len(present)) * 1.2
+
+    # disagreement penalty
+    top = max(scores) if scores else 0.0
+    second = sorted(scores, reverse=True)[1] if len(scores) >= 2 else 0.0
+    # If one domain is screaming and the rest are dead, penalize slightly.
+    penalty = 0.0
+    if top >= 70.0 and second <= 20.0:
+        penalty = min(10.0, (top - second) / 10.0)  # bounded
+
+    total_evidence = max(0.0, min(100.0, raw_total - penalty))
+    domains_contributing = sum(1 for v in domain_evidence.values() if v >= 15.0)
+
+    notes: List[str] = []
+    if penalty > 0:
+        notes.append("Cross-domain disagreement detected; applying conservative penalty.")
+
+    return {
+        "domains_present": len(present),
+        "domains_contributing": int(domains_contributing),
+        "reliability_avg": round(reliability_avg, 2),
+        "domain_evidence": domain_evidence,
+        "total_evidence": round(total_evidence, 2),
+        "disagreement_penalty": round(penalty, 2),
+        "notes": notes,
+    }
+
+
+def _meets_rung(rung: LadderRung, evidence: Dict[str, Any]) -> Tuple[bool, List[str]]:
+    reasons: List[str] = []
+
+    total = float(evidence.get("total_evidence", 0.0) or 0.0)
+    contributing = int(evidence.get("domains_contributing", 0) or 0)
+    rel_avg = float(evidence.get("reliability_avg", 0.0) or 0.0)
+
+    if total < rung.min_total_evidence:
+        reasons.append(
+            f"Insufficient total evidence: {total:.2f} < {rung.min_total_evidence:.2f} required for {rung.label}."
+        )
+
+    # domain rule
+    if rung.allow_single_domain:
+        if contributing < 1:
+            reasons.append(
+                f"No contributing domain evidence: domains_contributing={contributing} required >= 1 for {rung.label}."
+            )
+    else:
+        if contributing < rung.min_domains:
+            reasons.append(
+                f"Insufficient cross-domain corroboration: domains_contributing={contributing} < {rung.min_domains} for {rung.label}."
+            )
+
+    if rel_avg < rung.min_reliability_avg:
+        reasons.append(
+            f"Reliability too low: reliability_avg={rel_avg:.2f} < {rung.min_reliability_avg:.2f} for {rung.label}."
+        )
+
+    return (len(reasons) == 0), reasons
+
+
+def _step_up_proof(evidence: Dict[str, Any]) -> bool:
+    """
+    Proof that allows multi-rung step-ups (rare):
+    - at least 3 contributing domains
+    - total evidence >= 85
+    - reliability avg >= 80
+    """
+    contributing = int(evidence.get("domains_contributing", 0) or 0)
+    total = float(evidence.get("total_evidence", 0.0) or 0.0)
+    rel_avg = float(evidence.get("reliability_avg", 0.0) or 0.0)
+    return bool(contributing >= 3 and total >= 85.0 and rel_avg >= 80.0)
+
+
+def _get_rung_by_level(ladder: List[LadderRung], level: int) -> Optional[LadderRung]:
+    for r in ladder:
+        if r.level == level:
+            return r
+    return None
+
+
+# -----------------------------
+# CLI smoke test (safe)
+# -----------------------------
+
+def _demo() -> None:
+    cases = [
+        ("Empty", {}, 0),
+        ("Single strong domain", {"CYBER": {"score": 85, "reliability": 75}}, 0),
+        ("Cross-domain moderate", {"CYBER": {"score": 60, "reliability": 80}, "EMS": {"score": 55, "reliability": 75}}, 0),
+        ("Disagreement", {"CYBER": {"score": 90, "reliability": 80}, "EMS": {"score": 10, "reliability": 80}, "COMMS": {"score": 5, "reliability": 70}}, 0),
+        ("Prior level monotonic", {"CYBER": {"score": 10, "reliability": 70}}, 2),
+    ]
+    for name, indicators, prior in cases:
+        out = assess_escalation(indicators=indicators, prior_level=prior)
+        print("\n===", name, "===")
+        print(out)
 
 
 if __name__ == "__main__":
-    ladder = build_escalation_ladder()
-    print("Escalation Ladder generated:")
-    print(f"  - {os.path.join(DOCS_DIR, 'escalation_ladder.json')}")
-    print(f"  - {os.path.join(DOCS_DIR, 'escalation_ladder.txt')}")
+    _demo()
 
