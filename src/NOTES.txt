@@ -2641,3 +2641,4 @@ Day 68 — 30× Training System Control Stack (Lock → Adapt → Command Center
   • Shows recommendation + reasoning
   • Shows Obasi coaching output + sessions table
 Day 71 (Spectral Owl Hardening): added crisis_mode_flag stable API + owl_degraded_mode deterministic contract + owl_fallback_router routing plan + owl_memory_consistency checker artifacts.
+Day 71: Coach Interface Stabilization — obasi_training_coach now accepts **kwargs and always returns a string; session store normalized; training apps import-safe with sys.path injection; command center avoids reportlab crash via lazy import.

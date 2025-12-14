@@ -1,137 +1,117 @@
+# src/apps/gui/training_dashboard_app.py
 from __future__ import annotations
 
 import sys
 from pathlib import Path
+from typing import Any, Dict, List
+
 import streamlit as st
 
-# Ensure src/ is importable when running streamlit from repo root
-ROOT = Path(__file__).resolve().parents[3]  # .../parser_starter_kit
-SRC = ROOT / "src"
+# Ensure src/ is on sys.path no matter where Streamlit executes from
+REPO_ROOT = Path(__file__).resolve().parents[3]
+SRC = REPO_ROOT / "src"
 if str(SRC) not in sys.path:
     sys.path.insert(0, str(SRC))
 
-from training_session_store import load_sessions, append_session
-from training_curve_engine import compute_training_curve
-from training_feedback_engine import recommend_next_training, write_latest_feedback
+from training_session_store import load_sessions, append_session  # noqa: E402
+from obasi_training_coach import build_obasi_training_coach_speech  # noqa: E402
 
 
-st.set_page_config(page_title="GLL Training Dashboard", layout="wide")
-
-
-def _safe_str(x, default=""):
+def _safe_curve() -> Dict[str, Any]:
     try:
-        return str(x)
-    except Exception:
-        return default
+        from training_curve_engine import compute_training_curve  # type: ignore
 
-
-def _call_obasi(payload: dict) -> str:
-    """
-    Defensive adapter: obasi_training_coach may have different signatures.
-    Always returns a STRING for display.
-    """
-    try:
-        import inspect
-        import obasi_training_coach as coach
-
-        fn = getattr(coach, "build_obasi_training_coach_speech", None)
-        if fn is None:
-            return "Obasi coach module not available."
-
-        sig = inspect.signature(fn)
-        # If it takes kwargs, pass payload. If it takes none, call bare.
-        if len(sig.parameters) == 0:
-            res = fn()
-        else:
-            res = fn(**payload)
-
-        if isinstance(res, str):
-            return res
-        if isinstance(res, dict):
-            # render dict as readable text
-            return "\n".join([f"- {k}: {res[k]}" for k in res.keys()])
-        return _safe_str(res, "Obasi coach generated an unsupported response.")
-    except Exception as e:
-        return f"Obasi coach unavailable: {e.__class__.__name__}: {e}"
-
-
-def main():
-    st.title("🦉 GLL Training Dashboard")
-
-    sessions = load_sessions()
-
-    colA, colB = st.columns([1, 1])
-    with colA:
-        st.subheader("Log a Training Session (Synthetic / Safe)")
-        difficulty = st.selectbox("Difficulty", ["BEGINNER", "INTERMEDIATE", "ADVERSARIAL"], index=1)
-        verdict = st.selectbox("Validation Verdict", ["PASS", "WARN", "FAIL"], index=0)
-        score = st.slider("Session Score (0–100)", 0, 100, 75)
-        pattern = st.text_input("Pattern ID (optional)", value="").strip() or None
-        notes = st.text_area("Notes", value="", height=90)
-
-        if st.button("✅ Append Session"):
-            # This session append is "raw". Gate enforcement can be added later at the logging point.
-            s = append_session(
-                {
-                    "difficulty": difficulty,
-                    "verdict": verdict,
-                    "score": float(score),
-                    "pattern_id": pattern,
-                    "notes": notes,
-                    # default until gate wiring is added at logging time
-                    "counts_toward_agi": True,
-                }
-            )
-            st.success(f"Appended session: {s['session_id']}")
-
-    with colB:
-        st.subheader("Live Curve + Recommendation")
         curve = compute_training_curve()
-        st.metric("AGI (0–100)", curve["AGI"])
-        st.metric("Improvement slope", curve["improvement_slope"])
-        st.metric("Volatility index", curve["volatility_index"])
-        st.metric("Counted sessions", curve["counted_sessions"])
+        return curve if isinstance(curve, dict) else {}
+    except Exception:
+        return {}
 
-        fb = recommend_next_training(
-            training_curve=curve,
-            current_difficulty="INTERMEDIATE",
-            validation_verdict="PASS",
+
+def _load_latest_training_feedback() -> Dict[str, Any]:
+    # Read-only; safe if file missing
+    try:
+        import json
+
+        p = Path("src") / "docs" / "training" / "training_feedback_latest.json"
+        if not p.exists():
+            return {}
+        raw = json.loads(p.read_text(encoding="utf-8"))
+        return raw if isinstance(raw, dict) else {}
+    except Exception:
+        return {}
+
+
+def main() -> None:
+    st.set_page_config(page_title="GLL Training Dashboard", layout="wide")
+    st.title("GLL Training Dashboard")
+
+    sessions: List[Dict[str, Any]] = load_sessions()
+    curve = _safe_curve()
+    feedback = _load_latest_training_feedback()
+
+    left, right = st.columns([1, 1])
+
+    with left:
+        st.subheader("Log a Training Session")
+
+        trainee_name = st.text_input("Trainee name", value="Ghost")
+        difficulty = st.selectbox("Difficulty", ["BEGINNER", "INTERMEDIATE", "ADVANCED", "ADVERSARIAL"], index=1)
+        score = st.slider("Instructor Score (0–100)", 0, 100, 85)
+        scenario_id = st.text_input("Scenario ID (optional)", value="")
+        pattern_id = st.text_input("Pattern ID (optional)", value="")
+        notes = st.text_area("Notes (optional)", value="", height=80)
+
+        # Gate status: you said sessions already log with gate status.
+        # We keep this simple: instructor supplies current gate status for now.
+        # (Gate-enforced sessions is a separate module; we won't break your app here.)
+        gate_pre_status = st.selectbox("Gate (PRE) status", ["GREEN", "YELLOW", "RED", "UNKNOWN"], index=0)
+        gate_post_status = st.selectbox("Gate (POST) status", ["GREEN", "YELLOW", "RED", "UNKNOWN"], index=0)
+        counted_for_agi = st.checkbox("Counts toward AGI", value=(gate_pre_status == "GREEN" and gate_post_status == "GREEN"))
+
+        if st.button("Append Session", type="primary"):
+            new_session = {
+                "trainee_name": trainee_name,
+                "difficulty": difficulty,
+                "score": float(score),
+                "scenario_id": scenario_id,
+                "pattern_id": pattern_id,
+                "notes": notes,
+                "gate_pre_status": gate_pre_status,
+                "gate_post_status": gate_post_status,
+                "counted_for_agi": counted_for_agi,
+            }
+            written = append_session(new_session)
+            st.success(f"Session logged: {written.get('session_id')}")
+            st.rerun()
+
+    with right:
+        st.subheader("Curve Metrics")
+        c1, c2, c3, c4 = st.columns(4)
+        c1.metric("AGI", f"{float(curve.get('AGI', 0.0)):.1f}")
+        c2.metric("Slope", f"{float(curve.get('improvement_slope', 0.0)):.2f}")
+        c3.metric("Difficulty Avg", f"{float(curve.get('difficulty_weighted_average', 0.0)):.1f}")
+        c4.metric("Volatility", f"{float(curve.get('volatility_index', 0.0)):.2f}")
+
+        st.subheader("Obasi Coach (Stable)")
+        coach_msg = build_obasi_training_coach_speech(
+            trainee_name="Ghost",
+            difficulty=str(curve.get("current_difficulty", "UNKNOWN")),
+            gate_status="GREEN",
+            curve=curve,
+            sessions=sessions,
+            training_feedback=feedback,
         )
-        write_latest_feedback(fb)
+        st.code(coach_msg)
 
         with st.expander("🧭 Next Training Recommendation", expanded=True):
-            st.json(fb)
-
-        with st.expander("🦉 Obasi Coach", expanded=True):
-            msg = _call_obasi(
-                {
-                    "trainee_name": "Ghost",
-                    "agi": curve["AGI"],
-                    "slope": curve["improvement_slope"],
-                    "volatility": curve["volatility_index"],
-                    "counted_sessions": curve["counted_sessions"],
-                }
-            )
-            st.write(msg)
+            st.json(feedback if feedback else {"status": "NONE", "message": "No feedback written yet."})
 
     st.divider()
-    st.subheader("Sessions (Normalized)")
-
-    # Render stable table (no KeyError)
-    rows = []
-    for s in sessions:
-        rows.append(
-            {
-                "session_id": s.get("session_id", ""),
-                "timestamp": s.get("timestamp", ""),
-                "difficulty": s.get("difficulty", ""),
-                "score": s.get("score", 0.0),
-                "verdict": s.get("verdict", ""),
-                "counts_toward_agi": s.get("counts_toward_agi", False),
-                "pattern_id": s.get("pattern_id", None),
-            }
-        )
-    st.dataframe(rows, use_container_width=True)
+    st.subheader("Sessions")
+    if sessions:
+        st.dataframe(sessions, use_container_width=True, hide_index=True)
+    else:
+        st.info("No sessions logged yet.")
 
 
 if __name__ == "__main__":
