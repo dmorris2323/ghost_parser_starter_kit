@@ -1,15 +1,17 @@
 """
 nuclear_decision_card.py
 
-Day 73 — Module 2: Decision-card confidence under ambiguity
-- Pulls latest safe training/validation artifacts (best effort)
-- Computes escalation rung (Module 1)
-- Computes confidence under ambiguity (Module 2)
-- Writes commander-friendly JSON + TXT decision card
+Day 73 — Module 2 + 3:
+- Escalation rung (Module 1)
+- Decision-card confidence under ambiguity (Module 2)
+- Pre-brief trust annotations (Module 3)
+
+Writes:
+- docs/decision_cards/nuclear_decision_card_latest.json/.txt (+ stamped)
+- docs/briefs/prebrief_trust_annotations_latest.json/.txt (+ stamped)
 
 SAFE:
-- Uses synthetic/abstracted indicators and trust proxies
-- Does not attempt real-world missile telemetry
+- Synthetic/abstracted indicators only (training/demo)
 """
 
 from __future__ import annotations
@@ -21,6 +23,7 @@ from typing import Any, Dict, Optional
 
 from escalation_ladder import assess_escalation
 from decision_card_confidence import compute_confidence_under_ambiguity
+from prebrief_trust_annotations import write_prebrief_trust_annotations
 
 
 OUT_DIR = Path("docs") / "decision_cards"
@@ -60,15 +63,10 @@ def _write_json(path: Path, obj: Any) -> None:
 
 
 def _best_effort_inputs() -> Dict[str, Any]:
-    """
-    Pull latest artifacts if present. If missing, return safe defaults.
-    """
     validation = _read_json(Path("docs") / "validation" / "fusion_validation_report.json") or {}
     curve = _read_json(Path("docs") / "training" / "training_curve_latest.json") or {}
     sis = _read_json(Path("docs") / "integrity" / "system_integrity_report.json") or {}
     sps = _read_json(Path("docs") / "integrity" / "sps_immunity_scan.json") or {}
-
-    # Try to locate gate outputs (best-effort)
     gate_latest = _read_json(Path("docs") / "integrity" / "gate_latest.json") or {}
 
     return {
@@ -81,17 +79,12 @@ def _best_effort_inputs() -> Dict[str, Any]:
 
 
 def _extract_gate_status(bundle: Dict[str, Any]) -> str:
-    """
-    Attempt to infer gate status. Default = UNKNOWN.
-    We only need GREEN vs not GREEN for confidence cap.
-    """
     gate = bundle.get("gate_latest") or {}
     if isinstance(gate, dict):
         status = gate.get("status") or gate.get("gate_status") or gate.get("overall_status")
         if isinstance(status, str) and status.strip():
             return status.strip().upper()
 
-    # if no gate_latest, look for common fields in SIS/SPS
     sis = bundle.get("sis") or {}
     sps = bundle.get("sps") or {}
 
@@ -105,9 +98,6 @@ def _extract_gate_status(bundle: Dict[str, Any]) -> str:
 
 
 def _extract_trust(bundle: Dict[str, Any]) -> float:
-    """
-    Prefer fusion_trust result if present inside validation report.
-    """
     validation = bundle.get("validation") or {}
     try:
         trust_obj = (
@@ -142,34 +132,22 @@ def _extract_osl(bundle: Dict[str, Any]) -> str:
 
 
 def _extract_indicators(bundle: Dict[str, Any]) -> Dict[str, Any]:
-    """
-    Produce abstracted indicator inputs for escalation/confidence.
-    This is intentionally conservative: if we don't have a value, we don't invent it.
-    """
     validation = bundle.get("validation") or {}
-
-    # If your validation report includes domain deltas or injected patterns,
-    # we can derive a few safe proxy domain scores.
     indicators: Dict[str, Any] = {}
 
-    # Baseline vs injected deltas (safe training proxy)
     delta = validation.get("delta_vs_baseline") or {}
     injected = validation.get("injected_metrics") or {}
-    baseline = validation.get("baseline_metrics") or {}
 
-    # Proxy: alert pressure (CYBER/COMMS) and trust drop (multi-domain stress)
     try:
         trust_delta = float(delta.get("trust_proxy_delta", 0.0) or 0.0)
         risk_delta = float(delta.get("risk_score_delta", 0.0) or 0.0)
         alerts_delta = delta.get("alerts_delta") or {}
 
-        # Treat trust drop as multi-domain stress
         stress = max(0.0, min(100.0, abs(trust_delta) * 5.0 + risk_delta))
         if stress > 0:
             indicators["EMS"] = {"score": min(100.0, 40.0 + stress / 2.0), "reliability": 75.0}
             indicators["COMMS"] = {"score": min(100.0, 35.0 + stress / 2.5), "reliability": 75.0}
 
-        # Attack-like alert increases map to CYBER proxy
         if isinstance(alerts_delta, dict):
             atk = float(alerts_delta.get("attack_like", 0.0) or 0.0)
             anom = float(alerts_delta.get("anomaly", 0.0) or 0.0)
@@ -177,7 +155,6 @@ def _extract_indicators(bundle: Dict[str, Any]) -> Dict[str, Any]:
             if cyber_score > 0:
                 indicators["CYBER"] = {"score": cyber_score, "reliability": 80.0}
 
-        # If injected metrics show crit/high, treat as escalatory pressure
         inj_alerts = (injected.get("alerts") or {})
         crit = float(inj_alerts.get("crit", 0.0) or 0.0)
         high = float(inj_alerts.get("high", 0.0) or 0.0)
@@ -185,17 +162,12 @@ def _extract_indicators(bundle: Dict[str, Any]) -> Dict[str, Any]:
             indicators["RADIATION"] = {"score": min(100.0, 10.0 + crit * 15.0 + high * 5.0), "reliability": 70.0}
 
     except Exception:
-        # If we fail to derive indicators, return empty -> confidence will be conservative
         return {}
 
     return indicators
 
 
 def generate_nuclear_decision_card(*, prior_escalation_level: int = 0) -> Dict[str, Any]:
-    """
-    Primary generator used by CLI/GUI hooks.
-    Writes latest + stamped artifacts and returns a summary dict.
-    """
     bundle = _best_effort_inputs()
     gate_status = _extract_gate_status(bundle)
     fusion_trust = _extract_trust(bundle)
@@ -203,10 +175,8 @@ def generate_nuclear_decision_card(*, prior_escalation_level: int = 0) -> Dict[s
 
     indicators = _extract_indicators(bundle)
 
-    # Module 1: escalation rung
     escalation = assess_escalation(indicators=indicators, prior_level=int(prior_escalation_level))
 
-    # Module 2: confidence under ambiguity
     confidence = compute_confidence_under_ambiguity(
         indicators=indicators,
         fusion_trust=fusion_trust if fusion_trust > 0 else None,
@@ -241,19 +211,23 @@ def generate_nuclear_decision_card(*, prior_escalation_level: int = 0) -> Dict[s
         ],
     }
 
-    # Write outputs
     stamped_json = OUT_DIR / f"nuclear_decision_card_{_ts()}.json"
     stamped_txt = OUT_DIR / f"nuclear_decision_card_{_ts()}.txt"
+
     _write_json(LATEST_JSON, report)
     _write_json(stamped_json, report)
     _write(LATEST_TXT, _render_txt(report))
     _write(stamped_txt, _render_txt(report))
+
+    # ---- Module 3: write pre-brief trust annotations (brief-ready artifact) ----
+    prebrief_paths = write_prebrief_trust_annotations(decision_card=report)
 
     return {
         "json_latest": str(LATEST_JSON),
         "txt_latest": str(LATEST_TXT),
         "json_stamped": str(stamped_json),
         "txt_stamped": str(stamped_txt),
+        "prebrief": prebrief_paths,
         "escalation_level": report["escalation"]["escalation_level"],
         "confidence_score": report["confidence"]["confidence_score"],
         "gate_status": gate_status,
