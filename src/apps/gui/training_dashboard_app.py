@@ -15,6 +15,7 @@ if str(SRC) not in sys.path:
 
 from training_session_store import load_sessions, append_session  # noqa: E402
 from obasi_training_coach import build_obasi_training_coach_speech  # noqa: E402
+from training_validation_gate import run_training_session_gates  # noqa: E402
 
 
 def _safe_curve() -> Dict[str, Any]:
@@ -28,7 +29,6 @@ def _safe_curve() -> Dict[str, Any]:
 
 
 def _load_latest_training_feedback() -> Dict[str, Any]:
-    # Read-only; safe if file missing
     try:
         import json
 
@@ -43,7 +43,7 @@ def _load_latest_training_feedback() -> Dict[str, Any]:
 
 def main() -> None:
     st.set_page_config(page_title="GLL Training Dashboard", layout="wide")
-    st.title("GLL Training Dashboard")
+    st.title("GLL Training Dashboard — Gate Enforced")
 
     sessions: List[Dict[str, Any]] = load_sessions()
     curve = _safe_curve()
@@ -52,7 +52,7 @@ def main() -> None:
     left, right = st.columns([1, 1])
 
     with left:
-        st.subheader("Log a Training Session")
+        st.subheader("Log a Training Session (Gate-Enforced)")
 
         trainee_name = st.text_input("Trainee name", value="Ghost")
         difficulty = st.selectbox("Difficulty", ["BEGINNER", "INTERMEDIATE", "ADVANCED", "ADVERSARIAL"], index=1)
@@ -61,14 +61,20 @@ def main() -> None:
         pattern_id = st.text_input("Pattern ID (optional)", value="")
         notes = st.text_area("Notes (optional)", value="", height=80)
 
-        # Gate status: you said sessions already log with gate status.
-        # We keep this simple: instructor supplies current gate status for now.
-        # (Gate-enforced sessions is a separate module; we won't break your app here.)
-        gate_pre_status = st.selectbox("Gate (PRE) status", ["GREEN", "YELLOW", "RED", "UNKNOWN"], index=0)
-        gate_post_status = st.selectbox("Gate (POST) status", ["GREEN", "YELLOW", "RED", "UNKNOWN"], index=0)
-        counted_for_agi = st.checkbox("Counts toward AGI", value=(gate_pre_status == "GREEN" and gate_post_status == "GREEN"))
+        st.caption("Policy: session counts toward AGI only if SIS+SPS PRE and POST gates are GREEN/PASS.")
 
-        if st.button("Append Session", type="primary"):
+        if st.button("Append Session (Run Gates)", type="primary"):
+            with st.spinner("Running SIS+SPS PRE/POST gates…"):
+                pre_gate, post_gate, decision = run_training_session_gates()
+
+            counted_for_agi = bool(decision.get("counted_for_agi", False))
+            pre_status = str(decision.get("pre_status", "UNKNOWN"))
+            post_status = str(decision.get("post_status", "UNKNOWN"))
+            reasons = decision.get("reason", [])
+            if not isinstance(reasons, list):
+                reasons = [str(reasons)]
+
+            # Always log the session, but counted_for_agi is locked to gate decision
             new_session = {
                 "trainee_name": trainee_name,
                 "difficulty": difficulty,
@@ -76,16 +82,26 @@ def main() -> None:
                 "scenario_id": scenario_id,
                 "pattern_id": pattern_id,
                 "notes": notes,
-                "gate_pre_status": gate_pre_status,
-                "gate_post_status": gate_post_status,
+                "gate_pre_status": pre_status,
+                "gate_post_status": post_status,
                 "counted_for_agi": counted_for_agi,
             }
             written = append_session(new_session)
-            st.success(f"Session logged: {written.get('session_id')}")
+
+            st.success(
+                f"Session logged: {written.get('session_id')} | "
+                f"PRE={pre_status} POST={post_status} | "
+                f"Counted={counted_for_agi}"
+            )
+            with st.expander("Gate decision details", expanded=not counted_for_agi):
+                st.json({"decision": decision, "pre_gate": pre_gate, "post_gate": post_gate})
+
+            # Recompute curve after append
+            _ = _safe_curve()
             st.rerun()
 
     with right:
-        st.subheader("Curve Metrics")
+        st.subheader("Curve Metrics (COUNTED sessions only)")
         c1, c2, c3, c4 = st.columns(4)
         c1.metric("AGI", f"{float(curve.get('AGI', 0.0)):.1f}")
         c2.metric("Slope", f"{float(curve.get('improvement_slope', 0.0)):.2f}")
