@@ -1,12 +1,12 @@
 """
 training_policy.py
 
-Rules for:
-- whether a session "counts toward AGI"
-- difficulty logging rules (lightweight)
-- gate enforcement (SIS+SPS)
+Central policy for training:
+- Difficulty expectations (thresholds & grading weights)
+- Gate enforcement: only GREEN sessions count toward AGI
+- Certification mode behaviors (strictness knobs)
 
-No imports from training_curve_engine or feedback engine.
+This file MUST NOT import training_session_store to avoid circular imports.
 """
 
 from __future__ import annotations
@@ -14,60 +14,76 @@ from __future__ import annotations
 from typing import Any, Dict
 
 
-def gate_is_green(gate_report: Dict[str, Any]) -> bool:
+DIFFICULTY_LEVELS = ["BEGINNER", "INTERMEDIATE", "ADVANCED", "ADVERSARIAL"]
+
+# Instructor expectations by difficulty
+EXPECTATIONS = {
+    "BEGINNER": {
+        "min_score": 60.0,
+        "grader_weight_accuracy": 0.50,
+        "grader_weight_process": 0.50,
+        "notes": "Basic competence, stable steps, correct terminology.",
+    },
+    "INTERMEDIATE": {
+        "min_score": 70.0,
+        "grader_weight_accuracy": 0.60,
+        "grader_weight_process": 0.40,
+        "notes": "Good analysis + fewer misses; handle mild ambiguity.",
+    },
+    "ADVANCED": {
+        "min_score": 80.0,
+        "grader_weight_accuracy": 0.70,
+        "grader_weight_process": 0.30,
+        "notes": "High accuracy under pressure; recognizes deception cues.",
+    },
+    "ADVERSARIAL": {
+        "min_score": 85.0,
+        "grader_weight_accuracy": 0.75,
+        "grader_weight_process": 0.25,
+        "notes": "Handles injected patterns; maintains discipline; no panic.",
+    },
+}
+
+
+def normalize_difficulty(d: str) -> str:
+    d = (d or "BEGINNER").upper().strip()
+    return d if d in EXPECTATIONS else "BEGINNER"
+
+
+def counts_toward_agi(*, gate_status: str) -> bool:
     """
-    Normalize multiple gate schemas.
-    We treat GREEN/PASS as allowed. Everything else => not counted.
+    Non-negotiable: only GREEN sessions count toward AGI.
     """
-    if not isinstance(gate_report, dict):
-        return False
-
-    # Common patterns
-    status = str(gate_report.get("overall_status") or gate_report.get("status") or "").upper()
-    if status in {"GREEN", "PASS"}:
-        return True
-
-    # Sometimes nested
-    sis = gate_report.get("sis", {}) if isinstance(gate_report.get("sis"), dict) else {}
-    sps = gate_report.get("sps", {}) if isinstance(gate_report.get("sps"), dict) else {}
-
-    sis_status = str(sis.get("status") or sis.get("overall_status") or "").upper()
-    sps_status = str(sps.get("status") or sps.get("overall_status") or "").upper()
-
-    # If either explicitly fails, not green
-    if sis_status in {"RED", "FAIL"} or sps_status in {"RED", "FAIL"}:
-        return False
-
-    # If both look green-ish, allow
-    if sis_status in {"GREEN", "PASS"} and sps_status in {"GREEN", "PASS"}:
-        return True
-
-    return False
+    return str(gate_status or "UNKNOWN").upper() == "GREEN"
 
 
-def apply_gate_enforcement_to_session(
+def can_log_difficulty(
     *,
-    session: Dict[str, Any],
-    pre_gate: Dict[str, Any] | None,
-    post_gate: Dict[str, Any] | None,
-) -> Dict[str, Any]:
+    requested_difficulty: str,
+    certified_track: str,
+) -> bool:
     """
-    Adds:
-      session["gates"] = {"pre":..., "post":...}
-      session["counts_toward_agi"] = True/False
-    Rule:
-      counts only if BOTH pre and post are GREEN/PASS.
+    Prevents logging difficulties above certification track+1.
+    (So you don't spam ADVERSARIAL before you're ready.)
+
+    certified_track can be "NONE" or one of DIFFICULTY_LEVELS.
     """
-    s = dict(session) if isinstance(session, dict) else {}
-    gates = {
-        "pre": pre_gate or {},
-        "post": post_gate or {},
-    }
-    s["gates"] = gates
+    req = normalize_difficulty(requested_difficulty)
+    cert = (certified_track or "NONE").upper().strip()
 
-    pre_ok = gate_is_green(gates["pre"])
-    post_ok = gate_is_green(gates["post"])
+    if cert == "NONE":
+        return req == "BEGINNER"
 
-    s["counts_toward_agi"] = bool(pre_ok and post_ok)
-    return s
+    if cert not in DIFFICULTY_LEVELS:
+        return req == "BEGINNER"
+
+    cert_idx = DIFFICULTY_LEVELS.index(cert)
+    req_idx = DIFFICULTY_LEVELS.index(req)
+
+    # allow current or next track
+    return req_idx <= min(cert_idx + 1, len(DIFFICULTY_LEVELS) - 1)
+
+
+def get_expectations(difficulty: str) -> Dict[str, Any]:
+    return EXPECTATIONS[normalize_difficulty(difficulty)]
 

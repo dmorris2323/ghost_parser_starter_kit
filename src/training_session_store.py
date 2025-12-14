@@ -1,21 +1,26 @@
-# src/training_session_store.py
 """
 training_session_store.py
 
-Single source of truth for training sessions persistence.
+Single source of truth for training session persistence.
 
-Hard rules:
-- This module does NOT import training_policy, operator_certification_engine, or any GUI code.
-- This module ONLY reads/writes the sessions JSON file.
-- Gate enforcement and certification logic live elsewhere.
+Rules:
+- No other module writes sessions JSON directly.
+- All reads/writes go through load_sessions() / append_session().
+- Session schema is normalized on load to prevent KeyError drift.
+
+Storage path (relative to repo root):
+- src/docs/training/training_sessions.json
 """
 
 from __future__ import annotations
 
 import json
+import uuid
+from dataclasses import dataclass, asdict
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Any, Dict, List
+from typing import Any, Dict, List, Optional
+
 
 SESSIONS_PATH = Path("src") / "docs" / "training" / "training_sessions.json"
 
@@ -28,81 +33,97 @@ def _safe_mkdir(p: Path) -> None:
     p.mkdir(parents=True, exist_ok=True)
 
 
-def _read_json(path: Path) -> Any:
+def _read_json(path: Path) -> Dict[str, Any]:
     if not path.exists():
-        return None
-    return json.loads(path.read_text(encoding="utf-8"))
+        return {"schema_version": 1, "sessions": []}
+    try:
+        raw = json.loads(path.read_text(encoding="utf-8"))
+        if isinstance(raw, dict):
+            return raw
+        # If someone wrote a list by mistake, salvage it
+        if isinstance(raw, list):
+            return {"schema_version": 1, "sessions": raw}
+    except Exception:
+        pass
+    return {"schema_version": 1, "sessions": []}
 
 
-def _write_json(path: Path, obj: Any) -> None:
+def _write_json(path: Path, obj: Dict[str, Any]) -> None:
     _safe_mkdir(path.parent)
     path.write_text(json.dumps(obj, indent=2), encoding="utf-8")
 
 
-def _ensure_session_shape(s: Dict[str, Any], idx: int) -> Dict[str, Any]:
-    # Backfill required keys safely so older sessions don't break the UI.
-    if "session_id" not in s or not s.get("session_id"):
-        s["session_id"] = f"sess_{idx+1:04d}"
-    if "created_at" not in s or not s.get("created_at"):
-        s["created_at"] = _utc_now_iso()
+@dataclass
+class TrainingSession:
+    session_id: str
+    created_at: str
+    difficulty: str
+    gate_status: str  # GREEN / YELLOW / RED / UNKNOWN
+    score: float      # 0-100 training score proxy
+    notes: str = ""
+    tags: Optional[List[str]] = None
+    # Optional fields that may be present later
+    validation_context: Optional[str] = None
+    pattern_id: Optional[str] = None
 
-    # Defaults expected by downstream logic
-    s.setdefault("trainee_name", "Ghost")
-    s.setdefault("difficulty", "INTERMEDIATE")
-    s.setdefault("score", 0.0)
-    s.setdefault("scenario_id", "")
-    s.setdefault("pattern_id", "")
-    s.setdefault("notes", "")
-    s.setdefault("gate_pre_status", "UNKNOWN")
-    s.setdefault("gate_post_status", "UNKNOWN")
-    s.setdefault("counted_for_agi", False)
 
-    return s
+def _normalize_session(d: Dict[str, Any]) -> Dict[str, Any]:
+    """
+    Guarantee required keys exist so GUIs never KeyError.
+    """
+    if not isinstance(d, dict):
+        d = {}
+    d = dict(d)
+
+    d.setdefault("session_id", d.get("id") or str(uuid.uuid4()))
+    d.setdefault("created_at", d.get("created_at") or _utc_now_iso())
+    d.setdefault("difficulty", (d.get("difficulty") or "BEGINNER"))
+    d.setdefault("gate_status", (d.get("gate_status") or "UNKNOWN"))
+    d.setdefault("score", float(d.get("score") or 0.0))
+    d.setdefault("notes", d.get("notes") or "")
+    d.setdefault("tags", d.get("tags") if isinstance(d.get("tags"), list) else [])
+    d.setdefault("validation_context", d.get("validation_context"))
+    d.setdefault("pattern_id", d.get("pattern_id"))
+    return d
 
 
 def load_sessions() -> List[Dict[str, Any]]:
     raw = _read_json(SESSIONS_PATH)
-    if not raw:
-        return []
-    if isinstance(raw, dict):
-        sessions = raw.get("sessions", [])
-    else:
-        sessions = raw
-
+    sessions = raw.get("sessions", [])
     if not isinstance(sessions, list):
-        return []
-
-    fixed: List[Dict[str, Any]] = []
-    changed = False
-
-    for i, item in enumerate(sessions):
-        if isinstance(item, dict):
-            before = dict(item)
-            fixed_item = _ensure_session_shape(item, i)
-            fixed.append(fixed_item)
-            if fixed_item != before:
-                changed = True
-
-    # Write back only if we had to backfill / repair old sessions.
-    if changed:
-        _write_json(SESSIONS_PATH, {"sessions": fixed})
-
-    return fixed
+        sessions = []
+    normalized = [_normalize_session(s) for s in sessions]
+    # Persist normalization to prevent future drift
+    _write_json(SESSIONS_PATH, {"schema_version": 1, "sessions": normalized})
+    return normalized
 
 
-def append_session(session: Dict[str, Any]) -> Dict[str, Any]:
+def append_session(
+    *,
+    difficulty: str,
+    gate_status: str,
+    score: float,
+    notes: str = "",
+    tags: Optional[List[str]] = None,
+    validation_context: Optional[str] = None,
+    pattern_id: Optional[str] = None,
+) -> Dict[str, Any]:
     sessions = load_sessions()
 
-    # Generate a stable session id
-    next_id = f"sess_{len(sessions)+1:04d}"
-    session = dict(session)
-    session.setdefault("session_id", next_id)
-    session.setdefault("created_at", _utc_now_iso())
+    sess = TrainingSession(
+        session_id=str(uuid.uuid4()),
+        created_at=_utc_now_iso(),
+        difficulty=str(difficulty or "BEGINNER").upper(),
+        gate_status=str(gate_status or "UNKNOWN").upper(),
+        score=float(score or 0.0),
+        notes=str(notes or ""),
+        tags=tags or [],
+        validation_context=validation_context,
+        pattern_id=pattern_id,
+    )
 
-    # Ensure all expected keys exist
-    session = _ensure_session_shape(session, len(sessions))
-
-    sessions.append(session)
-    _write_json(SESSIONS_PATH, {"sessions": sessions})
-    return session
+    d = _normalize_session(asdict(sess))
+    sessions.append(d)
+    _write_json(SESSIONS_PATH, {"schema_version": 1, "sessions": sessions})
+    return d
 

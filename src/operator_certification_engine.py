@@ -1,129 +1,131 @@
-# src/operator_certification_engine.py
 """
 operator_certification_engine.py
 
-Certification streak logic across tracks:
+Operator certification tracks:
 BEGINNER → INTERMEDIATE → ADVANCED → ADVERSARIAL
 
-Definition (simple + stable):
-- Only COUNTED sessions are eligible (counted_for_agi == True).
-- A streak for a given target difficulty requires consecutive eligible sessions
-  at EXACTLY that difficulty with score >= threshold.
-- Once certified at a level, operator is considered certified at all lower levels.
+Streak logic:
+- BEGINNER cert requires 3 GREEN sessions at BEGINNER with score >= threshold
+- INTERMEDIATE requires 3 GREEN sessions at INTERMEDIATE with score >= threshold
+- ADVANCED requires 3 GREEN sessions at ADVANCED with score >= threshold
+- ADVERSARIAL requires 3 GREEN sessions at ADVERSARIAL with score >= threshold
+
+We evaluate from recent history (most recent first) and compute:
+- current certified track (highest achieved)
+- streak progress for next track
 """
 
 from __future__ import annotations
 
+from dataclasses import dataclass, asdict
 from typing import Any, Dict, List, Tuple
 
-from training_session_store import load_sessions
 
+TRACKS = ["BEGINNER", "INTERMEDIATE", "ADVANCED", "ADVERSARIAL"]
 
-LEVELS = ["BEGINNER", "INTERMEDIATE", "ADVANCED", "ADVERSARIAL"]
-
-# Score thresholds per difficulty (you can tune later).
-THRESHOLDS = {
-    "BEGINNER": 70,
-    "INTERMEDIATE": 75,
-    "ADVANCED": 80,
-    "ADVERSARIAL": 85,
+DEFAULT_THRESHOLDS = {
+    "BEGINNER": 60.0,
+    "INTERMEDIATE": 70.0,
+    "ADVANCED": 80.0,
+    "ADVERSARIAL": 85.0,
 }
 
-# Required streak length for certification at each level.
-STREAK_REQUIRED = {
-    "BEGINNER": 3,
-    "INTERMEDIATE": 3,
-    "ADVANCED": 3,
-    "ADVERSARIAL": 3,
-}
+DEFAULT_STREAK_LEN = 3
 
 
-def _norm_diff(d: Any) -> str:
-    return str(d or "").upper().strip()
-
-
-def _eligible(s: Dict[str, Any]) -> bool:
-    return bool(s.get("counted_for_agi", False))
-
-
-def _score(s: Dict[str, Any]) -> float:
+def _coerce_float(x: Any, default: float = 0.0) -> float:
     try:
-        return float(s.get("score", 0.0))
+        return float(x)
     except Exception:
-        return 0.0
+        return default
 
 
-def _difficulty(s: Dict[str, Any]) -> str:
-    return _norm_diff(s.get("difficulty", "INTERMEDIATE"))
+def _is_green(session: Dict[str, Any]) -> bool:
+    return str(session.get("gate_status", "UNKNOWN")).upper() == "GREEN"
 
 
-def _compute_streak_for_level(sessions: List[Dict[str, Any]], level: str) -> int:
+def _difficulty(session: Dict[str, Any]) -> str:
+    return str(session.get("difficulty", "BEGINNER")).upper()
+
+
+def _score(session: Dict[str, Any]) -> float:
+    return _coerce_float(session.get("score", 0.0), 0.0)
+
+
+def highest_certified_track(result: Dict[str, Any]) -> str:
     """
-    Count consecutive eligible sessions from the end that meet:
-    - difficulty == level
-    - score >= THRESHOLDS[level]
+    Helper used by feedback engine.
+    Returns a string track name.
     """
-    level = _norm_diff(level)
-    need = THRESHOLDS.get(level, 75)
-    streak = 0
-
-    for s in reversed(sessions):
-        if not _eligible(s):
-            break
-        if _difficulty(s) != level:
-            break
-        if _score(s) < need:
-            break
-        streak += 1
-
-    return streak
+    return str(result.get("certified_track", "NONE") or "NONE")
 
 
-def highest_certified_track(summary: Dict[str, Any]) -> str:
-    """
-    Return the highest certified difficulty (or NONE).
-    """
-    cert = summary.get("certified_level", "NONE")
-    return str(cert).upper().strip()
+@dataclass
+class CertificationResult:
+    certified_track: str
+    streak_target_track: str
+    streak_required: int
+    streak_current: int
+    thresholds: Dict[str, float]
+    note: str
 
 
-def compute_certification() -> Dict[str, Any]:
-    sessions = load_sessions()
+def compute_certification(
+    sessions: List[Dict[str, Any]],
+    *,
+    thresholds: Dict[str, float] | None = None,
+    streak_len: int = DEFAULT_STREAK_LEN,
+) -> Dict[str, Any]:
+    thresholds = dict(thresholds or DEFAULT_THRESHOLDS)
 
-    # Streaks per level (from end)
-    streaks = {lvl: _compute_streak_for_level(sessions, lvl) for lvl in LEVELS}
+    # sort newest first if timestamps exist (fallback to stable order)
+    sessions_sorted = list(reversed(sessions))
+
+    def has_streak(track: str) -> bool:
+        needed = streak_len
+        count = 0
+        for s in sessions_sorted:
+            if _difficulty(s) != track:
+                continue
+            if _is_green(s) and _score(s) >= thresholds.get(track, 0.0):
+                count += 1
+                if count >= needed:
+                    return True
+        return False
 
     certified = "NONE"
-    for lvl in LEVELS:
-        if streaks[lvl] >= STREAK_REQUIRED[lvl]:
-            certified = lvl
+    for t in TRACKS:
+        if has_streak(t):
+            certified = t
 
-    # Determine next target (one above current certified)
+    # next target
     if certified == "NONE":
-        next_target = "BEGINNER"
+        target = "BEGINNER"
     else:
-        idx = LEVELS.index(certified)
-        next_target = LEVELS[idx + 1] if idx + 1 < len(LEVELS) else None
+        idx = TRACKS.index(certified)
+        target = TRACKS[min(idx + 1, len(TRACKS) - 1)]
 
-    if next_target:
-        next_streak = streaks[next_target]
-        next_need = STREAK_REQUIRED[next_target]
-        remaining = max(0, next_need - next_streak)
-    else:
-        next_streak = 0
-        next_need = 0
-        remaining = 0
+    # current streak progress for target
+    current = 0
+    for s in sessions_sorted:
+        if _difficulty(s) != target:
+            continue
+        if _is_green(s) and _score(s) >= thresholds.get(target, 0.0):
+            current += 1
 
-    return {
-        "certified_level": certified,
-        "thresholds": THRESHOLDS,
-        "streak_required": STREAK_REQUIRED,
-        "streaks": streaks,
-        "next_target": next_target,
-        "next_target_progress": {
-            "current_streak": next_streak,
-            "required": next_need,
-            "remaining": remaining,
-        },
-    }
+    note = "Keep sessions GREEN and meet score thresholds to progress."
+    if certified == "ADVERSARIAL":
+        target = "ADVERSARIAL"
+        current = streak_len
+        note = "Top track achieved. Maintain proficiency."
+
+    result = CertificationResult(
+        certified_track=certified,
+        streak_target_track=target,
+        streak_required=streak_len,
+        streak_current=min(current, streak_len),
+        thresholds=thresholds,
+        note=note,
+    )
+    return asdict(result)
 
