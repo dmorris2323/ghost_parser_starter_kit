@@ -1,15 +1,17 @@
-# src/training_curve_engine.py
 """
 training_curve_engine.py
 
-Computes training curve metrics from session store.
+Computes training curve metrics from sessions:
+- AGI (0-100 proxy)
+- improvement_slope (trend over last N sessions)
+- difficulty_weighted_average
+- volatility_index (score variability)
 
-Policy:
-- Only sessions that are "counted_for_agi" contribute to AGI/slope/volatility.
+Rules:
+- Only GREEN sessions count toward AGI + curve (gate enforced).
+- No circular imports. This module imports ONLY session store + policy.
 
-Also writes operator certification summary into the curve payload.
-
-Outputs:
+Writes:
 - src/docs/training/training_curve_latest.json
 """
 
@@ -21,7 +23,7 @@ from pathlib import Path
 from typing import Any, Dict, List
 
 from training_session_store import load_sessions
-from operator_certification_engine import compute_certification
+from training_policy import counts_toward_agi, normalize_difficulty
 
 
 OUT_PATH = Path("src") / "docs" / "training" / "training_curve_latest.json"
@@ -40,107 +42,124 @@ def _write_json(path: Path, obj: Any) -> None:
     path.write_text(json.dumps(obj, indent=2), encoding="utf-8")
 
 
-def _as_float(x: Any, default: float = 0.0) -> float:
+def _coerce_float(x: Any, default: float = 0.0) -> float:
     try:
         return float(x)
     except Exception:
         return default
 
 
-def _is_counted(session: Dict[str, Any]) -> bool:
-    if "counted_for_agi" in session:
-        return bool(session.get("counted_for_agi"))
-    pre = str(session.get("gate_pre_status", "UNKNOWN")).upper().strip()
-    post = str(session.get("gate_post_status", "UNKNOWN")).upper().strip()
-    return (pre in {"GREEN", "PASS"}) and (post in {"GREEN", "PASS"})
+DIFF_WEIGHT = {
+    "BEGINNER": 1.00,
+    "INTERMEDIATE": 1.10,
+    "ADVANCED": 1.20,
+    "ADVERSARIAL": 1.35,
+}
 
 
-def _difficulty_weight(d: str) -> float:
-    d = str(d or "").upper().strip()
-    return {
-        "BEGINNER": 0.85,
-        "INTERMEDIATE": 1.00,
-        "ADVANCED": 1.15,
-        "ADVERSARIAL": 1.30,
-    }.get(d, 1.00)
+def _green_sessions(sessions: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+    out = []
+    for s in sessions:
+        if counts_toward_agi(gate_status=str(s.get("gate_status", "UNKNOWN"))):
+            out.append(s)
+    return out
 
 
-def _stddev(vals: List[float]) -> float:
-    n = len(vals)
-    if n <= 1:
-        return 0.0
-    mean = sum(vals) / n
-    var = sum((v - mean) ** 2 for v in vals) / (n - 1)
-    return var ** 0.5
-
-
-def _slope(vals: List[float]) -> float:
-    n = len(vals)
-    if n <= 1:
+def _compute_slope(scores: List[float]) -> float:
+    """
+    Simple slope over index: slope of best-fit line for points (i, score_i).
+    No numpy dependency.
+    """
+    n = len(scores)
+    if n < 2:
         return 0.0
     xs = list(range(n))
     x_mean = sum(xs) / n
-    y_mean = sum(vals) / n
-    num = sum((x - x_mean) * (y - y_mean) for x, y in zip(xs, vals))
-    den = sum((x - x_mean) ** 2 for x in xs)
-    return 0.0 if den == 0 else (num / den)
+    y_mean = sum(scores) / n
+    num = sum((xs[i] - x_mean) * (scores[i] - y_mean) for i in range(n))
+    den = sum((xs[i] - x_mean) ** 2 for i in range(n))
+    if den == 0:
+        return 0.0
+    return num / den
 
 
-def compute_training_curve() -> Dict[str, Any]:
-    sessions = load_sessions()
+def _volatility(scores: List[float]) -> float:
+    n = len(scores)
+    if n < 2:
+        return 0.0
+    mean = sum(scores) / n
+    var = sum((s - mean) ** 2 for s in scores) / (n - 1)
+    return var ** 0.5
 
-    counted = [s for s in sessions if isinstance(s, dict) and _is_counted(s)]
-    scores = [_as_float(s.get("score", 0.0), 0.0) for s in counted]
-    difficulties = [str(s.get("difficulty", "INTERMEDIATE")).upper().strip() for s in counted]
 
-    certification = compute_certification()
+def compute_training_curve(*, last_n: int = 20) -> Dict[str, Any]:
+    all_sessions = load_sessions()
+    green = _green_sessions(all_sessions)
 
-    if not counted:
-        curve = {
+    # Use most recent last_n GREEN sessions
+    green_sorted = sorted(green, key=lambda x: str(x.get("created_at", "")))
+    green_recent = green_sorted[-last_n:] if last_n > 0 else green_sorted
+
+    scores = [_coerce_float(s.get("score", 0.0), 0.0) for s in green_recent]
+    diffs = [normalize_difficulty(str(s.get("difficulty", "BEGINNER"))) for s in green_recent]
+
+    if not scores:
+        result = {
             "generated_at": _utc_now_iso(),
-            "total_sessions": len(sessions),
-            "counted_sessions": 0,
+            "total_sessions": len(all_sessions),
+            "counted_green_sessions": 0,
             "AGI": 0.0,
             "improvement_slope": 0.0,
             "difficulty_weighted_average": 0.0,
             "volatility_index": 0.0,
-            "certification": certification,
         }
-        _write_json(OUT_PATH, curve)
-        return curve
+        _write_json(OUT_PATH, result)
+        return result
 
-    agi = sum(scores) / len(scores)
-    weights = [_difficulty_weight(d) for d in difficulties]
-    denom = sum(weights) if sum(weights) else 1.0
-    dwa = sum(s * w for s, w in zip(scores, weights)) / denom
-    slope = _slope(scores)
-    vol = _stddev(scores)
+    # AGI: average score of GREEN sessions (bounded)
+    agi = max(0.0, min(100.0, sum(scores) / len(scores)))
 
-    curve = {
+    # Slope: trend over recent scores
+    slope = _compute_slope(scores)
+
+    # Difficulty-weighted avg
+    weighted_sum = 0.0
+    weight_total = 0.0
+    for sc, d in zip(scores, diffs):
+        w = DIFF_WEIGHT.get(d, 1.0)
+        weighted_sum += sc * w
+        weight_total += w
+    dwa = weighted_sum / weight_total if weight_total else agi
+    dwa = max(0.0, min(100.0, dwa))
+
+    vol = _volatility(scores)
+
+    result = {
         "generated_at": _utc_now_iso(),
-        "total_sessions": len(sessions),
-        "counted_sessions": len(counted),
+        "total_sessions": len(all_sessions),
+        "counted_green_sessions": len(scores),
         "AGI": round(agi, 3),
         "improvement_slope": round(slope, 3),
         "difficulty_weighted_average": round(dwa, 3),
         "volatility_index": round(vol, 3),
-        "certification": certification,
     }
+    _write_json(OUT_PATH, result)
+    return result
 
-    _write_json(OUT_PATH, curve)
-    return curve
+
+def write_training_curve_latest() -> str:
+    curve = compute_training_curve()
+    return str(OUT_PATH)
 
 
 if __name__ == "__main__":
     curve = compute_training_curve()
     print("Training curve written:")
     print(f"  JSON: {OUT_PATH}")
-    print(f"  Total sessions: {curve.get('total_sessions')}")
-    print(f"  Counted sessions: {curve.get('counted_sessions')}")
-    print(f"  AGI: {curve.get('AGI')}")
-    print(f"  Improvement slope: {curve.get('improvement_slope')}")
-    print(f"  Difficulty-weighted avg: {curve.get('difficulty_weighted_average')}")
-    print(f"  Volatility index: {curve.get('volatility_index')}")
-    cert = (curve.get("certification") or {}).get("certified_level")
-    print(f"  Certified: {cert}")
+    print(f"  Total sessions: {curve['total_sessions']}")
+    print(f"  Counted GREEN sessions: {curve['counted_green_sessions']}")
+    print(f"  AGI: {curve['AGI']}")
+    print(f"  Improvement slope: {curve['improvement_slope']}")
+    print(f"  Difficulty-weighted avg: {curve['difficulty_weighted_average']}")
+    print(f"  Volatility index: {curve['volatility_index']}")
 
