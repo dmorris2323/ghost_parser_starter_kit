@@ -6,7 +6,8 @@ Computes training curve metrics from session store.
 
 Policy:
 - Only sessions that are "counted_for_agi" contribute to AGI/slope/volatility.
-- Backward compatible: if counted_for_agi missing, require gate_pre_status and gate_post_status GREEN/PASS.
+
+Also writes operator certification summary into the curve payload.
 
 Outputs:
 - src/docs/training/training_curve_latest.json
@@ -15,12 +16,12 @@ Outputs:
 from __future__ import annotations
 
 import json
-from dataclasses import dataclass
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Any, Dict, List, Tuple
+from typing import Any, Dict, List
 
 from training_session_store import load_sessions
+from operator_certification_engine import compute_certification
 
 
 OUT_PATH = Path("src") / "docs" / "training" / "training_curve_latest.json"
@@ -74,9 +75,6 @@ def _stddev(vals: List[float]) -> float:
 
 
 def _slope(vals: List[float]) -> float:
-    """
-    Simple linear slope over index: y ~ a + b*i
-    """
     n = len(vals)
     if n <= 1:
         return 0.0
@@ -85,18 +83,17 @@ def _slope(vals: List[float]) -> float:
     y_mean = sum(vals) / n
     num = sum((x - x_mean) * (y - y_mean) for x, y in zip(xs, vals))
     den = sum((x - x_mean) ** 2 for x in xs)
-    if den == 0:
-        return 0.0
-    return num / den
+    return 0.0 if den == 0 else (num / den)
 
 
 def compute_training_curve() -> Dict[str, Any]:
     sessions = load_sessions()
 
-    # Filter to counted sessions only
     counted = [s for s in sessions if isinstance(s, dict) and _is_counted(s)]
     scores = [_as_float(s.get("score", 0.0), 0.0) for s in counted]
     difficulties = [str(s.get("difficulty", "INTERMEDIATE")).upper().strip() for s in counted]
+
+    certification = compute_certification()
 
     if not counted:
         curve = {
@@ -107,18 +104,15 @@ def compute_training_curve() -> Dict[str, Any]:
             "improvement_slope": 0.0,
             "difficulty_weighted_average": 0.0,
             "volatility_index": 0.0,
+            "certification": certification,
         }
         _write_json(OUT_PATH, curve)
         return curve
 
     agi = sum(scores) / len(scores)
-
-    # Difficulty weighted average
     weights = [_difficulty_weight(d) for d in difficulties]
     denom = sum(weights) if sum(weights) else 1.0
     dwa = sum(s * w for s, w in zip(scores, weights)) / denom
-
-    # Trend + volatility
     slope = _slope(scores)
     vol = _stddev(scores)
 
@@ -130,6 +124,7 @@ def compute_training_curve() -> Dict[str, Any]:
         "improvement_slope": round(slope, 3),
         "difficulty_weighted_average": round(dwa, 3),
         "volatility_index": round(vol, 3),
+        "certification": certification,
     }
 
     _write_json(OUT_PATH, curve)
@@ -146,4 +141,6 @@ if __name__ == "__main__":
     print(f"  Improvement slope: {curve.get('improvement_slope')}")
     print(f"  Difficulty-weighted avg: {curve.get('difficulty_weighted_average')}")
     print(f"  Volatility index: {curve.get('volatility_index')}")
+    cert = (curve.get("certification") or {}).get("certified_level")
+    print(f"  Certified: {cert}")
 

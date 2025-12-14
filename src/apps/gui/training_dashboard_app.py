@@ -7,25 +7,15 @@ from typing import Any, Dict, List
 
 import streamlit as st
 
-# Ensure src/ is on sys.path no matter where Streamlit executes from
 REPO_ROOT = Path(__file__).resolve().parents[3]
 SRC = REPO_ROOT / "src"
 if str(SRC) not in sys.path:
     sys.path.insert(0, str(SRC))
 
 from training_session_store import load_sessions, append_session  # noqa: E402
-from obasi_training_coach import build_obasi_training_coach_speech  # noqa: E402
 from training_validation_gate import run_training_session_gates  # noqa: E402
-
-
-def _safe_curve() -> Dict[str, Any]:
-    try:
-        from training_curve_engine import compute_training_curve  # type: ignore
-
-        curve = compute_training_curve()
-        return curve if isinstance(curve, dict) else {}
-    except Exception:
-        return {}
+from training_curve_engine import compute_training_curve  # noqa: E402
+from operator_certification_engine import compute_certification  # noqa: E402
 
 
 def _load_latest_training_feedback() -> Dict[str, Any]:
@@ -43,10 +33,11 @@ def _load_latest_training_feedback() -> Dict[str, Any]:
 
 def main() -> None:
     st.set_page_config(page_title="GLL Training Dashboard", layout="wide")
-    st.title("GLL Training Dashboard — Gate Enforced")
+    st.title("GLL Training Dashboard — Gate + Certification")
 
     sessions: List[Dict[str, Any]] = load_sessions()
-    curve = _safe_curve()
+    curve = compute_training_curve()
+    certification = compute_certification()
     feedback = _load_latest_training_feedback()
 
     left, right = st.columns([1, 1])
@@ -70,11 +61,7 @@ def main() -> None:
             counted_for_agi = bool(decision.get("counted_for_agi", False))
             pre_status = str(decision.get("pre_status", "UNKNOWN"))
             post_status = str(decision.get("post_status", "UNKNOWN"))
-            reasons = decision.get("reason", [])
-            if not isinstance(reasons, list):
-                reasons = [str(reasons)]
 
-            # Always log the session, but counted_for_agi is locked to gate decision
             new_session = {
                 "trainee_name": trainee_name,
                 "difficulty": difficulty,
@@ -96,8 +83,6 @@ def main() -> None:
             with st.expander("Gate decision details", expanded=not counted_for_agi):
                 st.json({"decision": decision, "pre_gate": pre_gate, "post_gate": post_gate})
 
-            # Recompute curve after append
-            _ = _safe_curve()
             st.rerun()
 
     with right:
@@ -108,16 +93,21 @@ def main() -> None:
         c3.metric("Difficulty Avg", f"{float(curve.get('difficulty_weighted_average', 0.0)):.1f}")
         c4.metric("Volatility", f"{float(curve.get('volatility_index', 0.0)):.2f}")
 
-        st.subheader("Obasi Coach (Stable)")
-        coach_msg = build_obasi_training_coach_speech(
-            trainee_name="Ghost",
-            difficulty=str(curve.get("current_difficulty", "UNKNOWN")),
-            gate_status="GREEN",
-            curve=curve,
-            sessions=sessions,
-            training_feedback=feedback,
-        )
-        st.code(coach_msg)
+        st.subheader("🎖️ Operator Certification")
+        st.write(f"**Certified level:** `{certification.get('certified_level')}`")
+        nxt = certification.get("next_target")
+        prog = certification.get("next_target_progress", {}) or {}
+        if nxt:
+            st.write(
+                f"**Next target:** `{nxt}` — "
+                f"streak {prog.get('current_streak', 0)}/{prog.get('required', 0)} "
+                f"(remaining {prog.get('remaining', 0)})"
+            )
+        else:
+            st.success("Top level achieved. You’re fully certified through ADVERSARIAL.")
+
+        with st.expander("Certification details"):
+            st.json(certification)
 
         with st.expander("🧭 Next Training Recommendation", expanded=True):
             st.json(feedback if feedback else {"status": "NONE", "message": "No feedback written yet."})

@@ -2,14 +2,12 @@
 """
 training_session_store.py
 
-Single source of truth for training sessions storage.
+Single source of truth for training sessions persistence.
 
-Hard contract:
-- load_sessions() -> list[dict]
-- append_session(session: dict) -> dict (written session)
-
-No imports from certification / curve / feedback engines.
-(Prevents circular imports.)
+Hard rules:
+- This module does NOT import training_policy, operator_certification_engine, or any GUI code.
+- This module ONLY reads/writes the sessions JSON file.
+- Gate enforcement and certification logic live elsewhere.
 """
 
 from __future__ import annotations
@@ -19,8 +17,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Dict, List
 
-
-STORE_PATH = Path("src") / "docs" / "training" / "training_sessions.json"
+SESSIONS_PATH = Path("src") / "docs" / "training" / "training_sessions.json"
 
 
 def _utc_now_iso() -> str:
@@ -31,75 +28,81 @@ def _safe_mkdir(p: Path) -> None:
     p.mkdir(parents=True, exist_ok=True)
 
 
-def _safe_read_json(path: Path) -> Any:
-    try:
-        if not path.exists():
-            return None
-        return json.loads(path.read_text(encoding="utf-8"))
-    except Exception:
+def _read_json(path: Path) -> Any:
+    if not path.exists():
         return None
+    return json.loads(path.read_text(encoding="utf-8"))
 
 
-def _safe_write_json(path: Path, obj: Any) -> None:
+def _write_json(path: Path, obj: Any) -> None:
     _safe_mkdir(path.parent)
     path.write_text(json.dumps(obj, indent=2), encoding="utf-8")
 
 
-def _normalize_session(s: Dict[str, Any]) -> Dict[str, Any]:
-    # Accept older keys + enforce stable keys used by the UI/curve engines.
-    sid = s.get("session_id") or s.get("id") or s.get("Session") or f"session_{int(datetime.now().timestamp())}"
-    ts = s.get("timestamp") or s.get("ts") or s.get("created_at") or _utc_now_iso()
+def _ensure_session_shape(s: Dict[str, Any], idx: int) -> Dict[str, Any]:
+    # Backfill required keys safely so older sessions don't break the UI.
+    if "session_id" not in s or not s.get("session_id"):
+        s["session_id"] = f"sess_{idx+1:04d}"
+    if "created_at" not in s or not s.get("created_at"):
+        s["created_at"] = _utc_now_iso()
 
-    difficulty = str(s.get("difficulty", s.get("Difficulty", "UNKNOWN"))).upper().strip()
-    if difficulty not in {"BEGINNER", "INTERMEDIATE", "ADVANCED", "ADVERSARIAL"}:
-        difficulty = "UNKNOWN"
+    # Defaults expected by downstream logic
+    s.setdefault("trainee_name", "Ghost")
+    s.setdefault("difficulty", "INTERMEDIATE")
+    s.setdefault("score", 0.0)
+    s.setdefault("scenario_id", "")
+    s.setdefault("pattern_id", "")
+    s.setdefault("notes", "")
+    s.setdefault("gate_pre_status", "UNKNOWN")
+    s.setdefault("gate_post_status", "UNKNOWN")
+    s.setdefault("counted_for_agi", False)
 
-    score = s.get("score", s.get("Score", 0))
-    try:
-        score = float(score)
-    except Exception:
-        score = 0.0
-
-    # gate + counting flags
-    gate_pre = str(s.get("gate_pre_status", s.get("gate_status", "UNKNOWN"))).upper().strip()
-    gate_post = str(s.get("gate_post_status", "UNKNOWN")).upper().strip()
-    counted = bool(s.get("counted_for_agi", False))
-
-    return {
-        "session_id": str(sid),
-        "timestamp": str(ts),
-        "difficulty": difficulty,
-        "score": score,
-        "scenario_id": str(s.get("scenario_id", "")),
-        "pattern_id": str(s.get("pattern_id", "")),
-        "gate_pre_status": gate_pre,
-        "gate_post_status": gate_post,
-        "counted_for_agi": counted,
-        "notes": str(s.get("notes", "")),
-    }
+    return s
 
 
 def load_sessions() -> List[Dict[str, Any]]:
-    raw = _safe_read_json(STORE_PATH)
+    raw = _read_json(SESSIONS_PATH)
     if not raw:
         return []
     if isinstance(raw, dict):
         sessions = raw.get("sessions", [])
     else:
         sessions = raw
+
     if not isinstance(sessions, list):
         return []
-    out: List[Dict[str, Any]] = []
-    for item in sessions:
+
+    fixed: List[Dict[str, Any]] = []
+    changed = False
+
+    for i, item in enumerate(sessions):
         if isinstance(item, dict):
-            out.append(_normalize_session(item))
-    return out
+            before = dict(item)
+            fixed_item = _ensure_session_shape(item, i)
+            fixed.append(fixed_item)
+            if fixed_item != before:
+                changed = True
+
+    # Write back only if we had to backfill / repair old sessions.
+    if changed:
+        _write_json(SESSIONS_PATH, {"sessions": fixed})
+
+    return fixed
 
 
 def append_session(session: Dict[str, Any]) -> Dict[str, Any]:
     sessions = load_sessions()
-    normalized = _normalize_session(session)
-    sessions.append(normalized)
-    _safe_write_json(STORE_PATH, {"sessions": sessions})
-    return normalized
+
+    # Generate a stable session id
+    next_id = f"sess_{len(sessions)+1:04d}"
+    session = dict(session)
+    session.setdefault("session_id", next_id)
+    session.setdefault("created_at", _utc_now_iso())
+
+    # Ensure all expected keys exist
+    session = _ensure_session_shape(session, len(sessions))
+
+    sessions.append(session)
+    _write_json(SESSIONS_PATH, {"sessions": sessions})
+    return session
 

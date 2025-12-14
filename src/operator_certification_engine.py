@@ -1,72 +1,129 @@
+# src/operator_certification_engine.py
 """
 operator_certification_engine.py
 
-Computes operator certification state from sessions:
-- streak logic
-- difficulty tracks
+Certification streak logic across tracks:
+BEGINNER → INTERMEDIATE → ADVANCED → ADVERSARIAL
 
-Returns dicts (stable API) so callers never assume strings.
-
-No imports from training_policy to avoid cycles.
+Definition (simple + stable):
+- Only COUNTED sessions are eligible (counted_for_agi == True).
+- A streak for a given target difficulty requires consecutive eligible sessions
+  at EXACTLY that difficulty with score >= threshold.
+- Once certified at a level, operator is considered certified at all lower levels.
 """
 
 from __future__ import annotations
 
-from typing import Any, Dict, List
+from typing import Any, Dict, List, Tuple
+
+from training_session_store import load_sessions
 
 
-TRACKS = ["BEGINNER", "INTERMEDIATE", "ADVERSARIAL"]
+LEVELS = ["BEGINNER", "INTERMEDIATE", "ADVANCED", "ADVERSARIAL"]
+
+# Score thresholds per difficulty (you can tune later).
+THRESHOLDS = {
+    "BEGINNER": 70,
+    "INTERMEDIATE": 75,
+    "ADVANCED": 80,
+    "ADVERSARIAL": 85,
+}
+
+# Required streak length for certification at each level.
+STREAK_REQUIRED = {
+    "BEGINNER": 3,
+    "INTERMEDIATE": 3,
+    "ADVANCED": 3,
+    "ADVERSARIAL": 3,
+}
 
 
-def _counts(session: Dict[str, Any]) -> bool:
-    return bool(session.get("counts_toward_agi", False))
+def _norm_diff(d: Any) -> str:
+    return str(d or "").upper().strip()
 
 
-def compute_certification(sessions: List[Dict[str, Any]]) -> Dict[str, Any]:
+def _eligible(s: Dict[str, Any]) -> bool:
+    return bool(s.get("counted_for_agi", False))
+
+
+def _score(s: Dict[str, Any]) -> float:
+    try:
+        return float(s.get("score", 0.0))
+    except Exception:
+        return 0.0
+
+
+def _difficulty(s: Dict[str, Any]) -> str:
+    return _norm_diff(s.get("difficulty", "INTERMEDIATE"))
+
+
+def _compute_streak_for_level(sessions: List[Dict[str, Any]], level: str) -> int:
     """
-    Certification is based on consecutive counted sessions at/above a track.
+    Count consecutive eligible sessions from the end that meet:
+    - difficulty == level
+    - score >= THRESHOLDS[level]
     """
-    streaks = {t: 0 for t in TRACKS}
-    best = "NONE"
+    level = _norm_diff(level)
+    need = THRESHOLDS.get(level, 75)
+    streak = 0
 
-    # We compute streaks in chronological order (sessions are already ordered append-wise)
-    for s in sessions:
-        if not isinstance(s, dict):
-            continue
-        if not _counts(s):
-            # breaks streak for all tracks
-            for t in TRACKS:
-                streaks[t] = 0
-            continue
+    for s in reversed(sessions):
+        if not _eligible(s):
+            break
+        if _difficulty(s) != level:
+            break
+        if _score(s) < need:
+            break
+        streak += 1
 
-        diff = str(s.get("difficulty", "BEGINNER")).upper()
-        # if a session is INTERMEDIATE, it counts for BEGINNER and INTERMEDIATE tracks
-        for t in TRACKS:
-            if TRACKS.index(diff) >= TRACKS.index(t):
-                streaks[t] += 1
-            else:
-                streaks[t] = 0
+    return streak
 
-    # thresholds (tune later)
-    thresholds = {"BEGINNER": 3, "INTERMEDIATE": 5, "ADVERSARIAL": 7}
-    for t in TRACKS:
-        if streaks[t] >= thresholds[t]:
-            best = t
+
+def highest_certified_track(summary: Dict[str, Any]) -> str:
+    """
+    Return the highest certified difficulty (or NONE).
+    """
+    cert = summary.get("certified_level", "NONE")
+    return str(cert).upper().strip()
+
+
+def compute_certification() -> Dict[str, Any]:
+    sessions = load_sessions()
+
+    # Streaks per level (from end)
+    streaks = {lvl: _compute_streak_for_level(sessions, lvl) for lvl in LEVELS}
+
+    certified = "NONE"
+    for lvl in LEVELS:
+        if streaks[lvl] >= STREAK_REQUIRED[lvl]:
+            certified = lvl
+
+    # Determine next target (one above current certified)
+    if certified == "NONE":
+        next_target = "BEGINNER"
+    else:
+        idx = LEVELS.index(certified)
+        next_target = LEVELS[idx + 1] if idx + 1 < len(LEVELS) else None
+
+    if next_target:
+        next_streak = streaks[next_target]
+        next_need = STREAK_REQUIRED[next_target]
+        remaining = max(0, next_need - next_streak)
+    else:
+        next_streak = 0
+        next_need = 0
+        remaining = 0
 
     return {
-        "highest_certified": best,
+        "certified_level": certified,
+        "thresholds": THRESHOLDS,
+        "streak_required": STREAK_REQUIRED,
         "streaks": streaks,
-        "thresholds": thresholds,
+        "next_target": next_target,
+        "next_target_progress": {
+            "current_streak": next_streak,
+            "required": next_need,
+            "remaining": remaining,
+        },
     }
-
-
-def highest_certified_track() -> Dict[str, Any]:
-    """
-    Convenience wrapper that loads sessions internally.
-    Kept as dict return to match your updated ecosystem.
-    """
-    from training_session_store import load_sessions  # local import is safe
-
-    sessions = load_sessions()
-    return compute_certification(sessions)
 

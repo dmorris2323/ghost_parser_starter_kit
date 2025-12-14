@@ -13,96 +13,61 @@ if str(SRC) not in sys.path:
     sys.path.insert(0, str(SRC))
 
 from training_session_store import load_sessions  # noqa: E402
-from obasi_training_coach import build_obasi_training_coach_speech  # noqa: E402
-from crisis_mode_flag import read_crisis_mode, set_crisis_mode  # noqa: E402
+from training_curve_engine import compute_training_curve  # noqa: E402
+from operator_certification_engine import compute_certification  # noqa: E402
 
 
-def _load_json(path: Path) -> Dict[str, Any]:
+def _load_latest_training_feedback() -> Dict[str, Any]:
     try:
         import json
 
-        if not path.exists():
+        p = Path("src") / "docs" / "training" / "training_feedback_latest.json"
+        if not p.exists():
             return {}
-        raw = json.loads(path.read_text(encoding="utf-8"))
+        raw = json.loads(p.read_text(encoding="utf-8"))
         return raw if isinstance(raw, dict) else {}
-    except Exception:
-        return {}
-
-
-def _safe_curve() -> Dict[str, Any]:
-    try:
-        from training_curve_engine import compute_training_curve  # type: ignore
-
-        curve = compute_training_curve()
-        return curve if isinstance(curve, dict) else {}
     except Exception:
         return {}
 
 
 def main() -> None:
     st.set_page_config(page_title="GLL Training Command Center", layout="wide")
-    st.title("GLL Training Command Center")
+    st.title("GLL Training Command Center — Certification + Curve")
 
     sessions: List[Dict[str, Any]] = load_sessions()
-    curve = _safe_curve()
+    curve = compute_training_curve()
+    certification = compute_certification()
+    feedback = _load_latest_training_feedback()
 
-    left, right = st.columns([1, 1])
+    c1, c2, c3, c4 = st.columns(4)
+    c1.metric("AGI", f"{float(curve.get('AGI', 0.0)):.1f}")
+    c2.metric("Slope", f"{float(curve.get('improvement_slope', 0.0)):.2f}")
+    c3.metric("Difficulty Avg", f"{float(curve.get('difficulty_weighted_average', 0.0)):.1f}")
+    c4.metric("Volatility", f"{float(curve.get('volatility_index', 0.0)):.2f}")
 
-    with left:
-        st.subheader("System Status")
-
-        cm = read_crisis_mode()
-        st.json(cm)
-
-        enable = st.checkbox("CRISIS MODE (ON)", value=(cm.get("crisis_mode") == "ON"))
-        reason = st.text_input("Reason", value=str(cm.get("reason", "operator_action")))
-        if st.button("Apply Crisis Mode"):
-            written = set_crisis_mode(enabled=enable, reason=reason, operator="Ghost")
-            st.success(f"Updated: {written.get('crisis_mode')}")
-            st.rerun()
-
-        st.subheader("Curve Metrics")
-        c1, c2, c3, c4 = st.columns(4)
-        c1.metric("AGI", f"{float(curve.get('AGI', 0.0)):.1f}")
-        c2.metric("Slope", f"{float(curve.get('improvement_slope', 0.0)):.2f}")
-        c3.metric("Difficulty Avg", f"{float(curve.get('difficulty_weighted_average', 0.0)):.1f}")
-        c4.metric("Volatility", f"{float(curve.get('volatility_index', 0.0)):.2f}")
-
-        st.subheader("Obasi Coach (Stable)")
-        coach_msg = build_obasi_training_coach_speech(
-            trainee_name="Ghost",
-            difficulty=str(curve.get("current_difficulty", "UNKNOWN")),
-            gate_status="GREEN",
-            curve=curve,
-            sessions=sessions,
-            training_feedback=_load_json(Path("src") / "docs" / "training" / "training_feedback_latest.json"),
+    st.subheader("🎖️ Operator Certification Status")
+    st.write(f"**Certified level:** `{certification.get('certified_level')}`")
+    nxt = certification.get("next_target")
+    prog = certification.get("next_target_progress", {}) or {}
+    if nxt:
+        st.write(
+            f"**Next target:** `{nxt}` — "
+            f"streak {prog.get('current_streak', 0)}/{prog.get('required', 0)} "
+            f"(remaining {prog.get('remaining', 0)})"
         )
-        st.code(coach_msg)
+    else:
+        st.success("Top level achieved. Fully certified through ADVERSARIAL.")
 
-    with right:
-        st.subheader("Latest Validation Report")
-        report = _load_json(Path("src") / "docs" / "validation" / "fusion_validation_report.json")
-        if report:
-            st.json(report)
-        else:
-            st.info("No validation report found yet: src/docs/validation/fusion_validation_report.json")
+    with st.expander("Certification details"):
+        st.json(certification)
 
-        st.subheader("Command Brief Export (Optional)")
-        st.caption("If reportlab isn't installed, this will show a safe warning instead of crashing.")
-        if st.button("Export Command Brief PDF"):
-            try:
-                # Lazy import so missing reportlab never kills the UI
-                from command_brief_exporter import export_command_brief  # type: ignore
-
-                out = export_command_brief()
-                st.success(f"Exported: {out}")
-            except Exception as e:
-                st.warning(f"PDF export unavailable: {e.__class__.__name__}: {e}")
+    with st.expander("🧭 Next Training Recommendation", expanded=True):
+        st.json(feedback if feedback else {"status": "NONE", "message": "No feedback written yet."})
 
     st.divider()
-    st.subheader("Recent Sessions")
+    st.subheader("Sessions (raw)")
     if sessions:
-        st.dataframe(sessions[-25:], use_container_width=True, hide_index=True)
+        st.dataframe(sessions, use_container_width=True, hide_index=True)
     else:
         st.info("No sessions logged yet.")
 
