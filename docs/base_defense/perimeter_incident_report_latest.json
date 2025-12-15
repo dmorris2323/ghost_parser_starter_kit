@@ -1,5 +1,5 @@
 {
-  "generated_at_utc": "2025-12-15T21:07:42.947524+00:00",
+  "generated_at_utc": "2025-12-15T21:51:38.053169+00:00",
   "type": "perimeter_incident_report",
   "safe_notice": "Synthetic training artifact. Do not use as real-world intel.",
   "inputs": {
@@ -25,7 +25,7 @@
       "zone": "NORTH_GATE",
       "type": "UAS_SIGHTING",
       "severity": "HIGH",
-      "timestamp_utc": "2025-12-15T21:07:42.947298+00:00",
+      "timestamp_utc": "2025-12-15T21:51:38.052930+00:00",
       "details": {
         "alt_m": 60,
         "bearing_deg": 20,
@@ -37,7 +37,7 @@
       "zone": "PERIMETER_EAST",
       "type": "FENCE_TAMPER",
       "severity": "MED",
-      "timestamp_utc": "2025-12-15T21:07:42.947517+00:00",
+      "timestamp_utc": "2025-12-15T21:51:38.053163+00:00",
       "details": {
         "sensor_id": "FENCE-E-12",
         "repeat_hits": 3
