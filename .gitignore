@@ -80,3 +80,6 @@ docs/training/training_curve_latest.json
 !docs/**/**/*_latest.txt
 
 
+docs/base_defense/**_20*.json
+docs/base_defense/**_20*.txt
+
