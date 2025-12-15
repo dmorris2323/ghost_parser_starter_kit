@@ -1,28 +1,30 @@
-SENSOR OUTAGE PREDICTOR
-Generated: 2025-12-15T20:25:35.320478+00:00
+GLL Base Defense — Sensor Outage Predictor (SAFE)
+generated_at_utc: 2025-12-15T20:45:31.682539+00:00
 
-Posture: MAINT_PRIORITY_NOW
-Confidence: LOW
-Ambiguity Flags: DEGRADED_COMMS
+site_id: INSTALLATION_ALPHA
+time_horizon_minutes: 120
+posture: DUTY_OFFICER_NOTIFY
+confidence: MED
+avg_outage_risk_score: 45.8
+peak_outage_risk_score: 91.0
 
-SUMMARY:
-- HIGH: 1
-- MEDIUM: 1
-- LOW: 0
+counts:
+  down: 1
+  degraded: 1
+  unknown: 1
+  high_risk: 2
 
-TOP PREDICTIONS (first 10):
-- CAM_2: state=OFFLINE risk=HIGH score=0.95 capped=False
-- RADAR_1: state=NOISY risk=MEDIUM score=0.65 capped=False
+What we can say (bounded):
+- Sensor outage risk is assessed as ELEVATED (avg_score=45.8).
+- Posture is DUTY_OFFICER_NOTIFY with confidence=MED.
+- Assessment is bounded to the next 120 minutes and is probabilistic.
 
-WHAT WE CAN SAY:
-- Maintenance posture is MAINT_PRIORITY_NOW with confidence=LOW.
-- 1 sensors are HIGH outage risk; 1 are MEDIUM outage risk.
-- Assessment is probabilistic and bounded; operator judgment applies.
+Unknowns / caveats:
+- Some sensors report UNKNOWN health; confirm comms and power status.
 
-WHAT WE CANNOT SAY:
-- Cannot attribute outages to adversary action.
-- Cannot confirm root cause without maintenance diagnostics.
-
-OPERATOR NOTES:
-- Prioritize sensors marked HIGH risk for inspection/repair.
-- If comms are degraded, treat predictions as more uncertain and corroborate via local checks.
+Top sensors (by risk):
+- RF_NODE_07: state=DOWN, risk=91.0 (HIGH), last_seen_min=125.0
+- GATE_MAG_03: state=UNKNOWN, risk=83.0 (HIGH), last_seen_min=61.0
+- PERIM_CAM_02: state=DEGRADED, risk=47.0 (ELEVATED), last_seen_min=18.0
+- PERIM_CAM_01: state=OK, risk=5.0 (LOW), last_seen_min=2.0
+- SEISMIC_02: state=OK, risk=3.0 (LOW), last_seen_min=8.0

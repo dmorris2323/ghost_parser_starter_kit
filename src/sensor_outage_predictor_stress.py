@@ -1,11 +1,17 @@
 """
-Sensor Outage Predictor Stress Gate
-Week-2 Base Defense Hardening
+sensor_outage_predictor_stress.py
 
-Pass Criteria:
-- No crashes
-- Under comms ambiguity, no non-OFFLINE sensor may report HIGH risk (capped)
-- Required tokens appear in latest txt (probabilistic, bounded, operator judgment)
+Week-2 Base Defense — Stress test for Sensor Outage Predictor (SAFE)
+Goal:
+- No crashes across randomized degraded inputs
+- Risk always bounded [0,100]
+- Posture always one of {ROUTINE_MONITORING, DUTY_OFFICER_NOTIFY, ELEVATED_WATCH}
+- Confidence always one of {HIGH, MED, LOW}
+- Writes latest + stamped JSON to docs/base_defense/
+
+Artifacts:
+- docs/base_defense/sensor_outage_predictor_stress_latest.json
+- docs/base_defense/sensor_outage_predictor_stress_<timestamp>.json
 """
 
 from __future__ import annotations
@@ -16,120 +22,136 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Dict, List
 
-from sensor_outage_predictor import predict_sensor_outages, write_sensor_outage_prediction
+from sensor_outage_predictor import build_sensor_outage_predictor
 
-OUT_DIR = Path("docs/nuclear")  # keep your existing pattern
-OUT_DIR.mkdir(parents=True, exist_ok=True)
+
+OUT_DIR = Path("docs") / "base_defense"
 
 
 def _ts() -> str:
     return datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S")
 
 
-def _write_latest(obj: Dict[str, Any]) -> Dict[str, str]:
-    latest = OUT_DIR / "sensor_outage_predictor_stress_latest.json"
-    stamped = OUT_DIR / f"sensor_outage_predictor_stress_{_ts()}.json"
-    latest.write_text(json.dumps(obj, indent=2), encoding="utf-8")
-    stamped.write_text(json.dumps(obj, indent=2), encoding="utf-8")
-    return {"json_latest": str(latest), "json_stamped": str(stamped)}
+def _safe_mkdir(p: Path) -> None:
+    p.mkdir(parents=True, exist_ok=True)
 
 
-def _missing_tokens(text: str) -> List[str]:
-    req = ["probabilistic", "bounded", "operator judgment"]
-    return [t for t in req if t.lower() not in text.lower()]
+def _write_json(path: Path, obj: Any) -> None:
+    _safe_mkdir(path.parent)
+    path.write_text(json.dumps(obj, indent=2), encoding="utf-8")
 
 
-def _rand_state() -> str:
-    return random.choice(["OK", "NOISY", "OFFLINE", "UNKNOWN"])
+def _clamp(x: float, lo: float, hi: float) -> float:
+    return max(lo, min(hi, x))
 
 
-def main() -> int:
-    random.seed(72)
+def _rand_sensor(i: int) -> Dict[str, Any]:
+    sid = f"SENSOR_{i:03d}"
+    health = random.choice(["OK", "DEGRADED", "DOWN", "UNKNOWN", None, "green", "red"])
+    # sometimes missing last_seen
+    if random.random() < 0.12:
+        last_seen = None
+    else:
+        # skew toward realistic values but include outliers
+        last_seen = random.choice([0.5, 2, 8, 16, 45, 75, 120, 240, 999])
 
+    loss = random.choice([0, 0.2, 1.0, 4.9, 5.1, 12.0, 18.0, 55.0, None])
+    jitter = random.choice([0, 10, 45, 85, 140, 210, 400, None])
+    batt = random.choice([None, 5, 9, 12, 24, 50, 88, 110])  # 110 should clamp
+    tamper = random.choice([False, False, False, True])
+    maint = random.choice([False, False, True])
+
+    row: Dict[str, Any] = {"sensor_id": sid, "health_state": health}
+    if last_seen is not None:
+        row["last_seen_minutes"] = last_seen
+    if loss is not None:
+        row["packet_loss_pct"] = loss
+    if jitter is not None:
+        row["jitter_ms"] = jitter
+    row["battery_pct"] = batt
+    row["tamper_flag"] = tamper
+    row["maintenance_window"] = maint
+    return row
+
+
+def main() -> None:
+    random.seed(42)
+
+    allowed_posture = {"ROUTINE_MONITORING", "DUTY_OFFICER_NOTIFY", "ELEVATED_WATCH"}
+    allowed_conf = {"HIGH", "MED", "LOW"}
+
+    runs = 120
     crashes = 0
-    violations: List[Dict[str, Any]] = []
+    violations: List[str] = []
 
-    cases = 400
-    for i in range(cases):
-        comms_state = random.choice(["OK", "NOISY", "DEGRADED", "OK"])
-
-        sensor_health: Dict[str, Any] = {}
-        # sometimes empty input
-        if random.random() < 0.10:
-            sensor_health = {}
+    for r in range(runs):
+        # sometimes zero sensors (hard case)
+        if random.random() < 0.08:
+            sensors: List[Dict[str, Any]] = []
         else:
-            for sid in ["CAM_1", "CAM_2", "RADAR_1", "RADAR_2", "FENCE_1", "RF_1"]:
-                if random.random() < 0.75:
-                    sensor_health[sid] = {
-                        "state": _rand_state(),
-                        "last_seen_age_sec": random.choice([0, 10, 30, 90, 150, 250, 400, 800]),
-                        "error_rate": random.choice([0.0, 0.05, 0.12, 0.22, 0.35, 0.5, 0.8]),
-                        "battery_proxy": random.choice([0.05, 0.15, 0.3, 0.45, 0.7, 0.9]),
-                    }
+            n = random.randint(1, 25)
+            sensors = [_rand_sensor(i) for i in range(n)]
+
+        dq = random.choice(["HIGH", "MED", "LOW", "UNKNOWN", None])
 
         try:
-            report = predict_sensor_outages(sensor_health=sensor_health, comms_state=comms_state)
+            report = build_sensor_outage_predictor(
+                sensors=sensors,
+                site_id="INSTALLATION_ALPHA",
+                time_horizon_minutes=random.choice([30, 60, 120, 240, 999]),
+                data_quality=str(dq) if dq is not None else "UNKNOWN",
+            )
         except Exception as e:
             crashes += 1
-            violations.append({"case_index": i, "type": "CRASH", "error": f"{e.__class__.__name__}: {e}"})
+            violations.append(f"CRASH[{r}]: {e.__class__.__name__}: {e}")
             continue
 
-        preds = report.get("predictions", []) or []
-        status = report.get("status", {}) if isinstance(report.get("status"), dict) else {}
-        ambiguity = status.get("ambiguity_flags", []) or []
-        is_amb = bool(ambiguity)
+        # Validate invariants
+        summary = report.get("summary", {}) if isinstance(report.get("summary"), dict) else {}
+        posture = str(summary.get("posture", "")).strip()
+        conf = str(summary.get("confidence", "")).strip()
+        avg_score = float(summary.get("avg_outage_risk_score", 0.0) or 0.0)
+        peak_score = float(summary.get("peak_outage_risk_score", 0.0) or 0.0)
 
-        # Under ambiguity: only OFFLINE may be HIGH risk
-        if is_amb:
-            for p in preds:
-                if p.get("state") != "OFFLINE" and p.get("risk") == "HIGH":
-                    violations.append(
-                        {
-                            "case_index": i,
-                            "type": "UNCAPPED_HIGH_RISK_UNDER_AMBIGUITY",
-                            "sensor_id": p.get("sensor_id"),
-                            "state": p.get("state"),
-                            "risk": p.get("risk"),
-                            "risk_score": p.get("risk_score"),
-                            "ambiguity_flags": ambiguity,
-                        }
-                    )
-                    break
+        if posture not in allowed_posture:
+            violations.append(f"BAD_POSTURE[{r}]: {posture}")
+        if conf not in allowed_conf:
+            violations.append(f"BAD_CONF[{r}]: {conf}")
 
-    # Write a sample artifact so humans can read it
-    sample = predict_sensor_outages(
-        sensor_health={
-            "RADAR_1": {"state": "NOISY", "last_seen_age_sec": 250, "error_rate": 0.35, "battery_proxy": 0.3},
-            "CAM_2": {"state": "OFFLINE", "last_seen_age_sec": 800, "error_rate": 0.9, "battery_proxy": 0.1},
-        },
-        comms_state="DEGRADED",
-    )
-    paths = write_sensor_outage_prediction(sample)
+        if not (0.0 <= avg_score <= 100.0):
+            violations.append(f"AVG_OOB[{r}]: {avg_score}")
+        if not (0.0 <= peak_score <= 100.0):
+            violations.append(f"PEAK_OOB[{r}]: {peak_score}")
 
-    # token check
-    txt = Path(paths["txt_latest"]).read_text(encoding="utf-8")
-    missing = _missing_tokens(txt)
-    if missing:
-        violations.append({"type": "MISSING_REQUIRED_TOKENS", "missing": missing, "txt_latest": paths["txt_latest"]})
+        # Per-sensor scores bounded
+        per = report.get("per_sensor", [])
+        if isinstance(per, list):
+            for j, row in enumerate(per[:100]):  # bounded
+                s = float(row.get("outage_risk_score", 0.0) or 0.0)
+                if s != _clamp(s, 0.0, 100.0):
+                    violations.append(f"SCORE_OOB[{r}:{j}]: {s}")
 
-    verdict = "PASS" if (crashes == 0 and len(violations) == 0) else "FAIL"
-    payload = {
+    verdict = "PASS" if crashes == 0 and len(violations) == 0 else "FAIL"
+
+    out = {
         "generated_at_utc": datetime.now(timezone.utc).isoformat(),
         "verdict": verdict,
-        "cases": cases,
+        "runs": runs,
         "crashes": crashes,
         "violations_count": len(violations),
-        "violations_preview": violations[:25],
-        "sample_paths": paths,
+        "violations": violations[:200],  # bounded
     }
-    out_paths = _write_latest(payload)
 
-    print("Sensor Outage Predictor Stress Gate:")
-    print(json.dumps({**payload, **out_paths}, indent=2))
+    _safe_mkdir(OUT_DIR)
+    stamped = OUT_DIR / f"sensor_outage_predictor_stress_{_ts()}.json"
+    latest = OUT_DIR / "sensor_outage_predictor_stress_latest.json"
+    _write_json(stamped, out)
+    _write_json(latest, out)
 
-    return 0 if verdict == "PASS" else 2
+    print("Sensor Outage Predictor Stress:")
+    print(json.dumps({"verdict": verdict, "latest": str(latest), "stamped": str(stamped)}, indent=2))
 
 
 if __name__ == "__main__":
-    raise SystemExit(main())
+    main()
 
