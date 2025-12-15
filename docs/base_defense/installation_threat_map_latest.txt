@@ -1,30 +1,46 @@
-INSTALLATION THREAT MAP
-Generated: 2025-12-15T20:52:14.232907+00:00
-
-Posture: HEIGHTENED_AWARENESS
-Confidence: LOW
-Threat Band: RED
-Threat Score: 6
-Ambiguity Flags: DEGRADED_COMMS, SENSOR_OUTAGE
-Cap Applied: True
-
-INPUT COUNTS:
-- perimeter_events: 2
-- patrol_reports: 1
-- sensors_reported: 2
-- sensors_offline: 1
-- comms_state: NOISY
-
-WHAT WE CAN SAY:
-- Installation posture is HEIGHTENED_AWARENESS with confidence=LOW.
-- Threat is assessed in a bounded band (threat_band=RED).
-- Assessment is probabilistic and bounded; operator judgment applies.
-
-WHAT WE CANNOT SAY:
-- Cannot infer adversary intent.
-- Cannot confirm coordinated attack.
-- Cannot attribute activity to a specific actor based on this product alone.
-
-OPERATOR NOTES:
-- If comms are degraded or sensors are offline, validate with Security Forces and cross-check manual reports.
-- Escalation beyond SECURITY_FORCES_NOTIFY requires corroboration and command direction.
+{
+  "generated_at_utc": "2025-12-15T21:36:29.641753+00:00",
+  "type": "installation_threat_map",
+  "safe_notice": "Synthetic training artifact. Not real-world intelligence.",
+  "inputs": {
+    "comms_state": "OK",
+    "sensor_coverage_present": false
+  },
+  "summary": {
+    "posture": "DUTY_OFFICER_NOTIFY",
+    "overall_risk_band": "ELEVATED",
+    "max_risk_score": 0.72,
+    "degraded": false
+  },
+  "zones": [
+    {
+      "zone": "FLIGHTLINE",
+      "risk_score": 0.72,
+      "risk_band": "ELEVATED",
+      "notes": "High asset density"
+    },
+    {
+      "zone": "PERIMETER_NORTH",
+      "risk_score": 0.61,
+      "risk_band": "ELEVATED",
+      "notes": "UAS exposure"
+    },
+    {
+      "zone": "MAIN_GATE",
+      "risk_score": 0.55,
+      "risk_band": "ELEVATED",
+      "notes": "Traffic congestion"
+    },
+    {
+      "zone": "HOUSING",
+      "risk_score": 0.28,
+      "risk_band": "LOW",
+      "notes": "Low adversary value"
+    }
+  ],
+  "bounded_statements": [
+    "Assessment is probabilistic and bounded; operator judgment applies.",
+    "Threat posture reflects synthetic indicators only."
+  ],
+  "unknowns": []
+}

@@ -1,37 +1,46 @@
 {
-  "generated_at_utc": "2025-12-15T20:52:14.232907+00:00",
+  "generated_at_utc": "2025-12-15T21:36:29.641753+00:00",
+  "type": "installation_threat_map",
+  "safe_notice": "Synthetic training artifact. Not real-world intelligence.",
   "inputs": {
-    "counts": {
-      "perimeter_events": 2,
-      "patrol_reports": 1,
-      "sensors_reported": 2,
-      "sensors_offline": 1
+    "comms_state": "OK",
+    "sensor_coverage_present": false
+  },
+  "summary": {
+    "posture": "DUTY_OFFICER_NOTIFY",
+    "overall_risk_band": "ELEVATED",
+    "max_risk_score": 0.72,
+    "degraded": false
+  },
+  "zones": [
+    {
+      "zone": "FLIGHTLINE",
+      "risk_score": 0.72,
+      "risk_band": "ELEVATED",
+      "notes": "High asset density"
     },
-    "comms_state": "NOISY"
-  },
-  "status": {
-    "posture": "HEIGHTENED_AWARENESS",
-    "confidence": "LOW",
-    "threat_band": "RED",
-    "threat_score": 6,
-    "ambiguity_flags": [
-      "DEGRADED_COMMS",
-      "SENSOR_OUTAGE"
-    ],
-    "cap_applied": true
-  },
-  "what_we_can_say": [
-    "Installation posture is HEIGHTENED_AWARENESS with confidence=LOW.",
-    "Threat is assessed in a bounded band (threat_band=RED).",
-    "Assessment is probabilistic and bounded; operator judgment applies."
+    {
+      "zone": "PERIMETER_NORTH",
+      "risk_score": 0.61,
+      "risk_band": "ELEVATED",
+      "notes": "UAS exposure"
+    },
+    {
+      "zone": "MAIN_GATE",
+      "risk_score": 0.55,
+      "risk_band": "ELEVATED",
+      "notes": "Traffic congestion"
+    },
+    {
+      "zone": "HOUSING",
+      "risk_score": 0.28,
+      "risk_band": "LOW",
+      "notes": "Low adversary value"
+    }
   ],
-  "what_we_cannot_say": [
-    "Cannot infer adversary intent.",
-    "Cannot confirm coordinated attack.",
-    "Cannot attribute activity to a specific actor based on this product alone."
+  "bounded_statements": [
+    "Assessment is probabilistic and bounded; operator judgment applies.",
+    "Threat posture reflects synthetic indicators only."
   ],
-  "operator_notes": [
-    "If comms are degraded or sensors are offline, validate with Security Forces and cross-check manual reports.",
-    "Escalation beyond SECURITY_FORCES_NOTIFY requires corroboration and command direction."
-  ]
+  "unknowns": []
 }
