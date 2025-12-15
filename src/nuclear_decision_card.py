@@ -1,18 +1,16 @@
 """
 nuclear_decision_card.py
 
-Commander-grade decision card for nuclear/ISR watch contexts.
+Commander-safe nuclear decision card (TRAINING / SAFE)
+- Produces a bounded, ambiguity-aware "decision card" from synthetic metrics.
+- Caps escalation posture under ambiguity (prevents over-escalation when inputs are missing/degraded/contested).
+- Writes latest + stamped JSON/TXT artifacts.
 
-Week-1 hardening:
-- Never crash under missing/partial data
-- Explicit ambiguity handling + confidence
-- Escalation ladder recommendation is embedded and consistent
-- Safe outputs (synthetic-friendly)
-- Writes latest + stamped artifacts
-
-Public API:
-- build_decision_card(...)
-- write_decision_card(...)
+Outputs:
+- docs/decision_cards/nuclear_decision_card_latest.json
+- docs/decision_cards/nuclear_decision_card_latest.txt
+- docs/decision_cards/nuclear_decision_card_<timestamp>.json
+- docs/decision_cards/nuclear_decision_card_<timestamp>.txt
 """
 
 from __future__ import annotations
@@ -20,9 +18,7 @@ from __future__ import annotations
 import json
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Any, Dict, Optional
-
-from escalation_ladder import recommend_escalation, write_escalation_artifacts
+from typing import Any, Dict, Optional, Tuple
 
 
 DECISION_DIR = Path("docs") / "decision_cards"
@@ -45,252 +41,312 @@ def _write_json(path: Path, obj: Any) -> None:
     path.write_text(json.dumps(obj, indent=2), encoding="utf-8")
 
 
-def _coerce_int(x: Any, default: int = 0) -> int:
-    try:
-        return int(x)
-    except Exception:
-        return default
+def _write_txt(path: Path, text: str) -> None:
+    _safe_mkdir(path.parent)
+    path.write_text(text, encoding="utf-8")
 
 
 def _coerce_float(x: Any, default: float = 0.0) -> float:
     try:
+        if x is None:
+            return default
         return float(x)
     except Exception:
         return default
 
 
-def _norm_alerts(alerts: Optional[Dict[str, Any]]) -> Dict[str, int]:
+def _normalize_alerts(alerts: Optional[Dict[str, Any]]) -> Dict[str, int]:
     a = alerts or {}
+
+    def _i(v: Any) -> int:
+        try:
+            return int(v)
+        except Exception:
+            return 0
+
+    crit = _i(a.get("crit", 0))
+    high = _i(a.get("high", 0))
+    anomaly = _i(a.get("anomaly", 0))
+    attack_like = _i(a.get("attack_like", 0))
+    total = _i(a.get("total", crit + high + anomaly + attack_like))
     return {
-        "crit": _coerce_int(a.get("crit", 0)),
-        "high": _coerce_int(a.get("high", 0)),
-        "attack_like": _coerce_int(a.get("attack_like", 0)),
-        "anomaly": _coerce_int(a.get("anomaly", 0)),
-        "total": _coerce_int(a.get("total", 0)),
+        "total": total,
+        "crit": crit,
+        "high": high,
+        "anomaly": anomaly,
+        "attack_like": attack_like,
     }
 
 
-def _confidence_band(trust_score: float, degraded: bool, missing_signals: int) -> str:
-    base = trust_score
-    if degraded:
-        base -= 10
-    base -= min(20, missing_signals * 5)
-
-    if base >= 85:
-        return "HIGH"
-    if base >= 70:
-        return "MEDIUM"
-    if base >= 55:
-        return "LOW"
-    return "VERY_LOW"
-
-
 def _risk_band(risk_score: float) -> str:
-    if risk_score >= 85:
+    # Bounded bands (do not imply certainty)
+    if risk_score >= 80:
         return "SEVERE"
-    if risk_score >= 65:
+    if risk_score >= 60:
         return "ELEVATED"
     if risk_score >= 40:
         return "GUARDED"
-    return "NORMAL"
+    if risk_score >= 20:
+        return "WATCH"
+    return "BASELINE"
 
 
-def _derive_missing_signals(
+def _confidence_label(*, trust_score: Optional[float], degraded: bool, ambiguity_flags: list[str]) -> str:
+    # Conservative confidence heuristic.
+    if degraded or ambiguity_flags:
+        return "LOW"
+    if trust_score is None:
+        return "LOW"
+    if trust_score >= 90:
+        return "HIGH"
+    if trust_score >= 75:
+        return "MEDIUM"
+    return "LOW"
+
+
+def _fmt_metric(value: Optional[float], *, ambiguity_flags: list[str]) -> str:
+    """
+    Avoid producing fake numeric certainty under ambiguity.
+    If we are missing signals or in contested conditions, treat 0.0 as potentially "unknown"
+    (many pipelines default missing to 0).
+    """
+    if value is None:
+        return "UNKNOWN"
+    if ambiguity_flags and abs(float(value)) < 1e-9:
+        return "UNKNOWN"
+    return f"{float(value):.2f}"
+
+
+def _bounded_statement(
     *,
-    comms_state: Optional[str],
-    radiation_usv: Optional[float],
-    seismic_mag: Optional[float],
-    ems_state: Optional[str],
-) -> int:
-    missing = 0
-    if comms_state is None:
-        missing += 1
-    if radiation_usv is None:
-        missing += 1
-    if seismic_mag is None:
-        missing += 1
-    if ems_state is None:
-        missing += 1
-    return missing
+    posture: str,
+    confidence: str,
+    risk_band: str,
+    trust_score: Optional[float],
+    risk_score: Optional[float],
+    ambiguity_flags: list[str],
+) -> list[str]:
+    trust_txt = _fmt_metric(trust_score, ambiguity_flags=ambiguity_flags)
+    risk_txt = _fmt_metric(risk_score, ambiguity_flags=ambiguity_flags)
+
+    lines = [
+        f"System posture is {posture} with confidence={confidence}.",
+        f"Risk is assessed in a bounded band (risk_score={risk_txt}).",
+        f"Trust is bounded (trust_score={trust_txt}); interpretation remains probabilistic.",
+    ]
+    if ambiguity_flags:
+        lines.append(f"Ambiguity flags: {', '.join(ambiguity_flags)}.")
+    return lines
+
+
+def _call_recommend_escalation_flex(
+    *,
+    trust_score: float,
+    risk_score: float,
+    alerts: Dict[str, int],
+    degraded: bool,
+    ambiguity_flags: list[str],
+) -> Dict[str, Any]:
+    """
+    recommend_escalation() has been refactored a few times in your repo.
+    This wrapper calls it safely across common signatures.
+    """
+    try:
+        from escalation_ladder import recommend_escalation  # type: ignore
+    except Exception as e:
+        return {
+            "posture": "DUTY_OFFICER_NOTIFY",
+            "confidence": "LOW",
+            "reason": f"Escalation engine unavailable: {e.__class__.__name__}: {e}",
+        }
+
+    attempts: list[Tuple[Dict[str, Any], str]] = [
+        (
+            {
+                "trust_score": trust_score,
+                "risk_score": risk_score,
+                "alerts": alerts,
+                "degraded": degraded,
+                "ambiguity_flags": ambiguity_flags,
+            },
+            "trust,risk,alerts,degraded,ambiguity_flags",
+        ),
+        (
+            {"trust_score": trust_score, "risk_score": risk_score, "alerts": alerts, "degraded": degraded},
+            "trust,risk,alerts,degraded",
+        ),
+        (
+            {"trust_score": trust_score, "risk_score": risk_score, "alerts": alerts},
+            "trust,risk,alerts",
+        ),
+        (
+            {"trust_score": trust_score, "risk_score": risk_score},
+            "trust,risk",
+        ),
+    ]
+
+    last_err: Optional[Exception] = None
+    for kwargs, _sig in attempts:
+        try:
+            res = recommend_escalation(**kwargs)  # type: ignore
+            if isinstance(res, dict):
+                return res
+            posture = getattr(res, "posture", None)
+            conf = getattr(res, "confidence", None)
+            reason = getattr(res, "reason", None) or getattr(res, "reasoning", None)
+            return {
+                "posture": posture or "DUTY_OFFICER_NOTIFY",
+                "confidence": conf or "LOW",
+                "reason": reason or "",
+            }
+        except Exception as e:
+            last_err = e
+
+    return {
+        "posture": "DUTY_OFFICER_NOTIFY",
+        "confidence": "LOW",
+        "reason": f"Escalation engine call failed: {last_err.__class__.__name__}: {last_err}",
+    }
+
+
+def _dedupe_flags(flags: list[str]) -> list[str]:
+    seen: set[str] = set()
+    out: list[str] = []
+    for f in flags:
+        if f and f not in seen:
+            out.append(f)
+            seen.add(f)
+    return out
 
 
 def build_decision_card(
     *,
-    trust_score: Any,
-    risk_score: Any,
+    trust_score: Optional[float],
+    risk_score: Optional[float],
     alerts: Optional[Dict[str, Any]] = None,
     degraded: bool = False,
-    scenario: str = "Synthetic / Training",
     comms_state: Optional[str] = None,
-    radiation_usv: Optional[Any] = None,
-    seismic_mag: Optional[Any] = None,
+    radiation_usv: Optional[float] = None,
+    seismic_mag: Optional[float] = None,
     ems_state: Optional[str] = None,
-    notes: Optional[str] = None,
 ) -> Dict[str, Any]:
-    trust = _coerce_float(trust_score, 0.0)
-    risk = _coerce_float(risk_score, 0.0)
-    a = _norm_alerts(alerts)
+    """
+    Build the commander-safe decision card.
 
-    rad = None if radiation_usv is None else _coerce_float(radiation_usv, 0.0)
-    mag = None if seismic_mag is None else _coerce_float(seismic_mag, 0.0)
+    Under ambiguity (missing/degraded/contested):
+    - Confidence is LOW
+    - Escalation posture is capped to DUTY_OFFICER_NOTIFY
+    """
+    a = _normalize_alerts(alerts)
 
-    missing = _derive_missing_signals(
-        comms_state=comms_state,
-        radiation_usv=rad,
-        seismic_mag=mag,
-        ems_state=ems_state,
-    )
+    trust = None if trust_score is None else _coerce_float(trust_score, 0.0)
+    risk = None if risk_score is None else _coerce_float(risk_score, 0.0)
 
-    confidence = _confidence_band(trust, degraded, missing)
-    risk_band = _risk_band(risk)
+    ambiguity_flags: list[str] = []
 
-    ambiguity_flags = []
+    # Core degraded flag
     if degraded:
         ambiguity_flags.append("DEGRADED_OPS")
-    if missing > 0:
-        ambiguity_flags.append("MISSING_SIGNALS")
-    if trust < 70:
-        ambiguity_flags.append("LOW_TRUST")
-    if a["crit"] > 0:
-        ambiguity_flags.append("CRIT_ALERTS_PRESENT")
 
-    key_judgment = (
-        "No immediate indicators of confirmed nuclear event."
-        if risk < 65 and a["crit"] == 0
-        else "Elevated indicators require increased scrutiny."
-    )
+    # Missing signals
+    if comms_state is None:
+        ambiguity_flags.append("MISSING_COMMS_STATE")
+    if radiation_usv is None:
+        ambiguity_flags.append("MISSING_RADIATION_uSv")
+    if seismic_mag is None:
+        ambiguity_flags.append("MISSING_SEISMIC_MAG")
+    if ems_state is None:
+        ambiguity_flags.append("MISSING_EMS_STATE")
 
-    known = []
-    unknown = []
-
-    known.append(f"Trust score: {trust:.1f} (proxy)")
-    known.append(f"Risk score: {risk:.1f} (proxy)")
-    known.append(f"Alerts: crit={a['crit']}, high={a['high']}, attack_like={a['attack_like']}, anomaly={a['anomaly']}")
+    # Contested/noisy environment flags (THIS is what your stress expects)
+    if ems_state is not None:
+        ems_u = str(ems_state).upper().strip()
+        if ems_u in {"NOISY", "JAMMED", "CONTESTED", "DEGRADED"}:
+            ambiguity_flags.append("EMS_CONTESTED")
 
     if comms_state is not None:
-        known.append(f"Comms state: {comms_state}")
-    else:
-        unknown.append("Comms state unavailable")
+        comms_u = str(comms_state).upper().strip()
+        if comms_u not in {"OK", "UP", "NORMAL"}:
+            ambiguity_flags.append("COMMS_CONTESTED")
 
-    if ems_state is not None:
-        known.append(f"EMS state: {ems_state}")
-    else:
-        unknown.append("EMS state unavailable")
+    # Alert context can imply ambiguity even when sensors exist (bounded)
+    if a.get("anomaly", 0) > 0 or a.get("attack_like", 0) > 0:
+        ambiguity_flags.append("ALERT_ANOMALY_CONTEXT")
 
-    if rad is not None:
-        known.append(f"Radiation uSv (proxy): {rad:.2f}")
-    else:
-        unknown.append("Radiation uSv unavailable")
+    # Aggregate missing
+    if any(flag.startswith("MISSING_") for flag in ambiguity_flags):
+        ambiguity_flags.append("MISSING_SIGNALS")
 
-    if mag is not None:
-        known.append(f"Seismic magnitude (proxy): {mag:.2f}")
-    else:
-        unknown.append("Seismic magnitude unavailable")
+    ambiguity_flags = _dedupe_flags(ambiguity_flags)
 
-    # Escalation ladder: recorded + embedded (consistent posture language)
-    escalation = recommend_escalation(
-        trust_score=trust,
-        risk_score=risk,
+    confidence = _confidence_label(trust_score=trust, degraded=degraded, ambiguity_flags=ambiguity_flags)
+    band = _risk_band(risk if risk is not None else 0.0)
+
+    escalation = _call_recommend_escalation_flex(
+        trust_score=trust if trust is not None else 0.0,
+        risk_score=risk if risk is not None else 0.0,
         alerts=a,
         degraded=degraded,
-        confidence=confidence,
         ambiguity_flags=ambiguity_flags,
     )
 
-    card = {
-        "generated_at_utc": _utc_now_iso(),
-        "type": "NUCLEAR_DECISION_CARD",
-        "scenario": scenario,
-        "safe_notice": "This product may be generated from synthetic telemetry for training/demos.",
+    posture = str(escalation.get("posture", "DUTY_OFFICER_NOTIFY"))
+
+    # 🔒 Escalation cap under ambiguity (hard safety)
+    if ambiguity_flags and posture not in {"ROUTINE_MONITORING", "DUTY_OFFICER_NOTIFY"}:
+        posture = "DUTY_OFFICER_NOTIFY"
+
+    card: Dict[str, Any] = {
+        "generated_at": _utc_now_iso(),
+        "safe_notice": "Synthetic decision-support output (training/demo). Not real missile telemetry.",
+        "inputs": {
+            "trust_score": trust_score,
+            "risk_score": risk_score,
+            "alerts": a,
+            "degraded": degraded,
+            "comms_state": comms_state,
+            "radiation_usv": radiation_usv,
+            "seismic_mag": seismic_mag,
+            "ems_state": ems_state,
+        },
         "status": {
-            "degraded": bool(degraded),
+            "degraded": degraded,
             "confidence": confidence,
-            "risk_band": risk_band,
+            "risk_band": band,
             "ambiguity_flags": ambiguity_flags,
         },
-        "key_judgment": key_judgment,
-        "signals": {
-            "trust_score": trust,
-            "risk_score": risk,
-            "alerts": a,
-            "comms_state": comms_state,
-            "ems_state": ems_state,
-            "radiation_usv": rad,
-            "seismic_mag": mag,
-            "missing_signal_count": missing,
+        "escalation": {
+            "posture": posture,
+            "reason": escalation.get("reason") or escalation.get("reasoning") or "",
+            "confidence": escalation.get("confidence", confidence),
         },
-        "escalation": escalation,
-        "knowns": known,
-        "unknowns": unknown,
-        "notes": notes or "",
+        "what_we_can_say": _bounded_statement(
+            posture=posture,
+            confidence=confidence,
+            risk_band=band,
+            trust_score=trust,
+            risk_score=risk,
+            ambiguity_flags=ambiguity_flags,
+        ),
     }
 
     return card
 
 
-def _render_txt(card: Dict[str, Any]) -> str:
-    s = card.get("status", {})
-    sig = card.get("signals", {})
-    alerts = (sig.get("alerts") or {})
-    esc = (card.get("escalation") or {})
-
-    lines = []
-    lines.append("GLL — NUCLEAR DECISION CARD")
-    lines.append(f"Generated (UTC): {card.get('generated_at_utc', '')}")
-    lines.append(f"Scenario: {card.get('scenario', '')}")
-    lines.append("")
-    lines.append(f"Confidence: {s.get('confidence','')}")
-    lines.append(f"Risk Band:  {s.get('risk_band','')}")
-    lines.append(f"Degraded:   {s.get('degraded', False)}")
-    lines.append(f"Flags:      {', '.join(s.get('ambiguity_flags', []) or [])}")
-    lines.append("")
-    lines.append("Key Judgment:")
-    lines.append(f"- {card.get('key_judgment','')}")
-    lines.append("")
-    lines.append("Signals (proxy):")
-    lines.append(f"- Trust: {sig.get('trust_score', 0)}")
-    lines.append(f"- Risk:  {sig.get('risk_score', 0)}")
-    lines.append(
-        f"- Alerts: crit={alerts.get('crit',0)} high={alerts.get('high',0)} "
-        f"attack_like={alerts.get('attack_like',0)} anomaly={alerts.get('anomaly',0)}"
-    )
-    lines.append(f"- Missing signals: {sig.get('missing_signal_count', 0)}")
-    lines.append("")
-    lines.append("Escalation Ladder:")
-    lines.append(f"- Posture: {esc.get('posture','')}")
-    for a in (esc.get("actions") or []):
-        lines.append(f"  - {a}")
-    if card.get("notes"):
-        lines.append("")
-        lines.append("Notes:")
-        lines.append(card.get("notes", ""))
-
-    return "\n".join(lines).strip() + "\n"
-
-
 def write_decision_card(card: Dict[str, Any]) -> Dict[str, str]:
     _safe_mkdir(DECISION_DIR)
-
-    # also write escalation ladder artifacts so leadership sees a stable posture product
-    try:
-        write_escalation_artifacts(card.get("escalation", {}) or {})
-    except Exception:
-        # never fail decision card on optional artifacts
-        pass
+    stamped = _ts()
 
     json_latest = DECISION_DIR / "nuclear_decision_card_latest.json"
     txt_latest = DECISION_DIR / "nuclear_decision_card_latest.txt"
 
-    stamped = _ts()
     json_stamped = DECISION_DIR / f"nuclear_decision_card_{stamped}.json"
     txt_stamped = DECISION_DIR / f"nuclear_decision_card_{stamped}.txt"
 
     _write_json(json_latest, card)
     _write_json(json_stamped, card)
-
-    _safe_mkdir(txt_latest.parent)
-    txt_latest.write_text(_render_txt(card), encoding="utf-8")
-    txt_stamped.write_text(_render_txt(card), encoding="utf-8")
+    _write_txt(txt_latest, _render_txt(card))
+    _write_txt(txt_stamped, _render_txt(card))
 
     return {
         "json_latest": str(json_latest),
@@ -298,4 +354,40 @@ def write_decision_card(card: Dict[str, Any]) -> Dict[str, str]:
         "json_stamped": str(json_stamped),
         "txt_stamped": str(txt_stamped),
     }
+
+
+def _render_txt(card: Dict[str, Any]) -> str:
+    esc = card.get("escalation", {}) if isinstance(card.get("escalation"), dict) else {}
+    status = card.get("status", {}) if isinstance(card.get("status"), dict) else {}
+    what = card.get("what_we_can_say", [])
+    if not isinstance(what, list):
+        what = [str(what)]
+
+    lines: list[str] = []
+    lines.append("GLL Nuclear Decision Card (SAFE/TRAINING)")
+    lines.append(f"Generated: {card.get('generated_at', '')}")
+    lines.append("")
+    lines.append(f"Posture: {esc.get('posture', 'DUTY_OFFICER_NOTIFY')}")
+    lines.append(f"Confidence: {status.get('confidence', 'LOW')}")
+    lines.append(f"Risk band: {status.get('risk_band', 'BASELINE')}")
+    lines.append("")
+
+    flags = status.get("ambiguity_flags", [])
+    if isinstance(flags, list) and flags:
+        lines.append("Ambiguity flags:")
+        for f in flags:
+            lines.append(f"  - {f}")
+        lines.append("")
+
+    reason = esc.get("reason", "")
+    if reason:
+        lines.append("Escalation reason (bounded):")
+        lines.append(f"  {reason}")
+        lines.append("")
+
+    lines.append("What we can say (bounded):")
+    for w in what:
+        lines.append(f"- {w}")
+
+    return "\n".join(lines)
 

@@ -1,20 +1,6 @@
-GLL — AMBIGUITY STRESS REPORT (LATEST)
-Generated (UTC): 2025-12-15T14:08:40.201588+00:00
-Verdict: FAIL
-Matrix size: 40
-Violations: 40
-
-Rule:
-- If risk<65 and crit==0, posture must not exceed HEIGHTENED_COLLECTION.
-
-Top violations (first 10):
-- risk48_trust82_NONE_MISSING_degradedFalse_high0 -> posture=DUTY_OFFICER_NOTIFY
-- risk48_trust82_NONE_MISSING_degradedFalse_high1 -> posture=DUTY_OFFICER_NOTIFY
-- risk48_trust82_NONE_MISSING_degradedFalse_high3 -> posture=DUTY_OFFICER_NOTIFY
-- risk48_trust82_NONE_MISSING_degradedFalse_high5 -> posture=DUTY_OFFICER_NOTIFY
-- risk48_trust82_COMMS_MISSING_degradedFalse_high0 -> posture=DUTY_OFFICER_NOTIFY
-- risk48_trust82_COMMS_MISSING_degradedFalse_high1 -> posture=DUTY_OFFICER_NOTIFY
-- risk48_trust82_COMMS_MISSING_degradedFalse_high3 -> posture=DUTY_OFFICER_NOTIFY
-- risk48_trust82_COMMS_MISSING_degradedFalse_high5 -> posture=DUTY_OFFICER_NOTIFY
-- risk48_trust82_RAD_MISSING_degradedFalse_high0 -> posture=DUTY_OFFICER_NOTIFY
-- risk48_trust82_RAD_MISSING_degradedFalse_high1 -> posture=DUTY_OFFICER_NOTIFY
+Ambiguity Stress Test
+generated_at_utc: 2025-12-15T15:19:37.943486+00:00
+verdict: PASS
+total_cases: 648
+crashes: 0
+violations: 0
