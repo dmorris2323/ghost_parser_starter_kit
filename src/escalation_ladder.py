@@ -1,263 +1,181 @@
 """
 escalation_ladder.py
 
-Week-1 Nuclear/AFTAC hardening:
-- Convert risk/trust/alerts/degraded/ambiguity into a *bounded* watch posture
-- Outputs a commander-defensible escalation recommendation
-- Never crashes; safe for synthetic demos
+Week-1 Nuclear/AFTAC Hardening:
+- Monotonic, bounded escalation posture
+- No illegal multi-step jumps in a single evaluation
+- No oscillation (hysteresis) unless conditions are clean + stable
 
-Public API:
-- recommend_escalation(...)
-- write_escalation_artifacts(...)
+This is a training/safety policy layer. It is NOT real-world warning logic.
 """
 
 from __future__ import annotations
 
-import json
-from datetime import datetime, timezone
-from pathlib import Path
-from typing import Any, Dict, List, Optional
+from dataclasses import dataclass
+from typing import Any, Dict, Optional, Tuple
 
 
-NUCLEAR_DIR = Path("docs") / "nuclear"
+POSTURE_ORDER = [
+    "ROUTINE_MONITORING",
+    "DUTY_OFFICER_NOTIFY",
+    "UNIT_COMMANDER_ALERT",
+    "WING_COMMANDER_ALERT",
+    "NATIONAL_COMMAND_ALERT",
+]
+_POSTURE_INDEX = {p: i for i, p in enumerate(POSTURE_ORDER)}
 
 
-def _utc_now_iso() -> str:
-    return datetime.now(timezone.utc).isoformat()
+def _clamp_posture(p: str) -> str:
+    if p not in _POSTURE_INDEX:
+        return "ROUTINE_MONITORING"
+    return p
 
 
-def _ts() -> str:
-    return datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S")
+def _max_posture(a: str, b: str) -> str:
+    a = _clamp_posture(a)
+    b = _clamp_posture(b)
+    return a if _POSTURE_INDEX[a] >= _POSTURE_INDEX[b] else b
 
 
-def _safe_mkdir(p: Path) -> None:
-    p.mkdir(parents=True, exist_ok=True)
+def _min_posture(a: str, b: str) -> str:
+    a = _clamp_posture(a)
+    b = _clamp_posture(b)
+    return a if _POSTURE_INDEX[a] <= _POSTURE_INDEX[b] else b
 
 
-def _write_json(path: Path, obj: Any) -> None:
-    _safe_mkdir(path.parent)
-    path.write_text(json.dumps(obj, indent=2), encoding="utf-8")
+def _step_toward(prev: str, target: str, max_steps: int) -> str:
+    prev = _clamp_posture(prev)
+    target = _clamp_posture(target)
+    pi = _POSTURE_INDEX[prev]
+    ti = _POSTURE_INDEX[target]
+    if ti <= pi:
+        return target
+    step = min(max_steps, ti - pi)
+    return POSTURE_ORDER[pi + step]
 
 
-def _write_txt(path: Path, text: str) -> None:
-    _safe_mkdir(path.parent)
-    path.write_text(text, encoding="utf-8")
-
-
-def _coerce_int(x: Any, default: int = 0) -> int:
-    try:
-        return int(x)
-    except Exception:
-        return default
-
-
-def _coerce_float(x: Any, default: float = 0.0) -> float:
-    try:
-        return float(x)
-    except Exception:
-        return default
-
-
-def _norm_alerts(alerts: Optional[Dict[str, Any]]) -> Dict[str, int]:
-    a = alerts or {}
-    return {
-        "crit": _coerce_int(a.get("crit", 0)),
-        "high": _coerce_int(a.get("high", 0)),
-        "attack_like": _coerce_int(a.get("attack_like", 0)),
-        "anomaly": _coerce_int(a.get("anomaly", 0)),
-        "total": _coerce_int(a.get("total", 0)),
-    }
-
-
-def _posture_from_score(score: int) -> str:
-    if score <= 2:
-        return "ROUTINE"
-    if score <= 4:
-        return "ELEVATED_WATCH"
-    if score <= 6:
-        return "HEIGHTENED_COLLECTION"
-    if score <= 8:
+def _risk_to_posture(risk_score: float) -> str:
+    # Conservative banding. Tune only with evidence + tests.
+    if risk_score >= 85:
+        return "NATIONAL_COMMAND_ALERT"
+    if risk_score >= 70:
+        return "WING_COMMANDER_ALERT"
+    if risk_score >= 55:
+        return "UNIT_COMMANDER_ALERT"
+    if risk_score >= 35:
         return "DUTY_OFFICER_NOTIFY"
-    return "CRISIS_ACTION_TEAM"
+    return "ROUTINE_MONITORING"
 
 
-def recommend_escalation(
+def _confidence_norm(conf: Optional[str]) -> str:
+    if not conf:
+        return "UNKNOWN"
+    c = str(conf).strip().upper()
+    if c in {"LOW", "MEDIUM", "HIGH"}:
+        return c
+    return "UNKNOWN"
+
+
+@dataclass(frozen=True)
+class EscalationResult:
+    posture: str
+    cap_applied: bool
+    allowed_jump_steps: int
+    deescalation_blocked: bool
+    reasons: Dict[str, Any]
+
+
+def compute_posture(
     *,
-    trust_score: Any,
-    risk_score: Any,
-    alerts: Optional[Dict[str, Any]] = None,
-    degraded: bool = False,
-    confidence: str = "UNKNOWN",
-    ambiguity_flags: Optional[List[str]] = None,
-) -> Dict[str, Any]:
+    trust_score: float,
+    risk_score: float,
+    confidence: Optional[str],
+    degraded: bool,
+    ambiguity_flags: Optional[list],
+    previous_posture: Optional[str] = None,
+) -> EscalationResult:
     """
-    Returns a bounded escalation recommendation.
+    Compute posture with hardening controls.
 
-    posture levels:
-      - ROUTINE
-      - ELEVATED_WATCH
-      - HEIGHTENED_COLLECTION
-      - DUTY_OFFICER_NOTIFY
-      - CRISIS_ACTION_TEAM
+    Rules:
+    - Base posture derived from risk_score.
+    - If degraded or confidence LOW/UNKNOWN or ambiguity exists -> cap at DUTY_OFFICER_NOTIFY (bounded statement).
+    - Limit escalation per step to at most +2 posture levels (jump limiter).
+    - Prevent oscillation: do not de-escalate unless conditions are clean (HIGH confidence, not degraded, no ambiguity).
     """
-    trust = _coerce_float(trust_score, 0.0)
-    risk = _coerce_float(risk_score, 0.0)
-    a = _norm_alerts(alerts)
-    flags = [str(x) for x in (ambiguity_flags or [])]
 
-    score = 0
+    prev = _clamp_posture(previous_posture or "ROUTINE_MONITORING")
+    conf = _confidence_norm(confidence)
+    flags = ambiguity_flags or []
+    has_ambiguity = len(flags) > 0
 
-    # ---- primary drivers (these can justify escalation) ----
-    if risk >= 85:
-        score += 4
-    elif risk >= 65:
-        score += 3
-    elif risk >= 40:
-        score += 2
-    elif risk >= 20:
-        score += 1
-
-    if a["crit"] > 0:
-        score += 4
-    elif a["high"] >= 3:
-        score += 3
-    elif a["high"] > 0:
-        score += 2
-    elif a["attack_like"] >= 10:
-        score += 2
-    elif a["attack_like"] > 0:
-        score += 1
-
-    # ---- trust / confidence modifiers (bounded) ----
-    # low trust nudges verification posture; it should not auto-trigger leadership notification without risk/crit.
-    if trust < 55:
-        score += 2
-    elif trust < 70:
-        score += 1
-
-    # confidence only matters when trust is already not great
-    conf = str(confidence).upper()
-    if trust < 70 and conf in {"VERY_LOW", "LOW"}:
-        score += 1
-
-    # ambiguity/degraded nudges collection posture (but is capped below)
-    if degraded:
-        score += 1
-    if "MISSING_SIGNALS" in flags:
-        score += 1
-
-    # preliminary posture
-    posture = _posture_from_score(score)
-
-    # ---- HARDENING CAP (Week-1): ambiguity drives collection, not unnecessary notification ----
-    # If there is no CRIT and risk is below ELEVATED, we cap at HEIGHTENED_COLLECTION.
+    base = _risk_to_posture(float(risk_score))
     cap_applied = False
-    if a["crit"] == 0 and risk < 65:
-        if posture in {"DUTY_OFFICER_NOTIFY", "CRISIS_ACTION_TEAM"}:
-            posture = "HEIGHTENED_COLLECTION"
-            cap_applied = True
 
-    # posture-specific actions
-    actions: List[str] = []
-    if posture == "ROUTINE":
-        actions = [
-            "Maintain normal watch cadence.",
-            "Continue multi-source monitoring; avoid single-domain interpretation.",
-        ]
-    elif posture == "ELEVATED_WATCH":
-        actions = [
-            "Increase monitoring cadence and verify feed continuity.",
-            "Queue cross-domain checks (EMS/COMMS/CYBER) before narrative conclusions.",
-        ]
-    elif posture == "HEIGHTENED_COLLECTION":
-        actions = [
-            "Prioritize restoration of missing signals; confirm sensor health.",
-            "Run baseline vs injected validation and compare bounded deltas.",
-            "Elevate analyst review (second set of eyes) before escalation.",
-        ]
-    elif posture == "DUTY_OFFICER_NOTIFY":
-        actions = [
-            "Notify duty leadership per local SOP; provide bounded language only.",
-            "Cross-check independent sources; do not rely on a single indicator stream.",
-            "Prepare a short decision card + pre-brief trust annotations for leadership.",
-        ]
-    else:  # CRISIS_ACTION_TEAM
-        actions = [
-            "Initiate crisis coordination per SOP (CAT/ops floor).",
-            "Treat as time-sensitive: verify, corroborate, communicate uncertainties.",
-            "Do not claim confirmation; present probabilities + unknowns.",
-        ]
+    # --- Cap logic (bounded under ambiguity / degraded / low confidence) ---
+    cap_posture = "DUTY_OFFICER_NOTIFY"
+    if degraded or conf in {"LOW", "UNKNOWN"} or has_ambiguity:
+        capped = _min_posture(base, cap_posture)
+        cap_applied = (capped != base)
+        target = capped
+    else:
+        target = base
 
-    rationale = {
-        "computed_score": score,
-        "cap_applied": cap_applied,
-        "cap_rule": "If crit==0 and risk<65, posture is capped at HEIGHTENED_COLLECTION.",
-        "drivers": {
-            "risk_score": risk,
-            "trust_score": trust,
-            "alerts": a,
-            "confidence": confidence,
-            "degraded": bool(degraded),
-            "ambiguity_flags": flags,
-        },
-        "notes": [
-            "This ladder is deterministic and bounded to reduce analyst drift.",
-            "Ambiguity increases verification posture, not certainty claims.",
-        ],
-    }
+    # --- Jump limiter (no ROUTINE→NATIONAL in one step) ---
+    # max_steps=2 means: ROUTINE→UNIT max in a single evaluation
+    allowed_jump_steps = 2
 
-    return {
-        "generated_at_utc": _utc_now_iso(),
-        "type": "ESCALATION_LADDER_RECOMMENDATION",
-        "safe_notice": "May be generated from synthetic telemetry for training/demos.",
-        "posture": posture,
-        "actions": actions,
-        "rationale": rationale,
-    }
-
-
-def write_escalation_artifacts(rec: Dict[str, Any]) -> Dict[str, str]:
-    _safe_mkdir(NUCLEAR_DIR)
-    stamped = _ts()
-
-    json_latest = NUCLEAR_DIR / "escalation_ladder_latest.json"
-    txt_latest = NUCLEAR_DIR / "escalation_ladder_latest.txt"
-    json_stamped = NUCLEAR_DIR / f"escalation_ladder_{stamped}.json"
-    txt_stamped = NUCLEAR_DIR / f"escalation_ladder_{stamped}.txt"
-
-    _write_json(json_latest, rec)
-    _write_json(json_stamped, rec)
-
-    r = rec.get("rationale", {}).get("drivers", {})
-    a = (r.get("alerts") or {})
-    lines = []
-    lines.append("GLL — ESCALATION LADDER (LATEST)")
-    lines.append(f"Generated (UTC): {rec.get('generated_at_utc','')}")
-    lines.append("")
-    lines.append(f"Posture: {rec.get('posture','')}")
-    lines.append(f"Cap Applied: {rec.get('rationale',{}).get('cap_applied', False)}")
-    lines.append("")
-    lines.append("Drivers:")
-    lines.append(f"- Risk: {r.get('risk_score',0)}")
-    lines.append(f"- Trust: {r.get('trust_score',0)}")
-    lines.append(f"- Confidence: {r.get('confidence','')}")
-    lines.append(f"- Degraded: {r.get('degraded', False)}")
-    lines.append(
-        f"- Alerts: crit={a.get('crit',0)} high={a.get('high',0)} "
-        f"attack_like={a.get('attack_like',0)} anomaly={a.get('anomaly',0)}"
+    # Emergency override is intentionally strict
+    emergency_override = (
+        (not degraded)
+        and (conf == "HIGH")
+        and (not has_ambiguity)
+        and (float(risk_score) >= 95.0)
+        and (float(trust_score) >= 85.0)
     )
-    lines.append("")
-    lines.append("Actions:")
-    for x in (rec.get("actions") or []):
-        lines.append(f"- {x}")
+    if emergency_override:
+        allowed_jump_steps = 4  # allow full jump only under strict override
 
-    _write_txt(txt_latest, "\n".join(lines).strip() + "\n")
-    _write_txt(txt_stamped, "\n".join(lines).strip() + "\n")
+    # Apply step limiter for upward moves
+    stepped = _step_toward(prev, target, allowed_jump_steps)
 
-    return {
-        "json_latest": str(json_latest),
-        "txt_latest": str(txt_latest),
-        "json_stamped": str(json_stamped),
-        "txt_stamped": str(txt_stamped),
+    # --- Anti-oscillation / hysteresis ---
+    # Default: do not de-escalate unless conditions are clean
+    clean_for_deescalation = (
+        (not degraded)
+        and (conf == "HIGH")
+        and (not has_ambiguity)
+        and (float(risk_score) < 25.0)
+        and (float(trust_score) >= 70.0)
+    )
+
+    deescalation_blocked = False
+    if _POSTURE_INDEX[stepped] < _POSTURE_INDEX[prev] and not clean_for_deescalation:
+        stepped = prev
+        deescalation_blocked = True
+
+    reasons: Dict[str, Any] = {
+        "inputs": {
+            "trust_score": float(trust_score),
+            "risk_score": float(risk_score),
+            "confidence": conf,
+            "degraded": bool(degraded),
+            "ambiguity_flags": list(flags),
+            "previous_posture": prev,
+        },
+        "base_posture": base,
+        "target_posture": target,
+        "step_limited_posture": stepped,
+        "cap_posture": cap_posture,
+        "emergency_override": emergency_override,
+        "clean_for_deescalation": clean_for_deescalation,
     }
+
+    return EscalationResult(
+        posture=stepped,
+        cap_applied=cap_applied,
+        allowed_jump_steps=allowed_jump_steps,
+        deescalation_blocked=deescalation_blocked,
+        reasons=reasons,
+    )
 

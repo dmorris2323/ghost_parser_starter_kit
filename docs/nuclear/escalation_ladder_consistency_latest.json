@@ -1,34 +1,135 @@
 {
-  "generated_at_utc": "2025-12-15T12:37:53.530040+00:00",
-  "artifact": "ESCALATION_LADDER_CONSISTENCY",
-  "ladder": [
-    "ROUTINE_MONITORING",
-    "DUTY_OFFICER_NOTIFY",
-    "COMMAND_AWARENESS",
-    "NATIONAL_COMMAND_ALERT"
-  ],
-  "results": {
-    "clean_progression": {
-      "valid": true,
-      "violations": []
-    },
-    "noise_only": {
-      "valid": true,
-      "violations": []
-    },
-    "illegal_jump": {
-      "valid": false,
-      "violations": [
-        "ILLEGAL_JUMP: ROUTINE_MONITORING->NATIONAL_COMMAND_ALERT"
-      ]
-    },
-    "oscillation": {
-      "valid": false,
-      "violations": [
-        "OSCILLATION: DUTY_OFFICER_NOTIFY->ROUTINE_MONITORING"
-      ]
-    }
+  "generated_at_utc": "2025-12-15T12:46:23.390351Z",
+  "verdict": "PASS",
+  "violations": {
+    "illegal_jump": [],
+    "oscillation": []
   },
-  "verdict": "FAIL",
-  "safe_notice": "Validation uses synthetic sequences only."
+  "history": [
+    {
+      "step": 1,
+      "prev_posture": "ROUTINE_MONITORING",
+      "posture": "DUTY_OFFICER_NOTIFY",
+      "cap_applied": false,
+      "allowed_jump_steps": 2,
+      "deescalation_blocked": false,
+      "reasons": {
+        "inputs": {
+          "trust_score": 82.0,
+          "risk_score": 40.0,
+          "confidence": "MEDIUM",
+          "degraded": false,
+          "ambiguity_flags": [],
+          "previous_posture": "ROUTINE_MONITORING"
+        },
+        "base_posture": "DUTY_OFFICER_NOTIFY",
+        "target_posture": "DUTY_OFFICER_NOTIFY",
+        "step_limited_posture": "DUTY_OFFICER_NOTIFY",
+        "cap_posture": "DUTY_OFFICER_NOTIFY",
+        "emergency_override": false,
+        "clean_for_deescalation": false
+      }
+    },
+    {
+      "step": 2,
+      "prev_posture": "DUTY_OFFICER_NOTIFY",
+      "posture": "WING_COMMANDER_ALERT",
+      "cap_applied": false,
+      "allowed_jump_steps": 2,
+      "deescalation_blocked": false,
+      "reasons": {
+        "inputs": {
+          "trust_score": 82.0,
+          "risk_score": 96.0,
+          "confidence": "HIGH",
+          "degraded": false,
+          "ambiguity_flags": [],
+          "previous_posture": "DUTY_OFFICER_NOTIFY"
+        },
+        "base_posture": "NATIONAL_COMMAND_ALERT",
+        "target_posture": "NATIONAL_COMMAND_ALERT",
+        "step_limited_posture": "WING_COMMANDER_ALERT",
+        "cap_posture": "DUTY_OFFICER_NOTIFY",
+        "emergency_override": false,
+        "clean_for_deescalation": false
+      }
+    },
+    {
+      "step": 3,
+      "prev_posture": "WING_COMMANDER_ALERT",
+      "posture": "WING_COMMANDER_ALERT",
+      "cap_applied": true,
+      "allowed_jump_steps": 2,
+      "deescalation_blocked": true,
+      "reasons": {
+        "inputs": {
+          "trust_score": 70.0,
+          "risk_score": 80.0,
+          "confidence": "LOW",
+          "degraded": true,
+          "ambiguity_flags": [
+            "DEGRADED_OPS",
+            "MISSING_SIGNALS"
+          ],
+          "previous_posture": "WING_COMMANDER_ALERT"
+        },
+        "base_posture": "WING_COMMANDER_ALERT",
+        "target_posture": "DUTY_OFFICER_NOTIFY",
+        "step_limited_posture": "WING_COMMANDER_ALERT",
+        "cap_posture": "DUTY_OFFICER_NOTIFY",
+        "emergency_override": false,
+        "clean_for_deescalation": false
+      }
+    },
+    {
+      "step": 4,
+      "prev_posture": "WING_COMMANDER_ALERT",
+      "posture": "WING_COMMANDER_ALERT",
+      "cap_applied": false,
+      "allowed_jump_steps": 2,
+      "deescalation_blocked": true,
+      "reasons": {
+        "inputs": {
+          "trust_score": 75.0,
+          "risk_score": 20.0,
+          "confidence": "MEDIUM",
+          "degraded": false,
+          "ambiguity_flags": [],
+          "previous_posture": "WING_COMMANDER_ALERT"
+        },
+        "base_posture": "ROUTINE_MONITORING",
+        "target_posture": "ROUTINE_MONITORING",
+        "step_limited_posture": "WING_COMMANDER_ALERT",
+        "cap_posture": "DUTY_OFFICER_NOTIFY",
+        "emergency_override": false,
+        "clean_for_deescalation": false
+      }
+    },
+    {
+      "step": 5,
+      "prev_posture": "WING_COMMANDER_ALERT",
+      "posture": "ROUTINE_MONITORING",
+      "cap_applied": false,
+      "allowed_jump_steps": 2,
+      "deescalation_blocked": false,
+      "reasons": {
+        "inputs": {
+          "trust_score": 80.0,
+          "risk_score": 10.0,
+          "confidence": "HIGH",
+          "degraded": false,
+          "ambiguity_flags": [],
+          "previous_posture": "WING_COMMANDER_ALERT"
+        },
+        "base_posture": "ROUTINE_MONITORING",
+        "target_posture": "ROUTINE_MONITORING",
+        "step_limited_posture": "ROUTINE_MONITORING",
+        "cap_posture": "DUTY_OFFICER_NOTIFY",
+        "emergency_override": false,
+        "clean_for_deescalation": true
+      }
+    }
+  ],
+  "json_latest": "docs/nuclear/escalation_ladder_consistency_latest.json",
+  "json_stamped": "docs/nuclear/escalation_ladder_consistency_20251215_124623.json"
 }

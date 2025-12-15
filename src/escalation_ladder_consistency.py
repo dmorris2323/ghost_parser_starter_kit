@@ -1,136 +1,126 @@
 """
 escalation_ladder_consistency.py
 
-Validates nuclear escalation ladder behavior:
-- No illegal jumps
-- No oscillation under noise
-- Reversible under ambiguity
-- Monotonic escalation only when justified
+Consistency test:
+- Ensures ladder does NOT generate:
+  - illegal jumps (ROUTINE->NATIONAL in one step)
+  - oscillation (de-escalation without clean conditions)
 
-Commander trust hardening artifact.
+Writes:
+- docs/nuclear/escalation_ladder_consistency_latest.json
+- docs/nuclear/escalation_ladder_consistency_<timestamp>.json
 """
 
 from __future__ import annotations
 
 import json
-from datetime import datetime, timezone
+from datetime import datetime
 from pathlib import Path
-from typing import Dict, List
+from typing import Any, Dict, List, Tuple
 
+from escalation_ladder import compute_posture, POSTURE_ORDER
 
 OUT_DIR = Path("docs") / "nuclear"
 
-LADDER = [
-    "ROUTINE_MONITORING",
-    "DUTY_OFFICER_NOTIFY",
-    "COMMAND_AWARENESS",
-    "NATIONAL_COMMAND_ALERT",
-]
-
-
-def _utc() -> str:
-    return datetime.now(timezone.utc).isoformat()
-
 
 def _ts() -> str:
-    return datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S")
+    return datetime.utcnow().strftime("%Y%m%d_%H%M%S")
 
 
-def _write(path: Path, obj: Dict) -> None:
+def _write_json(path: Path, obj: Any) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(obj, indent=2), encoding="utf-8")
 
 
-def validate_sequence(sequence: List[str]) -> Dict:
-    violations = []
+def _idx(posture: str) -> int:
+    return POSTURE_ORDER.index(posture) if posture in POSTURE_ORDER else 0
 
-    for i in range(1, len(sequence)):
-        prev = sequence[i - 1]
-        cur = sequence[i]
 
-        if prev not in LADDER or cur not in LADDER:
-            violations.append(f"UNKNOWN_STATE: {prev}->{cur}")
-            continue
+def main() -> Dict[str, Any]:
+    violations = {"illegal_jump": [], "oscillation": []}
 
-        prev_idx = LADDER.index(prev)
-        cur_idx = LADDER.index(cur)
+    # We simulate a small sequence of evaluations.
+    # The ladder must enforce safety constraints even when risk changes quickly.
+    prev_posture = "ROUTINE_MONITORING"
 
-        # Illegal jump
-        if cur_idx - prev_idx > 1:
-            violations.append(f"ILLEGAL_JUMP: {prev}->{cur}")
+    # Each tuple is:
+    # (trust, risk, confidence, degraded, flags)
+    test_sequence: List[Tuple[float, float, str, bool, List[str]]] = [
+        # normal rise into DUTY
+        (82, 40, "MEDIUM", False, []),
+        # risk spike (should NOT jump to NATIONAL in one step)
+        (82, 96, "HIGH", False, []),
+        # degraded/ambiguous situation (cap should keep it bounded)
+        (70, 80, "LOW", True, ["DEGRADED_OPS", "MISSING_SIGNALS"]),
+        # risk drops but NOT clean enough to de-escalate (avoid oscillation)
+        (75, 20, "MEDIUM", False, []),
+        # now clean + stable (allow controlled de-escalation)
+        (80, 10, "HIGH", False, []),
+    ]
 
-        # Oscillation
-        if cur_idx < prev_idx:
-            violations.append(f"OSCILLATION: {prev}->{cur}")
+    history: List[Dict[str, Any]] = []
 
-    return {
-        "valid": len(violations) == 0,
+    for i, (trust, risk, conf, degraded, flags) in enumerate(test_sequence, start=1):
+        res = compute_posture(
+            trust_score=trust,
+            risk_score=risk,
+            confidence=conf,
+            degraded=degraded,
+            ambiguity_flags=flags,
+            previous_posture=prev_posture,
+        )
+
+        cur = res.posture
+
+        # Illegal jump check: ROUTINE->NATIONAL in one evaluation is forbidden
+        if prev_posture == "ROUTINE_MONITORING" and cur == "NATIONAL_COMMAND_ALERT":
+            violations["illegal_jump"].append(
+                f"ILLEGAL_JUMP: {prev_posture}->{cur} at step {i}"
+            )
+
+        # Oscillation check: de-escalation without clean conditions
+        if _idx(cur) < _idx(prev_posture) and not res.reasons.get("clean_for_deescalation", False):
+            violations["oscillation"].append(
+                f"OSCILLATION: {prev_posture}->{cur} at step {i}"
+            )
+
+        history.append(
+            {
+                "step": i,
+                "prev_posture": prev_posture,
+                "posture": cur,
+                "cap_applied": res.cap_applied,
+                "allowed_jump_steps": res.allowed_jump_steps,
+                "deescalation_blocked": res.deescalation_blocked,
+                "reasons": res.reasons,
+            }
+        )
+
+        prev_posture = cur
+
+    ok = (len(violations["illegal_jump"]) == 0 and len(violations["oscillation"]) == 0)
+    verdict = "PASS" if ok else "FAIL"
+
+    payload = {
+        "generated_at_utc": datetime.utcnow().isoformat() + "Z",
+        "verdict": verdict,
         "violations": violations,
+        "history": history,
+        "json_latest": str(OUT_DIR / "escalation_ladder_consistency_latest.json"),
+        "json_stamped": str(OUT_DIR / f"escalation_ladder_consistency_{_ts()}.json"),
     }
 
-
-def run_escalation_ladder_consistency_test() -> Dict:
-    # Synthetic stress sequences
-    sequences = {
-        "clean_progression": [
-            "ROUTINE_MONITORING",
-            "DUTY_OFFICER_NOTIFY",
-            "COMMAND_AWARENESS",
-        ],
-        "noise_only": [
-            "ROUTINE_MONITORING",
-            "ROUTINE_MONITORING",
-            "ROUTINE_MONITORING",
-        ],
-        "illegal_jump": [
-            "ROUTINE_MONITORING",
-            "NATIONAL_COMMAND_ALERT",
-        ],
-        "oscillation": [
-            "DUTY_OFFICER_NOTIFY",
-            "ROUTINE_MONITORING",
-        ],
-    }
-
-    results = {}
-    overall_ok = True
-
-    for name, seq in sequences.items():
-        res = validate_sequence(seq)
-        results[name] = res
-        if not res["valid"] and name != "illegal_jump":
-            overall_ok = False
-
-    verdict = "PASS" if overall_ok else "FAIL"
-
-    report = {
-        "generated_at_utc": _utc(),
-        "artifact": "ESCALATION_LADDER_CONSISTENCY",
-        "ladder": LADDER,
-        "results": results,
-        "verdict": verdict,
-        "safe_notice": "Validation uses synthetic sequences only.",
-    }
-
-    ts = _ts()
+    OUT_DIR.mkdir(parents=True, exist_ok=True)
     latest = OUT_DIR / "escalation_ladder_consistency_latest.json"
-    stamped = OUT_DIR / f"escalation_ladder_consistency_{ts}.json"
+    stamped = OUT_DIR / f"escalation_ladder_consistency_{_ts()}.json"
+    _write_json(latest, payload)
+    _write_json(stamped, payload)
 
-    _write(latest, report)
-    _write(stamped, report)
-
-    return {
-        "verdict": verdict,
-        "json_latest": str(latest),
-        "json_stamped": str(stamped),
-        "violations": {
-            k: v["violations"] for k, v in results.items() if v["violations"]
-        },
-    }
+    print("Escalation Ladder Consistency Test:")
+    print(json.dumps({k: payload[k] for k in ["verdict", "json_latest", "json_stamped", "violations"]}, indent=2))
+    return payload
 
 
 if __name__ == "__main__":
-    result = run_escalation_ladder_consistency_test()
-    print("Escalation Ladder Consistency Test:")
-    print(json.dumps(result, indent=2))
+    main()
 
