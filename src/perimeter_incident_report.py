@@ -1,209 +1,205 @@
+"""
+perimeter_incident_report.py
+
+Week-2 Base Defense Hardening
+Perimeter Incident Report (SAFE / SYNTHETIC)
+
+Goals:
+- Flawless outputs without perfect inputs
+- Always write commander-usable report (bounded language)
+- Write both:
+  (A) canonical artifacts -> docs/base_defense/
+  (B) legacy artifacts    -> src/docs/ (backward compatibility)
+
+Outputs:
+- docs/base_defense/perimeter_incident_report_latest.json
+- docs/base_defense/perimeter_incident_report_latest.txt
+- docs/base_defense/perimeter_incident_report_<timestamp>.json
+- docs/base_defense/perimeter_incident_report_<timestamp>.txt
+- (legacy) src/docs/perimeter_incident_report.json
+- (legacy) src/docs/perimeter_incident_report.txt
+"""
+
 from __future__ import annotations
 
 import json
-from datetime import datetime
+from dataclasses import dataclass
+from datetime import datetime, timezone
 from pathlib import Path
-from typing import Any, Dict, Iterable, List
+from typing import Any, Dict, List, Optional
 
 
-BASE_DIR = Path(__file__).resolve().parent
-DOCS_DIR = BASE_DIR / "docs"
-DATA_DIR = BASE_DIR / "data"
+OUT_DIR = Path("docs") / "base_defense"
+LEGACY_DIR = Path("src") / "docs"
 
 
-def _iter_threat_log(path: Path) -> Iterable[Dict[str, Any]]:
-    """
-    Safely iterate over threat_memory_log.jsonl.
-    Each line should be a JSON object. Malformed lines are skipped.
-    """
-    if not path.exists():
-        return []
+def _utc_now_iso() -> str:
+    return datetime.now(timezone.utc).isoformat()
+
+
+def _ts() -> str:
+    return datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S")
+
+
+def _safe_mkdir(p: Path) -> None:
+    p.mkdir(parents=True, exist_ok=True)
+
+
+def _write_json(path: Path, obj: Any) -> None:
+    _safe_mkdir(path.parent)
+    path.write_text(json.dumps(obj, indent=2), encoding="utf-8")
+
+
+def _write_txt(path: Path, text: str) -> None:
+    _safe_mkdir(path.parent)
+    path.write_text(text, encoding="utf-8")
+
+
+def _coerce_int(x: Any, default: int = 0) -> int:
     try:
-        lines = path.read_text().splitlines()
+        return int(x)
     except Exception:
-        return []
-
-    events: List[Dict[str, Any]] = []
-    for line in lines:
-        line = line.strip()
-        if not line:
-            continue
-        try:
-            ev = json.loads(line)
-            if isinstance(ev, dict):
-                events.append(ev)
-        except Exception:
-            continue
-    return events
+        return default
 
 
-def _classify_sector(ev: Dict[str, Any]) -> str:
-    """
-    Map generic 'sector'/'zone' hints into named perimeter sectors.
-    Defaults to UNKNOWN.
-    """
-    raw = (ev.get("sector") or ev.get("zone") or "").upper()
-
-    if "NORTH" in raw or raw == "N":
-        return "PERIMETER_NORTH"
-    if "SOUTH" in raw or raw == "S":
-        return "PERIMETER_SOUTH"
-    if "EAST" in raw or raw == "E":
-        return "PERIMETER_EAST"
-    if "WEST" in raw or raw == "W":
-        return "PERIMETER_WEST"
-    if "GATE" in raw:
-        return "GATE_COMPLEX"
-    if "AIRFIELD" in raw or "RUNWAY" in raw:
-        return "AIRFIELD"
-    return "UNKNOWN"
+def _coerce_float(x: Any, default: float = 0.0) -> float:
+    try:
+        return float(x)
+    except Exception:
+        return default
 
 
-def _classify_pattern(ev: Dict[str, Any]) -> str:
-    """
-    Very simple tagger for 'drone', 'gate', 'fence', etc.
-    Helps tie to real-world incident narratives.
-    """
-    text = " ".join(
-        str(ev.get(k, "")).lower()
-        for k in ("event_type", "details", "Description", "message")
-    )
-
-    if any(word in text for word in ("uav", "drone", "quad", "uas")):
-        return "DRONE_ACTIVITY"
-    if "gate" in text or "entry control" in text:
-        return "GATE_PRESSURE"
-    if "fence" in text or "perimeter" in text:
-        return "FENCE_PROBE"
-    if "jam" in text or "jamming" in text:
-        return "EMS_JAMMING"
-    if "rad" in text or "radiation" in text:
-        return "RADIATION_ANOMALY"
-    return "GENERAL_INCIDENT"
+def _bounded_language(degraded: bool, unknowns: List[str]) -> List[str]:
+    lines = [
+        "This product is generated from synthetic training telemetry.",
+        "Assessment is probabilistic and bounded; operator judgment applies.",
+    ]
+    if degraded:
+        lines.append("Degraded conditions detected; confidence is bounded downward.")
+    if unknowns:
+        lines.append("Unknowns present; do not infer intent from missing fields.")
+    return lines
 
 
-def build_perimeter_incident_report(max_events: int = 50) -> Dict[str, Any]:
-    """
-    Build an Installation / Perimeter Incident Report from threat_memory_log.jsonl.
+def _default_incidents() -> List[Dict[str, Any]]:
+    # SAFE synthetic examples only
+    return [
+        {
+            "id": "INC-001",
+            "zone": "NORTH_GATE",
+            "type": "UAS_SIGHTING",
+            "severity": "HIGH",
+            "timestamp_utc": _utc_now_iso(),
+            "details": {"alt_m": 60, "bearing_deg": 20, "duration_s": 45},
+        },
+        {
+            "id": "INC-002",
+            "zone": "PERIMETER_EAST",
+            "type": "FENCE_TAMPER",
+            "severity": "MED",
+            "timestamp_utc": _utc_now_iso(),
+            "details": {"sensor_id": "FENCE-E-12", "repeat_hits": 3},
+        },
+    ]
 
-    Output structure:
-      {
-        "product_type": "Perimeter Incident Report",
-        "generated_at": "...Z",
-        "total_events": int,
-        "sector_counts": {...},
-        "pattern_counts": {...},
-        "recent_events": [ ... up to max_events ... ]
-      }
-    """
-    DOCS_DIR.mkdir(exist_ok=True, parents=True)
-    DATA_DIR.mkdir(exist_ok=True, parents=True)
 
-    threat_log = DATA_DIR / "threat_memory_log.jsonl"
-    events = list(_iter_threat_log(threat_log))
+def build_perimeter_incident_report(
+    *,
+    incidents: Optional[List[Dict[str, Any]]] = None,
+    comms_state: Optional[str] = "OK",
+    sensor_health: Optional[Dict[str, Any]] = None,
+    operator_notes: Optional[str] = None,
+) -> Dict[str, Any]:
+    incidents = incidents if isinstance(incidents, list) and incidents else _default_incidents()
+    sensor_health = sensor_health if isinstance(sensor_health, dict) else {}
 
-    sector_counts: Dict[str, int] = {}
-    pattern_counts: Dict[str, int] = {}
+    unknowns: List[str] = []
+    if comms_state is None:
+        unknowns.append("comms_state")
 
-    recent: List[Dict[str, Any]] = []
+    degraded = False
+    if str(comms_state or "").upper() not in {"OK", "NOMINAL"}:
+        degraded = True
 
-    for ev in events:
-        sector = _classify_sector(ev)
-        pattern = _classify_pattern(ev)
+    # Aggregate counts safely
+    sev_counts = {"CRIT": 0, "HIGH": 0, "MED": 0, "LOW": 0, "UNK": 0}
+    for inc in incidents:
+        sev = str(inc.get("severity", "UNK")).upper()
+        if sev not in sev_counts:
+            sev = "UNK"
+        sev_counts[sev] += 1
 
-        sector_counts[sector] = sector_counts.get(sector, 0) + 1
-        pattern_counts[pattern] = pattern_counts.get(pattern, 0) + 1
+    # Commander posture (bounded)
+    posture = "ROUTINE_MONITORING"
+    if sev_counts["CRIT"] > 0:
+        posture = "SECURITY_FORCES_DISPATCH"
+    elif sev_counts["HIGH"] >= 1:
+        posture = "DUTY_OFFICER_NOTIFY"
+    elif degraded and (sev_counts["MED"] + sev_counts["LOW"]) > 0:
+        posture = "DUTY_OFFICER_NOTIFY"
 
-    # Sort newest first by timestamp if present
-    def _parse_ts(e: Dict[str, Any]) -> float:
-        t = e.get("timestamp") or e.get("time") or ""
-        try:
-            # ISO-ish fallback
-            return datetime.fromisoformat(t.replace("Z", "+00:00")).timestamp()
-        except Exception:
-            return 0.0
-
-    events_sorted = sorted(events, key=_parse_ts, reverse=True)
-    for ev in events_sorted[:max_events]:
-        # Strip to a small, briefing-friendly subset
-        recent.append(
-            {
-                "timestamp": ev.get("timestamp"),
-                "sector": _classify_sector(ev),
-                "pattern": _classify_pattern(ev),
-                "severity": ev.get("severity"),
-                "event_type": ev.get("event_type") or ev.get("Description"),
-                "details": ev.get("details"),
-            }
-        )
-
-    report = {
-        "product_type": "Perimeter Incident Report",
-        "generated_at": datetime.utcnow().isoformat() + "Z",
-        "total_events": len(events),
-        "sector_counts": sector_counts,
-        "pattern_counts": pattern_counts,
-        "recent_events": recent,
+    report: Dict[str, Any] = {
+        "generated_at_utc": _utc_now_iso(),
+        "type": "perimeter_incident_report",
+        "safe_notice": "Synthetic training artifact. Do not use as real-world intel.",
+        "inputs": {
+            "comms_state": comms_state,
+            "sensor_health": sensor_health,
+            "operator_notes_present": bool(operator_notes),
+        },
+        "summary": {
+            "posture": posture,
+            "degraded": degraded,
+            "incident_counts": sev_counts,
+            "total_incidents": sum(sev_counts.values()),
+        },
+        "incidents": incidents,
+        "bounded_statements": _bounded_language(degraded=degraded, unknowns=unknowns),
+        "unknowns": unknowns,
     }
 
-    # If no data at all, return a shaped-safe default
-    if len(events) == 0:
-        report["note"] = "No perimeter incidents recorded yet; this is a shaped default."
+    if operator_notes:
+        report["operator_notes"] = str(operator_notes)[:2000]
 
     return report
 
 
-def write_perimeter_incident_report() -> Dict[str, str]:
-    """
-    Write JSON and TXT versions under docs/.
-    """
-    DOCS_DIR.mkdir(exist_ok=True, parents=True)
+def write_perimeter_incident_report(report: Dict[str, Any]) -> Dict[str, str]:
+    ts = _ts()
+    json_latest = OUT_DIR / "perimeter_incident_report_latest.json"
+    txt_latest = OUT_DIR / "perimeter_incident_report_latest.txt"
+    json_stamped = OUT_DIR / f"perimeter_incident_report_{ts}.json"
+    txt_stamped = OUT_DIR / f"perimeter_incident_report_{ts}.txt"
 
-    data = build_perimeter_incident_report()
+    legacy_json = LEGACY_DIR / "perimeter_incident_report.json"
+    legacy_txt = LEGACY_DIR / "perimeter_incident_report.txt"
 
-    json_path = DOCS_DIR / "perimeter_incident_report.json"
-    txt_path = DOCS_DIR / "perimeter_incident_report.txt"
+    _write_json(json_latest, report)
+    _write_json(json_stamped, report)
+    _write_txt(txt_latest, json.dumps(report, indent=2))
+    _write_txt(txt_stamped, json.dumps(report, indent=2))
 
-    json_path.write_text(json.dumps(data, indent=2))
+    # legacy compatibility
+    _write_json(legacy_json, report)
+    _write_txt(legacy_txt, json.dumps(report, indent=2))
 
-    lines: List[str] = []
-    lines.append("=== PERIMETER INCIDENT REPORT ===")
-    lines.append(f"Generated at: {data['generated_at']}")
-    lines.append(f"Total events in log: {data['total_events']}")
-    lines.append("")
+    return {
+        "json_latest": str(json_latest),
+        "txt_latest": str(txt_latest),
+        "json_stamped": str(json_stamped),
+        "txt_stamped": str(txt_stamped),
+        "legacy_json": str(legacy_json),
+        "legacy_txt": str(legacy_txt),
+    }
 
-    if "note" in data:
-        lines.append(f"NOTE: {data['note']}")
-        lines.append("")
 
-    lines.append("Sector incident counts:")
-    for sector, count in sorted(data["sector_counts"].items()):
-        lines.append(f"  - {sector}: {count}")
-    lines.append("")
-
-    lines.append("Pattern counts:")
-    for pattern, count in sorted(data["pattern_counts"].items()):
-        lines.append(f"  - {pattern}: {count}")
-    lines.append("")
-
-    lines.append("Most recent events:")
-    for ev in data["recent_events"]:
-        lines.append(
-            f"  [{ev.get('timestamp')}] {ev['sector']} | {ev['pattern']} | "
-            f"severity={ev.get('severity')} | type={ev.get('event_type')}"
-        )
-        if ev.get("details"):
-            lines.append(f"    details: {ev['details']}")
-    lines.append("")
-
-    txt_path.write_text("\n".join(lines))
-
-    return {"json_path": str(json_path), "txt_path": str(txt_path)}
+def main() -> None:
+    report = build_perimeter_incident_report()
+    paths = write_perimeter_incident_report(report)
+    print("Perimeter Incident Report written:")
+    print(json.dumps(paths, indent=2))
 
 
 if __name__ == "__main__":
-    out = write_perimeter_incident_report()
-    print("Perimeter Incident Report written:")
-    print(f"JSON → {out['json_path']}")
-    print(f"TXT  → {out['txt_path']}")
+    main()
 
