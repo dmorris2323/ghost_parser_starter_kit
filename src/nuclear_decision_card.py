@@ -1,14 +1,18 @@
 """
 nuclear_decision_card.py
 
-Nuclear Decision Card (Commander-grade, SAFE)
-- Produces a decision-ready summary from trust/risk/alerts and degraded state
-- Integrates Pre-Brief Trust Annotations as a commander-trust attachment
-- Writes latest + stamped JSON/TXT outputs for demos/training/audit
+Commander-grade decision card for nuclear/ISR watch contexts.
 
-SAFE NOTICE:
-This module is intended for synthetic telemetry / training metadata unless otherwise specified.
-It does not generate real missile telemetry or classified content.
+Design goals (Week-1 hardening):
+- Never crash under missing/partial data
+- Explicit ambiguity handling + confidence
+- Clear recommendations + bounded language
+- Safe outputs (synthetic-friendly)
+- Writes latest + stamped artifacts
+
+Public API:
+- build_decision_card(...)
+- write_decision_card(...)
 """
 
 from __future__ import annotations
@@ -17,11 +21,10 @@ import json
 from dataclasses import dataclass
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Any, Dict, Optional, List
+from typing import Any, Dict, Optional
 
 
-DECISION_DIR = Path("docs") / "nuclear"
-BRIEFS_DIR = Path("docs") / "briefs"
+DECISION_DIR = Path("docs") / "decision_cards"
 
 
 def _utc_now_iso() -> str:
@@ -41,11 +44,6 @@ def _write_json(path: Path, obj: Any) -> None:
     path.write_text(json.dumps(obj, indent=2), encoding="utf-8")
 
 
-def _write_txt(path: Path, text: str) -> None:
-    _safe_mkdir(path.parent)
-    path.write_text(text, encoding="utf-8")
-
-
 def _coerce_int(x: Any, default: int = 0) -> int:
     try:
         return int(x)
@@ -60,127 +58,63 @@ def _coerce_float(x: Any, default: float = 0.0) -> float:
         return default
 
 
-def _clamp(x: float, lo: float, hi: float) -> float:
-    return max(lo, min(hi, x))
+def _norm_alerts(alerts: Optional[Dict[str, Any]]) -> Dict[str, int]:
+    a = alerts or {}
+    return {
+        "crit": _coerce_int(a.get("crit", 0)),
+        "high": _coerce_int(a.get("high", 0)),
+        "attack_like": _coerce_int(a.get("attack_like", 0)),
+        "anomaly": _coerce_int(a.get("anomaly", 0)),
+        "total": _coerce_int(a.get("total", 0)),
+    }
 
 
-def _band(score_0_100: float) -> str:
-    s = _clamp(score_0_100, 0.0, 100.0)
-    if s >= 85:
+def _confidence_band(trust_score: float, degraded: bool, missing_signals: int) -> str:
+    """
+    Simple, bounded confidence rubric.
+    We want consistent commander language, not vibes.
+    """
+    base = trust_score
+    if degraded:
+        base -= 10
+    base -= min(20, missing_signals * 5)
+
+    if base >= 85:
         return "HIGH"
-    if s >= 70:
+    if base >= 70:
         return "MEDIUM"
-    if s >= 50:
+    if base >= 55:
         return "LOW"
     return "VERY_LOW"
 
 
-def _default_actions_for_band(conf_band: str, degraded: bool) -> List[str]:
-    """
-    Commander-ready actions. Tight and practical.
-    """
-    actions: List[str] = []
-    if conf_band in {"HIGH", "MEDIUM"}:
-        actions.append("Maintain continuous watch; verify contributing sensors/domains.")
-        actions.append("Cross-check anomalies against recent baseline and known training patterns.")
-        if degraded:
-            actions.append("Degraded operations: request redundancy/alternate reporting path if available.")
-    else:
-        actions.append("Treat as provisional: do not escalate without corroboration.")
-        actions.append("Run validation harness baseline + injected pattern to confirm expected deltas.")
-        if degraded:
-            actions.append("Degraded operations: prioritize restoring missing data inputs before decisions.")
-    actions.append("Document assumptions + confidence drivers for audit and commander review.")
-    return actions
+def _risk_band(risk_score: float) -> str:
+    if risk_score >= 85:
+        return "SEVERE"
+    if risk_score >= 65:
+        return "ELEVATED"
+    if risk_score >= 40:
+        return "GUARDED"
+    return "NORMAL"
 
 
-def _escalation_posture(trust: float, risk: float, crit: int, high: int, degraded: bool) -> Dict[str, Any]:
-    """
-    Explainable posture model:
-    - Not a real-world escalation ladder; it's a commander-friendly training proxy.
-    """
-    score = 0.0
-    score += (risk * 0.6)
-    score += (crit * 12.0)
-    score += (min(high, 10) * 2.5)
-    score += (max(0.0, 70.0 - trust) * 0.25)
-    if degraded:
-        score += 6.0
-
-    score = _clamp(score, 0.0, 100.0)
-
-    if score >= 75:
-        posture = "ELEVATE"
-        rationale = "High pressure environment: risk/alerts indicate sustained concern."
-    elif score >= 45:
-        posture = "HEIGHTENED_WATCH"
-        rationale = "Moderate pressure: maintain alert posture and verify signal integrity."
-    else:
-        posture = "BASELINE_WATCH"
-        rationale = "Bounded pressure: continue monitoring and trend analysis."
-
-    return {
-        "posture": posture,
-        "posture_score": round(score, 2),
-        "rationale": rationale,
-    }
-
-
-def _try_write_prebrief(
+def _derive_missing_signals(
     *,
-    trust_score: float,
-    risk_score: float,
-    alerts: Dict[str, Any],
-    degraded: bool,
-    difficulty: str,
-    pattern_id: Optional[str],
-    delta_vs_baseline: Optional[Dict[str, Any]],
-    sis_status: str,
-    sps_status: str,
-    gate_status: str,
-    operator_notes: Optional[List[str]] = None,
-) -> Dict[str, Any]:
-    """
-    Best-effort: generate prebrief artifact and return its attachment payload.
-    Does NOT fail decision card if prebrief module is missing.
-    """
-    try:
-        from prebrief_trust_annotations import write_prebrief_trust_annotations_latest  # type: ignore
-
-        result = write_prebrief_trust_annotations_latest(
-            trust_score=trust_score,
-            risk_score=risk_score,
-            alerts=alerts,
-            degraded=degraded,
-            difficulty=difficulty,
-            pattern_id=pattern_id,
-            delta_vs_baseline=delta_vs_baseline,
-            sis_status=sis_status,
-            sps_status=sps_status,
-            gate_status=gate_status,
-            operator_notes=operator_notes or [],
-        )
-
-        rep = result.get("report", {}) if isinstance(result, dict) else {}
-        summary = rep.get("summary", {}) if isinstance(rep, dict) else {}
-
-        return {
-            "status": "OK",
-            "paths": {
-                "json_latest": result.get("json_latest"),
-                "txt_latest": result.get("txt_latest"),
-                "json_stamped": result.get("json_stamped"),
-                "txt_stamped": result.get("txt_stamped"),
-            },
-            "summary": summary,
-        }
-    except Exception as e:
-        return {
-            "status": "ERROR",
-            "reason": f"Prebrief generation failed: {e.__class__.__name__}: {e}",
-            "paths": {},
-            "summary": {},
-        }
+    comms_state: Optional[str],
+    radiation_usv: Optional[float],
+    seismic_mag: Optional[float],
+    ems_state: Optional[str],
+) -> int:
+    missing = 0
+    if comms_state is None:
+        missing += 1
+    if radiation_usv is None:
+        missing += 1
+    if seismic_mag is None:
+        missing += 1
+    if ems_state is None:
+        missing += 1
+    return missing
 
 
 def build_decision_card(
@@ -189,187 +123,189 @@ def build_decision_card(
     risk_score: Any,
     alerts: Optional[Dict[str, Any]] = None,
     degraded: bool = False,
-    difficulty: str = "UNKNOWN",
-    pattern_id: Optional[str] = None,
-    delta_vs_baseline: Optional[Dict[str, Any]] = None,
-    sis_status: str = "UNKNOWN",
-    sps_status: str = "UNKNOWN",
-    gate_status: str = "UNKNOWN",
+    scenario: str = "Synthetic / Training",
+    comms_state: Optional[str] = None,
+    radiation_usv: Optional[Any] = None,
+    seismic_mag: Optional[Any] = None,
+    ems_state: Optional[str] = None,
+    notes: Optional[str] = None,
 ) -> Dict[str, Any]:
     """
-    Build a commander-grade decision card object (does not write files).
+    Create a commander-ready decision card object.
     """
-    alerts = alerts or {}
-    trust = _clamp(_coerce_float(trust_score, 0.0), 0.0, 100.0)
-    risk = _clamp(_coerce_float(risk_score, 0.0), 0.0, 100.0)
 
-    crit = _coerce_int(alerts.get("crit", 0), 0)
-    high = _coerce_int(alerts.get("high", 0), 0)
-    anomaly = _coerce_int(alerts.get("anomaly", 0), 0)
-    attack_like = _coerce_int(alerts.get("attack_like", 0), 0)
+    trust = _coerce_float(trust_score, 0.0)
+    risk = _coerce_float(risk_score, 0.0)
+    a = _norm_alerts(alerts)
 
-    # Commander confidence (tight + explainable)
-    confidence = (
-        0.55 * trust
-        + 0.25 * (100.0 - risk)
-        - 2.5 * min(crit, 5)
-        - 1.0 * min(high, 10)
+    rad = None if radiation_usv is None else _coerce_float(radiation_usv, 0.0)
+    mag = None if seismic_mag is None else _coerce_float(seismic_mag, 0.0)
+
+    missing = _derive_missing_signals(
+        comms_state=comms_state,
+        radiation_usv=rad,
+        seismic_mag=mag,
+        ems_state=ems_state,
     )
+
+    confidence = _confidence_band(trust, degraded, missing)
+    risk_band = _risk_band(risk)
+
+    # bounded, commander language – never overclaim
+    ambiguity_flags = []
     if degraded:
-        confidence -= 10.0
-    confidence = _clamp(confidence, 0.0, 100.0)
-    conf_band = _band(confidence)
+        ambiguity_flags.append("DEGRADED_OPS")
+    if missing > 0:
+        ambiguity_flags.append("MISSING_SIGNALS")
+    if trust < 70:
+        ambiguity_flags.append("LOW_TRUST")
+    if a["crit"] > 0:
+        ambiguity_flags.append("CRIT_ALERTS_PRESENT")
 
-    posture = _escalation_posture(trust, risk, crit, high, degraded)
-    actions = _default_actions_for_band(conf_band, degraded)
-
-    # Attach prebrief artifact (best-effort)
-    prebrief = _try_write_prebrief(
-        trust_score=trust,
-        risk_score=risk,
-        alerts={"crit": crit, "high": high, "anomaly": anomaly, "attack_like": attack_like},
-        degraded=degraded,
-        difficulty=difficulty,
-        pattern_id=pattern_id,
-        delta_vs_baseline=delta_vs_baseline,
-        sis_status=sis_status,
-        sps_status=sps_status,
-        gate_status=gate_status,
-        operator_notes=["Attached to Nuclear Decision Card for commander-trust pre-brief."],
+    key_judgment = (
+        "No immediate indicators of confirmed nuclear event."
+        if risk < 65 and a["crit"] == 0
+        else "Elevated indicators require increased scrutiny."
     )
 
-    card: Dict[str, Any] = {
-        "artifact": "nuclear_decision_card",
-        "version": 1,
-        "generated_at": _utc_now_iso(),
-        "inputs": {
-            "trust_score": round(trust, 2),
-            "risk_score": round(risk, 2),
-            "alerts": {"crit": crit, "high": high, "attack_like": attack_like, "anomaly": anomaly},
+    # action recommendations: always give next steps
+    actions = []
+    if confidence in {"VERY_LOW", "LOW"}:
+        actions.append("Increase collection: restore missing sensors / verify data feed continuity.")
+        actions.append("Run baseline vs injected validation to confirm system behavior is bounded.")
+    if risk_band in {"ELEVATED", "SEVERE"} or a["crit"] > 0:
+        actions.append("Escalate watch posture and notify duty leadership per local SOP.")
+        actions.append("Cross-check independent sources; do not rely on single-domain indicators.")
+    if not actions:
+        actions.append("Maintain current watch posture; continue monitoring at normal cadence.")
+
+    # what we know / don't know
+    known = []
+    unknown = []
+
+    known.append(f"Trust score: {trust:.1f} (proxy)")
+    known.append(f"Risk score: {risk:.1f} (proxy)")
+    known.append(f"Alerts: crit={a['crit']}, high={a['high']}, attack_like={a['attack_like']}, anomaly={a['anomaly']}")
+
+    if comms_state is not None:
+        known.append(f"Comms state: {comms_state}")
+    else:
+        unknown.append("Comms state unavailable")
+
+    if ems_state is not None:
+        known.append(f"EMS state: {ems_state}")
+    else:
+        unknown.append("EMS state unavailable")
+
+    if rad is not None:
+        known.append(f"Radiation uSv (proxy): {rad:.2f}")
+    else:
+        unknown.append("Radiation uSv unavailable")
+
+    if mag is not None:
+        known.append(f"Seismic magnitude (proxy): {mag:.2f}")
+    else:
+        unknown.append("Seismic magnitude unavailable")
+
+    card = {
+        "generated_at_utc": _utc_now_iso(),
+        "type": "NUCLEAR_DECISION_CARD",
+        "scenario": scenario,
+        "safe_notice": "This product may be generated from synthetic telemetry for training/demos.",
+        "status": {
             "degraded": bool(degraded),
-            "difficulty": difficulty,
-            "pattern_id": pattern_id,
-            "delta_vs_baseline": delta_vs_baseline,
-            "gates": {
-                "sis_status": sis_status,
-                "sps_status": sps_status,
-                "gate_status": gate_status,
-            },
+            "confidence": confidence,
+            "risk_band": risk_band,
+            "ambiguity_flags": ambiguity_flags,
         },
-        "commander_summary": {
-            "confidence_score": round(confidence, 2),
-            "confidence_band": conf_band,
-            "recommended_posture": posture,
-            "key_takeaway": (
-                "System stable under current conditions."
-                if conf_band in {"HIGH", "MEDIUM"}
-                else "System outputs are provisional; verify before escalation."
-            ),
+        "key_judgment": key_judgment,
+        "recommendations": actions,
+        "signals": {
+            "trust_score": trust,
+            "risk_score": risk,
+            "alerts": a,
+            "comms_state": comms_state,
+            "ems_state": ems_state,
+            "radiation_usv": rad,
+            "seismic_mag": mag,
+            "missing_signal_count": missing,
         },
-        "recommended_actions": actions,
-        "attachments": {
-            "prebrief_trust_annotations": prebrief,
-        },
-        "safe_notice": "This card is produced from training-safe metadata/synthetic telemetry unless explicitly sourced otherwise.",
+        "knowns": known,
+        "unknowns": unknown,
+        "notes": notes or "",
     }
+
     return card
 
 
-def write_decision_card_latest(
-    *,
-    trust_score: Any,
-    risk_score: Any,
-    alerts: Optional[Dict[str, Any]] = None,
-    degraded: bool = False,
-    difficulty: str = "UNKNOWN",
-    pattern_id: Optional[str] = None,
-    delta_vs_baseline: Optional[Dict[str, Any]] = None,
-    sis_status: str = "UNKNOWN",
-    sps_status: str = "UNKNOWN",
-    gate_status: str = "UNKNOWN",
-) -> Dict[str, Any]:
-    """
-    Writes latest + stamped JSON/TXT outputs and returns paths + object.
-    """
-    card = build_decision_card(
-        trust_score=trust_score,
-        risk_score=risk_score,
-        alerts=alerts or {},
-        degraded=degraded,
-        difficulty=difficulty,
-        pattern_id=pattern_id,
-        delta_vs_baseline=delta_vs_baseline,
-        sis_status=sis_status,
-        sps_status=sps_status,
-        gate_status=gate_status,
+def _render_txt(card: Dict[str, Any]) -> str:
+    s = card.get("status", {})
+    sig = card.get("signals", {})
+    alerts = (sig.get("alerts") or {})
+
+    lines = []
+    lines.append("GLL — NUCLEAR DECISION CARD")
+    lines.append(f"Generated (UTC): {card.get('generated_at_utc', '')}")
+    lines.append(f"Scenario: {card.get('scenario', '')}")
+    lines.append("")
+    lines.append(f"Confidence: {s.get('confidence','')}")
+    lines.append(f"Risk Band:  {s.get('risk_band','')}")
+    lines.append(f"Degraded:   {s.get('degraded', False)}")
+    lines.append(f"Flags:      {', '.join(s.get('ambiguity_flags', []) or [])}")
+    lines.append("")
+    lines.append("Key Judgment:")
+    lines.append(f"- {card.get('key_judgment','')}")
+    lines.append("")
+    lines.append("Signals (proxy):")
+    lines.append(f"- Trust: {sig.get('trust_score', 0)}")
+    lines.append(f"- Risk:  {sig.get('risk_score', 0)}")
+    lines.append(
+        f"- Alerts: crit={alerts.get('crit',0)} high={alerts.get('high',0)} "
+        f"attack_like={alerts.get('attack_like',0)} anomaly={alerts.get('anomaly',0)}"
     )
+    lines.append(f"- Missing signals: {sig.get('missing_signal_count', 0)}")
+    lines.append("")
+    lines.append("Recommendations:")
+    for r in card.get("recommendations", []) or []:
+        lines.append(f"- {r}")
+    lines.append("")
+    lines.append("Knowns:")
+    for k in card.get("knowns", []) or []:
+        lines.append(f"- {k}")
+    lines.append("")
+    lines.append("Unknowns:")
+    for u in card.get("unknowns", []) or []:
+        lines.append(f"- {u}")
+    if card.get("notes"):
+        lines.append("")
+        lines.append("Notes:")
+        lines.append(card.get("notes", ""))
 
+    return "\n".join(lines).strip() + "\n"
+
+
+def write_decision_card(card: Dict[str, Any]) -> Dict[str, str]:
+    """
+    Writes latest + stamped artifacts.
+    """
     _safe_mkdir(DECISION_DIR)
+    json_latest = DECISION_DIR / "nuclear_decision_card_latest.json"
+    txt_latest = DECISION_DIR / "nuclear_decision_card_latest.txt"
+
     stamped = _ts()
-
-    json_latest = DECISION_DIR / "decision_card_latest.json"
-    txt_latest = DECISION_DIR / "decision_card_latest.txt"
-
-    json_stamped = DECISION_DIR / f"decision_card_{stamped}.json"
-    txt_stamped = DECISION_DIR / f"decision_card_{stamped}.txt"
-
-    txt = _render_txt(card)
+    json_stamped = DECISION_DIR / f"nuclear_decision_card_{stamped}.json"
+    txt_stamped = DECISION_DIR / f"nuclear_decision_card_{stamped}.txt"
 
     _write_json(json_latest, card)
-    _write_txt(txt_latest, txt)
     _write_json(json_stamped, card)
-    _write_txt(txt_stamped, txt)
+    _safe_mkdir(txt_latest.parent)
+    txt_latest.write_text(_render_txt(card), encoding="utf-8")
+    txt_stamped.write_text(_render_txt(card), encoding="utf-8")
 
     return {
         "json_latest": str(json_latest),
         "txt_latest": str(txt_latest),
         "json_stamped": str(json_stamped),
         "txt_stamped": str(txt_stamped),
-        "card": card,
     }
-
-
-def _render_txt(card: Dict[str, Any]) -> str:
-    inp = card.get("inputs", {})
-    cs = card.get("commander_summary", {})
-    att = card.get("attachments", {}).get("prebrief_trust_annotations", {})
-
-    lines: List[str] = []
-    lines.append("GLL — Nuclear Decision Card")
-    lines.append("=" * 26)
-    lines.append(f"Generated: {card.get('generated_at', 'UNKNOWN')}")
-    lines.append("")
-    lines.append("Inputs")
-    lines.append("-" * 6)
-    lines.append(f"Trust: {inp.get('trust_score')} | Risk: {inp.get('risk_score')} | Degraded: {inp.get('degraded')}")
-    lines.append(f"Alerts: {inp.get('alerts')}")
-    lines.append(f"Difficulty: {inp.get('difficulty')} | Pattern: {inp.get('pattern_id')}")
-    lines.append("")
-    lines.append("Commander Summary")
-    lines.append("-" * 16)
-    lines.append(f"Confidence: {cs.get('confidence_score')} ({cs.get('confidence_band')})")
-    rp = cs.get("recommended_posture", {})
-    lines.append(f"Posture: {rp.get('posture')} (score={rp.get('posture_score')})")
-    lines.append(f"Rationale: {rp.get('rationale')}")
-    lines.append(f"Key Takeaway: {cs.get('key_takeaway')}")
-    lines.append("")
-    lines.append("Recommended Actions")
-    lines.append("-" * 18)
-    for a in card.get("recommended_actions", []):
-        lines.append(f"- {a}")
-    lines.append("")
-
-    lines.append("Attachment — Pre-Brief Trust Annotations")
-    lines.append("-" * 38)
-    lines.append(f"Status: {att.get('status')}")
-    if att.get("paths"):
-        lines.append(f"Paths: {att.get('paths')}")
-    summ = att.get("summary") if isinstance(att, dict) else {}
-    if isinstance(summ, dict) and summ:
-        lines.append(f"Prebrief Summary: confidence={summ.get('confidence_score')} band={summ.get('confidence_band')}")
-    if att.get("status") != "OK":
-        lines.append(f"Reason: {att.get('reason')}")
-    lines.append("")
-
-    return "\n".join(lines)
 
