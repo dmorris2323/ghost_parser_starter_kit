@@ -1,41 +1,68 @@
 {
-  "artifact": "prebrief_trust_annotations",
-  "version": 1,
-  "generated_at": "2025-12-15T03:50:52.071345+00:00",
+  "generated_at_utc": "2025-12-15T11:55:44.052342+00:00",
+  "type": "PREBRIEF_TRUST_ANNOTATIONS",
+  "safe_notice": "May be generated from synthetic telemetry for training/demos.",
+  "sources": {
+    "decision_card_latest": "docs/decision_cards/nuclear_decision_card_latest.json",
+    "escalation_ladder_latest": "docs/nuclear/escalation_ladder_latest.json"
+  },
   "summary": {
-    "confidence_score": 60.25,
-    "confidence_band": "LOW",
-    "trust_score": 80.0,
-    "risk_score": 35.0,
-    "degraded": false,
+    "posture": "DUTY_OFFICER_NOTIFY",
+    "confidence": "LOW",
+    "risk_band": "GUARDED",
+    "degraded": true,
+    "cap_applied": false,
     "alerts": {
       "crit": 0,
       "high": 0,
       "attack_like": 0,
-      "anomaly": 0
+      "anomaly": 0,
+      "total": 0
     },
-    "gates": {
-      "sis_status": "UNKNOWN",
-      "sps_status": "UNKNOWN",
-      "gate_status": "UNKNOWN"
-    },
-    "training_context": {
-      "difficulty": "UNKNOWN",
-      "pattern_id": null
-    }
+    "missing_signal_count": 3
   },
-  "confidence_drivers": [
-    "Moderate trust score; system stable but requires continued validation under stress.",
-    "Low risk; baseline watch posture is acceptable unless new signals emerge."
-  ],
-  "delta_notes": [],
-  "assumptions": [
-    "This pre-brief is derived from safe metadata/synthetic telemetry for training/demos unless otherwise noted.",
-    "Confidence reflects system behavior and data quality, not ground truth certainty."
-  ],
-  "missing_data": [],
-  "data_quality_notes": [],
-  "operator_notes": [
-    "Attached to Nuclear Decision Card for commander-trust pre-brief."
-  ]
+  "signals": {
+    "comms_state": null,
+    "ems_state": "NOISY",
+    "radiation_usv": null,
+    "seismic_mag": null,
+    "missing_signal_count": 3
+  },
+  "annotations": {
+    "claims_allowed": [
+      "System posture is DUTY_OFFICER_NOTIFY with confidence=LOW.",
+      "Risk is assessed in a bounded band (risk_score=0.00).",
+      "Trust is bounded (trust_score=0.00); interpretation remains probabilistic.",
+      "Operating under degraded/ambiguous conditions; prioritizing verification and signal restoration.",
+      "No CRIT alerts present; escalation is driven by bounded risk + corroboration, not single indicators."
+    ],
+    "claims_forbidden": [
+      "We confirm a real-world event occurred (not supported by this product).",
+      "This is a confirmed launch/detonation/attack (requires independent confirmation).",
+      "Single-source certainty (no single signal is treated as proof).",
+      "We have complete sensor coverage (we do not).",
+      "We can assign attribution or intent from degraded signals alone.",
+      "This requires leadership notification solely due to ambiguity (ambiguity triggers collection posture first)."
+    ],
+    "known_unknowns": [
+      "Degraded operations mode active; signal quality may be reduced.",
+      "Missing signals detected (count=3); domain confidence is reduced.",
+      "Ambiguity flag: DEGRADED_OPS",
+      "Ambiguity flag: MISSING_SIGNALS"
+    ],
+    "collection_tasks": [
+      "Run baseline vs injected validation and review delta_vs_baseline for expected directional changes.",
+      "Verify sensor health and pipeline integrity (SIS+SPS).",
+      "Restore COMMS state telemetry or corroborate via independent comms monitoring.",
+      "Restore radiation telemetry; verify sensor calibration and data freshness.",
+      "Restore seismic magnitude telemetry; verify timing alignment and noise floor.",
+      "Perform a second-analyst review before any narrative is briefed upward.",
+      "Prepare an update window/timebox for next check-in (avoid continuous escalation without new data)."
+    ],
+    "recommended_comms_language": [
+      "Use bounded language: 'assess', 'indicates', 'suggests', 'requires verification'.",
+      "Separate observation from inference (what we saw vs what it might mean).",
+      "State what would change our posture (specific signals or corroboration)."
+    ]
+  }
 }
