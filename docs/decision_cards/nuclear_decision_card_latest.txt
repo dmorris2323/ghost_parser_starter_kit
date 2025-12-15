@@ -1,5 +1,5 @@
 GLL — NUCLEAR DECISION CARD
-Generated (UTC): 2025-12-15T13:58:54.612285+00:00
+Generated (UTC): 2025-12-15T14:08:31.633811+00:00
 Scenario: Synthetic / Training
 
 Confidence: LOW

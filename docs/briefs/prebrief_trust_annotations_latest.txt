@@ -1,6 +1,6 @@
 GLL PRE-BRIEF TRUST ANNOTATIONS (TRAINING SAFE)
 ====================================================
-Generated: 2025-12-15T13:58:54.720520+00:00
+Generated: 2025-12-15T14:08:59.145313+00:00
 Posture: DUTY_OFFICER_NOTIFY | Confidence: LOW | Risk band: GUARDED
 Degraded: True | Cap applied: False | De-escalation blocked: False
 

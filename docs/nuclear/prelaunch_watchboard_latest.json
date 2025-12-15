@@ -1,5 +1,5 @@
 {
-  "generated_at": "2025-12-15T13:58:54.719507+00:00",
+  "generated_at": "2025-12-15T14:08:59.144330+00:00",
   "safe_notice": "This watchboard is generated from synthetic telemetry and is safe for training/demos.",
   "inputs": {
     "trust_score": 82.0,
@@ -21,7 +21,7 @@
     "previous_posture": "DUTY_OFFICER_NOTIFY"
   },
   "decision_card": {
-    "generated_at_utc": "2025-12-15T13:58:54.719245+00:00",
+    "generated_at_utc": "2025-12-15T14:08:59.144132+00:00",
     "type": "NUCLEAR_DECISION_CARD",
     "scenario": "Synthetic / Training",
     "safe_notice": "This product may be generated from synthetic telemetry for training/demos.",

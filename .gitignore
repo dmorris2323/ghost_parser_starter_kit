@@ -66,4 +66,17 @@ src/docs/sps_behavior_report.json
 src/docs/sps_behavior_report.txt
 src/docs/training/training_curve_latest.json
 
+# --- Keep docs/ "latest" commander products tracked ---
+!docs/**/**/*_latest.json
+!docs/**/**/*_latest.txt
+
+docs/training/training_curve_latest.json
+
+# Ignore root docs training curve too (noisy)
+docs/training/training_curve_latest.json
+
+# Keep docs/ "latest" commander products tracked (even though stamped docs are ignored)
+!docs/**/**/*_latest.json
+!docs/**/**/*_latest.txt
+
 
