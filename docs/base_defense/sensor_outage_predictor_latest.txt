@@ -1,0 +1,28 @@
+SENSOR OUTAGE PREDICTOR
+Generated: 2025-12-15T20:25:35.320478+00:00
+
+Posture: MAINT_PRIORITY_NOW
+Confidence: LOW
+Ambiguity Flags: DEGRADED_COMMS
+
+SUMMARY:
+- HIGH: 1
+- MEDIUM: 1
+- LOW: 0
+
+TOP PREDICTIONS (first 10):
+- CAM_2: state=OFFLINE risk=HIGH score=0.95 capped=False
+- RADAR_1: state=NOISY risk=MEDIUM score=0.65 capped=False
+
+WHAT WE CAN SAY:
+- Maintenance posture is MAINT_PRIORITY_NOW with confidence=LOW.
+- 1 sensors are HIGH outage risk; 1 are MEDIUM outage risk.
+- Assessment is probabilistic and bounded; operator judgment applies.
+
+WHAT WE CANNOT SAY:
+- Cannot attribute outages to adversary action.
+- Cannot confirm root cause without maintenance diagnostics.
+
+OPERATOR NOTES:
+- Prioritize sensors marked HIGH risk for inspection/repair.
+- If comms are degraded, treat predictions as more uncertain and corroborate via local checks.

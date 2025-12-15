@@ -1,0 +1,64 @@
+{
+  "generated_at_utc": "2025-12-15T20:25:35.320478+00:00",
+  "safe_notice": "Derived from synthetic/base-defense telemetry for training/demos.",
+  "inputs": {
+    "sensor_count": 2,
+    "comms_state": "DEGRADED"
+  },
+  "status": {
+    "posture": "MAINT_PRIORITY_NOW",
+    "confidence": "LOW",
+    "ambiguity_flags": [
+      "DEGRADED_COMMS"
+    ]
+  },
+  "summary": {
+    "high_risk": 1,
+    "medium_risk": 1,
+    "low_risk": 0
+  },
+  "predictions": [
+    {
+      "sensor_id": "CAM_2",
+      "state": "OFFLINE",
+      "risk": "HIGH",
+      "risk_score": 0.95,
+      "capped": false,
+      "flags": [
+        "ALREADY_OFFLINE"
+      ],
+      "last_seen_age_sec": 800.0,
+      "error_rate": 0.9,
+      "battery_proxy": 0.1
+    },
+    {
+      "sensor_id": "RADAR_1",
+      "state": "NOISY",
+      "risk": "MEDIUM",
+      "risk_score": 0.65,
+      "capped": false,
+      "flags": [
+        "NOISY_STATE",
+        "STALE_LAST_SEEN>=120S",
+        "ELEVATED_ERROR_RATE",
+        "MID_BATTERY_PROXY"
+      ],
+      "last_seen_age_sec": 250.0,
+      "error_rate": 0.35,
+      "battery_proxy": 0.3
+    }
+  ],
+  "what_we_can_say": [
+    "Maintenance posture is MAINT_PRIORITY_NOW with confidence=LOW.",
+    "1 sensors are HIGH outage risk; 1 are MEDIUM outage risk.",
+    "Assessment is probabilistic and bounded; operator judgment applies."
+  ],
+  "what_we_cannot_say": [
+    "Cannot attribute outages to adversary action.",
+    "Cannot confirm root cause without maintenance diagnostics."
+  ],
+  "operator_notes": [
+    "Prioritize sensors marked HIGH risk for inspection/repair.",
+    "If comms are degraded, treat predictions as more uncertain and corroborate via local checks."
+  ]
+}
