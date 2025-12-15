@@ -3,10 +3,10 @@ nuclear_decision_card.py
 
 Commander-grade decision card for nuclear/ISR watch contexts.
 
-Design goals (Week-1 hardening):
+Week-1 hardening:
 - Never crash under missing/partial data
 - Explicit ambiguity handling + confidence
-- Clear recommendations + bounded language
+- Escalation ladder recommendation is embedded and consistent
 - Safe outputs (synthetic-friendly)
 - Writes latest + stamped artifacts
 
@@ -18,10 +18,11 @@ Public API:
 from __future__ import annotations
 
 import json
-from dataclasses import dataclass
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Dict, Optional
+
+from escalation_ladder import recommend_escalation, write_escalation_artifacts
 
 
 DECISION_DIR = Path("docs") / "decision_cards"
@@ -70,10 +71,6 @@ def _norm_alerts(alerts: Optional[Dict[str, Any]]) -> Dict[str, int]:
 
 
 def _confidence_band(trust_score: float, degraded: bool, missing_signals: int) -> str:
-    """
-    Simple, bounded confidence rubric.
-    We want consistent commander language, not vibes.
-    """
     base = trust_score
     if degraded:
         base -= 10
@@ -130,10 +127,6 @@ def build_decision_card(
     ems_state: Optional[str] = None,
     notes: Optional[str] = None,
 ) -> Dict[str, Any]:
-    """
-    Create a commander-ready decision card object.
-    """
-
     trust = _coerce_float(trust_score, 0.0)
     risk = _coerce_float(risk_score, 0.0)
     a = _norm_alerts(alerts)
@@ -151,7 +144,6 @@ def build_decision_card(
     confidence = _confidence_band(trust, degraded, missing)
     risk_band = _risk_band(risk)
 
-    # bounded, commander language – never overclaim
     ambiguity_flags = []
     if degraded:
         ambiguity_flags.append("DEGRADED_OPS")
@@ -168,18 +160,6 @@ def build_decision_card(
         else "Elevated indicators require increased scrutiny."
     )
 
-    # action recommendations: always give next steps
-    actions = []
-    if confidence in {"VERY_LOW", "LOW"}:
-        actions.append("Increase collection: restore missing sensors / verify data feed continuity.")
-        actions.append("Run baseline vs injected validation to confirm system behavior is bounded.")
-    if risk_band in {"ELEVATED", "SEVERE"} or a["crit"] > 0:
-        actions.append("Escalate watch posture and notify duty leadership per local SOP.")
-        actions.append("Cross-check independent sources; do not rely on single-domain indicators.")
-    if not actions:
-        actions.append("Maintain current watch posture; continue monitoring at normal cadence.")
-
-    # what we know / don't know
     known = []
     unknown = []
 
@@ -207,6 +187,16 @@ def build_decision_card(
     else:
         unknown.append("Seismic magnitude unavailable")
 
+    # Escalation ladder: recorded + embedded (consistent posture language)
+    escalation = recommend_escalation(
+        trust_score=trust,
+        risk_score=risk,
+        alerts=a,
+        degraded=degraded,
+        confidence=confidence,
+        ambiguity_flags=ambiguity_flags,
+    )
+
     card = {
         "generated_at_utc": _utc_now_iso(),
         "type": "NUCLEAR_DECISION_CARD",
@@ -219,7 +209,6 @@ def build_decision_card(
             "ambiguity_flags": ambiguity_flags,
         },
         "key_judgment": key_judgment,
-        "recommendations": actions,
         "signals": {
             "trust_score": trust,
             "risk_score": risk,
@@ -230,6 +219,7 @@ def build_decision_card(
             "seismic_mag": mag,
             "missing_signal_count": missing,
         },
+        "escalation": escalation,
         "knowns": known,
         "unknowns": unknown,
         "notes": notes or "",
@@ -242,6 +232,7 @@ def _render_txt(card: Dict[str, Any]) -> str:
     s = card.get("status", {})
     sig = card.get("signals", {})
     alerts = (sig.get("alerts") or {})
+    esc = (card.get("escalation") or {})
 
     lines = []
     lines.append("GLL — NUCLEAR DECISION CARD")
@@ -265,17 +256,10 @@ def _render_txt(card: Dict[str, Any]) -> str:
     )
     lines.append(f"- Missing signals: {sig.get('missing_signal_count', 0)}")
     lines.append("")
-    lines.append("Recommendations:")
-    for r in card.get("recommendations", []) or []:
-        lines.append(f"- {r}")
-    lines.append("")
-    lines.append("Knowns:")
-    for k in card.get("knowns", []) or []:
-        lines.append(f"- {k}")
-    lines.append("")
-    lines.append("Unknowns:")
-    for u in card.get("unknowns", []) or []:
-        lines.append(f"- {u}")
+    lines.append("Escalation Ladder:")
+    lines.append(f"- Posture: {esc.get('posture','')}")
+    for a in (esc.get("actions") or []):
+        lines.append(f"  - {a}")
     if card.get("notes"):
         lines.append("")
         lines.append("Notes:")
@@ -285,10 +269,15 @@ def _render_txt(card: Dict[str, Any]) -> str:
 
 
 def write_decision_card(card: Dict[str, Any]) -> Dict[str, str]:
-    """
-    Writes latest + stamped artifacts.
-    """
     _safe_mkdir(DECISION_DIR)
+
+    # also write escalation ladder artifacts so leadership sees a stable posture product
+    try:
+        write_escalation_artifacts(card.get("escalation", {}) or {})
+    except Exception:
+        # never fail decision card on optional artifacts
+        pass
+
     json_latest = DECISION_DIR / "nuclear_decision_card_latest.json"
     txt_latest = DECISION_DIR / "nuclear_decision_card_latest.txt"
 
@@ -298,6 +287,7 @@ def write_decision_card(card: Dict[str, Any]) -> Dict[str, str]:
 
     _write_json(json_latest, card)
     _write_json(json_stamped, card)
+
     _safe_mkdir(txt_latest.parent)
     txt_latest.write_text(_render_txt(card), encoding="utf-8")
     txt_stamped.write_text(_render_txt(card), encoding="utf-8")
