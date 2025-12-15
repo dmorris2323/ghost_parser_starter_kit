@@ -1,0 +1,34 @@
+{
+  "generated_at_utc": "2025-12-15T12:37:53.530040+00:00",
+  "artifact": "ESCALATION_LADDER_CONSISTENCY",
+  "ladder": [
+    "ROUTINE_MONITORING",
+    "DUTY_OFFICER_NOTIFY",
+    "COMMAND_AWARENESS",
+    "NATIONAL_COMMAND_ALERT"
+  ],
+  "results": {
+    "clean_progression": {
+      "valid": true,
+      "violations": []
+    },
+    "noise_only": {
+      "valid": true,
+      "violations": []
+    },
+    "illegal_jump": {
+      "valid": false,
+      "violations": [
+        "ILLEGAL_JUMP: ROUTINE_MONITORING->NATIONAL_COMMAND_ALERT"
+      ]
+    },
+    "oscillation": {
+      "valid": false,
+      "violations": [
+        "OSCILLATION: DUTY_OFFICER_NOTIFY->ROUTINE_MONITORING"
+      ]
+    }
+  },
+  "verdict": "FAIL",
+  "safe_notice": "Validation uses synthetic sequences only."
+}
