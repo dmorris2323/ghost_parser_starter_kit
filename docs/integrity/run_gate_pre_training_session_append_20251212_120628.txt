@@ -1,0 +1,20 @@
+GLL RUN GATE REPORT
+======================
+Gate:      PRE
+Context:   training_session_append
+Generated: 2025-12-12T12:06:28.723002+00:00
+Status:    WARN
+
+SIS Status: WARN
+SPS Status: WARN
+
+Notes:
+- Proceed cautiously. Review drift/missing function warnings.
+
+Paths:
+  SIS json: docs/integrity/system_integrity_sentinel.json
+  SIS txt: docs/integrity/system_integrity_sentinel.txt
+  SIS baseline_hashes: docs/integrity/baseline_hashes.json
+  SPS json: docs/integrity/sps_mutation_guard.json
+  SPS txt: docs/integrity/sps_mutation_guard.txt
+  SPS baseline: docs/integrity/mutation_guard_baseline.json

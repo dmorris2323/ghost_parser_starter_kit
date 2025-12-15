@@ -1,0 +1,53 @@
+GLL COMMAND-GRADE BRIEF (TRAINING + VALIDATION)
+Generated: 2025-12-13T11:27:29.881215+00:00
+
+SAFE NOTICE:
+This brief is generated from synthetic/training artifacts and is safe for demos.
+
+HEADLINE METRICS:
+- AGI: 0.0
+- Improvement slope: 0.0
+- Volatility index: 0.0
+- Difficulty-weighted avg: 0.0
+
+VALIDATION:
+- Verdict: PASS
+- Difficulty: ADVERSARIAL
+- Pattern: CROSS_DOMAIN_CONFUSION
+- Trust delta vs baseline: 0.0
+- Risk delta vs baseline: 0.0
+
+NEXT TRAINING RECOMMENDATION (Recorded, not enforced):
+{
+  "next_difficulty": "ADVERSARIAL",
+  "inject_pattern": null,
+  "reason": [],
+  "status": "HOLD"
+}
+
+LATEST SIS/SPS GATE EXCERPT:
+GLL RUN GATES REPORT
+generated_at_utc: 2025-12-13T11:08:15.133269+00:00
+gate_type: POST
+context: fusion_validation_harness
+ok: True
+
+CHECKS:
+ - PASS: SIS: System Integrity Report
+    generated
+ - PASS: SPS: Immunity Scan
+    generated
+ - PASS: SPS: Behavioral Integrity Monitor
+    generated
+
+ARTIFACTS:
+ - sis_report_path: /Users/dextermorris/ghost/parser_starter_kit/src/docs/system_integrity_report.txt
+ - sps_behavior_txt_path: /Users/dextermorris/ghost/parser_starter_kit/src/docs/sps_behavior_report.txt
+ - sps_behavior_json_path: /Users/dextermorris/ghost/parser_starter_kit/src/docs/sps_behavior_report.json
+
+
+SOURCES:
+- training_curve: /Users/dextermorris/ghost/parser_starter_kit/src/docs/training/training_curve_latest.json
+- validation_report: /Users/dextermorris/ghost/parser_starter_kit/src/docs/validation/fusion_validation_report.json
+- training_feedback: /Users/dextermorris/ghost/parser_starter_kit/docs/training/training_feedback_latest.json
+- latest_gate_txt: /Users/dextermorris/ghost/parser_starter_kit/src/docs/integrity/run_gate_post_fusion_validation_harness_20251213_110815.txt

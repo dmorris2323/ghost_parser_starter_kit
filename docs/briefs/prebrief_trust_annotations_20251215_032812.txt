@@ -1,0 +1,46 @@
+GLL — Pre-Brief Trust Annotations
+==================================
+Generated: 2025-12-15T03:28:12.108747+00:00
+
+Commander Summary
+----------------
+Confidence: 45.1 (VERY_LOW)
+Trust Score: 82.0
+Risk Score:  48.0
+Degraded:    True
+Alerts:      {'crit': 0, 'high': 3, 'attack_like': 2, 'anomaly': 14}
+
+Gates (SIS/SPS)
+-------------
+SIS: GREEN | SPS: GREEN | Gate: PASS
+
+Training Context
+----------------
+Difficulty: INTERMEDIATE
+Pattern ID: CROSS_DOMAIN_CONFUSION
+
+Confidence Drivers
+------------------
+- Moderate trust score; system stable but requires continued validation under stress.
+- Moderate risk; maintain heightened watch while verifying signal consistency.
+- 3 HIGH alerts present; elevate watch and verify contributing factors.
+- Degraded operations are active; uncertainty increased and confidence is explicitly penalized.
+
+Delta Notes (Baseline vs Injected)
+---------------------------------
+- Delta vs baseline: trust_proxy_delta=-7.68
+- Delta vs baseline: risk_score_delta=17.94
+- Delta vs baseline: alerts_delta={'crit': 3, 'high': 5, 'attack_like': 7, 'anomaly': 11, 'total': 0}
+
+Assumptions
+-----------
+- This pre-brief is derived from safe metadata/synthetic telemetry for training/demos unless otherwise noted.
+- Confidence reflects system behavior and data quality, not ground truth certainty.
+
+Missing Data
+------------
+- No real sensor provenance (synthetic training mode).
+
+Operator Notes
+--------------
+- Use this artifact as the commander pre-brief trust summary.

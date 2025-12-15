@@ -1,0 +1,287 @@
+{
+  "report_version": 1,
+  "generated_at": "2025-12-12T15:29:21.887258+00:00",
+  "status": "FAIL",
+  "counts": {
+    "pass": 33,
+    "warn": 2,
+    "fail": 1,
+    "total": 36
+  },
+  "safe_notice": "Local integrity check only. No network. No destructive actions.",
+  "checks": [
+    {
+      "name": "module:fusion_ingest",
+      "status": "PASS",
+      "message": "Imported successfully.",
+      "details": null
+    },
+    {
+      "name": "module:fusion_sanitizer",
+      "status": "PASS",
+      "message": "Imported successfully.",
+      "details": null
+    },
+    {
+      "name": "module:fusion_scoring",
+      "status": "PASS",
+      "message": "Imported successfully.",
+      "details": null
+    },
+    {
+      "name": "module:fusion_alerts",
+      "status": "PASS",
+      "message": "Imported successfully.",
+      "details": null
+    },
+    {
+      "name": "module:commander_extract",
+      "status": "PASS",
+      "message": "Imported successfully.",
+      "details": null
+    },
+    {
+      "name": "module:fusion_heat_index",
+      "status": "PASS",
+      "message": "Imported successfully.",
+      "details": null
+    },
+    {
+      "name": "module:fusion_temporal_forecast",
+      "status": "PASS",
+      "message": "Imported successfully.",
+      "details": null
+    },
+    {
+      "name": "module:fusion_trust",
+      "status": "PASS",
+      "message": "Imported successfully.",
+      "details": null
+    },
+    {
+      "name": "module:operator_safety_layer",
+      "status": "PASS",
+      "message": "Imported successfully.",
+      "details": null
+    },
+    {
+      "name": "module:operator_identity",
+      "status": "PASS",
+      "message": "Imported successfully.",
+      "details": null
+    },
+    {
+      "name": "module:system_integrity_report",
+      "status": "PASS",
+      "message": "Imported successfully.",
+      "details": null
+    },
+    {
+      "name": "module:gll_readiness",
+      "status": "PASS",
+      "message": "Imported successfully.",
+      "details": null
+    },
+    {
+      "name": "module:synthetic_signal_generator",
+      "status": "PASS",
+      "message": "Imported successfully.",
+      "details": null
+    },
+    {
+      "name": "module:pattern_injection_engine",
+      "status": "PASS",
+      "message": "Imported successfully.",
+      "details": null
+    },
+    {
+      "name": "module:difficulty_scaling_engine",
+      "status": "PASS",
+      "message": "Imported successfully.",
+      "details": null
+    },
+    {
+      "name": "module:training_curve_engine",
+      "status": "PASS",
+      "message": "Imported successfully.",
+      "details": null
+    },
+    {
+      "name": "module:training_session_store",
+      "status": "PASS",
+      "message": "Imported successfully.",
+      "details": null
+    },
+    {
+      "name": "module:scenario_engine",
+      "status": "PASS",
+      "message": "Imported successfully.",
+      "details": null
+    },
+    {
+      "name": "module:instructor_rubric_autograder",
+      "status": "FAIL",
+      "message": "ImportError: cannot import name 'get_weight' from 'difficulty_scaling_engine' (/Users/dextermorris/ghost/parser_starter_kit/src/difficulty_scaling_engine.py)",
+      "details": null
+    },
+    {
+      "name": "module:fusion_validation_harness",
+      "status": "PASS",
+      "message": "Imported successfully.",
+      "details": null
+    },
+    {
+      "name": "module:sps_mutation_watcher",
+      "status": "PASS",
+      "message": "Imported successfully.",
+      "details": null
+    },
+    {
+      "name": "module:sps_behavior_monitor",
+      "status": "PASS",
+      "message": "Imported successfully.",
+      "details": null
+    },
+    {
+      "name": "functions:fusion_trust",
+      "status": "PASS",
+      "message": "Found callable: compute_trust",
+      "details": {
+        "expected": [
+          "compute_trust",
+          "compute_fusion_trust"
+        ],
+        "found": "compute_trust"
+      }
+    },
+    {
+      "name": "functions:operator_safety_layer",
+      "status": "PASS",
+      "message": "Found callable: compute_osl",
+      "details": {
+        "expected": [
+          "compute_osl",
+          "compute_operator_safety_layer"
+        ],
+        "found": "compute_osl"
+      }
+    },
+    {
+      "name": "functions:operator_identity",
+      "status": "WARN",
+      "message": "No expected callable found (module may be mid-refactor).",
+      "details": {
+        "expected": [
+          "get_operator",
+          "read_operator",
+          "operator_name"
+        ],
+        "found": null
+      }
+    },
+    {
+      "name": "functions:training_curve_engine",
+      "status": "PASS",
+      "message": "Found callable: compute_training_curve",
+      "details": {
+        "expected": [
+          "compute_training_curve"
+        ],
+        "found": "compute_training_curve"
+      }
+    },
+    {
+      "name": "functions:training_session_store",
+      "status": "PASS",
+      "message": "Found callable: load_sessions",
+      "details": {
+        "expected": [
+          "append_training_session",
+          "load_sessions"
+        ],
+        "found": "load_sessions"
+      }
+    },
+    {
+      "name": "functions:scenario_engine",
+      "status": "WARN",
+      "message": "No expected callable found (module may be mid-refactor).",
+      "details": {
+        "expected": [
+          "generate_scenario"
+        ],
+        "found": null
+      }
+    },
+    {
+      "name": "functions:difficulty_scaling_engine",
+      "status": "PASS",
+      "message": "Found callable: normalize_difficulty",
+      "details": {
+        "expected": [
+          "normalize_difficulty"
+        ],
+        "found": "normalize_difficulty"
+      }
+    },
+    {
+      "name": "functions:fusion_validation_harness",
+      "status": "PASS",
+      "message": "Found callable: run_synthetic_fusion_validation",
+      "details": {
+        "expected": [
+          "run_synthetic_fusion_validation"
+        ],
+        "found": "run_synthetic_fusion_validation"
+      }
+    },
+    {
+      "name": "writable:docs",
+      "status": "PASS",
+      "message": "Writable.",
+      "details": null
+    },
+    {
+      "name": "writable:docs/training",
+      "status": "PASS",
+      "message": "Writable.",
+      "details": null
+    },
+    {
+      "name": "writable:docs/validation",
+      "status": "PASS",
+      "message": "Writable.",
+      "details": null
+    },
+    {
+      "name": "writable:docs/synthetic",
+      "status": "PASS",
+      "message": "Writable.",
+      "details": null
+    },
+    {
+      "name": "writable:docs/integrity",
+      "status": "PASS",
+      "message": "Writable.",
+      "details": null
+    },
+    {
+      "name": "hash_drift",
+      "status": "PASS",
+      "message": "No drift detected.",
+      "details": {
+        "count": 0
+      }
+    }
+  ],
+  "paths": {
+    "json": "docs/integrity/system_integrity_sentinel.json",
+    "txt": "docs/integrity/system_integrity_sentinel.txt",
+    "baseline_hashes": "docs/integrity/baseline_hashes.json"
+  },
+  "recommendations": [
+    "If FAIL: freeze feature work, fix imports/functions, re-run sentinel.",
+    "If WARN: review drift and missing optional functions; proceed cautiously.",
+    "After intentional upgrades: run with update_baseline=True to accept drift."
+  ]
+}

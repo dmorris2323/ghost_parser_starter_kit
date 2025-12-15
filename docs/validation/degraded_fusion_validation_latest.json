@@ -1,0 +1,50 @@
+{
+  "artifact": "degraded_fusion_validation",
+  "version": 1,
+  "generated_at": "2025-12-15T03:52:35.871458+00:00",
+  "safe_notice": "This report is generated from synthetic telemetry and is safe for training/demos.",
+  "inputs": {
+    "difficulty": "INTERMEDIATE",
+    "seed": 73
+  },
+  "generator": {
+    "ok": true,
+    "error": null
+  },
+  "baseline_metrics": {
+    "trust_proxy": 0.0,
+    "risk_score": 0.0,
+    "alerts": {
+      "total": 0,
+      "crit": 0,
+      "high": 0,
+      "attack_like": 0,
+      "anomaly": 0
+    }
+  },
+  "degraded_metrics": {
+    "trust_proxy": 0.0,
+    "risk_score": 0.0,
+    "alerts": {
+      "total": 0,
+      "crit": 0,
+      "high": 0,
+      "attack_like": 0,
+      "anomaly": 0
+    }
+  },
+  "pipeline_attempt": {
+    "ingest_fn_found": false,
+    "ingest_result_type": "<class 'NoneType'>",
+    "ingest_error": "No ingest function found in fusion_ingest."
+  },
+  "verdict": {
+    "status": "PASS",
+    "message": "Degraded run completed without crash."
+  },
+  "recommendations": [
+    "If degraded PASS, you can safely harden Week-3 pipeline continuity.",
+    "If ingest fails but report still writes, fix fusion_ingest export names next (not today).",
+    "Keep degraded tests deterministic (seeded) for regression."
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "module": "fusion_degraded_validation",
+  "generated_at": "2025-12-14T09:49:47.603048+00:00",
+  "status": "PASS",
+  "stages": {
+    "ingest": false,
+    "sanitize": true,
+    "score": true,
+    "alerts": false,
+    "trust": true,
+    "forecast": false
+  },
+  "observations": {
+    "alerts_type": "list",
+    "trust_keys": [
+      "_error"
+    ],
+    "forecast_keys": []
+  },
+  "operator_note": "Pipeline executed safely under degraded synthetic inputs. Missing stages were skipped without failure. No false precision observed."
+}

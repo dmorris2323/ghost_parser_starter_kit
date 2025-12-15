@@ -1,0 +1,12 @@
+OBASI / SPECTRAL OWL — MEMORY CONSISTENCY CHECK
+Status: FAIL
+Generated: 2025-12-14T09:59:27.979514+00:00
+
+Required artifacts:
+- training_curve_latest: OK (src/docs/training/training_curve_latest.json)
+- training_feedback_latest: MISSING (src/docs/training/training_feedback_latest.json)
+- validation_latest: OK (src/docs/validation/fusion_validation_report.json)
+- crisis_mode: OK (docs/integrity/crisis_mode.json)
+
+Issues:
+- Missing required artifact: training_feedback_latest -> src/docs/training/training_feedback_latest.json

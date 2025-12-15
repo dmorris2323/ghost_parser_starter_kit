@@ -1,0 +1,34 @@
+GLL — Pre-Brief Trust Annotations
+==================================
+Generated: 2025-12-15T03:40:08.533675+00:00
+
+Commander Summary
+----------------
+Confidence: 60.25 (LOW)
+Trust Score: 80.0
+Risk Score:  35.0
+Degraded:    False
+Alerts:      {'crit': 0, 'high': 0, 'attack_like': 0, 'anomaly': 0}
+
+Gates (SIS/SPS)
+-------------
+SIS: UNKNOWN | SPS: UNKNOWN | Gate: UNKNOWN
+
+Training Context
+----------------
+Difficulty: UNKNOWN
+Pattern ID: None
+
+Confidence Drivers
+------------------
+- Moderate trust score; system stable but requires continued validation under stress.
+- Low risk; baseline watch posture is acceptable unless new signals emerge.
+
+Assumptions
+-----------
+- This pre-brief is derived from safe metadata/synthetic telemetry for training/demos unless otherwise noted.
+- Confidence reflects system behavior and data quality, not ground truth certainty.
+
+Operator Notes
+--------------
+- Attached to Nuclear Decision Card for commander-trust pre-brief.

@@ -1,0 +1,24 @@
+{
+  "gate_version": 1,
+  "gate_type": "POST",
+  "context": "training_session_append",
+  "generated_at": "2025-12-12T12:06:28.744884+00:00",
+  "status": "WARN",
+  "sis_status": "WARN",
+  "sps_status": "WARN",
+  "notes": "Proceed cautiously. Review drift/missing function warnings.",
+  "sis_paths": {
+    "json": "docs/integrity/system_integrity_sentinel.json",
+    "txt": "docs/integrity/system_integrity_sentinel.txt",
+    "baseline_hashes": "docs/integrity/baseline_hashes.json"
+  },
+  "sps_paths": {
+    "json": "docs/integrity/sps_mutation_guard.json",
+    "txt": "docs/integrity/sps_mutation_guard.txt",
+    "baseline": "docs/integrity/mutation_guard_baseline.json"
+  },
+  "paths": {
+    "json": "docs/integrity/run_gate_post_training_session_append_20251212_120628.json",
+    "txt": "docs/integrity/run_gate_post_training_session_append_20251212_120628.txt"
+  }
+}

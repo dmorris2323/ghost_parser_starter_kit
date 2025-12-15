@@ -1,0 +1,55 @@
+GLL SYSTEM INTEGRITY SENTINEL (SIS)
+========================================
+Generated: 2025-12-12T15:29:21.887258+00:00
+Status:    FAIL
+Counts:    PASS=33 WARN=2 FAIL=1 TOTAL=36
+
+Key Notes:
+- Baseline hashes: docs/integrity/baseline_hashes.json
+
+Checks:
+  [PASS] module:fusion_ingest — Imported successfully.
+  [PASS] module:fusion_sanitizer — Imported successfully.
+  [PASS] module:fusion_scoring — Imported successfully.
+  [PASS] module:fusion_alerts — Imported successfully.
+  [PASS] module:commander_extract — Imported successfully.
+  [PASS] module:fusion_heat_index — Imported successfully.
+  [PASS] module:fusion_temporal_forecast — Imported successfully.
+  [PASS] module:fusion_trust — Imported successfully.
+  [PASS] module:operator_safety_layer — Imported successfully.
+  [PASS] module:operator_identity — Imported successfully.
+  [PASS] module:system_integrity_report — Imported successfully.
+  [PASS] module:gll_readiness — Imported successfully.
+  [PASS] module:synthetic_signal_generator — Imported successfully.
+  [PASS] module:pattern_injection_engine — Imported successfully.
+  [PASS] module:difficulty_scaling_engine — Imported successfully.
+  [PASS] module:training_curve_engine — Imported successfully.
+  [PASS] module:training_session_store — Imported successfully.
+  [PASS] module:scenario_engine — Imported successfully.
+  [FAIL] module:instructor_rubric_autograder — ImportError: cannot import name 'get_weight' from 'difficulty_scaling_engine' (/Users/dextermorris/ghost/parser_starter_kit/src/difficulty_scaling_engine.py)
+  [PASS] module:fusion_validation_harness — Imported successfully.
+  [PASS] module:sps_mutation_watcher — Imported successfully.
+  [PASS] module:sps_behavior_monitor — Imported successfully.
+  [PASS] functions:fusion_trust — Found callable: compute_trust
+  [PASS] functions:operator_safety_layer — Found callable: compute_osl
+  [WARN] functions:operator_identity — No expected callable found (module may be mid-refactor).
+  [PASS] functions:training_curve_engine — Found callable: compute_training_curve
+  [PASS] functions:training_session_store — Found callable: load_sessions
+  [WARN] functions:scenario_engine — No expected callable found (module may be mid-refactor).
+  [PASS] functions:difficulty_scaling_engine — Found callable: normalize_difficulty
+  [PASS] functions:fusion_validation_harness — Found callable: run_synthetic_fusion_validation
+  [PASS] writable:docs — Writable.
+  [PASS] writable:docs/training — Writable.
+  [PASS] writable:docs/validation — Writable.
+  [PASS] writable:docs/synthetic — Writable.
+  [PASS] writable:docs/integrity — Writable.
+  [PASS] hash_drift — No drift detected.
+
+Recommendations:
+  - If FAIL: freeze feature work, fix imports/functions, re-run sentinel.
+  - If WARN: review drift and missing optional functions; proceed cautiously.
+  - After intentional upgrades: run with update_baseline=True to accept drift.
+
+Outputs:
+  JSON: docs/integrity/system_integrity_sentinel.json
+  TXT:  docs/integrity/system_integrity_sentinel.txt

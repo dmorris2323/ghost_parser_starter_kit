@@ -1,0 +1,11 @@
+{
+  "instructor_lock": false,
+  "locked_difficulty": "INTERMEDIATE",
+  "auto_difficulty": false,
+  "auto_policy": {
+    "min_sessions_for_adapt": 4,
+    "promote_if_slope_gte": 1.0,
+    "demote_if_slope_lte": -1.0,
+    "max_volatility_for_promote": 18.0
+  }
+}

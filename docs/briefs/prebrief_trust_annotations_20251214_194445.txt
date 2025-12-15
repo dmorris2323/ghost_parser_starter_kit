@@ -1,0 +1,21 @@
+GLL — PRE-BRIEF TRUST ANNOTATIONS (SAFE TRAINING)
+Generated: 2025-12-14T19:44:45.728821+00:00
+
+- TRUST STATUS: Gate=UNKNOWN | OSL=UNKNOWN | FusionTrust=0.0
+- DECISION CONFIDENCE: LOW (8.0/100)
+- ESCALATION RUNG: MONITOR (L0)
+- AMBIGUITY: LOW_DOMAIN_COVERAGE, GATE_NOT_GREEN:UNKNOWN
+- LIMITATION: Integrity gates not GREEN → advisory only until corrected.
+
+Trust Notes:
+  - Gates not GREEN: confidence capped for commander safety.
+  - Confidence: LOW (8.0/100).
+  - Domains present: 1. Reliability avg: 80.0.
+  - Escalation rung: MONITOR (L0).
+  - Integrity gates are not GREEN → treat outputs as advisory only until corrected.
+  - Limited corroboration across domains → request additional sources before escalation.
+
+Ambiguity Flags:
+  - LOW_DOMAIN_COVERAGE
+  - GATE_NOT_GREEN:UNKNOWN
+

@@ -1,19 +1,19 @@
 Ghost Lantern Labs – System Integrity Report
 ------------------------------------------------
-Generated at (UTC): 2025-12-11T18:24:03.019946Z
+Generated at (UTC): 2025-12-15T03:52:40.797823Z
 
 Summary:
   Total tracked:      15
-  Clean:              14
-  Modified:           1
+  Clean:              9
+  Modified:           6
   Missing:            0
   Untracked baseline: 0
 
 Per-file status:
-  - apps/gui/app.py: CLEAN
+  - apps/gui/app.py: MODIFIED
   - apps/gui/joint_readiness_app.py: CLEAN
-  - apps/gui/mission_scenario_app.py: CLEAN
-  - apps/gui/training_dashboard_app.py: CLEAN
+  - apps/gui/mission_scenario_app.py: MODIFIED
+  - apps/gui/training_dashboard_app.py: MODIFIED
   - daily_mission_brief.py: CLEAN
   - fusion_alerts.py: CLEAN
   - fusion_ingest.py: CLEAN
@@ -21,10 +21,10 @@ Per-file status:
   - fusion_scoring.py: CLEAN
   - ghost_cli.py: MODIFIED
   - mission_brief_html.py: CLEAN
-  - scenario_engine.py: CLEAN
+  - scenario_engine.py: MODIFIED
   - shari_legal_pack.py: CLEAN
   - spectral_dashboard_api.py: CLEAN
-  - training_curve_engine.py: CLEAN
+  - training_curve_engine.py: MODIFIED
 
 Baseline file: /Users/dextermorris/ghost/parser_starter_kit/src/docs/sps_integrity_baseline.json
 If files are MODIFIED or MISSING, investigate before using GLL for critical work.

@@ -1,0 +1,41 @@
+{
+  "artifact": "prebrief_trust_annotations",
+  "version": 1,
+  "generated_at": "2025-12-15T03:40:08.533675+00:00",
+  "summary": {
+    "confidence_score": 60.25,
+    "confidence_band": "LOW",
+    "trust_score": 80.0,
+    "risk_score": 35.0,
+    "degraded": false,
+    "alerts": {
+      "crit": 0,
+      "high": 0,
+      "attack_like": 0,
+      "anomaly": 0
+    },
+    "gates": {
+      "sis_status": "UNKNOWN",
+      "sps_status": "UNKNOWN",
+      "gate_status": "UNKNOWN"
+    },
+    "training_context": {
+      "difficulty": "UNKNOWN",
+      "pattern_id": null
+    }
+  },
+  "confidence_drivers": [
+    "Moderate trust score; system stable but requires continued validation under stress.",
+    "Low risk; baseline watch posture is acceptable unless new signals emerge."
+  ],
+  "delta_notes": [],
+  "assumptions": [
+    "This pre-brief is derived from safe metadata/synthetic telemetry for training/demos unless otherwise noted.",
+    "Confidence reflects system behavior and data quality, not ground truth certainty."
+  ],
+  "missing_data": [],
+  "data_quality_notes": [],
+  "operator_notes": [
+    "Attached to Nuclear Decision Card for commander-trust pre-brief."
+  ]
+}

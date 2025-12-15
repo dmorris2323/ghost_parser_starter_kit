@@ -1,6 +1,6 @@
 {
   "title": "Ghost Lantern Labs \u2013 SPS Module 3 \u2013 Behavioral Integrity Monitor",
-  "generated_at": "2025-12-11T14:00:01Z",
+  "generated_at": "2025-12-15T03:52:40Z",
   "notes_path": "/Users/dextermorris/ghost/parser_starter_kit/src/NOTES.txt",
   "mutation_report_path": "/Users/dextermorris/ghost/parser_starter_kit/src/docs/sps_mutation_report.json",
   "status": {
@@ -12,10 +12,13 @@
   },
   "notes_analysis": {
     "lines_analyzed": 160,
-    "negatives_found": [],
+    "negatives_found": [
+      "crash"
+    ],
     "cautions_found": [],
     "positives_found": [
       "stable",
+      "passed",
       "green"
     ]
   },

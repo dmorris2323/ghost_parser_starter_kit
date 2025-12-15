@@ -1,0 +1,47 @@
+{
+  "artifact": "prebrief_trust_annotations",
+  "version": 1,
+  "generated_at": "2025-12-15T03:34:47.729366+00:00",
+  "summary": {
+    "confidence_score": 45.1,
+    "confidence_band": "VERY_LOW",
+    "trust_score": 82.0,
+    "risk_score": 48.0,
+    "degraded": true,
+    "alerts": {
+      "crit": 0,
+      "high": 3,
+      "attack_like": 2,
+      "anomaly": 14
+    },
+    "gates": {
+      "sis_status": "GREEN",
+      "sps_status": "GREEN",
+      "gate_status": "PASS"
+    },
+    "training_context": {
+      "difficulty": "INTERMEDIATE",
+      "pattern_id": "CROSS_DOMAIN_CONFUSION"
+    }
+  },
+  "confidence_drivers": [
+    "Moderate trust score; system stable but requires continued validation under stress.",
+    "Moderate risk; maintain heightened watch while verifying signal consistency.",
+    "3 HIGH alerts present; elevate watch and verify contributing factors.",
+    "Degraded operations are active; uncertainty increased and confidence is explicitly penalized."
+  ],
+  "delta_notes": [
+    "Delta vs baseline: trust_proxy_delta=-7.68",
+    "Delta vs baseline: risk_score_delta=17.94",
+    "Delta vs baseline: alerts_delta={'crit': 3, 'high': 5, 'attack_like': 7, 'anomaly': 11, 'total': 0}"
+  ],
+  "assumptions": [
+    "This pre-brief is derived from safe metadata/synthetic telemetry for training/demos unless otherwise noted.",
+    "Confidence reflects system behavior and data quality, not ground truth certainty."
+  ],
+  "missing_data": [],
+  "data_quality_notes": [],
+  "operator_notes": [
+    "Attached to Nuclear Decision Card for commander-trust pre-brief."
+  ]
+}

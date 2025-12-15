@@ -1,0 +1,17 @@
+FUSION DEGRADED VALIDATION REPORT
+Generated: 2025-12-14T09:49:47.603048+00:00
+
+Stages Present:
+- ingest: False
+- sanitize: True
+- score: True
+- alerts: False
+- trust: True
+- forecast: False
+
+Observations:
+- alerts_type: list
+- trust_keys: ['_error']
+- forecast_keys: []
+
+Pipeline executed safely under degraded synthetic inputs. Missing stages were skipped without failure. No false precision observed.

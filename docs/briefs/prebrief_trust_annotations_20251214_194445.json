@@ -1,0 +1,64 @@
+{
+  "generated_at": "2025-12-14T19:44:45.728821+00:00",
+  "source": {
+    "decision_card_generated_at": "2025-12-14T19:44:45.727697+00:00"
+  },
+  "gate_status": "UNKNOWN",
+  "fusion_trust": 0.0,
+  "operator_safety_layer": "UNKNOWN",
+  "escalation": {
+    "escalation_level": 0,
+    "escalation_label": "MONITOR",
+    "blocking_factors": [
+      "Insufficient total evidence: 19.20 < 25.00 required for WATCH."
+    ],
+    "evidence": {
+      "domains_present": 1,
+      "domains_contributing": 1,
+      "reliability_avg": 80.0,
+      "domain_evidence": {
+        "CYBER": 16.0
+      },
+      "total_evidence": 19.2,
+      "disagreement_penalty": 0.0,
+      "notes": []
+    },
+    "confidence_floor_applied": false
+  },
+  "confidence": {
+    "confidence_score": 8.0,
+    "confidence_label": "LOW",
+    "ambiguity_flags": [
+      "LOW_DOMAIN_COVERAGE",
+      "GATE_NOT_GREEN:UNKNOWN"
+    ],
+    "trust_annotations": [
+      "Gates not GREEN: confidence capped for commander safety.",
+      "Confidence: LOW (8.0/100).",
+      "Domains present: 1. Reliability avg: 80.0.",
+      "Escalation rung: MONITOR (L0).",
+      "Integrity gates are not GREEN \u2192 treat outputs as advisory only until corrected.",
+      "Limited corroboration across domains \u2192 request additional sources before escalation."
+    ]
+  },
+  "brief_lines": [
+    "TRUST STATUS: Gate=UNKNOWN | OSL=UNKNOWN | FusionTrust=0.0",
+    "DECISION CONFIDENCE: LOW (8.0/100)",
+    "ESCALATION RUNG: MONITOR (L0)",
+    "AMBIGUITY: LOW_DOMAIN_COVERAGE, GATE_NOT_GREEN:UNKNOWN",
+    "LIMITATION: Integrity gates not GREEN \u2192 advisory only until corrected."
+  ],
+  "trust_annotations": [
+    "Gates not GREEN: confidence capped for commander safety.",
+    "Confidence: LOW (8.0/100).",
+    "Domains present: 1. Reliability avg: 80.0.",
+    "Escalation rung: MONITOR (L0).",
+    "Integrity gates are not GREEN \u2192 treat outputs as advisory only until corrected.",
+    "Limited corroboration across domains \u2192 request additional sources before escalation."
+  ],
+  "ambiguity_flags": [
+    "LOW_DOMAIN_COVERAGE",
+    "GATE_NOT_GREEN:UNKNOWN"
+  ],
+  "safe_notice": "SAFE: Pre-brief trust annotations derived from synthetic/abstracted decision card inputs."
+}

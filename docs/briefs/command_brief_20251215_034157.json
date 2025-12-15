@@ -1,0 +1,157 @@
+{
+  "artifact": "command_brief",
+  "version": 1,
+  "generated_at": "2025-12-15T03:41:57.712909+00:00",
+  "title": "GLL Commander Brief",
+  "operator": "Ghost",
+  "summary": {
+    "agi": 72.0,
+    "improvement_slope": 0.0,
+    "volatility_index": 0.0,
+    "last_validation_status": null,
+    "next_training_recommendation": {
+      "_missing": true
+    }
+  },
+  "attachments": {
+    "training_curve": {
+      "generated_at": "2025-12-14T11:37:08.065607+00:00",
+      "total_sessions": 16,
+      "counted_green_sessions": 1,
+      "AGI": 72.0,
+      "improvement_slope": 0.0,
+      "difficulty_weighted_average": 72.0,
+      "volatility_index": 0.0
+    },
+    "training_feedback": {
+      "_missing": true
+    },
+    "validation_report": {
+      "_missing": true
+    },
+    "decision_card": {
+      "artifact": "nuclear_decision_card",
+      "version": 1,
+      "generated_at": "2025-12-15T03:40:08.535480+00:00",
+      "inputs": {
+        "trust_score": 80.0,
+        "risk_score": 35.0,
+        "alerts": {
+          "crit": 0,
+          "high": 0,
+          "attack_like": 0,
+          "anomaly": 0
+        },
+        "degraded": false,
+        "difficulty": "UNKNOWN",
+        "pattern_id": null,
+        "delta_vs_baseline": null,
+        "gates": {
+          "sis_status": "UNKNOWN",
+          "sps_status": "UNKNOWN",
+          "gate_status": "UNKNOWN"
+        }
+      },
+      "commander_summary": {
+        "confidence_score": 60.25,
+        "confidence_band": "LOW",
+        "recommended_posture": {
+          "posture": "BASELINE_WATCH",
+          "posture_score": 21.0,
+          "rationale": "Bounded pressure: continue monitoring and trend analysis."
+        },
+        "key_takeaway": "System outputs are provisional; verify before escalation."
+      },
+      "recommended_actions": [
+        "Treat as provisional: do not escalate without corroboration.",
+        "Run validation harness baseline + injected pattern to confirm expected deltas.",
+        "Document assumptions + confidence drivers for audit and commander review."
+      ],
+      "attachments": {
+        "prebrief_trust_annotations": {
+          "status": "OK",
+          "paths": {
+            "json_latest": "docs/briefs/prebrief_trust_annotations_latest.json",
+            "txt_latest": "docs/briefs/prebrief_trust_annotations_latest.txt",
+            "json_stamped": "docs/briefs/prebrief_trust_annotations_20251215_034008.json",
+            "txt_stamped": "docs/briefs/prebrief_trust_annotations_20251215_034008.txt"
+          },
+          "summary": {
+            "confidence_score": 60.25,
+            "confidence_band": "LOW",
+            "trust_score": 80.0,
+            "risk_score": 35.0,
+            "degraded": false,
+            "alerts": {
+              "crit": 0,
+              "high": 0,
+              "attack_like": 0,
+              "anomaly": 0
+            },
+            "gates": {
+              "sis_status": "UNKNOWN",
+              "sps_status": "UNKNOWN",
+              "gate_status": "UNKNOWN"
+            },
+            "training_context": {
+              "difficulty": "UNKNOWN",
+              "pattern_id": null
+            }
+          }
+        }
+      },
+      "safe_notice": "This card is produced from training-safe metadata/synthetic telemetry unless explicitly sourced otherwise."
+    },
+    "degraded_validation": {
+      "artifact": "degraded_fusion_validation",
+      "version": 1,
+      "generated_at": "2025-12-15T03:41:14.563927+00:00",
+      "safe_notice": "This report is generated from synthetic telemetry and is safe for training/demos.",
+      "inputs": {
+        "difficulty": "INTERMEDIATE",
+        "seed": 73
+      },
+      "generator": {
+        "ok": true,
+        "error": null
+      },
+      "baseline_metrics": {
+        "trust_proxy": 0.0,
+        "risk_score": 0.0,
+        "alerts": {
+          "total": 0,
+          "crit": 0,
+          "high": 0,
+          "attack_like": 0,
+          "anomaly": 0
+        }
+      },
+      "degraded_metrics": {
+        "trust_proxy": 0.0,
+        "risk_score": 0.0,
+        "alerts": {
+          "total": 0,
+          "crit": 0,
+          "high": 0,
+          "attack_like": 0,
+          "anomaly": 0
+        }
+      },
+      "pipeline_attempt": {
+        "ingest_fn_found": false,
+        "ingest_result_type": "<class 'NoneType'>",
+        "ingest_error": "No ingest function found in fusion_ingest."
+      },
+      "verdict": {
+        "status": "PASS",
+        "message": "Degraded run completed without crash."
+      },
+      "recommendations": [
+        "If degraded PASS, you can safely harden Week-3 pipeline continuity.",
+        "If ingest fails but report still writes, fix fusion_ingest export names next (not today).",
+        "Keep degraded tests deterministic (seeded) for regression."
+      ]
+    }
+  },
+  "safe_notice": "This brief aggregates training-safe artifacts unless upstream sources are real."
+}

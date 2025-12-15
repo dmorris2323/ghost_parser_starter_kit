@@ -1,0 +1,129 @@
+{
+  "report_type": "degraded_fusion_validation",
+  "report_version": 1,
+  "generated_at": "2025-12-14T19:58:12.847814+00:00",
+  "inputs": {
+    "difficulty": "INTERMEDIATE",
+    "seed": 42
+  },
+  "pre_gate": {
+    "enabled": true,
+    "gate_type": "PRE",
+    "context": "fusion_degraded_validation",
+    "status": "PASS",
+    "details": {
+      "generated_at_utc": "2025-12-14T19:58:12.863549+00:00",
+      "gate_type": "PRE",
+      "context": "fusion_degraded_validation",
+      "update_baselines": false,
+      "ok": true,
+      "checks": [
+        {
+          "name": "SIS: System Integrity Report",
+          "ok": true,
+          "details": "generated"
+        },
+        {
+          "name": "SPS: Immunity Scan",
+          "ok": true,
+          "details": "generated"
+        },
+        {
+          "name": "SPS: Behavioral Integrity Monitor",
+          "ok": true,
+          "details": "generated"
+        }
+      ],
+      "artifacts": {
+        "sis_report_path": "/Users/dextermorris/ghost/parser_starter_kit/src/docs/system_integrity_report.txt",
+        "sps_behavior_txt_path": "/Users/dextermorris/ghost/parser_starter_kit/src/docs/sps_behavior_report.txt",
+        "sps_behavior_json_path": "/Users/dextermorris/ghost/parser_starter_kit/src/docs/sps_behavior_report.json"
+      },
+      "errors": {},
+      "report_path": "/Users/dextermorris/ghost/parser_starter_kit/src/docs/integrity/run_gate_pre_fusion_degraded_validation_20251214_195812.txt",
+      "report_json": "/Users/dextermorris/ghost/parser_starter_kit/src/docs/integrity/run_gate_pre_fusion_degraded_validation_20251214_195812.json"
+    },
+    "error": null
+  },
+  "post_gate": {
+    "enabled": true,
+    "gate_type": "POST",
+    "context": "fusion_degraded_validation",
+    "status": "PASS",
+    "details": {
+      "generated_at_utc": "2025-12-14T19:58:12.868398+00:00",
+      "gate_type": "POST",
+      "context": "fusion_degraded_validation",
+      "update_baselines": false,
+      "ok": true,
+      "checks": [
+        {
+          "name": "SIS: System Integrity Report",
+          "ok": true,
+          "details": "generated"
+        },
+        {
+          "name": "SPS: Immunity Scan",
+          "ok": true,
+          "details": "generated"
+        },
+        {
+          "name": "SPS: Behavioral Integrity Monitor",
+          "ok": true,
+          "details": "generated"
+        }
+      ],
+      "artifacts": {
+        "sis_report_path": "/Users/dextermorris/ghost/parser_starter_kit/src/docs/system_integrity_report.txt",
+        "sps_behavior_txt_path": "/Users/dextermorris/ghost/parser_starter_kit/src/docs/sps_behavior_report.txt",
+        "sps_behavior_json_path": "/Users/dextermorris/ghost/parser_starter_kit/src/docs/sps_behavior_report.json"
+      },
+      "errors": {},
+      "report_path": "/Users/dextermorris/ghost/parser_starter_kit/src/docs/integrity/run_gate_post_fusion_degraded_validation_20251214_195812.txt",
+      "report_json": "/Users/dextermorris/ghost/parser_starter_kit/src/docs/integrity/run_gate_post_fusion_degraded_validation_20251214_195812.json"
+    },
+    "error": null
+  },
+  "degraded_bundle": {
+    "degraded_conditions": {
+      "sensor_loss": [
+        "seismic"
+      ],
+      "present_sensors": [
+        "optical",
+        "ems",
+        "radiation",
+        "cyber",
+        "comms"
+      ],
+      "noise_level": 0.25,
+      "delayed_reporting": true
+    },
+    "trust_proxy": 85.0,
+    "risk_score": 29.42,
+    "alerts": {
+      "anomaly": 22,
+      "attack_like": 0,
+      "high": 0,
+      "crit": 0,
+      "total": 22
+    }
+  },
+  "pipeline_attempts": {
+    "attempted": [],
+    "results": {},
+    "errors": {
+      "fusion_ingest": "No ingest function found. Expected one of: ingest_fusion_data/ingest_fusion_bundle/ingest_data/ingest/ run_ingest",
+      "fusion_trust": "ImportError: cannot import name 'status' from 'crisis_mode_flag' (/Users/dextermorris/ghost/parser_starter_kit/src/crisis_mode_flag.py)",
+      "operator_safety_layer": "ImportError: cannot import name 'status' from 'crisis_mode_flag' (/Users/dextermorris/ghost/parser_starter_kit/src/crisis_mode_flag.py)"
+    }
+  },
+  "verdict": {
+    "status": "PASS",
+    "message": "Degraded operations appear controlled (bounded alerts, no crash)."
+  },
+  "paths": {
+    "json_latest": "docs/validation/degraded_fusion_validation_latest.json",
+    "json_stamped": "docs/validation/degraded_fusion_validation_20251214_195812.json"
+  }
+}

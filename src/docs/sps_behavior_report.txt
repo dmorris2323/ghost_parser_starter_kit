@@ -2,7 +2,7 @@ Ghost Lantern Labs – Self-Preservation Shield (SPS)
 Module 3 – Behavioral Integrity Monitor
 ========================================================================
 
-Generated at       : 2025-12-11T14:00:01Z
+Generated at       : 2025-12-15T03:52:40Z
 NOTES.txt path     : /Users/dextermorris/ghost/parser_starter_kit/src/NOTES.txt
 Mutation report    : /Users/dextermorris/ghost/parser_starter_kit/src/docs/sps_mutation_report.json
 
@@ -16,9 +16,9 @@ Reasons :
 Recent NOTES.txt Analysis
 -------------------------
 Lines analyzed   : 160
-Negative markers : []
+Negative markers : ['crash']
 Caution markers  : []
-Positive markers : ['green', 'stable']
+Positive markers : ['green', 'passed', 'stable']
 
 SPS Mutation Summary (from last report)
 ---------------------------------------

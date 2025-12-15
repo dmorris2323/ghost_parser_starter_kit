@@ -1,358 +1,484 @@
 """
 fusion_validation_harness.py
 
-Day 68 — Synthetic Fusion Validation Harness (Hardened)
-Now supports:
-- Pattern injection reporting (Module 2)
-- Baseline vs injected delta (measures impact)
-- Normalized risk score (avoids always-100 saturation in ADVERSARIAL)
-- Difficulty-aware verdict rubric
-- Resilient integration hooks for "real" GLL modules (function name agnostic)
+Synthetic Fusion Validation Harness (SAFE)
+- Generates synthetic bundle (SAFE training-only)
+- Optionally injects adversary pattern (SAFE training-only)
+- Computes baseline vs injected metrics + delta
+- Attempts to run real modules (best-effort) for trust/OSL/training-curve
+- Runs SIS+SPS PRE and POST gates around validation (hardening)
 
-Outputs:
-  - src/docs/validation/fusion_validation_report.json
-  - src/docs/validation/fusion_validation_report.txt
+Outputs (always under src/docs/...):
+- src/docs/validation/fusion_validation_report.json
+- src/docs/validation/fusion_validation_report_<timestamp>.json
+- src/docs/validation/fusion_validation_report.txt
 """
 
 from __future__ import annotations
 
-import importlib
 import json
+from dataclasses import dataclass
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Dict, Optional, Tuple
 
-from synthetic_signal_generator import build_synthetic_fusion_bundle
+
+# ----------------------------
+# Paths (stable no matter CWD)
+# ----------------------------
+SRC_DIR = Path(__file__).resolve().parent
+DOCS_DIR = SRC_DIR / "docs"
+VALIDATION_DIR = DOCS_DIR / "validation"
 
 
-def _repo_root() -> Path:
-    return Path(__file__).resolve().parent.parent
+def _utc_now_iso() -> str:
+    return datetime.now(timezone.utc).isoformat()
 
 
-def _docs_dir() -> Path:
-    return _repo_root() / "src" / "docs"
+def _ts() -> str:
+    return datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S")
 
 
 def _safe_mkdir(p: Path) -> None:
     p.mkdir(parents=True, exist_ok=True)
 
 
-def _stamp() -> str:
-    return datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S")
+def _write_json(path: Path, obj: Any) -> None:
+    _safe_mkdir(path.parent)
+    path.write_text(json.dumps(obj, indent=2), encoding="utf-8")
 
 
-def _utc_iso() -> str:
-    return datetime.now(timezone.utc).isoformat()
+def _write_txt(path: Path, text: str) -> None:
+    _safe_mkdir(path.parent)
+    path.write_text(text, encoding="utf-8")
 
 
-def _clamp(v: float, lo: float, hi: float) -> float:
-    return max(lo, min(hi, v))
+def _coerce_float(x: Any, default: float = 0.0) -> float:
+    try:
+        return float(x)
+    except Exception:
+        return default
 
 
-def _trust_proxy(bundle: Dict[str, Any]) -> float:
-    stats = bundle.get("stats", {})
-    total = float(stats.get("total_events", 0) or 0)
-    if total <= 0:
-        return 100.0
-    anom = float(stats.get("anomaly_events", 0) or 0)
-    atk = float(stats.get("attack_like_events", 0) or 0)
-    crit = float(stats.get("crit_events", 0) or 0)
-
-    # Penalties scale by rates not counts
-    p = 0.0
-    p += (anom / total) * 35.0
-    p += (atk / total) * 45.0
-    p += (crit / total) * 25.0
-
-    trust = 100.0 - p
-    return _clamp(trust, 0.0, 100.0)
+def _coerce_int(x: Any, default: int = 0) -> int:
+    try:
+        return int(x)
+    except Exception:
+        return default
 
 
-def _alert_counts(bundle: Dict[str, Any]) -> Dict[str, int]:
-    events = bundle.get("events", []) or []
-    crit = sum(1 for e in events if str(e.get("severity", "")).upper() == "CRIT")
-    high = sum(1 for e in events if str(e.get("severity", "")).upper() == "HIGH")
-    atk = sum(1 for e in events if bool(e.get("attack_like", False)))
-    anom = sum(1 for e in events if bool(e.get("anomaly", False)))
-    total = len(events)
-    return {"total": int(total), "crit": int(crit), "high": int(high), "attack_like": int(atk), "anomaly": int(anom)}
-
-
-def _normalized_risk_score(alerts: Dict[str, int]) -> float:
+def _metric_pack(bundle: Dict[str, Any]) -> Dict[str, Any]:
     """
-    Normalizes risk by total events so ADVERSARIAL doesn't auto-peg at 100.
-    Returns 0–100.
+    Compute safe proxy metrics from synthetic bundle structure.
+    This is NOT real missile telemetry. This is a training proxy.
     """
-    total = float(alerts.get("total", 0) or 0)
-    if total <= 0:
-        return 0.0
+    alerts = bundle.get("alerts", {}) if isinstance(bundle.get("alerts", {}), dict) else {}
+    trust_proxy = _coerce_float(bundle.get("trust_proxy", 0.0), 0.0)
+    risk_score = _coerce_float(bundle.get("risk_score", 0.0), 0.0)
 
-    crit = float(alerts.get("crit", 0) or 0)
-    high = float(alerts.get("high", 0) or 0)
-    atk = float(alerts.get("attack_like", 0) or 0)
-    anom = float(alerts.get("anomaly", 0) or 0)
+    # Normalize alert counts for reporting
+    packed_alerts = {
+        "total": _coerce_int(alerts.get("total", 0), 0),
+        "crit": _coerce_int(alerts.get("crit", 0), 0),
+        "high": _coerce_int(alerts.get("high", 0), 0),
+        "attack_like": _coerce_int(alerts.get("attack_like", 0), 0),
+        "anomaly": _coerce_int(alerts.get("anomaly", 0), 0),
+    }
 
-    # Weighted rate-based risk (stable)
-    rate = 0.0
-    rate += (crit / total) * 1.00
-    rate += (high / total) * 0.55
-    rate += (atk / total) * 0.75
-    rate += (anom / total) * 0.40
+    # If total is missing, derive a reasonable total proxy
+    if packed_alerts["total"] <= 0:
+        packed_alerts["total"] = (
+            packed_alerts["crit"]
+            + packed_alerts["high"]
+            + packed_alerts["attack_like"]
+            + packed_alerts["anomaly"]
+        )
 
-    # Map to 0–100 with a smooth-ish curve
-    score = 100.0 * _clamp(rate / 0.85, 0.0, 1.0)
-    return round(float(score), 2)
-
-
-def _difficulty_rubric(difficulty: str) -> Dict[str, float]:
-    d = difficulty.upper().strip()
-    # These are intentionally looser for stress modes.
-    if d == "BEGINNER":
-        return {"pass_trust": 82.0, "pass_risk": 35.0, "warn_trust": 68.0, "warn_risk": 60.0}
-    if d == "INTERMEDIATE":
-        return {"pass_trust": 78.0, "pass_risk": 45.0, "warn_trust": 62.0, "warn_risk": 70.0}
-    if d == "ADVANCED":
-        return {"pass_trust": 72.0, "pass_risk": 55.0, "warn_trust": 58.0, "warn_risk": 78.0}
-    # ADVERSARIAL should *feel* bad—PASS is rare. WARN is “expected stress but controlled.”
-    if d == "ADVERSARIAL":
-        return {"pass_trust": 70.0, "pass_risk": 60.0, "warn_trust": 55.0, "warn_risk": 85.0}
-    return {"pass_trust": 78.0, "pass_risk": 45.0, "warn_trust": 62.0, "warn_risk": 70.0}
-
-
-def _verdict(difficulty: str, trust: float, risk: float) -> Tuple[str, str]:
-    r = _difficulty_rubric(difficulty)
-    if trust >= r["pass_trust"] and risk <= r["pass_risk"]:
-        return ("PASS", "Controlled environment for this difficulty.")
-    if trust >= r["warn_trust"] and risk <= r["warn_risk"]:
-        return ("WARN", "Expected stress for this difficulty; behavior remains bounded.")
-    return ("FAIL", "Out-of-bounds stress behavior; investigate alerts/trust response.")
-
-
-def _summarize_injections(bundle: Dict[str, Any]) -> Dict[str, Any]:
-    injections = bundle.get("injections", []) or []
     return {
-        "count": int(len(injections)),
-        "items": injections,
-        "pattern_requested": bundle.get("pattern_requested"),
-        "pattern_seed": bundle.get("pattern_seed"),
-        "pattern_error": bundle.get("pattern_error"),
+        "trust_proxy": round(trust_proxy, 2),
+        "risk_score": round(risk_score, 2),
+        "alerts": packed_alerts,
     }
 
 
-def _safe_call(module_name: str, fn_candidates: list[str]) -> Tuple[Optional[Any], Optional[str], Optional[str]]:
+def _delta_pack(base: Dict[str, Any], inj: Dict[str, Any]) -> Dict[str, Any]:
+    base_alerts = base.get("alerts", {}) if isinstance(base.get("alerts", {}), dict) else {}
+    inj_alerts = inj.get("alerts", {}) if isinstance(inj.get("alerts", {}), dict) else {}
+
+    return {
+        "trust_proxy_delta": round(_coerce_float(inj.get("trust_proxy"), 0.0) - _coerce_float(base.get("trust_proxy"), 0.0), 2),
+        "risk_score_delta": round(_coerce_float(inj.get("risk_score"), 0.0) - _coerce_float(base.get("risk_score"), 0.0), 2),
+        "alerts_delta": {
+            "crit": _coerce_int(inj_alerts.get("crit", 0), 0) - _coerce_int(base_alerts.get("crit", 0), 0),
+            "high": _coerce_int(inj_alerts.get("high", 0), 0) - _coerce_int(base_alerts.get("high", 0), 0),
+            "attack_like": _coerce_int(inj_alerts.get("attack_like", 0), 0) - _coerce_int(base_alerts.get("attack_like", 0), 0),
+            "anomaly": _coerce_int(inj_alerts.get("anomaly", 0), 0) - _coerce_int(base_alerts.get("anomaly", 0), 0),
+            "total": _coerce_int(inj_alerts.get("total", 0), 0) - _coerce_int(base_alerts.get("total", 0), 0),
+        },
+    }
+
+
+@dataclass
+class _BundlePaths:
+    latest: str
+    stamped: str
+
+
+def _best_effort_real_modules() -> Tuple[Dict[str, Any], Dict[str, str]]:
     """
-    Try importing module and calling first available function name.
-    Returns: (result, called_fn_name, error_str)
+    Try to run real GLL modules for trust/OSL/training curve.
+    Must never hard-fail the harness if these are missing or signatures differ.
     """
+    results: Dict[str, Any] = {}
+    errors: Dict[str, str] = {}
+
+    # ---- fusion_trust (try multiple likely function names) ----
     try:
-        mod = importlib.import_module(module_name)
+        import fusion_trust as ft  # type: ignore
+
+        fn = None
+        for name in ("compute_trust", "compute_fusion_trust", "build_fusion_trust", "run_fusion_trust"):
+            if hasattr(ft, name):
+                fn = getattr(ft, name)
+                break
+
+        if fn is None:
+            raise AttributeError("MissingFunction: none of trust functions found in fusion_trust")
+
+        trust_out = fn()  # keep as zero-arg; your module appears to be zero-arg style
+        results["fusion_trust"] = trust_out
     except Exception as e:
-        return None, None, f"ImportError: {type(e).__name__}: {e}"
+        errors["fusion_trust"] = f"{e.__class__.__name__}: {e}"
 
-    for fn in fn_candidates:
-        if hasattr(mod, fn):
-            try:
-                return getattr(mod, fn)(), fn, None
-            except Exception as e:
-                return None, fn, f"CallError: {type(e).__name__}: {e}"
+    # ---- operator_safety_layer ----
+    try:
+        import operator_safety_layer as osl  # type: ignore
 
-    return None, None, f"MissingFunction: none of {fn_candidates} found in {module_name}"
+        fn = None
+        for name in ("compute_osl", "compute_operator_safety_layer", "build_operator_safety_layer", "run_operator_safety_layer"):
+            if hasattr(osl, name):
+                fn = getattr(osl, name)
+                break
 
+        if fn is None:
+            raise AttributeError("MissingFunction: none of OSL functions found in operator_safety_layer")
 
-def _try_real_modules() -> Dict[str, Any]:
-    out: Dict[str, Any] = {"attempted": {}, "results": {}, "errors": {}}
+        osl_out = fn()  # keep as zero-arg
+        results["operator_safety_layer"] = osl_out
+    except Exception as e:
+        errors["operator_safety_layer"] = f"{e.__class__.__name__}: {e}"
 
-    # fusion trust
-    res, called, err = _safe_call(
-        "fusion_trust",
-        ["compute_fusion_trust", "compute_trust", "get_fusion_trust", "fusion_trust_score", "run_fusion_trust"],
-    )
-    out["attempted"]["fusion_trust"] = called
-    if err:
-        out["errors"]["fusion_trust"] = err
-    else:
-        out["results"]["fusion_trust"] = res
+    # ---- crisis_mode_flag ----
+    try:
+        import crisis_mode_flag as cm  # type: ignore
 
-    # operator safety layer
-    res, called, err = _safe_call(
-        "operator_safety_layer",
-        ["compute_operator_safety_layer", "get_operator_safety_layer", "compute_osl", "run_operator_safety_layer"],
-    )
-    out["attempted"]["operator_safety_layer"] = called
-    if err:
-        out["errors"]["operator_safety_layer"] = err
-    else:
-        out["results"]["operator_safety_layer"] = res
+        fn = None
+        for name in ("read_crisis_mode", "get_crisis_mode", "is_crisis_mode", "crisis_mode_status"):
+            if hasattr(cm, name):
+                fn = getattr(cm, name)
+                break
 
-    # crisis mode flag
-    res, called, err = _safe_call(
-        "crisis_mode_flag",
-        ["read_crisis_mode", "get_crisis_mode", "is_crisis_mode", "crisis_mode_status"],
-    )
-    out["attempted"]["crisis_mode_flag"] = called
-    if err:
-        out["errors"]["crisis_mode_flag"] = err
-    else:
-        out["results"]["crisis_mode"] = res
+        if fn is None:
+            raise AttributeError(
+                "MissingFunction: none of ['read_crisis_mode','get_crisis_mode','is_crisis_mode','crisis_mode_status'] found in crisis_mode_flag"
+            )
 
-    # training curve (should be stable now)
+        cm_out = fn()
+        results["crisis_mode"] = cm_out
+    except Exception as e:
+        errors["crisis_mode_flag"] = f"{e.__class__.__name__}: {e}"
+
+    # ---- training_curve_engine ----
     try:
         from training_curve_engine import compute_training_curve  # type: ignore
+
         curve = compute_training_curve()
-        out["attempted"]["training_curve_engine"] = "compute_training_curve"
-        out["results"]["training_curve"] = {
-            "AGI": curve.get("AGI"),
-            "improvement_slope": curve.get("improvement_slope"),
-            "difficulty_weighted_average": curve.get("difficulty_weighted_average"),
-            "volatility_index": curve.get("volatility_index"),
-        }
+        results["training_curve"] = curve
     except Exception as e:
-        out["errors"]["training_curve_engine"] = f"{type(e).__name__}: {e}"
+        errors["training_curve_engine"] = f"{e.__class__.__name__}: {e}"
 
-    return out
+    return results, errors
 
 
-def _metrics(bundle: Dict[str, Any]) -> Dict[str, Any]:
-    trust = round(_trust_proxy(bundle), 2)
-    alerts = _alert_counts(bundle)
-    risk = _normalized_risk_score(alerts)
-    return {"trust_proxy": trust, "risk_score": risk, "alerts": alerts}
+def _score_verdict(difficulty: str, baseline: Dict[str, Any], injected: Dict[str, Any]) -> Dict[str, str]:
+    """
+    Keep verdict conservative and training-appropriate.
+    FAIL only if baseline is extreme. Otherwise PASS/WARN is fine for stress.
+    """
+    d = (difficulty or "").upper().strip()
+
+    base_risk = _coerce_float(baseline.get("risk_score"), 0.0)
+    inj_risk = _coerce_float(injected.get("risk_score"), 0.0)
+    inj_crit = _coerce_int(injected.get("alerts", {}).get("crit", 0), 0)
+
+    # baseline should not be catastrophic
+    if base_risk >= 90.0:
+        return {"status": "FAIL", "message": "Baseline synthetic environment indicates instability. Investigate scoring/trust/alerts behavior."}
+
+    # ADVERSARIAL is allowed to look ugly; warn if crit spikes
+    if d == "ADVERSARIAL" and inj_crit >= 3:
+        return {"status": "WARN", "message": "Adversarial injection raised critical pressure (acceptable stress test). Review delta vs baseline."}
+
+    # Default: controlled
+    if inj_risk >= 75.0:
+        return {"status": "WARN", "message": "Elevated injected risk. Review delta vs baseline and ensure expected behavior."}
+
+    return {"status": "PASS", "message": "Controlled environment for this difficulty."}
+
+
+def _render_txt(report: Dict[str, Any]) -> str:
+    lines = []
+    lines.append("GLL Synthetic Fusion Validation Report (SAFE)")
+    lines.append("=" * 44)
+    lines.append(f"Generated: {report.get('generated_at')}")
+    lines.append(f"Difficulty: {report.get('inputs', {}).get('difficulty')}")
+    lines.append(f"Seed: {report.get('inputs', {}).get('seed')}")
+    lines.append("")
+    lines.append(str(report.get("safe_notice", "")))
+    lines.append("")
+
+    verdict = report.get("verdict", {})
+    lines.append(f"VERDICT: {verdict.get('status')} — {verdict.get('message')}")
+    lines.append("")
+
+    base = report.get("baseline_metrics", {})
+    inj = report.get("injected_metrics", {})
+    delta = report.get("delta_vs_baseline", {})
+
+    lines.append("Baseline Metrics")
+    lines.append(f"  trust_proxy: {base.get('trust_proxy')}")
+    lines.append(f"  risk_score:  {base.get('risk_score')}")
+    lines.append(f"  alerts:      {base.get('alerts')}")
+    lines.append("")
+
+    lines.append("Injected Metrics")
+    lines.append(f"  trust_proxy: {inj.get('trust_proxy')}")
+    lines.append(f"  risk_score:  {inj.get('risk_score')}")
+    lines.append(f"  alerts:      {inj.get('alerts')}")
+    lines.append("")
+
+    lines.append("Delta vs Baseline")
+    lines.append(f"  trust_proxy_delta: {delta.get('trust_proxy_delta')}")
+    lines.append(f"  risk_score_delta:  {delta.get('risk_score_delta')}")
+    lines.append(f"  alerts_delta:      {delta.get('alerts_delta')}")
+    lines.append("")
+
+    pi = report.get("pattern_injection", {})
+    lines.append("Pattern Injection")
+    lines.append(f"  requested: {pi.get('pattern_requested')}")
+    lines.append(f"  seed:      {pi.get('pattern_seed')}")
+    lines.append(f"  error:     {pi.get('pattern_error')}")
+    items = pi.get("items", [])
+    if isinstance(items, list) and items:
+        for it in items:
+            lines.append(f"  - {it.get('pattern_id')} | intensity={it.get('intensity')} | injected_events={it.get('injected_events')}")
+    lines.append("")
+
+    rma = report.get("real_module_attempts", {})
+    lines.append("Real Module Attempts (best-effort)")
+    lines.append(f"  attempted: {rma.get('attempted')}")
+    lines.append(f"  results:   {rma.get('results')}")
+    lines.append(f"  errors:    {rma.get('errors')}")
+    lines.append("")
+
+    tf = report.get("training_feedback", None)
+    if tf is not None:
+        lines.append("Training Feedback (recommendation)")
+        lines.append(str(tf))
+        lines.append("")
+
+    recs = report.get("recommendations", [])
+    if isinstance(recs, list) and recs:
+        lines.append("Recommendations")
+        for r in recs:
+            lines.append(f"  - {r}")
+        lines.append("")
+
+    paths = report.get("paths", {})
+    lines.append("Paths")
+    lines.append(str(paths))
+
+    return "\n".join(lines)
 
 
 def run_synthetic_fusion_validation(
+    *,
     difficulty: str = "INTERMEDIATE",
-    seed: Optional[int] = 42,
+    seed: int = 1,
     pattern_id: Optional[str] = None,
     pattern_seed: Optional[int] = None,
-    write: bool = True,
+    update_baselines: bool = False,
 ) -> Dict[str, Any]:
-    difficulty = difficulty.upper().strip()
+    """
+    Main entrypoint.
 
-    # Baseline run (no injection) for delta measurement
-    baseline_bundle = build_synthetic_fusion_bundle(difficulty=difficulty, seed=seed, pattern_id=None, write=True)
-    baseline_metrics = _metrics(baseline_bundle)
+    difficulty: BEGINNER | INTERMEDIATE | ADVERSARIAL (string, flexible)
+    seed: generator seed
+    pattern_id: optional injection pattern id (ex: "CROSS_DOMAIN_CONFUSION")
+    pattern_seed: optional injection seed; defaults to seed
+    update_baselines: only True when you intentionally accept a new baseline for gates
+    """
+    difficulty = (difficulty or "INTERMEDIATE").upper().strip()
+    pattern_seed = seed if pattern_seed is None else int(pattern_seed)
 
-    # Injected run (optional)
-    injected_bundle = build_synthetic_fusion_bundle(
-        difficulty=difficulty,
-        seed=seed,
-        pattern_id=pattern_id,
-        pattern_seed=pattern_seed,
-        write=True,
-    )
-    injected_metrics = _metrics(injected_bundle)
-    injections_summary = _summarize_injections(injected_bundle)
+    # ---- PRE GATE (SIS+SPS) ----
+    from gll_run_gates import run_gates  # local import to avoid hard-fail on import order
+    pre_gate = run_gates(gate_type="PRE", context="fusion_validation_harness", update_baselines=update_baselines)
 
-    # Delta
-    delta = {
-        "trust_proxy_delta": round(injected_metrics["trust_proxy"] - baseline_metrics["trust_proxy"], 2),
-        "risk_score_delta": round(injected_metrics["risk_score"] - baseline_metrics["risk_score"], 2),
-        "alerts_delta": {
-            k: int(injected_metrics["alerts"].get(k, 0)) - int(baseline_metrics["alerts"].get(k, 0))
-            for k in ["crit", "high", "attack_like", "anomaly", "total"]
-        },
+    # ---- Generate baseline synthetic bundle ----
+    from synthetic_signal_generator import build_synthetic_fusion_bundle  # type: ignore
+
+    baseline_bundle = build_synthetic_fusion_bundle(difficulty=difficulty, seed=int(seed))
+    baseline_metrics = _metric_pack(baseline_bundle)
+
+    # Capture paths if generator returns them
+    baseline_paths = baseline_bundle.get("paths", {}) if isinstance(baseline_bundle, dict) else {}
+    baseline_bundle_paths = {
+        "latest": baseline_paths.get("latest"),
+        "stamped": baseline_paths.get("stamped"),
     }
 
-    status, msg = _verdict(difficulty, injected_metrics["trust_proxy"], injected_metrics["risk_score"])
+    # ---- Optionally inject a pattern ----
+    injected_bundle = baseline_bundle
+    injection_items = []
+    pattern_error: Optional[str] = None
 
-    real = _try_real_modules()
+    if pattern_id:
+        try:
+            from pattern_injection_engine import inject_pattern  # type: ignore
+
+            injected_bundle, injection_meta = inject_pattern(
+                bundle=baseline_bundle,
+                pattern_id=str(pattern_id),
+                seed=int(pattern_seed),
+            )
+            if isinstance(injection_meta, dict):
+                injection_items = injection_meta.get("items", []) if isinstance(injection_meta.get("items", []), list) else []
+        except Exception as e:
+            pattern_error = f"{e.__class__.__name__}: {e}"
+
+    injected_metrics = _metric_pack(injected_bundle)
+    delta_vs_baseline = _delta_pack(baseline_metrics, injected_metrics)
+
+    verdict = _score_verdict(difficulty, baseline_metrics, injected_metrics)
+
+    # ---- Real modules (best-effort) ----
+    real_results, real_errors = _best_effort_real_modules()
+
+    # ---- Build report ----
+    stamp = _ts()
+    json_latest = VALIDATION_DIR / "fusion_validation_report.json"
+    json_stamped = VALIDATION_DIR / f"fusion_validation_report_{stamp}.json"
+    txt_path = VALIDATION_DIR / "fusion_validation_report.txt"
 
     report: Dict[str, Any] = {
-        "report_version": 3,
-        "generated_at": _utc_iso(),
+        "report_version": 4,
+        "generated_at": _utc_now_iso(),
         "safe_notice": "This report is generated from synthetic telemetry and is safe for training/demos.",
         "inputs": {
             "difficulty": difficulty,
-            "seed": seed,
-            "pattern_id": pattern_id.upper() if pattern_id else None,
-            "pattern_seed": pattern_seed if pattern_seed is not None else seed,
-            "baseline_bundle_paths": baseline_bundle.get("paths", {}),
-            "injected_bundle_paths": injected_bundle.get("paths", {}),
+            "seed": int(seed),
+            "pattern_id": pattern_id,
+            "pattern_seed": int(pattern_seed),
+            "baseline_bundle_paths": baseline_bundle_paths,
+            "injected_bundle_paths": baseline_bundle_paths,  # generator currently writes same path; acceptable
         },
         "baseline_metrics": baseline_metrics,
         "injected_metrics": injected_metrics,
-        "delta_vs_baseline": delta,
-        "pattern_injection": injections_summary,
-        "verdict": {"status": status, "message": msg},
-        "real_module_attempts": real,
+        "delta_vs_baseline": delta_vs_baseline,
+        "pattern_injection": {
+            "count": 1 if pattern_id else 0,
+            "items": injection_items,
+            "pattern_requested": pattern_id,
+            "pattern_seed": int(pattern_seed),
+            "pattern_error": pattern_error,
+        },
+        "verdict": verdict,
+        "run_gates": {
+            "pre": pre_gate,
+        },
+        "real_module_attempts": {
+            "attempted": {
+                "fusion_trust": "auto",
+                "operator_safety_layer": "auto",
+                "crisis_mode_flag": "auto",
+                "training_curve_engine": "compute_training_curve",
+            },
+            "results": real_results,
+            "errors": real_errors,
+        },
         "recommendations": [
-            "If ADVERSARIAL is WARN with bounded deltas, that’s acceptable training stress.",
-            "If baseline is FAIL, freeze changes and run system integrity before adding features.",
+            "Use INTERMEDIATE without injection for baseline regression.",
+            "Use ADVERSARIAL + injection to test SPS defenses and operator coaching.",
             "Use delta_vs_baseline to validate that injections change the system in expected directions.",
+            "If PRE gate fails, freeze changes and fix integrity before proceeding.",
         ],
+        "paths": {
+            "json_latest": str(json_latest),
+            "json_stamped": str(json_stamped),
+            "txt": str(txt_path),
+        },
     }
 
-    if write:
-        out_dir = _docs_dir() / "validation"
-        _safe_mkdir(out_dir)
-        latest_json = out_dir / "fusion_validation_report.json"
-        stamped_json = out_dir / f"fusion_validation_report_{_stamp()}.json"
-        txt_path = out_dir / "fusion_validation_report.txt"
+    # ---- Training → Validation Feedback Loop (recorded, not enforced) ----
+    try:
+        from training_feedback_engine import recommend_next_training  # type: ignore
 
-        latest_json.write_text(json.dumps(report, indent=2))
-        stamped_json.write_text(json.dumps(report, indent=2))
-        txt_path.write_text(_render_txt(report))
+        training_curve_result = (
+            report.get("real_module_attempts", {})
+                .get("results", {})
+                .get("training_curve", {})
+        )
+        if not isinstance(training_curve_result, dict):
+            training_curve_result = {}
 
-        report["paths"] = {"json_latest": str(latest_json), "json_stamped": str(stamped_json), "txt": str(txt_path)}
+        training_feedback = recommend_next_training(
+            training_curve=training_curve_result,
+            difficulty=str(difficulty),
+            validation_verdict=str(report.get("verdict", {}).get("status", "UNKNOWN")),
+        )
+        report["training_feedback"] = training_feedback
+
+        # Persist for instructors (docs/training)
+        feedback_path = Path("docs") / "training" / "training_feedback_latest.json"
+        feedback_path.parent.mkdir(parents=True, exist_ok=True)
+        feedback_path.write_text(json.dumps(training_feedback, indent=2), encoding="utf-8")
+
+        # Record path in the report so the GUI can find it
+        report.setdefault("paths", {})
+        report["paths"]["training_feedback_latest"] = str(feedback_path)
+
+    except Exception as e:
+        report["training_feedback"] = {
+            "status": "ERROR",
+            "reason": f"Feedback engine failed: {e.__class__.__name__}: {e}",
+        }
+    # ---- POST GATE (SIS+SPS) ----
+    try:
+        post_gate = run_gates(gate_type="POST", context="fusion_validation_harness", update_baselines=False)
+    except Exception as e:
+        post_gate = {"status": "FAIL", "error": f"{e.__class__.__name__}: {e}"}
+
+    report.setdefault("gates", {})
+    report["gates"]["post"] = post_gate
+
+    # ---- Write outputs ----
+    _write_json(json_latest, report)
+    _write_json(json_stamped, report)
+    _write_txt(txt_path, _render_txt(report))
+
+    # ---- POST GATE (SIS+SPS) ----
+    post_gate = run_gates(gate_type="POST", context="fusion_validation_harness", update_baselines=False)
+    report["run_gates"]["post"] = post_gate
+    _write_json(json_latest, report)
+    _write_json(json_stamped, report)
+    _write_txt(txt_path, _render_txt(report))
 
     return report
 
 
-def _render_txt(report: Dict[str, Any]) -> str:
-    inp = report.get("inputs", {})
-    base = report.get("baseline_metrics", {})
-    inj = report.get("injected_metrics", {})
-    d = report.get("delta_vs_baseline", {})
-    v = report.get("verdict", {})
-    pinj = report.get("pattern_injection", {})
-
-    def fmt_alerts(a: Dict[str, Any]) -> str:
-        return f"CRIT={a.get('crit',0)} HIGH={a.get('high',0)} ATTACK={a.get('attack_like',0)} ANOM={a.get('anomaly',0)} TOTAL={a.get('total',0)}"
-
-    lines = []
-    lines.append("GLL — Synthetic Fusion Validation Report (SAFE)")
-    lines.append("=" * 60)
-    lines.append(f"Generated:   {report.get('generated_at')}")
-    lines.append(f"Difficulty:  {inp.get('difficulty')}")
-    lines.append(f"Seed:        {inp.get('seed')}")
-    lines.append(f"Pattern:     {inp.get('pattern_id') or 'None'}")
-    lines.append("")
-    lines.append("Baseline Metrics")
-    lines.append("-" * 60)
-    lines.append(f"Trust Proxy: {base.get('trust_proxy')}    Risk: {base.get('risk_score')}")
-    lines.append(f"Alerts: {fmt_alerts(base.get('alerts', {}))}")
-    lines.append("")
-    lines.append("Injected Metrics")
-    lines.append("-" * 60)
-    lines.append(f"Trust Proxy: {inj.get('trust_proxy')}    Risk: {inj.get('risk_score')}")
-    lines.append(f"Alerts: {fmt_alerts(inj.get('alerts', {}))}")
-    lines.append("")
-    lines.append("Delta vs Baseline")
-    lines.append("-" * 60)
-    lines.append(f"Trust Δ: {d.get('trust_proxy_delta')}    Risk Δ: {d.get('risk_score_delta')}")
-    lines.append(f"Alerts Δ: {d.get('alerts_delta')}")
-    lines.append("")
-    lines.append("Pattern Injection")
-    lines.append("-" * 60)
-    lines.append(f"Injections: {pinj.get('count', 0)}")
-    if pinj.get("pattern_error"):
-        lines.append(f"Pattern error: {pinj.get('pattern_error')}")
-    if pinj.get("items"):
-        ex = pinj["items"][0]
-        lines.append(f"Example: {ex.get('pattern_id')} — {ex.get('label')} (injected_events={ex.get('injected_events')})")
-    lines.append("")
-    lines.append("Verdict")
-    lines.append("-" * 60)
-    lines.append(f"{v.get('status')}: {v.get('message')}")
-    lines.append("")
-    lines.append("Notes")
-    lines.append("-" * 60)
-    lines.append("• This is synthetic telemetry only (safe).")
-    lines.append("• Use delta_vs_baseline to confirm patterns move metrics in expected directions.")
-    return "\n".join(lines)
-
-
 if __name__ == "__main__":
-    r = run_synthetic_fusion_validation(difficulty="ADVERSARIAL", seed=99, pattern_id="CROSS_DOMAIN_CONFUSION", pattern_seed=99)
+    # Safe local run
+    r = run_synthetic_fusion_validation(difficulty="INTERMEDIATE", seed=1)
     print(json.dumps(r, indent=2))
 

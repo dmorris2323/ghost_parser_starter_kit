@@ -1,0 +1,29 @@
+GLL — Nuclear Decision Card
+==========================
+Generated: 2025-12-15T03:34:47.731109+00:00
+
+Inputs
+------
+Trust: 82.0 | Risk: 48.0 | Degraded: True
+Alerts: {'crit': 0, 'high': 3, 'attack_like': 2, 'anomaly': 14}
+Difficulty: INTERMEDIATE | Pattern: CROSS_DOMAIN_CONFUSION
+
+Commander Summary
+----------------
+Confidence: 45.1 (VERY_LOW)
+Posture: BASELINE_WATCH (score=42.3)
+Rationale: Bounded pressure: continue monitoring and trend analysis.
+Key Takeaway: System outputs are provisional; verify before escalation.
+
+Recommended Actions
+------------------
+- Treat as provisional: do not escalate without corroboration.
+- Run validation harness baseline + injected pattern to confirm expected deltas.
+- Degraded operations: prioritize restoring missing data inputs before decisions.
+- Document assumptions + confidence drivers for audit and commander review.
+
+Attachment — Pre-Brief Trust Annotations
+--------------------------------------
+Status: OK
+Paths: {'json_latest': 'docs/briefs/prebrief_trust_annotations_latest.json', 'txt_latest': 'docs/briefs/prebrief_trust_annotations_latest.txt', 'json_stamped': 'docs/briefs/prebrief_trust_annotations_20251215_033447.json', 'txt_stamped': 'docs/briefs/prebrief_trust_annotations_20251215_033447.txt'}
+Prebrief Summary: confidence=45.1 band=VERY_LOW

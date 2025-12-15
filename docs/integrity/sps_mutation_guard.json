@@ -1,0 +1,169 @@
+{
+  "report_version": 1,
+  "generated_at": "2025-12-12T15:29:22.016105+00:00",
+  "status": "WARN",
+  "safe_notice": "Local drift/mutation report only. No network. No destructive actions.",
+  "baseline": {
+    "path": "docs/integrity/mutation_guard_baseline.json",
+    "generated_at": "2025-12-12T11:55:12.558594+00:00"
+  },
+  "counts": {
+    "info": 6,
+    "warn": 2,
+    "fail": 0,
+    "total_findings": 8,
+    "tracked_files": 578
+  },
+  "findings": [
+    {
+      "level": "WARN",
+      "category": "filesystem",
+      "message": "New tracked files detected: 14",
+      "details": {
+        "added": [
+          "apps/gui/obasi_training_coach.py",
+          "src/adaptive_difficulty_engine.py",
+          "src/apps/gui/training_command_center_app.py",
+          "src/apps/gui/validation_harness_app.py",
+          "src/config/training_config.json",
+          "src/difficulty_control_engine.py",
+          "src/docs/synthetic/synthetic_fusion_bundle_20251212_120012.json",
+          "src/gll_run_gates.py",
+          "src/instructor_autograder.py",
+          "src/instructor_grader.py",
+          "src/instructor_grading_weights.py",
+          "src/training_config.py",
+          "src/training_difficulty_engine.py",
+          "src/training_validation_gate.py"
+        ]
+      }
+    },
+    {
+      "level": "WARN",
+      "category": "drift",
+      "message": "Content drift detected in tracked files: 15",
+      "details": {
+        "changed": {
+          "src/NOTES.txt": {
+            "baseline": "e9d747daf15c1c3f63d60b3f08c6e0b678ceaff86308bcc424382e469c9257b2",
+            "current": "c9817a0d55755f91e94478adf650705fb3910530ff6c5448fe4909b7bfc6f86a"
+          },
+          "src/apps/gui/mission_scenario_app.py": {
+            "baseline": "241451eea867d6b93babe420f6d2474d26255dffae86d385234cefce4d40026a",
+            "current": "c2b8c77b69229015ea5edd7df7f022f61a949441c9758b01d7c8681365c02de7"
+          },
+          "src/apps/gui/obasi_training_coach.py": {
+            "baseline": "0c130425b9306d265a699f70e281d7d7fc74dc30940c9b0a35b7fdb070e192a4",
+            "current": "e155880bf82a0d6844919fdcecb712e5b1874b58d0cbf1daedb3e208ce606038"
+          },
+          "src/apps/gui/training_dashboard_app.py": {
+            "baseline": "dbf5932726a0e4f3c383af5cb5b1607436cb311215f922f17d912403ccb273fb",
+            "current": "88e171f4843bde0ac04b2dc81b53272cc1c08245e0c3933668824d98b499d21a"
+          },
+          "src/difficulty_scaling_engine.py": {
+            "baseline": "f85df5c9cf46a87dfeedc5e8e6c32700f45beb0248b10857c47152ff19d11157",
+            "current": "f053a9537d82974a7fac68f65e4360a27db8e5a2f09a62c9dbe9d9b93eb53175"
+          },
+          "src/docs/sps_behavior_report.json": {
+            "baseline": "154a724b1225950045ac8bc638f93d128bb704a3cc935c38b4b24fa88e13ffe5",
+            "current": "605c31e4302d02250dba75206b140f8ebf346f014a252fec9f93eaa08d7757ba"
+          },
+          "src/docs/sps_behavior_report.txt": {
+            "baseline": "397153e9120ee020b65097ca58bb9014e8f7721f3721daa582f3052a41cf342f",
+            "current": "d018607757f7e42354c290903357a01bab25142a9294da51d76ca89385d3cf1f"
+          },
+          "src/docs/synthetic/synthetic_fusion_bundle.json": {
+            "baseline": "342a7ab9b295fb5fab8dd60ba9bae73c6713642db0821327a8aef07c19647d8e",
+            "current": "66e6dfa42cacb21eae1aa7c11b7d3ae298fa07a7c1ffcdca589c208245abddc8"
+          },
+          "src/docs/system_integrity_report.txt": {
+            "baseline": "6473f4c2438334c714ba24a0fc9497a635dca141ce0960dea344fdf1abeba808",
+            "current": "b251b6a784db760723c0fd21fbff8671e43130e9c8a9cb5b24c7e6df916302ef"
+          },
+          "src/docs/training/training_curve_latest.json": {
+            "baseline": "591e8747373e7d9ad953dd0eb93e079a2f763888046eadb9d9f1a66138d85ed7",
+            "current": "b37e8a7e113118378c57aef716df0857eac5c9900424731085598238835d2a0f"
+          },
+          "src/fusion_validation_harness.py": {
+            "baseline": "8b28f389e9e7ee1cd4f4826c95d5bdec22582fec73d7287cff19b38ba274bb7b",
+            "current": "51176c2f01fdbd51f680065c6da542a21f994072fd00406a94bf2d1d80f1ee54"
+          },
+          "src/obasi_training_coach.py": {
+            "baseline": "b8c2d67b9d706613b4c920529d2154aeb4620759340110491719ac1a641df504",
+            "current": "722d21cd856a8e15118410cfd01f8a7023d0b775399ddd10c2a5a3770257448c"
+          },
+          "src/scenario_engine.py": {
+            "baseline": "dd088477de21720b8601416291d8948211654802f5cc28f2ab6f4f42d03e6a51",
+            "current": "52ee902fa59dea477360e6d060759172abdd0762d774f422151cb3ae33b0b8e3"
+          },
+          "src/training_curve_engine.py": {
+            "baseline": "a4dcd96a9ec19670f8aac3fde3697809178f8457b199d7e93394816374d13198",
+            "current": "13f55ae4a9cea8a62fe45f27f1d75edadf3a1d936a58a27b47e14e8b07129019"
+          },
+          "src/training_session_store.py": {
+            "baseline": "bf4fe6ab6aa5f6ce6018b4181c58fe23290bf73365087d55b12a96a741d066cb",
+            "current": "65b70d015859574c7e09fe5aa0d2550312cf3c55cab95b11b73855b208d42326"
+          }
+        }
+      }
+    },
+    {
+      "level": "INFO",
+      "category": "critical",
+      "message": "Critical file present: src/ghost_cli.py",
+      "details": {
+        "path": "src/ghost_cli.py"
+      }
+    },
+    {
+      "level": "INFO",
+      "category": "critical",
+      "message": "Critical file present: src/fusion_trust.py",
+      "details": {
+        "path": "src/fusion_trust.py"
+      }
+    },
+    {
+      "level": "INFO",
+      "category": "critical",
+      "message": "Critical file present: src/operator_safety_layer.py",
+      "details": {
+        "path": "src/operator_safety_layer.py"
+      }
+    },
+    {
+      "level": "INFO",
+      "category": "critical",
+      "message": "Critical file present: src/training_curve_engine.py",
+      "details": {
+        "path": "src/training_curve_engine.py"
+      }
+    },
+    {
+      "level": "INFO",
+      "category": "critical",
+      "message": "Critical file present: src/difficulty_scaling_engine.py",
+      "details": {
+        "path": "src/difficulty_scaling_engine.py"
+      }
+    },
+    {
+      "level": "INFO",
+      "category": "critical",
+      "message": "Critical file present: src/fusion_validation_harness.py",
+      "details": {
+        "path": "src/fusion_validation_harness.py"
+      }
+    }
+  ],
+  "paths": {
+    "json": "docs/integrity/sps_mutation_guard.json",
+    "txt": "docs/integrity/sps_mutation_guard.txt",
+    "baseline": "docs/integrity/mutation_guard_baseline.json"
+  },
+  "recommendations": [
+    "If FAIL: stop feature work, restore missing critical files, re-run guard.",
+    "If WARN: review drift list; accept changes only if intentional.",
+    "After intentional refactors: rerun with update_baseline=True."
+  ]
+}

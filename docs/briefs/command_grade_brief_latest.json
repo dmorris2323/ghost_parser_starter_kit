@@ -1,0 +1,276 @@
+{
+  "generated_at": "2025-12-13T11:27:29.881215+00:00",
+  "safe_notice": "This brief is generated from synthetic/training artifacts and is safe for demos.",
+  "sources": {
+    "training_curve": "/Users/dextermorris/ghost/parser_starter_kit/src/docs/training/training_curve_latest.json",
+    "validation_report": "/Users/dextermorris/ghost/parser_starter_kit/src/docs/validation/fusion_validation_report.json",
+    "training_feedback": "/Users/dextermorris/ghost/parser_starter_kit/docs/training/training_feedback_latest.json",
+    "latest_gate_txt": "/Users/dextermorris/ghost/parser_starter_kit/src/docs/integrity/run_gate_post_fusion_validation_harness_20251213_110815.txt"
+  },
+  "headline_metrics": {
+    "training": {
+      "AGI": 0.0,
+      "improvement_slope": 0.0,
+      "volatility_index": 0.0,
+      "difficulty_weighted_average": 0.0
+    },
+    "validation": {
+      "verdict": "PASS",
+      "difficulty": "ADVERSARIAL",
+      "pattern_id": "CROSS_DOMAIN_CONFUSION",
+      "trust_proxy_delta": 0.0,
+      "risk_score_delta": 0.0
+    }
+  },
+  "training_feedback": {
+    "next_difficulty": "ADVERSARIAL",
+    "inject_pattern": null,
+    "reason": [],
+    "status": "HOLD"
+  },
+  "gate_excerpt": "GLL RUN GATES REPORT\ngenerated_at_utc: 2025-12-13T11:08:15.133269+00:00\ngate_type: POST\ncontext: fusion_validation_harness\nok: True\n\nCHECKS:\n - PASS: SIS: System Integrity Report\n    generated\n - PASS: SPS: Immunity Scan\n    generated\n - PASS: SPS: Behavioral Integrity Monitor\n    generated\n\nARTIFACTS:\n - sis_report_path: /Users/dextermorris/ghost/parser_starter_kit/src/docs/system_integrity_report.txt\n - sps_behavior_txt_path: /Users/dextermorris/ghost/parser_starter_kit/src/docs/sps_behavior_report.txt\n - sps_behavior_json_path: /Users/dextermorris/ghost/parser_starter_kit/src/docs/sps_behavior_report.json\n",
+  "raw": {
+    "training_curve": {
+      "curve_version": 2,
+      "generated_at": "2025-12-13T11:13:31.259063+00:00",
+      "total_sessions": 7,
+      "valid_sessions": 1,
+      "AGI": 0.0,
+      "improvement_slope": 0.0,
+      "difficulty_weighted_average": 0.0,
+      "volatility_index": 0.0,
+      "note": "Only valid sessions (SIS+SPS GREEN and Validation PASS/WARN) count toward metrics."
+    },
+    "validation_report": {
+      "report_version": 4,
+      "generated_at": "2025-12-13T11:08:15.126592+00:00",
+      "safe_notice": "This report is generated from synthetic telemetry and is safe for training/demos.",
+      "inputs": {
+        "difficulty": "ADVERSARIAL",
+        "seed": 99,
+        "pattern_id": "CROSS_DOMAIN_CONFUSION",
+        "pattern_seed": 99,
+        "baseline_bundle_paths": {
+          "latest": "/Users/dextermorris/ghost/parser_starter_kit/src/docs/synthetic/synthetic_fusion_bundle.json",
+          "stamped": "/Users/dextermorris/ghost/parser_starter_kit/src/docs/synthetic/synthetic_fusion_bundle_20251213_110815.json"
+        },
+        "injected_bundle_paths": {
+          "latest": "/Users/dextermorris/ghost/parser_starter_kit/src/docs/synthetic/synthetic_fusion_bundle.json",
+          "stamped": "/Users/dextermorris/ghost/parser_starter_kit/src/docs/synthetic/synthetic_fusion_bundle_20251213_110815.json"
+        }
+      },
+      "baseline_metrics": {
+        "trust_proxy": 0.0,
+        "risk_score": 0.0,
+        "alerts": {
+          "total": 0,
+          "crit": 0,
+          "high": 0,
+          "attack_like": 0,
+          "anomaly": 0
+        }
+      },
+      "injected_metrics": {
+        "trust_proxy": 0.0,
+        "risk_score": 0.0,
+        "alerts": {
+          "total": 0,
+          "crit": 0,
+          "high": 0,
+          "attack_like": 0,
+          "anomaly": 0
+        }
+      },
+      "delta_vs_baseline": {
+        "trust_proxy_delta": 0.0,
+        "risk_score_delta": 0.0,
+        "alerts_delta": {
+          "crit": 0,
+          "high": 0,
+          "attack_like": 0,
+          "anomaly": 0,
+          "total": 0
+        }
+      },
+      "pattern_injection": {
+        "count": 1,
+        "items": [],
+        "pattern_requested": "CROSS_DOMAIN_CONFUSION",
+        "pattern_seed": 99,
+        "pattern_error": null
+      },
+      "verdict": {
+        "status": "PASS",
+        "message": "Controlled environment for this difficulty."
+      },
+      "run_gates": {
+        "pre": {
+          "generated_at_utc": "2025-12-13T11:08:15.106617+00:00",
+          "gate_type": "PRE",
+          "context": "fusion_validation_harness",
+          "update_baselines": false,
+          "ok": true,
+          "checks": [
+            {
+              "name": "SIS: System Integrity Report",
+              "ok": true,
+              "details": "generated"
+            },
+            {
+              "name": "SPS: Immunity Scan",
+              "ok": true,
+              "details": "generated"
+            },
+            {
+              "name": "SPS: Behavioral Integrity Monitor",
+              "ok": true,
+              "details": "generated"
+            }
+          ],
+          "artifacts": {
+            "sis_report_path": "/Users/dextermorris/ghost/parser_starter_kit/src/docs/system_integrity_report.txt",
+            "sps_behavior_txt_path": "/Users/dextermorris/ghost/parser_starter_kit/src/docs/sps_behavior_report.txt",
+            "sps_behavior_json_path": "/Users/dextermorris/ghost/parser_starter_kit/src/docs/sps_behavior_report.json"
+          },
+          "errors": {},
+          "report_path": "/Users/dextermorris/ghost/parser_starter_kit/src/docs/integrity/run_gate_pre_fusion_validation_harness_20251213_110815.txt",
+          "report_json": "/Users/dextermorris/ghost/parser_starter_kit/src/docs/integrity/run_gate_pre_fusion_validation_harness_20251213_110815.json"
+        },
+        "post": {
+          "generated_at_utc": "2025-12-13T11:08:15.133269+00:00",
+          "gate_type": "POST",
+          "context": "fusion_validation_harness",
+          "update_baselines": false,
+          "ok": true,
+          "checks": [
+            {
+              "name": "SIS: System Integrity Report",
+              "ok": true,
+              "details": "generated"
+            },
+            {
+              "name": "SPS: Immunity Scan",
+              "ok": true,
+              "details": "generated"
+            },
+            {
+              "name": "SPS: Behavioral Integrity Monitor",
+              "ok": true,
+              "details": "generated"
+            }
+          ],
+          "artifacts": {
+            "sis_report_path": "/Users/dextermorris/ghost/parser_starter_kit/src/docs/system_integrity_report.txt",
+            "sps_behavior_txt_path": "/Users/dextermorris/ghost/parser_starter_kit/src/docs/sps_behavior_report.txt",
+            "sps_behavior_json_path": "/Users/dextermorris/ghost/parser_starter_kit/src/docs/sps_behavior_report.json"
+          },
+          "errors": {},
+          "report_path": "/Users/dextermorris/ghost/parser_starter_kit/src/docs/integrity/run_gate_post_fusion_validation_harness_20251213_110815.txt",
+          "report_json": "/Users/dextermorris/ghost/parser_starter_kit/src/docs/integrity/run_gate_post_fusion_validation_harness_20251213_110815.json"
+        }
+      },
+      "real_module_attempts": {
+        "attempted": {
+          "fusion_trust": "auto",
+          "operator_safety_layer": "auto",
+          "crisis_mode_flag": "auto",
+          "training_curve_engine": "compute_training_curve"
+        },
+        "results": {
+          "fusion_trust": {
+            "fusion_trust": 92,
+            "factors": {
+              "outliers": 0,
+              "drift": {
+                "status": "no_data",
+                "message": "docs/golden_dome_status.txt not found",
+                "drift_score": 0
+              },
+              "reliability": {
+                "sensors": {
+                  "global": 100.0,
+                  "optical": 90.0,
+                  "seismic": 90.0,
+                  "ems": 90.0,
+                  "radiation": 90.0
+                },
+                "avg_reliability": 92.0
+              },
+              "crisis_mode": "OFF"
+            }
+          },
+          "operator_safety_layer": {
+            "osl_status": "GREEN",
+            "trust_score": 92,
+            "message": "System stable."
+          },
+          "crisis_mode": "OFF",
+          "training_curve": {
+            "curve_version": 2,
+            "generated_at": "2025-12-13T11:08:15.125533+00:00",
+            "total_sessions": 7,
+            "valid_sessions": 1,
+            "AGI": 0.0,
+            "improvement_slope": 0.0,
+            "difficulty_weighted_average": 0.0,
+            "volatility_index": 0.0,
+            "note": "Only valid sessions (SIS+SPS GREEN and Validation PASS/WARN) count toward metrics."
+          }
+        },
+        "errors": {}
+      },
+      "recommendations": [
+        "Use INTERMEDIATE without injection for baseline regression.",
+        "Use ADVERSARIAL + injection to test SPS defenses and operator coaching.",
+        "Use delta_vs_baseline to validate that injections change the system in expected directions.",
+        "If PRE gate fails, freeze changes and fix integrity before proceeding."
+      ],
+      "paths": {
+        "json_latest": "/Users/dextermorris/ghost/parser_starter_kit/src/docs/validation/fusion_validation_report.json",
+        "json_stamped": "/Users/dextermorris/ghost/parser_starter_kit/src/docs/validation/fusion_validation_report_20251213_110815.json",
+        "txt": "/Users/dextermorris/ghost/parser_starter_kit/src/docs/validation/fusion_validation_report.txt",
+        "training_feedback_latest": "docs/training/training_feedback_latest.json"
+      },
+      "training_feedback": {
+        "next_difficulty": "ADVERSARIAL",
+        "inject_pattern": null,
+        "reason": [],
+        "status": "HOLD"
+      },
+      "gates": {
+        "post": {
+          "generated_at_utc": "2025-12-13T11:08:15.129822+00:00",
+          "gate_type": "POST",
+          "context": "fusion_validation_harness",
+          "update_baselines": false,
+          "ok": true,
+          "checks": [
+            {
+              "name": "SIS: System Integrity Report",
+              "ok": true,
+              "details": "generated"
+            },
+            {
+              "name": "SPS: Immunity Scan",
+              "ok": true,
+              "details": "generated"
+            },
+            {
+              "name": "SPS: Behavioral Integrity Monitor",
+              "ok": true,
+              "details": "generated"
+            }
+          ],
+          "artifacts": {
+            "sis_report_path": "/Users/dextermorris/ghost/parser_starter_kit/src/docs/system_integrity_report.txt",
+            "sps_behavior_txt_path": "/Users/dextermorris/ghost/parser_starter_kit/src/docs/sps_behavior_report.txt",
+            "sps_behavior_json_path": "/Users/dextermorris/ghost/parser_starter_kit/src/docs/sps_behavior_report.json"
+          },
+          "errors": {},
+          "report_path": "/Users/dextermorris/ghost/parser_starter_kit/src/docs/integrity/run_gate_post_fusion_validation_harness_20251213_110815.txt",
+          "report_json": "/Users/dextermorris/ghost/parser_starter_kit/src/docs/integrity/run_gate_post_fusion_validation_harness_20251213_110815.json"
+        }
+      }
+    }
+  }
+}

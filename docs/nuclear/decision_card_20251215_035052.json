@@ -1,0 +1,73 @@
+{
+  "artifact": "nuclear_decision_card",
+  "version": 1,
+  "generated_at": "2025-12-15T03:50:52.072555+00:00",
+  "inputs": {
+    "trust_score": 80.0,
+    "risk_score": 35.0,
+    "alerts": {
+      "crit": 0,
+      "high": 0,
+      "attack_like": 0,
+      "anomaly": 0
+    },
+    "degraded": false,
+    "difficulty": "UNKNOWN",
+    "pattern_id": null,
+    "delta_vs_baseline": null,
+    "gates": {
+      "sis_status": "UNKNOWN",
+      "sps_status": "UNKNOWN",
+      "gate_status": "UNKNOWN"
+    }
+  },
+  "commander_summary": {
+    "confidence_score": 60.25,
+    "confidence_band": "LOW",
+    "recommended_posture": {
+      "posture": "BASELINE_WATCH",
+      "posture_score": 21.0,
+      "rationale": "Bounded pressure: continue monitoring and trend analysis."
+    },
+    "key_takeaway": "System outputs are provisional; verify before escalation."
+  },
+  "recommended_actions": [
+    "Treat as provisional: do not escalate without corroboration.",
+    "Run validation harness baseline + injected pattern to confirm expected deltas.",
+    "Document assumptions + confidence drivers for audit and commander review."
+  ],
+  "attachments": {
+    "prebrief_trust_annotations": {
+      "status": "OK",
+      "paths": {
+        "json_latest": "docs/briefs/prebrief_trust_annotations_latest.json",
+        "txt_latest": "docs/briefs/prebrief_trust_annotations_latest.txt",
+        "json_stamped": "docs/briefs/prebrief_trust_annotations_20251215_035052.json",
+        "txt_stamped": "docs/briefs/prebrief_trust_annotations_20251215_035052.txt"
+      },
+      "summary": {
+        "confidence_score": 60.25,
+        "confidence_band": "LOW",
+        "trust_score": 80.0,
+        "risk_score": 35.0,
+        "degraded": false,
+        "alerts": {
+          "crit": 0,
+          "high": 0,
+          "attack_like": 0,
+          "anomaly": 0
+        },
+        "gates": {
+          "sis_status": "UNKNOWN",
+          "sps_status": "UNKNOWN",
+          "gate_status": "UNKNOWN"
+        },
+        "training_context": {
+          "difficulty": "UNKNOWN",
+          "pattern_id": null
+        }
+      }
+    }
+  },
+  "safe_notice": "This card is produced from training-safe metadata/synthetic telemetry unless explicitly sourced otherwise."
+}

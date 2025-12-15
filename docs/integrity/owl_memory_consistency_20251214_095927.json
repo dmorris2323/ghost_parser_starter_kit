@@ -1,0 +1,29 @@
+{
+  "report": "owl_memory_consistency",
+  "generated_at": "2025-12-14T09:59:27.979514+00:00",
+  "status": "FAIL",
+  "present": {
+    "training_curve_latest": true,
+    "training_feedback_latest": false,
+    "validation_latest": true,
+    "crisis_mode": true,
+    "owl_memory_optional": false
+  },
+  "issues": [
+    "Missing required artifact: training_feedback_latest -> src/docs/training/training_feedback_latest.json"
+  ],
+  "parse_ok": true,
+  "parse_errors": [],
+  "recommendations": [
+    "If FAIL: fix missing artifacts first, then rerun check.",
+    "Keep crisis_mode_flag stable; many systems depend on it.",
+    "Standardize owl memory path later (post-Day 100 sprint) if needed."
+  ],
+  "paths_checked": {
+    "training_curve_latest": "src/docs/training/training_curve_latest.json",
+    "training_feedback_latest": "src/docs/training/training_feedback_latest.json",
+    "validation_latest": "src/docs/validation/fusion_validation_report.json",
+    "crisis_mode": "docs/integrity/crisis_mode.json",
+    "owl_memory_optional": "docs/owl/owl_memory.json"
+  }
+}
