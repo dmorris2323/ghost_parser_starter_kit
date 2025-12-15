@@ -1,0 +1,106 @@
+{
+  "generated_at": "2025-12-15T13:49:23.469660+00:00",
+  "safe_notice": "This watchboard is generated from synthetic telemetry and is safe for training/demos.",
+  "inputs": {
+    "trust_score": 82.0,
+    "risk_score": 48.0,
+    "alerts": {
+      "crit": 0,
+      "high": 3,
+      "attack_like": 0,
+      "anomaly": 14,
+      "total": 0
+    },
+    "degraded": true,
+    "signals": {
+      "comms_state": null,
+      "radiation_usv": null,
+      "seismic_mag": null,
+      "ems_state": "NOISY"
+    },
+    "previous_posture": "DUTY_OFFICER_NOTIFY"
+  },
+  "decision_card": {
+    "generated_at_utc": "2025-12-15T13:49:23.469155+00:00",
+    "type": "NUCLEAR_DECISION_CARD",
+    "scenario": "Synthetic / Training",
+    "safe_notice": "This product may be generated from synthetic telemetry for training/demos.",
+    "status": {
+      "degraded": true,
+      "confidence": "LOW",
+      "risk_band": "GUARDED",
+      "ambiguity_flags": [
+        "DEGRADED_OPS",
+        "MISSING_SIGNALS"
+      ]
+    },
+    "key_judgment": "No immediate indicators of confirmed nuclear event.",
+    "signals": {
+      "trust_score": 82.0,
+      "risk_score": 48.0,
+      "alerts": {
+        "crit": 0,
+        "high": 3,
+        "attack_like": 0,
+        "anomaly": 14,
+        "total": 0
+      },
+      "comms_state": null,
+      "ems_state": "NOISY",
+      "radiation_usv": null,
+      "seismic_mag": null,
+      "missing_signal_count": 3
+    },
+    "escalation": {
+      "posture": "DUTY_OFFICER_NOTIFY",
+      "cap_applied": false,
+      "allowed_jump_steps": 1,
+      "deescalation_blocked": false,
+      "reason": [
+        "risk>=35 => base=DUTY_OFFICER_NOTIFY"
+      ]
+    },
+    "knowns": [
+      "Trust score: 82.0 (proxy)",
+      "Risk score: 48.0 (proxy)",
+      "Alerts: crit=0, high=3, attack_like=0, anomaly=14",
+      "EMS state: NOISY"
+    ],
+    "unknowns": [
+      "Comms state unavailable",
+      "Radiation uSv unavailable",
+      "Seismic magnitude unavailable"
+    ],
+    "notes": ""
+  },
+  "escalation": {
+    "posture": "DUTY_OFFICER_NOTIFY",
+    "cap_applied": false,
+    "allowed_jump_steps": 1,
+    "deescalation_blocked": false
+  },
+  "brief": {
+    "what_we_can_say": [
+      "System posture is DUTY_OFFICER_NOTIFY with confidence=LOW.",
+      "Risk is assessed in a bounded band (risk_band=GUARDED).",
+      "Interpretation remains probabilistic due to degraded operations and/or ambiguity flags.",
+      "Ambiguity flags present: DEGRADED_OPS, MISSING_SIGNALS."
+    ],
+    "what_we_cannot_say": [
+      "Cannot assert signal-specific conclusions due to missing inputs: signals.",
+      "Cannot infer intent; this product only summarizes bounded risk/trust posture from synthetic telemetry."
+    ],
+    "unknowns": [
+      "MISSING_COMMS_STATE",
+      "MISSING_RADIATION_USV",
+      "MISSING_SEISMIC_MAG",
+      "MISSING_SIGNALS"
+    ],
+    "recommended_next_actions": [
+      "Request missing sensor inputs (training-safe): comms_state, radiation_usv, seismic_mag, ems_state.",
+      "Re-run validation at INTERMEDIATE baseline (no injection) to confirm bounded behavior.",
+      "Run ambiguity stress + escalation consistency checks to prevent posture instability.",
+      "If posture persists \u2265 UNIT_COMMANDER_ALERT for 2 consecutive cycles, trigger an operator review session."
+    ]
+  }
+}

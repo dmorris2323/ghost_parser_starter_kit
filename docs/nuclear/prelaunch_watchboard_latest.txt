@@ -1,0 +1,27 @@
+GLL PRE-LAUNCH WATCHBOARD (TRAINING SAFE)
+==============================================
+Generated: 2025-12-15T13:49:23.469660+00:00
+Posture: DUTY_OFFICER_NOTIFY  |  Confidence: LOW  |  Risk band: GUARDED
+Degraded: True  |  Cap applied: False  |  De-escalation blocked: False
+
+WHAT WE CAN SAY (BOUNDED):
+- System posture is DUTY_OFFICER_NOTIFY with confidence=LOW.
+- Risk is assessed in a bounded band (risk_band=GUARDED).
+- Interpretation remains probabilistic due to degraded operations and/or ambiguity flags.
+- Ambiguity flags present: DEGRADED_OPS, MISSING_SIGNALS.
+
+WHAT WE CANNOT SAY:
+- Cannot assert signal-specific conclusions due to missing inputs: signals.
+- Cannot infer intent; this product only summarizes bounded risk/trust posture from synthetic telemetry.
+
+UNKNOWNS / MISSING:
+- MISSING_COMMS_STATE
+- MISSING_RADIATION_USV
+- MISSING_SEISMIC_MAG
+- MISSING_SIGNALS
+
+RECOMMENDED NEXT ACTIONS:
+- Request missing sensor inputs (training-safe): comms_state, radiation_usv, seismic_mag, ems_state.
+- Re-run validation at INTERMEDIATE baseline (no injection) to confirm bounded behavior.
+- Run ambiguity stress + escalation consistency checks to prevent posture instability.
+- If posture persists ≥ UNIT_COMMANDER_ALERT for 2 consecutive cycles, trigger an operator review session.

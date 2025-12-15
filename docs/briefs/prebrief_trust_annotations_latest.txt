@@ -1,46 +1,26 @@
-GLL — PRE-BRIEF TRUST ANNOTATIONS (LATEST)
-Generated (UTC): 2025-12-15T11:55:44.052342+00:00
+GLL PRE-BRIEF TRUST ANNOTATIONS (TRAINING SAFE)
+====================================================
+Generated: 2025-12-15T13:49:23.470482+00:00
+Posture: DUTY_OFFICER_NOTIFY | Confidence: LOW | Risk band: GUARDED
+Degraded: True | Cap applied: False | De-escalation blocked: False
 
-Snapshot:
-- Posture: DUTY_OFFICER_NOTIFY
-- Confidence: LOW
-- Risk Band: GUARDED
-- Degraded: True
-- Cap Applied: False
-- Alerts: crit=0 high=0 attack_like=0 anomaly=0
-- Missing Signals: 3
-
-What we can say (bounded):
+BOUNDED STATEMENTS (BRIEF THESE):
 - System posture is DUTY_OFFICER_NOTIFY with confidence=LOW.
-- Risk is assessed in a bounded band (risk_score=0.00).
-- Trust is bounded (trust_score=0.00); interpretation remains probabilistic.
-- Operating under degraded/ambiguous conditions; prioritizing verification and signal restoration.
-- No CRIT alerts present; escalation is driven by bounded risk + corroboration, not single indicators.
+- Risk is assessed in a bounded band (risk_band=GUARDED).
+- Interpretation remains probabilistic due to degraded operations and/or ambiguity flags.
+- Ambiguity flags present: DEGRADED_OPS, MISSING_SIGNALS.
 
-What we cannot say:
-- We confirm a real-world event occurred (not supported by this product).
-- This is a confirmed launch/detonation/attack (requires independent confirmation).
-- Single-source certainty (no single signal is treated as proof).
-- We have complete sensor coverage (we do not).
-- We can assign attribution or intent from degraded signals alone.
-- This requires leadership notification solely due to ambiguity (ambiguity triggers collection posture first).
+DO NOT CLAIM:
+- Cannot assert signal-specific conclusions due to missing inputs: signals.
+- Cannot infer intent; this product only summarizes bounded risk/trust posture from synthetic telemetry.
 
-Known unknowns / ambiguity:
-- Degraded operations mode active; signal quality may be reduced.
-- Missing signals detected (count=3); domain confidence is reduced.
-- Ambiguity flag: DEGRADED_OPS
-- Ambiguity flag: MISSING_SIGNALS
+UNKNOWNS:
+- MISSING_COMMS_STATE
+- MISSING_RADIATION_USV
+- MISSING_SEISMIC_MAG
+- MISSING_SIGNALS
 
-Collection tasks (next steps):
-- Run baseline vs injected validation and review delta_vs_baseline for expected directional changes.
-- Verify sensor health and pipeline integrity (SIS+SPS).
-- Restore COMMS state telemetry or corroborate via independent comms monitoring.
-- Restore radiation telemetry; verify sensor calibration and data freshness.
-- Restore seismic magnitude telemetry; verify timing alignment and noise floor.
-- Perform a second-analyst review before any narrative is briefed upward.
-- Prepare an update window/timebox for next check-in (avoid continuous escalation without new data).
-
-Comms language:
-- Use bounded language: 'assess', 'indicates', 'suggests', 'requires verification'.
-- Separate observation from inference (what we saw vs what it might mean).
-- State what would change our posture (specific signals or corroboration).
+OPERATOR INSTRUCTION:
+- Brief only bounded statements.
+- If confidence is LOW/UNKNOWN or degraded=True, do not expand inference beyond listed text.
+- If posture ≥ UNIT_COMMANDER_ALERT persists across multiple cycles, initiate operator review and re-run baseline validation.
