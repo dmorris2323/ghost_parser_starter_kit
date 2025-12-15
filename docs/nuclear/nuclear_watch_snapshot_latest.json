@@ -1,0 +1,52 @@
+{
+  "generated_at_utc": "2025-12-15T12:01:13.362821+00:00",
+  "artifact": "NUCLEAR_WATCH_SNAPSHOT",
+  "posture": "DUTY_OFFICER_NOTIFY",
+  "confidence": "LOW",
+  "risk_band": "GUARDED",
+  "degraded": true,
+  "alerts": {
+    "crit": 0,
+    "high": 0,
+    "attack_like": 0,
+    "anomaly": 0,
+    "total": 0
+  },
+  "missing_signal_count": 3,
+  "safe_notice": "May be generated from synthetic telemetry. Not confirmation.",
+  "what_we_can_say": [
+    "System posture is DUTY_OFFICER_NOTIFY with confidence=LOW.",
+    "Risk is assessed in a bounded band (risk_score=0.00).",
+    "Trust is bounded (trust_score=0.00); interpretation remains probabilistic.",
+    "Operating under degraded/ambiguous conditions; prioritizing verification and signal restoration.",
+    "No CRIT alerts present; escalation is driven by bounded risk + corroboration, not single indicators."
+  ],
+  "what_we_cannot_say": [
+    "We confirm a real-world event occurred (not supported by this product).",
+    "This is a confirmed launch/detonation/attack (requires independent confirmation).",
+    "Single-source certainty (no single signal is treated as proof).",
+    "We have complete sensor coverage (we do not).",
+    "We can assign attribution or intent from degraded signals alone.",
+    "This requires leadership notification solely due to ambiguity (ambiguity triggers collection posture first)."
+  ],
+  "known_unknowns": [
+    "Degraded operations mode active; signal quality may be reduced.",
+    "Missing signals detected (count=3); domain confidence is reduced.",
+    "Ambiguity flag: DEGRADED_OPS",
+    "Ambiguity flag: MISSING_SIGNALS"
+  ],
+  "next_collection_tasks": [
+    "Run baseline vs injected validation and review delta_vs_baseline for expected directional changes.",
+    "Verify sensor health and pipeline integrity (SIS+SPS).",
+    "Restore COMMS state telemetry or corroborate via independent comms monitoring.",
+    "Restore radiation telemetry; verify sensor calibration and data freshness.",
+    "Restore seismic magnitude telemetry; verify timing alignment and noise floor.",
+    "Perform a second-analyst review before any narrative is briefed upward.",
+    "Prepare an update window/timebox for next check-in (avoid continuous escalation without new data)."
+  ],
+  "sources": {
+    "golden_dome_watch": "docs/nuclear/golden_dome_daily_watch_latest.json",
+    "decision_card": "docs/decision_cards/nuclear_decision_card_latest.json",
+    "prebrief_annotations": "docs/briefs/prebrief_trust_annotations_latest.json"
+  }
+}
