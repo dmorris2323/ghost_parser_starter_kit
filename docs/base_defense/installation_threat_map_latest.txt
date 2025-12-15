@@ -1,46 +1,15 @@
-{
-  "generated_at_utc": "2025-12-15T21:36:29.641753+00:00",
-  "type": "installation_threat_map",
-  "safe_notice": "Synthetic training artifact. Not real-world intelligence.",
-  "inputs": {
-    "comms_state": "OK",
-    "sensor_coverage_present": false
-  },
-  "summary": {
-    "posture": "DUTY_OFFICER_NOTIFY",
-    "overall_risk_band": "ELEVATED",
-    "max_risk_score": 0.72,
-    "degraded": false
-  },
-  "zones": [
-    {
-      "zone": "FLIGHTLINE",
-      "risk_score": 0.72,
-      "risk_band": "ELEVATED",
-      "notes": "High asset density"
-    },
-    {
-      "zone": "PERIMETER_NORTH",
-      "risk_score": 0.61,
-      "risk_band": "ELEVATED",
-      "notes": "UAS exposure"
-    },
-    {
-      "zone": "MAIN_GATE",
-      "risk_score": 0.55,
-      "risk_band": "ELEVATED",
-      "notes": "Traffic congestion"
-    },
-    {
-      "zone": "HOUSING",
-      "risk_score": 0.28,
-      "risk_band": "LOW",
-      "notes": "Low adversary value"
-    }
-  ],
-  "bounded_statements": [
-    "Assessment is probabilistic and bounded; operator judgment applies.",
-    "Threat posture reflects synthetic indicators only."
-  ],
-  "unknowns": []
-}
+INSTALLATION THREAT MAP (TRAINING)
+generated_at_utc: 2025-12-15T21:47:15.354838+00:00
+degraded: False
+comms_state: OK
+
+SUMMARY
+- overall_risk_band: LOW
+- max_risk_score: 10.0
+- recommended_posture: ROUTINE_MONITORING
+
+AMBIGUITY FLAGS
+- NON_DICT_ZONE_ITEM
+
+ZONES
+- A: risk_score=10.0 band=LOW notes=

@@ -1,9 +1,7 @@
 {
-  "generated_at_utc": "2025-12-15T21:36:29.675077+00:00",
-  "verdict": "FAIL",
+  "generated_at_utc": "2025-12-15T21:47:15.355314+00:00",
+  "verdict": "PASS",
   "runs": 5,
-  "crashes": 1,
-  "violations": [
-    "CRASH:NameError:name 'ambiguity_flags' is not defined"
-  ]
+  "crashes": 0,
+  "violations": []
 }

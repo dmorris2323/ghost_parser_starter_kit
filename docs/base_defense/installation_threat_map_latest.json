@@ -1,46 +1,30 @@
 {
-  "generated_at_utc": "2025-12-15T21:36:29.641753+00:00",
-  "type": "installation_threat_map",
-  "safe_notice": "Synthetic training artifact. Not real-world intelligence.",
+  "generated_at_utc": "2025-12-15T21:47:15.354838+00:00",
+  "safe_notice": "This artifact is derived from synthetic telemetry and is safe for training/demos.",
   "inputs": {
     "comms_state": "OK",
-    "sensor_coverage_present": false
+    "zones_count": 2
+  },
+  "status": {
+    "degraded": false,
+    "comms_state": "OK"
   },
   "summary": {
-    "posture": "DUTY_OFFICER_NOTIFY",
-    "overall_risk_band": "ELEVATED",
-    "max_risk_score": 0.72,
-    "degraded": false
+    "overall_risk_band": "LOW",
+    "max_risk_score": 10.0,
+    "recommended_posture": "ROUTINE_MONITORING"
   },
+  "ambiguity_flags": [
+    "NON_DICT_ZONE_ITEM"
+  ],
+  "unknowns": [],
   "zones": [
     {
-      "zone": "FLIGHTLINE",
-      "risk_score": 0.72,
-      "risk_band": "ELEVATED",
-      "notes": "High asset density"
-    },
-    {
-      "zone": "PERIMETER_NORTH",
-      "risk_score": 0.61,
-      "risk_band": "ELEVATED",
-      "notes": "UAS exposure"
-    },
-    {
-      "zone": "MAIN_GATE",
-      "risk_score": 0.55,
-      "risk_band": "ELEVATED",
-      "notes": "Traffic congestion"
-    },
-    {
-      "zone": "HOUSING",
-      "risk_score": 0.28,
+      "zone": "A",
+      "risk_score": 10.0,
       "risk_band": "LOW",
-      "notes": "Low adversary value"
+      "notes": "",
+      "raw_risk": 10
     }
-  ],
-  "bounded_statements": [
-    "Assessment is probabilistic and bounded; operator judgment applies.",
-    "Threat posture reflects synthetic indicators only."
-  ],
-  "unknowns": []
+  ]
 }
