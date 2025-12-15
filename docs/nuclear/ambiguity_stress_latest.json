@@ -1,0 +1,367 @@
+{
+  "generated_at_utc": "2025-12-15T11:50:40.080023+00:00",
+  "type": "AMBIGUITY_STRESS_REPORT",
+  "safe_notice": "Generated from synthetic/constructed inputs for training/demos.",
+  "matrix_size": 40,
+  "verdict": "PASS",
+  "violations_count": 0,
+  "violations": [],
+  "summary": {
+    "rule": "If risk<65 and crit==0, posture must not exceed HEIGHTENED_COLLECTION.",
+    "note": "Ambiguity should push collection/verification, not automatic notification."
+  },
+  "samples": [
+    {
+      "tag": "risk48_trust82_NONE_MISSING_degradedFalse_high0",
+      "inputs": {
+        "risk_score": 48,
+        "trust_score": 82,
+        "alerts": {
+          "crit": 0,
+          "high": 0,
+          "anomaly": 14,
+          "attack_like": 0
+        },
+        "degraded": false,
+        "missing_signal_count": 0
+      },
+      "outputs": {
+        "confidence": "MEDIUM",
+        "risk_band": "GUARDED",
+        "posture": "ROUTINE",
+        "cap_applied": false,
+        "ambiguity_flags": []
+      }
+    },
+    {
+      "tag": "risk48_trust82_NONE_MISSING_degradedFalse_high1",
+      "inputs": {
+        "risk_score": 48,
+        "trust_score": 82,
+        "alerts": {
+          "crit": 0,
+          "high": 1,
+          "anomaly": 14,
+          "attack_like": 0
+        },
+        "degraded": false,
+        "missing_signal_count": 0
+      },
+      "outputs": {
+        "confidence": "MEDIUM",
+        "risk_band": "GUARDED",
+        "posture": "ELEVATED_WATCH",
+        "cap_applied": false,
+        "ambiguity_flags": []
+      }
+    },
+    {
+      "tag": "risk48_trust82_NONE_MISSING_degradedFalse_high3",
+      "inputs": {
+        "risk_score": 48,
+        "trust_score": 82,
+        "alerts": {
+          "crit": 0,
+          "high": 3,
+          "anomaly": 14,
+          "attack_like": 0
+        },
+        "degraded": false,
+        "missing_signal_count": 0
+      },
+      "outputs": {
+        "confidence": "MEDIUM",
+        "risk_band": "GUARDED",
+        "posture": "HEIGHTENED_COLLECTION",
+        "cap_applied": false,
+        "ambiguity_flags": []
+      }
+    },
+    {
+      "tag": "risk48_trust82_NONE_MISSING_degradedFalse_high5",
+      "inputs": {
+        "risk_score": 48,
+        "trust_score": 82,
+        "alerts": {
+          "crit": 0,
+          "high": 5,
+          "anomaly": 14,
+          "attack_like": 0
+        },
+        "degraded": false,
+        "missing_signal_count": 0
+      },
+      "outputs": {
+        "confidence": "MEDIUM",
+        "risk_band": "GUARDED",
+        "posture": "HEIGHTENED_COLLECTION",
+        "cap_applied": false,
+        "ambiguity_flags": []
+      }
+    },
+    {
+      "tag": "risk48_trust82_COMMS_MISSING_degradedFalse_high0",
+      "inputs": {
+        "risk_score": 48,
+        "trust_score": 82,
+        "alerts": {
+          "crit": 0,
+          "high": 0,
+          "anomaly": 14,
+          "attack_like": 0
+        },
+        "degraded": false,
+        "missing_signal_count": 1
+      },
+      "outputs": {
+        "confidence": "MEDIUM",
+        "risk_band": "GUARDED",
+        "posture": "ELEVATED_WATCH",
+        "cap_applied": false,
+        "ambiguity_flags": [
+          "MISSING_SIGNALS"
+        ]
+      }
+    },
+    {
+      "tag": "risk48_trust82_COMMS_MISSING_degradedFalse_high1",
+      "inputs": {
+        "risk_score": 48,
+        "trust_score": 82,
+        "alerts": {
+          "crit": 0,
+          "high": 1,
+          "anomaly": 14,
+          "attack_like": 0
+        },
+        "degraded": false,
+        "missing_signal_count": 1
+      },
+      "outputs": {
+        "confidence": "MEDIUM",
+        "risk_band": "GUARDED",
+        "posture": "HEIGHTENED_COLLECTION",
+        "cap_applied": false,
+        "ambiguity_flags": [
+          "MISSING_SIGNALS"
+        ]
+      }
+    },
+    {
+      "tag": "risk48_trust82_COMMS_MISSING_degradedFalse_high3",
+      "inputs": {
+        "risk_score": 48,
+        "trust_score": 82,
+        "alerts": {
+          "crit": 0,
+          "high": 3,
+          "anomaly": 14,
+          "attack_like": 0
+        },
+        "degraded": false,
+        "missing_signal_count": 1
+      },
+      "outputs": {
+        "confidence": "MEDIUM",
+        "risk_band": "GUARDED",
+        "posture": "HEIGHTENED_COLLECTION",
+        "cap_applied": false,
+        "ambiguity_flags": [
+          "MISSING_SIGNALS"
+        ]
+      }
+    },
+    {
+      "tag": "risk48_trust82_COMMS_MISSING_degradedFalse_high5",
+      "inputs": {
+        "risk_score": 48,
+        "trust_score": 82,
+        "alerts": {
+          "crit": 0,
+          "high": 5,
+          "anomaly": 14,
+          "attack_like": 0
+        },
+        "degraded": false,
+        "missing_signal_count": 1
+      },
+      "outputs": {
+        "confidence": "MEDIUM",
+        "risk_band": "GUARDED",
+        "posture": "HEIGHTENED_COLLECTION",
+        "cap_applied": false,
+        "ambiguity_flags": [
+          "MISSING_SIGNALS"
+        ]
+      }
+    },
+    {
+      "tag": "risk48_trust82_RAD_MISSING_degradedFalse_high0",
+      "inputs": {
+        "risk_score": 48,
+        "trust_score": 82,
+        "alerts": {
+          "crit": 0,
+          "high": 0,
+          "anomaly": 14,
+          "attack_like": 0
+        },
+        "degraded": false,
+        "missing_signal_count": 1
+      },
+      "outputs": {
+        "confidence": "MEDIUM",
+        "risk_band": "GUARDED",
+        "posture": "ELEVATED_WATCH",
+        "cap_applied": false,
+        "ambiguity_flags": [
+          "MISSING_SIGNALS"
+        ]
+      }
+    },
+    {
+      "tag": "risk48_trust82_RAD_MISSING_degradedFalse_high1",
+      "inputs": {
+        "risk_score": 48,
+        "trust_score": 82,
+        "alerts": {
+          "crit": 0,
+          "high": 1,
+          "anomaly": 14,
+          "attack_like": 0
+        },
+        "degraded": false,
+        "missing_signal_count": 1
+      },
+      "outputs": {
+        "confidence": "MEDIUM",
+        "risk_band": "GUARDED",
+        "posture": "HEIGHTENED_COLLECTION",
+        "cap_applied": false,
+        "ambiguity_flags": [
+          "MISSING_SIGNALS"
+        ]
+      }
+    },
+    {
+      "tag": "risk48_trust82_RAD_MISSING_degradedFalse_high3",
+      "inputs": {
+        "risk_score": 48,
+        "trust_score": 82,
+        "alerts": {
+          "crit": 0,
+          "high": 3,
+          "anomaly": 14,
+          "attack_like": 0
+        },
+        "degraded": false,
+        "missing_signal_count": 1
+      },
+      "outputs": {
+        "confidence": "MEDIUM",
+        "risk_band": "GUARDED",
+        "posture": "HEIGHTENED_COLLECTION",
+        "cap_applied": false,
+        "ambiguity_flags": [
+          "MISSING_SIGNALS"
+        ]
+      }
+    },
+    {
+      "tag": "risk48_trust82_RAD_MISSING_degradedFalse_high5",
+      "inputs": {
+        "risk_score": 48,
+        "trust_score": 82,
+        "alerts": {
+          "crit": 0,
+          "high": 5,
+          "anomaly": 14,
+          "attack_like": 0
+        },
+        "degraded": false,
+        "missing_signal_count": 1
+      },
+      "outputs": {
+        "confidence": "MEDIUM",
+        "risk_band": "GUARDED",
+        "posture": "HEIGHTENED_COLLECTION",
+        "cap_applied": false,
+        "ambiguity_flags": [
+          "MISSING_SIGNALS"
+        ]
+      }
+    },
+    {
+      "tag": "risk48_trust82_MAG_MISSING_degradedFalse_high0",
+      "inputs": {
+        "risk_score": 48,
+        "trust_score": 82,
+        "alerts": {
+          "crit": 0,
+          "high": 0,
+          "anomaly": 14,
+          "attack_like": 0
+        },
+        "degraded": false,
+        "missing_signal_count": 1
+      },
+      "outputs": {
+        "confidence": "MEDIUM",
+        "risk_band": "GUARDED",
+        "posture": "ELEVATED_WATCH",
+        "cap_applied": false,
+        "ambiguity_flags": [
+          "MISSING_SIGNALS"
+        ]
+      }
+    },
+    {
+      "tag": "risk48_trust82_MAG_MISSING_degradedFalse_high1",
+      "inputs": {
+        "risk_score": 48,
+        "trust_score": 82,
+        "alerts": {
+          "crit": 0,
+          "high": 1,
+          "anomaly": 14,
+          "attack_like": 0
+        },
+        "degraded": false,
+        "missing_signal_count": 1
+      },
+      "outputs": {
+        "confidence": "MEDIUM",
+        "risk_band": "GUARDED",
+        "posture": "HEIGHTENED_COLLECTION",
+        "cap_applied": false,
+        "ambiguity_flags": [
+          "MISSING_SIGNALS"
+        ]
+      }
+    },
+    {
+      "tag": "risk48_trust82_MAG_MISSING_degradedFalse_high3",
+      "inputs": {
+        "risk_score": 48,
+        "trust_score": 82,
+        "alerts": {
+          "crit": 0,
+          "high": 3,
+          "anomaly": 14,
+          "attack_like": 0
+        },
+        "degraded": false,
+        "missing_signal_count": 1
+      },
+      "outputs": {
+        "confidence": "MEDIUM",
+        "risk_band": "GUARDED",
+        "posture": "HEIGHTENED_COLLECTION",
+        "cap_applied": false,
+        "ambiguity_flags": [
+          "MISSING_SIGNALS"
+        ]
+      }
+    }
+  ]
+}

@@ -14,7 +14,6 @@ Public API:
 from __future__ import annotations
 
 import json
-from dataclasses import dataclass
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Dict, List, Optional
@@ -70,6 +69,18 @@ def _norm_alerts(alerts: Optional[Dict[str, Any]]) -> Dict[str, int]:
     }
 
 
+def _posture_from_score(score: int) -> str:
+    if score <= 2:
+        return "ROUTINE"
+    if score <= 4:
+        return "ELEVATED_WATCH"
+    if score <= 6:
+        return "HEIGHTENED_COLLECTION"
+    if score <= 8:
+        return "DUTY_OFFICER_NOTIFY"
+    return "CRISIS_ACTION_TEAM"
+
+
 def recommend_escalation(
     *,
     trust_score: Any,
@@ -94,10 +105,9 @@ def recommend_escalation(
     a = _norm_alerts(alerts)
     flags = [str(x) for x in (ambiguity_flags or [])]
 
-    # scoring (bounded; deterministic)
     score = 0
 
-    # risk contribution
+    # ---- primary drivers (these can justify escalation) ----
     if risk >= 85:
         score += 4
     elif risk >= 65:
@@ -107,7 +117,6 @@ def recommend_escalation(
     elif risk >= 20:
         score += 1
 
-    # alert contribution
     if a["crit"] > 0:
         score += 4
     elif a["high"] >= 3:
@@ -119,34 +128,36 @@ def recommend_escalation(
     elif a["attack_like"] > 0:
         score += 1
 
-    # trust/confidence modifiers (ambiguity reduces decisiveness but increases collection posture)
+    # ---- trust / confidence modifiers (bounded) ----
+    # low trust nudges verification posture; it should not auto-trigger leadership notification without risk/crit.
     if trust < 55:
         score += 2
     elif trust < 70:
         score += 1
 
-    if str(confidence).upper() in {"VERY_LOW", "LOW"}:
-        score += 1  # push toward collection/verification
-
-    if degraded:
+    # confidence only matters when trust is already not great
+    conf = str(confidence).upper()
+    if trust < 70 and conf in {"VERY_LOW", "LOW"}:
         score += 1
 
+    # ambiguity/degraded nudges collection posture (but is capped below)
+    if degraded:
+        score += 1
     if "MISSING_SIGNALS" in flags:
         score += 1
 
-    # map score to posture (bounded)
-    if score <= 2:
-        posture = "ROUTINE"
-    elif score <= 4:
-        posture = "ELEVATED_WATCH"
-    elif score <= 6:
-        posture = "HEIGHTENED_COLLECTION"
-    elif score <= 8:
-        posture = "DUTY_OFFICER_NOTIFY"
-    else:
-        posture = "CRISIS_ACTION_TEAM"
+    # preliminary posture
+    posture = _posture_from_score(score)
 
-    # posture-specific actions (no overclaims)
+    # ---- HARDENING CAP (Week-1): ambiguity drives collection, not unnecessary notification ----
+    # If there is no CRIT and risk is below ELEVATED, we cap at HEIGHTENED_COLLECTION.
+    cap_applied = False
+    if a["crit"] == 0 and risk < 65:
+        if posture in {"DUTY_OFFICER_NOTIFY", "CRISIS_ACTION_TEAM"}:
+            posture = "HEIGHTENED_COLLECTION"
+            cap_applied = True
+
+    # posture-specific actions
     actions: List[str] = []
     if posture == "ROUTINE":
         actions = [
@@ -179,6 +190,8 @@ def recommend_escalation(
 
     rationale = {
         "computed_score": score,
+        "cap_applied": cap_applied,
+        "cap_rule": "If crit==0 and risk<65, posture is capped at HEIGHTENED_COLLECTION.",
         "drivers": {
             "risk_score": risk,
             "trust_score": trust,
@@ -215,7 +228,6 @@ def write_escalation_artifacts(rec: Dict[str, Any]) -> Dict[str, str]:
     _write_json(json_latest, rec)
     _write_json(json_stamped, rec)
 
-    # small txt render
     r = rec.get("rationale", {}).get("drivers", {})
     a = (r.get("alerts") or {})
     lines = []
@@ -223,6 +235,7 @@ def write_escalation_artifacts(rec: Dict[str, Any]) -> Dict[str, str]:
     lines.append(f"Generated (UTC): {rec.get('generated_at_utc','')}")
     lines.append("")
     lines.append(f"Posture: {rec.get('posture','')}")
+    lines.append(f"Cap Applied: {rec.get('rationale',{}).get('cap_applied', False)}")
     lines.append("")
     lines.append("Drivers:")
     lines.append(f"- Risk: {r.get('risk_score',0)}")

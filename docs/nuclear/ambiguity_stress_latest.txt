@@ -1,0 +1,10 @@
+GLL — AMBIGUITY STRESS REPORT (LATEST)
+Generated (UTC): 2025-12-15T11:50:40.080023+00:00
+Verdict: PASS
+Matrix size: 40
+Violations: 0
+
+Rule:
+- If risk<65 and crit==0, posture must not exceed HEIGHTENED_COLLECTION.
+
+No violations. Escalation remained bounded under ambiguity.
