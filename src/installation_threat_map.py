@@ -1,124 +1,230 @@
-from __future__ import annotations
+"""
+Installation Threat Map
+Week-2 Base Defense Hardening
 
-import json
-from collections import defaultdict
-from datetime import datetime
+Purpose:
+- Fuse partial base-defense telemetry
+- Produce bounded threat posture
+- Remain stable under missing inputs
+"""
+
+from datetime import datetime, timezone
 from pathlib import Path
-from typing import Any, Dict, List
+from typing import Any, Dict, List, Optional
+
+OUT_DIR = Path("docs/base_defense")
+OUT_DIR.mkdir(parents=True, exist_ok=True)
+
+ALLOWED_POSTURES = {
+    "ROUTINE_MONITORING",
+    "HEIGHTENED_AWARENESS",
+    "SECURITY_FORCES_NOTIFY",
+}
 
 
-BASE_DIR = Path(__file__).resolve().parent
-DOCS_DIR = BASE_DIR / "docs"
-DATA_DIR = BASE_DIR / "data"
+def _utc_now() -> str:
+    return datetime.now(timezone.utc).isoformat()
 
 
-def _safe_iter_threat_log(path: Path):
+def _ts() -> str:
+    return datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S")
+
+
+def _safe_list(x: Any) -> List[Any]:
+    return x if isinstance(x, list) else []
+
+
+def _safe_dict(x: Any) -> Dict[str, Any]:
+    return x if isinstance(x, dict) else {}
+
+
+def _compute_confidence(ambiguity_flags: List[str], threat_score: int) -> str:
     """
-    Iterate over threat_memory_log.jsonl if it exists.
-    Each line is expected to be a JSON object.
+    Confidence is bounded. We do NOT let it become "HIGH" under ambiguity.
     """
-    if not path.exists():
-        return
-    try:
-        for line in path.read_text().splitlines():
-            line = line.strip()
-            if not line:
-                continue
-            try:
-                yield json.loads(line)
-            except Exception:
-                # Skip malformed lines
-                continue
-    except Exception:
-        return
+    if ambiguity_flags:
+        return "LOW" if threat_score >= 5 else "MEDIUM"
+    # no ambiguity
+    if threat_score == 0:
+        return "HIGH"
+    if threat_score < 5:
+        return "MEDIUM"
+    return "MEDIUM"
 
 
-def build_installation_threat_map() -> Dict[str, Any]:
+def _threat_band(threat_score: int) -> str:
+    if threat_score == 0:
+        return "GREEN"
+    if threat_score < 5:
+        return "AMBER"
+    return "RED"
+
+
+def build_installation_threat_map(
+    perimeter_events: Optional[List[Dict[str, Any]]] = None,
+    sensor_status: Optional[Dict[str, str]] = None,
+    patrol_reports: Optional[List[Dict[str, Any]]] = None,
+    comms_state: str = "OK",
+) -> Dict[str, Any]:
     """
-    Build a perimeter-style Installation Threat Map from threat_memory_log.jsonl.
-    Falls back to a shaped default if there is no data.
+    All inputs optional.
+    System must remain stable under partial data.
     """
-    DOCS_DIR.mkdir(exist_ok=True, parents=True)
-    DATA_DIR.mkdir(exist_ok=True, parents=True)
 
-    threat_log = DATA_DIR / "threat_memory_log.jsonl"
+    perimeter_events = _safe_list(perimeter_events)
+    patrol_reports = _safe_list(patrol_reports)
+    sensor_status = _safe_dict(sensor_status)
 
-    # sector -> {critical, high, other}
-    sectors: Dict[str, Dict[str, int]] = defaultdict(
-        lambda: {"critical": 0, "high": 0, "other": 0}
-    )
+    ambiguity_flags: List[str] = []
 
-    for ev in _safe_iter_threat_log(threat_log) or []:
-        sector = ev.get("sector") or ev.get("zone") or "UNKNOWN"
-        sev = (ev.get("severity") or "").lower()
+    comms_state_norm = str(comms_state or "OK").upper().strip()
+    if comms_state_norm != "OK":
+        ambiguity_flags.append("DEGRADED_COMMS")
 
-        if "critical" in sev:
-            key = "critical"
-        elif "high" in sev:
-            key = "high"
-        else:
-            key = "other"
+    offline_sensors = [k for k, v in sensor_status.items() if str(v).upper().strip() != "OK"]
+    if offline_sensors:
+        ambiguity_flags.append("SENSOR_OUTAGE")
 
-        sectors[sector][key] += 1
+    # ----- bounded scoring (simple proxy; no intent inference) -----
+    threat_score = 0
+    threat_score += len(perimeter_events) * 2
+    threat_score += len(patrol_reports)
 
-    # If zero data, return a shaped but empty map
-    if not sectors:
-        sectors = {
-            "PERIMETER_NORTH": {"critical": 0, "high": 0, "other": 0},
-            "PERIMETER_SOUTH": {"critical": 0, "high": 0, "other": 0},
-            "PERIMETER_EAST": {"critical": 0, "high": 0, "other": 0},
-            "PERIMETER_WEST": {"critical": 0, "high": 0, "other": 0},
-        }
+    # bounded increase only — loss of sensors slightly increases uncertainty but does not spike posture
+    if offline_sensors:
+        threat_score += 1
 
-    overall_critical = sum(v["critical"] for v in sectors.values())
-    if overall_critical > 5:
-        status = "RED"
-    elif overall_critical > 0:
-        status = "AMBER"
+    # ----- posture selection -----
+    if threat_score == 0:
+        posture = "ROUTINE_MONITORING"
+    elif threat_score < 5:
+        posture = "HEIGHTENED_AWARENESS"
     else:
-        status = "GREEN"
+        posture = "SECURITY_FORCES_NOTIFY"
 
-    out = {
-        "product_type": "Installation Threat Map",
-        "generated_at": datetime.utcnow().isoformat() + "Z",
-        "status": status,
-        "sectors": sectors,
+    # 🔒 Cap escalation under ambiguity (base-defense version)
+    cap_applied = False
+    if ambiguity_flags and posture not in {"ROUTINE_MONITORING", "HEIGHTENED_AWARENESS"}:
+        posture = "HEIGHTENED_AWARENESS"
+        cap_applied = True
+
+    if posture not in ALLOWED_POSTURES:
+        posture = "HEIGHTENED_AWARENESS"
+        ambiguity_flags.append("POSTURE_SANITIZED")
+
+    confidence = _compute_confidence(ambiguity_flags, threat_score)
+    band = _threat_band(threat_score)
+
+    bounded_tokens = "Assessment is probabilistic and bounded; operator judgment applies."
+
+    return {
+        "generated_at_utc": _utc_now(),
+        "inputs": {
+            "counts": {
+                "perimeter_events": len(perimeter_events),
+                "patrol_reports": len(patrol_reports),
+                "sensors_reported": len(sensor_status),
+                "sensors_offline": len(offline_sensors),
+            },
+            "comms_state": comms_state_norm,
+        },
+        "status": {
+            "posture": posture,
+            "confidence": confidence,
+            "threat_band": band,
+            "threat_score": threat_score,
+            "ambiguity_flags": ambiguity_flags,
+            "cap_applied": cap_applied,
+        },
+        "what_we_can_say": [
+            f"Installation posture is {posture} with confidence={confidence}.",
+            f"Threat is assessed in a bounded band (threat_band={band}).",
+            bounded_tokens,
+        ],
+        "what_we_cannot_say": [
+            "Cannot infer adversary intent.",
+            "Cannot confirm coordinated attack.",
+            "Cannot attribute activity to a specific actor based on this product alone.",
+        ],
+        "operator_notes": [
+            "If comms are degraded or sensors are offline, validate with Security Forces and cross-check manual reports.",
+            "Escalation beyond SECURITY_FORCES_NOTIFY requires corroboration and command direction.",
+        ],
     }
-    return out
 
 
-def write_installation_threat_map() -> Dict[str, str]:
-    """
-    Writes both JSON and TXT products for the installation threat map.
-    """
-    DOCS_DIR.mkdir(exist_ok=True, parents=True)
-    data = build_installation_threat_map()
+def _render_txt(report: Dict[str, Any]) -> str:
+    s = report.get("status", {}) if isinstance(report.get("status"), dict) else {}
+    inputs = report.get("inputs", {}) if isinstance(report.get("inputs"), dict) else {}
+    counts = inputs.get("counts", {}) if isinstance(inputs.get("counts"), dict) else {}
 
-    json_path = DOCS_DIR / "installation_threat_map.json"
-    txt_path = DOCS_DIR / "installation_threat_map.txt"
+    lines = [
+        "INSTALLATION THREAT MAP",
+        f"Generated: {report.get('generated_at_utc', '')}",
+        "",
+        f"Posture: {s.get('posture', 'UNKNOWN')}",
+        f"Confidence: {s.get('confidence', 'UNKNOWN')}",
+        f"Threat Band: {s.get('threat_band', 'UNKNOWN')}",
+        f"Threat Score: {s.get('threat_score', 0)}",
+        f"Ambiguity Flags: {', '.join(s.get('ambiguity_flags', []) or [])}",
+        f"Cap Applied: {bool(s.get('cap_applied', False))}",
+        "",
+        "INPUT COUNTS:",
+        f"- perimeter_events: {counts.get('perimeter_events', 0)}",
+        f"- patrol_reports: {counts.get('patrol_reports', 0)}",
+        f"- sensors_reported: {counts.get('sensors_reported', 0)}",
+        f"- sensors_offline: {counts.get('sensors_offline', 0)}",
+        f"- comms_state: {inputs.get('comms_state', 'UNKNOWN')}",
+        "",
+        "WHAT WE CAN SAY:",
+    ]
+    for x in report.get("what_we_can_say", []) or []:
+        lines.append(f"- {x}")
 
-    json_path.write_text(json.dumps(data, indent=2))
+    lines += ["", "WHAT WE CANNOT SAY:"]
+    for x in report.get("what_we_cannot_say", []) or []:
+        lines.append(f"- {x}")
 
-    lines: List[str] = []
-    lines.append("=== INSTALLATION THREAT MAP ===")
-    lines.append(f"Generated at: {data['generated_at']}")
-    lines.append(f"Overall Status: {data['status']}")
-    lines.append("")
-    lines.append("Sector breakdown:")
-    for sector, counts in data["sectors"].items():
-        lines.append(
-            f"  - {sector}: critical={counts['critical']} "
-            f"high={counts['high']} other={counts['other']}"
-        )
-    lines.append("")
-    txt_path.write_text("\n".join(lines))
+    lines += ["", "OPERATOR NOTES:"]
+    for x in report.get("operator_notes", []) or []:
+        lines.append(f"- {x}")
 
-    return {"json_path": str(json_path), "txt_path": str(txt_path)}
+    return "\n".join(lines)
+
+
+def write_installation_threat_map(report: Dict[str, Any]) -> Dict[str, str]:
+    import json
+
+    ts = _ts()
+
+    latest_json = OUT_DIR / "installation_threat_map_latest.json"
+    stamped_json = OUT_DIR / f"installation_threat_map_{ts}.json"
+
+    latest_txt = OUT_DIR / "installation_threat_map_latest.txt"
+    stamped_txt = OUT_DIR / f"installation_threat_map_{ts}.txt"
+
+    latest_json.write_text(json.dumps(report, indent=2), encoding="utf-8")
+    stamped_json.write_text(json.dumps(report, indent=2), encoding="utf-8")
+
+    txt = _render_txt(report)
+    latest_txt.write_text(txt, encoding="utf-8")
+    stamped_txt.write_text(txt, encoding="utf-8")
+
+    return {
+        "json_latest": str(latest_json),
+        "txt_latest": str(latest_txt),
+        "json_stamped": str(stamped_json),
+        "txt_stamped": str(stamped_txt),
+    }
 
 
 if __name__ == "__main__":
-    out = write_installation_threat_map()
-    print("Installation Threat Map written:")
-    print(f"JSON → {out['json_path']}")
-    print(f"TXT  → {out['txt_path']}")
+    report = build_installation_threat_map(
+        perimeter_events=[{"zone": "NORTH"}],
+        sensor_status={"CAM_1": "OK", "RADAR_2": "OFFLINE"},
+        patrol_reports=[{"unit": "SF-3"}],
+        comms_state="NOISY",
+    )
+    paths = write_installation_threat_map(report)
+    print(paths)
 

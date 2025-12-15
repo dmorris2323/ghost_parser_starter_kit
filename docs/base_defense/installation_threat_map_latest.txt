@@ -1,0 +1,30 @@
+INSTALLATION THREAT MAP
+Generated: 2025-12-15T20:16:23.997722+00:00
+
+Posture: HEIGHTENED_AWARENESS
+Confidence: LOW
+Threat Band: RED
+Threat Score: 6
+Ambiguity Flags: DEGRADED_COMMS, SENSOR_OUTAGE
+Cap Applied: True
+
+INPUT COUNTS:
+- perimeter_events: 2
+- patrol_reports: 1
+- sensors_reported: 2
+- sensors_offline: 1
+- comms_state: NOISY
+
+WHAT WE CAN SAY:
+- Installation posture is HEIGHTENED_AWARENESS with confidence=LOW.
+- Threat is assessed in a bounded band (threat_band=RED).
+- Assessment is probabilistic and bounded; operator judgment applies.
+
+WHAT WE CANNOT SAY:
+- Cannot infer adversary intent.
+- Cannot confirm coordinated attack.
+- Cannot attribute activity to a specific actor based on this product alone.
+
+OPERATOR NOTES:
+- If comms are degraded or sensors are offline, validate with Security Forces and cross-check manual reports.
+- Escalation beyond SECURITY_FORCES_NOTIFY requires corroboration and command direction.

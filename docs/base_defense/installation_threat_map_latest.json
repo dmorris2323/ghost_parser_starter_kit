@@ -1,0 +1,37 @@
+{
+  "generated_at_utc": "2025-12-15T20:16:23.997722+00:00",
+  "inputs": {
+    "counts": {
+      "perimeter_events": 2,
+      "patrol_reports": 1,
+      "sensors_reported": 2,
+      "sensors_offline": 1
+    },
+    "comms_state": "NOISY"
+  },
+  "status": {
+    "posture": "HEIGHTENED_AWARENESS",
+    "confidence": "LOW",
+    "threat_band": "RED",
+    "threat_score": 6,
+    "ambiguity_flags": [
+      "DEGRADED_COMMS",
+      "SENSOR_OUTAGE"
+    ],
+    "cap_applied": true
+  },
+  "what_we_can_say": [
+    "Installation posture is HEIGHTENED_AWARENESS with confidence=LOW.",
+    "Threat is assessed in a bounded band (threat_band=RED).",
+    "Assessment is probabilistic and bounded; operator judgment applies."
+  ],
+  "what_we_cannot_say": [
+    "Cannot infer adversary intent.",
+    "Cannot confirm coordinated attack.",
+    "Cannot attribute activity to a specific actor based on this product alone."
+  ],
+  "operator_notes": [
+    "If comms are degraded or sensors are offline, validate with Security Forces and cross-check manual reports.",
+    "Escalation beyond SECURITY_FORCES_NOTIFY requires corroboration and command direction."
+  ]
+}
