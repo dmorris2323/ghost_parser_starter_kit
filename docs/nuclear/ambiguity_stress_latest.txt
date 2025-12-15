@@ -1,5 +1,5 @@
 Ambiguity Stress Test
-generated_at_utc: 2025-12-15T15:19:37.943486+00:00
+generated_at_utc: 2025-12-15T15:25:31.680826+00:00
 verdict: PASS
 total_cases: 648
 crashes: 0

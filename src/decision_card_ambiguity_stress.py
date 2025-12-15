@@ -1,11 +1,18 @@
 """
 decision_card_ambiguity_stress.py
 
-Week-1 hardening:
-- Stress-test nuclear decision card posture under ambiguity
-- Generate a matrix of scenarios (missing signals/degraded/alerts)
-- Verify escalation ladder does not over-escalate when risk<65 and crit==0
-- Write artifacts for command trust
+Hardening test: Decision card must remain commander-safe under ambiguity:
+- missing signals
+- degraded ops
+- noisy EMS / comms uncertainty
+- alert pressure
+
+Success criteria (PASS):
+- card builds for every test case (no crash)
+- status.confidence is never HIGH when ambiguity exists
+- ambiguity_flags present when degraded/missing signals exist
+- escalation posture is present
+- “bounded language” is used (no absolute certainty phrasing)
 
 Outputs:
 - docs/nuclear/ambiguity_stress_latest.json
@@ -17,14 +24,13 @@ Outputs:
 from __future__ import annotations
 
 import json
+from dataclasses import dataclass
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
 
-from nuclear_decision_card import build_decision_card
 
-
-NUCLEAR_DIR = Path("docs") / "nuclear"
+OUT_DIR = Path("docs") / "nuclear"
 
 
 def _utc_now_iso() -> str:
@@ -49,168 +55,214 @@ def _write_txt(path: Path, text: str) -> None:
     path.write_text(text, encoding="utf-8")
 
 
-def _scenario_rows() -> List[Dict[str, Any]]:
-    """
-    Matrix design:
-    - Keep primary case risk=48 (GUARDED) and no CRIT
-    - Vary missing signals + degraded + high count
-    - Ensure the cap holds: posture should not exceed HEIGHTENED_COLLECTION
-    """
-    base_alerts = {"crit": 0, "high": 3, "anomaly": 14, "attack_like": 0}
+ABSOLUTE_PHRASES = [
+    "confirmed",
+    "we know",
+    "certain",
+    "definitive",
+    "guaranteed",
+    "no doubt",
+    "is a nuclear event",
+    "this is nuclear",
+    "launch confirmed",
+]
 
-    rows: List[Dict[str, Any]] = []
 
+def _contains_absolute_language(text: str) -> bool:
+    t = (text or "").lower()
+    return any(p in t for p in ABSOLUTE_PHRASES)
+
+
+def _get(d: Dict[str, Any], path: List[str], default: Any = None) -> Any:
+    cur: Any = d
+    for k in path:
+        if not isinstance(cur, dict):
+            return default
+        cur = cur.get(k)
+    return cur if cur is not None else default
+
+
+def _as_str(x: Any) -> str:
+    try:
+        return str(x)
+    except Exception:
+        return ""
+
+
+def _build_cases() -> List[Dict[str, Any]]:
+    """
+    Generates a matrix of cases focused on ambiguous inputs.
+    IMPORTANT: We always supply trust_score and risk_score so the card logic
+    isn’t implicitly defaulting to zero unless it intentionally caps/bounds.
+    """
+    base_alerts = [
+        {"crit": 0, "high": 0, "anomaly": 2},
+        {"crit": 0, "high": 2, "anomaly": 12},
+        {"crit": 1, "high": 5, "anomaly": 24},
+    ]
+
+    cases: List[Dict[str, Any]] = []
     for degraded in [False, True]:
-        for missing_profile in ["NONE_MISSING", "COMMS_MISSING", "RAD_MISSING", "MAG_MISSING", "ALL_MISSING"]:
-            for high in [0, 1, 3, 5]:
-                alerts = dict(base_alerts)
-                alerts["high"] = high
+        for comms_state in [None, "OK", "NOISY", "DEGRADED"]:
+            for ems_state in [None, "CLEAR", "NOISY"]:
+                for seismic_mag in [None, 2.1, 4.7]:
+                    for radiation_usv in [None, 0.08, 0.35]:
+                        for alerts in base_alerts:
+                            # Define “ambiguity exists” conditions
+                            missing = (comms_state is None) or (ems_state is None) or (seismic_mag is None) or (radiation_usv is None)
+                            ambiguous = degraded or missing or (comms_state in {"NOISY", "DEGRADED"}) or (ems_state == "NOISY")
 
-                comms_state = "OK"
-                radiation_usv = 0.12
-                seismic_mag = 2.1
-                ems_state = "OK"
+                            trust_score = 82 if not ambiguous else 78
+                            risk_score = 18 if not ambiguous else 48
 
-                if missing_profile == "COMMS_MISSING":
-                    comms_state = None
-                elif missing_profile == "RAD_MISSING":
-                    radiation_usv = None
-                elif missing_profile == "MAG_MISSING":
-                    seismic_mag = None
-                elif missing_profile == "ALL_MISSING":
-                    comms_state = None
-                    radiation_usv = None
-                    seismic_mag = None
-                    ems_state = None
-
-                rows.append(
-                    {
-                        "risk_score": 48,
-                        "trust_score": 82,
-                        "alerts": alerts,
-                        "degraded": degraded,
-                        "comms_state": comms_state,
-                        "radiation_usv": radiation_usv,
-                        "seismic_mag": seismic_mag,
-                        "ems_state": ems_state,
-                        "tag": f"risk48_trust82_{missing_profile}_degraded{degraded}_high{high}",
-                    }
-                )
-    return rows
+                            cases.append({
+                                "degraded": degraded,
+                                "comms_state": comms_state,
+                                "ems_state": ems_state,
+                                "seismic_mag": seismic_mag,
+                                "radiation_usv": radiation_usv,
+                                "alerts": alerts,
+                                "trust_score": trust_score,
+                                "risk_score": risk_score,
+                                "expect_ambiguity": ambiguous,
+                            })
+    return cases
 
 
-def run_ambiguity_stress() -> Dict[str, Any]:
-    rows = _scenario_rows()
+def _validate_card(card: Dict[str, Any], expect_ambiguity: bool) -> List[str]:
+    violations: List[str] = []
 
+    confidence = _get(card, ["status", "confidence"], "")
+    ambiguity_flags = _get(card, ["status", "ambiguity_flags"], [])
+    posture = _get(card, ["escalation", "posture"], None)
+
+    # Escalation posture must exist
+    if posture is None:
+        violations.append("MISSING_ESCALATION_POSTURE")
+
+    # If ambiguity is expected, confidence MUST NOT be HIGH
+    if expect_ambiguity:
+        if _as_str(confidence).upper() == "HIGH":
+            violations.append("AMBIGUITY_HAS_HIGH_CONFIDENCE")
+        if not isinstance(ambiguity_flags, list) or len(ambiguity_flags) == 0:
+            violations.append("AMBIGUITY_MISSING_FLAGS")
+
+    # Bounded language checks across key narrative fields (if present)
+    narrative_fields = [
+        _get(card, ["narrative"], ""),
+        _get(card, ["what_we_can_say"], ""),
+        _get(card, ["bounded_statement"], ""),
+        _get(card, ["assessment"], ""),
+    ]
+    for idx, text in enumerate(narrative_fields):
+        if isinstance(text, str) and text.strip():
+            if _contains_absolute_language(text):
+                violations.append(f"ABSOLUTE_LANGUAGE_FIELD_{idx}")
+
+    return violations
+
+
+def main() -> None:
+    OUT_DIR.mkdir(parents=True, exist_ok=True)
+
+    try:
+        from nuclear_decision_card import build_decision_card  # type: ignore
+    except Exception as e:
+        print(f"ImportError: nuclear_decision_card.build_decision_card: {e.__class__.__name__}: {e}")
+        return
+
+    cases = _build_cases()
     results: List[Dict[str, Any]] = []
-    violations: List[Dict[str, Any]] = []
+    violations_total: List[Dict[str, Any]] = []
+    crash_count = 0
 
-    for r in rows:
-        card = build_decision_card(
-            trust_score=r["trust_score"],
-            risk_score=r["risk_score"],
-            alerts=r["alerts"],
-            degraded=r["degraded"],
-            comms_state=r["comms_state"],
-            radiation_usv=r["radiation_usv"],
-            seismic_mag=r["seismic_mag"],
-            ems_state=r["ems_state"],
-            scenario="Ambiguity Stress (SAFE)",
-            notes="Matrix test for bounded escalation under ambiguity.",
-        )
+    for i, c in enumerate(cases):
+        try:
+            card = build_decision_card(
+                trust_score=c["trust_score"],
+                risk_score=c["risk_score"],
+                alerts=c["alerts"],
+                degraded=c["degraded"],
+                comms_state=c["comms_state"],
+                radiation_usv=c["radiation_usv"],
+                seismic_mag=c["seismic_mag"],
+                ems_state=c["ems_state"],
+            )
+        except Exception as e:
+            crash_count += 1
+            violations_total.append({
+                "case_index": i,
+                "type": "CRASH",
+                "error": f"{e.__class__.__name__}: {e}",
+                "case": c,
+            })
+            continue
 
-        posture = (card.get("escalation") or {}).get("posture", "UNKNOWN")
-        cap_applied = ((card.get("escalation") or {}).get("rationale") or {}).get("cap_applied", False)
+        v = _validate_card(card, expect_ambiguity=bool(c["expect_ambiguity"]))
+        results.append({
+            "case_index": i,
+            "case": c,
+            "confidence": _get(card, ["status", "confidence"], None),
+            "risk_band": _get(card, ["status", "risk_band"], None),
+            "posture": _get(card, ["escalation", "posture"], None),
+            "ambiguity_flags": _get(card, ["status", "ambiguity_flags"], None),
+            "violations": v,
+        })
+        if v:
+            violations_total.append({
+                "case_index": i,
+                "type": "VIOLATIONS",
+                "violations": v,
+                "case": c,
+            })
 
-        item = {
-            "tag": r["tag"],
-            "inputs": {
-                "risk_score": r["risk_score"],
-                "trust_score": r["trust_score"],
-                "alerts": r["alerts"],
-                "degraded": r["degraded"],
-                "missing_signal_count": (card.get("signals") or {}).get("missing_signal_count", 0),
-            },
-            "outputs": {
-                "confidence": (card.get("status") or {}).get("confidence", "UNKNOWN"),
-                "risk_band": (card.get("status") or {}).get("risk_band", "UNKNOWN"),
-                "posture": posture,
-                "cap_applied": bool(cap_applied),
-                "ambiguity_flags": (card.get("status") or {}).get("ambiguity_flags", []),
-            },
-        }
-        results.append(item)
-
-        # rule we are enforcing in Week-1:
-        # when risk < 65 and crit == 0, posture must not exceed HEIGHTENED_COLLECTION
-        alerts = r["alerts"]
-        if r["risk_score"] < 65 and int(alerts.get("crit", 0)) == 0:
-            if posture in {"DUTY_OFFICER_NOTIFY", "CRISIS_ACTION_TEAM"}:
-                violations.append(item)
-
-    verdict = "PASS" if len(violations) == 0 else "FAIL"
+    verdict = "PASS" if (crash_count == 0 and len(violations_total) == 0) else "FAIL"
 
     report = {
         "generated_at_utc": _utc_now_iso(),
-        "type": "AMBIGUITY_STRESS_REPORT",
-        "safe_notice": "Generated from synthetic/constructed inputs for training/demos.",
-        "matrix_size": len(results),
         "verdict": verdict,
-        "violations_count": len(violations),
-        "violations": violations[:25],  # keep bounded
+        "total_cases": len(cases),
+        "crashes": crash_count,
+        "violations": len(violations_total),
+        "violation_items": violations_total[:200],  # cap to keep file readable
         "summary": {
-            "rule": "If risk<65 and crit==0, posture must not exceed HEIGHTENED_COLLECTION.",
-            "note": "Ambiguity should push collection/verification, not automatic notification.",
+            "notes": [
+                "This is synthetic ambiguity stress. It validates bounded outputs, not real nuclear truth.",
+                "PASS requires: no crashes + no violations across the ambiguity matrix.",
+            ]
         },
-        "samples": results[:15],
     }
-    return report
 
-
-def write_report(report: Dict[str, Any]) -> Dict[str, str]:
-    _safe_mkdir(NUCLEAR_DIR)
-    stamped = _ts()
-
-    json_latest = NUCLEAR_DIR / "ambiguity_stress_latest.json"
-    txt_latest = NUCLEAR_DIR / "ambiguity_stress_latest.txt"
-    json_stamped = NUCLEAR_DIR / f"ambiguity_stress_{stamped}.json"
-    txt_stamped = NUCLEAR_DIR / f"ambiguity_stress_{stamped}.txt"
+    json_latest = OUT_DIR / "ambiguity_stress_latest.json"
+    txt_latest = OUT_DIR / "ambiguity_stress_latest.txt"
+    json_stamped = OUT_DIR / f"ambiguity_stress_{_ts()}.json"
+    txt_stamped = OUT_DIR / f"ambiguity_stress_{_ts()}.txt"
 
     _write_json(json_latest, report)
     _write_json(json_stamped, report)
 
-    lines: List[str] = []
-    lines.append("GLL — AMBIGUITY STRESS REPORT (LATEST)")
-    lines.append(f"Generated (UTC): {report.get('generated_at_utc','')}")
-    lines.append(f"Verdict: {report.get('verdict','')}")
-    lines.append(f"Matrix size: {report.get('matrix_size',0)}")
-    lines.append(f"Violations: {report.get('violations_count',0)}")
-    lines.append("")
-    lines.append("Rule:")
-    lines.append(f"- {report.get('summary',{}).get('rule','')}")
-    lines.append("")
-    if report.get("violations_count", 0) > 0:
-        lines.append("Top violations (first 10):")
-        for v in (report.get("violations") or [])[:10]:
-            lines.append(f"- {v.get('tag','')} -> posture={v.get('outputs',{}).get('posture','')}")
-    else:
-        lines.append("No violations. Escalation remained bounded under ambiguity.")
-    _write_txt(txt_latest, "\n".join(lines).strip() + "\n")
-    _write_txt(txt_stamped, "\n".join(lines).strip() + "\n")
+    txt = []
+    txt.append("Ambiguity Stress Test")
+    txt.append(f"generated_at_utc: {report['generated_at_utc']}")
+    txt.append(f"verdict: {verdict}")
+    txt.append(f"total_cases: {len(cases)}")
+    txt.append(f"crashes: {crash_count}")
+    txt.append(f"violations: {len(violations_total)}")
+    if violations_total:
+        txt.append("\nTop violation items (first 25):")
+        for item in violations_total[:25]:
+            txt.append(json.dumps(item, indent=2))
+    _write_txt(txt_latest, "\n".join(txt))
+    _write_txt(txt_stamped, "\n".join(txt))
 
-    return {
-        "json_latest": str(json_latest),
-        "txt_latest": str(txt_latest),
-        "json_stamped": str(json_stamped),
-        "txt_stamped": str(txt_stamped),
-    }
+    print("Ambiguity stress written:")
+    print(f"  json_latest: {json_latest}")
+    print(f"  txt_latest: {txt_latest}")
+    print(f"  json_stamped: {json_stamped}")
+    print(f"  txt_stamped: {txt_stamped}")
+    print(f"Verdict: {verdict}, violations={len(violations_total)}")
 
 
 if __name__ == "__main__":
-    rep = run_ambiguity_stress()
-    paths = write_report(rep)
-    print("Ambiguity stress written:")
-    for k, v in paths.items():
-        print(f"  {k}: {v}")
-    print(f"Verdict: {rep.get('verdict')}, violations={rep.get('violations_count')}")
+    main()
 

@@ -1,5 +1,5 @@
 {
-  "generated_at": "2025-12-15T14:08:59.145313+00:00",
+  "generated_at": "2025-12-15T15:25:50.779029+00:00",
   "safe_notice": "This artifact is derived from synthetic telemetry and is safe for training/demos.",
   "inputs": {
     "watchboard_present": true,
@@ -12,6 +12,11 @@
     "degraded": true,
     "ambiguity_flags": [
       "DEGRADED_OPS",
+      "MISSING_COMMS_STATE",
+      "MISSING_RADIATION_uSv",
+      "MISSING_SEISMIC_MAG",
+      "EMS_CONTESTED",
+      "ALERT_ANOMALY_CONTEXT",
       "MISSING_SIGNALS"
     ],
     "cap_applied": false,
@@ -22,15 +27,16 @@
       "System posture is DUTY_OFFICER_NOTIFY with confidence=LOW.",
       "Risk is assessed in a bounded band (risk_band=GUARDED).",
       "Interpretation remains probabilistic due to degraded operations and/or ambiguity flags.",
-      "Ambiguity flags present: DEGRADED_OPS, MISSING_SIGNALS."
+      "Ambiguity flags present: DEGRADED_OPS, MISSING_COMMS_STATE, MISSING_RADIATION_uSv, MISSING_SEISMIC_MAG, EMS_CONTESTED, ALERT_ANOMALY_CONTEXT, MISSING_SIGNALS."
     ],
     "what_we_cannot_say": [
-      "Cannot assert signal-specific conclusions due to missing inputs: signals.",
+      "Cannot assert signal-specific conclusions due to missing inputs: comms_state, radiation_usv, seismic_mag, signals.",
       "Cannot infer intent; this product only summarizes bounded risk/trust posture from synthetic telemetry."
     ],
     "unknowns": [
       "MISSING_COMMS_STATE",
       "MISSING_RADIATION_USV",
+      "MISSING_RADIATION_uSv",
       "MISSING_SEISMIC_MAG",
       "MISSING_SIGNALS"
     ]
