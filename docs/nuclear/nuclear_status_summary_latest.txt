@@ -1,0 +1,9 @@
+GLL — NUCLEAR STATUS SUMMARY (SHIFT CHANGE)
+Generated (UTC): 2025-12-15T12:23:50.011988+00:00
+
+NUCLEAR STATUS: DUTY_OFFICER_NOTIFY | CONFIDENCE=LOW | RISK=GUARDED | DEGRADED=YES | MISSING_SIGNALS=3
+
+Notes:
+- Assessment is bounded and probabilistic
+- Degraded operations handled gracefully
+- Escalation posture unchanged unless stated above

@@ -1,0 +1,12 @@
+{
+  "generated_at_utc": "2025-12-15T12:23:50.011988+00:00",
+  "artifact": "NUCLEAR_STATUS_SUMMARY",
+  "status_line": "NUCLEAR STATUS: DUTY_OFFICER_NOTIFY | CONFIDENCE=LOW | RISK=GUARDED | DEGRADED=YES | MISSING_SIGNALS=3",
+  "posture": "DUTY_OFFICER_NOTIFY",
+  "confidence": "LOW",
+  "risk_band": "GUARDED",
+  "degraded": true,
+  "missing_signal_count": 3,
+  "safe_notice": "Bounded assessment. No confirmation implied.",
+  "source": "docs/nuclear/nuclear_watch_snapshot_latest.json"
+}
