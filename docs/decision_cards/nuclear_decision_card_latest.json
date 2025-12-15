@@ -1,62 +1,53 @@
 {
-  "generated_at": "2025-12-14T19:44:45.727697+00:00",
-  "safe_notice": "SAFE: This decision card is generated from synthetic/abstracted indicators for training/demo.",
-  "gate_status": "UNKNOWN",
-  "fusion_trust": 0.0,
-  "operator_safety_layer": "UNKNOWN",
-  "inputs": {
-    "indicators": {
-      "CYBER": {
-        "score": 20.0,
-        "reliability": 80.0
-      }
-    },
-    "sources_present": {
-      "validation_report": false,
-      "training_curve": true,
-      "sis": false,
-      "sps": false,
-      "gate_latest": false
-    }
-  },
-  "escalation": {
-    "escalation_level": 0,
-    "escalation_label": "MONITOR",
-    "blocking_factors": [
-      "Insufficient total evidence: 19.20 < 25.00 required for WATCH."
-    ],
-    "evidence": {
-      "domains_present": 1,
-      "domains_contributing": 1,
-      "reliability_avg": 80.0,
-      "domain_evidence": {
-        "CYBER": 16.0
-      },
-      "total_evidence": 19.2,
-      "disagreement_penalty": 0.0,
-      "notes": []
-    },
-    "confidence_floor_applied": false
-  },
-  "confidence": {
-    "confidence_score": 8.0,
-    "confidence_label": "LOW",
+  "generated_at_utc": "2025-12-15T13:58:54.612285+00:00",
+  "type": "NUCLEAR_DECISION_CARD",
+  "scenario": "Synthetic / Training",
+  "safe_notice": "This product may be generated from synthetic telemetry for training/demos.",
+  "status": {
+    "degraded": true,
+    "confidence": "LOW",
+    "risk_band": "GUARDED",
     "ambiguity_flags": [
-      "LOW_DOMAIN_COVERAGE",
-      "GATE_NOT_GREEN:UNKNOWN"
-    ],
-    "trust_annotations": [
-      "Gates not GREEN: confidence capped for commander safety.",
-      "Confidence: LOW (8.0/100).",
-      "Domains present: 1. Reliability avg: 80.0.",
-      "Escalation rung: MONITOR (L0).",
-      "Integrity gates are not GREEN \u2192 treat outputs as advisory only until corrected.",
-      "Limited corroboration across domains \u2192 request additional sources before escalation."
+      "DEGRADED_OPS",
+      "MISSING_SIGNALS"
     ]
   },
-  "commander_notes": [
-    "If confidence is LOW/MEDIUM: treat as advisory and request corroboration.",
-    "If gate_status is not GREEN: do not operationalize outputs\u2014fix integrity first.",
-    "Escalation ladder is conservative by design (anti-jump + evidence gates)."
-  ]
+  "key_judgment": "No immediate indicators of confirmed nuclear event.",
+  "signals": {
+    "trust_score": 82.0,
+    "risk_score": 48.0,
+    "alerts": {
+      "crit": 0,
+      "high": 3,
+      "attack_like": 0,
+      "anomaly": 14,
+      "total": 0
+    },
+    "comms_state": null,
+    "ems_state": "NOISY",
+    "radiation_usv": null,
+    "seismic_mag": null,
+    "missing_signal_count": 3
+  },
+  "escalation": {
+    "posture": "DUTY_OFFICER_NOTIFY",
+    "cap_applied": false,
+    "allowed_jump_steps": 1,
+    "deescalation_blocked": false,
+    "reason": [
+      "risk>=35 => base=DUTY_OFFICER_NOTIFY"
+    ]
+  },
+  "knowns": [
+    "Trust score: 82.0 (proxy)",
+    "Risk score: 48.0 (proxy)",
+    "Alerts: crit=0, high=3, attack_like=0, anomaly=14",
+    "EMS state: NOISY"
+  ],
+  "unknowns": [
+    "Comms state unavailable",
+    "Radiation uSv unavailable",
+    "Seismic magnitude unavailable"
+  ],
+  "notes": ""
 }

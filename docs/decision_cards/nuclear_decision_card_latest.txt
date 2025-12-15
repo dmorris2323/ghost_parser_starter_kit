@@ -1,27 +1,20 @@
-GLL — NUCLEAR DECISION CARD (SAFE TRAINING)
-Generated: 2025-12-14T19:44:45.727697+00:00
-Gate Status: UNKNOWN
-Fusion Trust: 0.0
-OSL: UNKNOWN
+GLL — NUCLEAR DECISION CARD
+Generated (UTC): 2025-12-15T13:58:54.612285+00:00
+Scenario: Synthetic / Training
 
-Escalation: MONITOR (L0)
-Blocking Factors:
-  - Insufficient total evidence: 19.20 < 25.00 required for WATCH.
+Confidence: LOW
+Risk Band:  GUARDED
+Degraded:   True
+Flags:      DEGRADED_OPS, MISSING_SIGNALS
 
-Confidence: LOW (8.0/100)
-Ambiguity Flags:
-  - LOW_DOMAIN_COVERAGE
-  - GATE_NOT_GREEN:UNKNOWN
+Key Judgment:
+- No immediate indicators of confirmed nuclear event.
 
-Trust Annotations:
-  - Gates not GREEN: confidence capped for commander safety.
-  - Confidence: LOW (8.0/100).
-  - Domains present: 1. Reliability avg: 80.0.
-  - Escalation rung: MONITOR (L0).
-  - Integrity gates are not GREEN → treat outputs as advisory only until corrected.
-  - Limited corroboration across domains → request additional sources before escalation.
+Signals (proxy):
+- Trust: 82.0
+- Risk:  48.0
+- Alerts: crit=0 high=3 attack_like=0 anomaly=14
+- Missing signals: 3
 
-Commander Notes:
-  - If confidence is LOW/MEDIUM: treat as advisory and request corroboration.
-  - If gate_status is not GREEN: do not operationalize outputs—fix integrity first.
-  - Escalation ladder is conservative by design (anti-jump + evidence gates).
+Escalation Ladder:
+- Posture: DUTY_OFFICER_NOTIFY
