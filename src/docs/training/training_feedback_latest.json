@@ -1,0 +1,18 @@
+{
+  "generated_at": "2025-12-15T03:52:16.532529+00:00",
+  "current_difficulty": "INTERMEDIATE",
+  "certified_track": "NONE",
+  "validation_verdict": "PASS",
+  "metrics": {
+    "AGI": 72.0,
+    "improvement_slope": 0.0,
+    "volatility_index": 0.0
+  },
+  "recommendation": {
+    "next_difficulty": "BEGINNER",
+    "pattern": "NONE"
+  },
+  "rationale": [
+    "Not certified yet: build a clean GREEN streak at BEGINNER."
+  ]
+}

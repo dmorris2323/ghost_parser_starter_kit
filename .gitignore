@@ -38,3 +38,19 @@ src/heatmap_data.csv
 src/scored_output.csv
 src/sum_fears_sim.csv
 
+# --- GLL generated artifacts (timestamped) ---
+src/docs/synthetic/synthetic_fusion_bundle_*.json
+src/docs/validation/fusion_validation_report_*.json
+src/docs/validation/degraded_fusion_validation_*.json
+src/docs/integrity/run_gate_*_*.json
+src/docs/integrity/run_gate_*_*.txt
+
+# Keep "latest" artifacts tracked
+!src/docs/synthetic/synthetic_fusion_bundle.json
+!src/docs/validation/fusion_validation_report.json
+!src/docs/validation/fusion_validation_report.txt
+!src/docs/validation/degraded_fusion_validation_latest.json
+
+# Training latest feedback is a product surface
+!src/docs/training/training_feedback_latest.json
+
