@@ -54,3 +54,16 @@ src/docs/integrity/run_gate_*_*.txt
 # Training latest feedback is a product surface
 !src/docs/training/training_feedback_latest.json
 
+# --- GLL stamped artifacts (keep repo clean) ---
+docs/**/**_20*.json
+docs/**/**_20*.txt
+src/docs/**/**_20*.json
+src/docs/**/**_20*.txt
+
+# --- optional: ignore auto-generated gate outputs (noisy) ---
+src/docs/system_integrity_report.txt
+src/docs/sps_behavior_report.json
+src/docs/sps_behavior_report.txt
+src/docs/training/training_curve_latest.json
+
+
