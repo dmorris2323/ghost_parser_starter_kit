@@ -64,6 +64,7 @@ Menu options:
  69) Difficulty Profile & Recommendation
  72) Degraded Fusion Validation (Resilience Test)MODULE 2 — CLI ENTRY (NO UI, NO DRAMA)
  73) Degraded Fusion Validation (SAFE)
+ 74) Commander Brief One-Shot (PRE->export->consistency->POST)
 
 """
 
@@ -83,6 +84,7 @@ from sps_mutation_watcher import run_sps_immunity_scan
 from system_integrity_report import generate_system_integrity_report
 from nuclear_signal_fusion import build_nuclear_signal_fusion
 
+from briefing_runbook import run_commander_brief_one_shot
 
 BASE_DIR = Path(__file__).resolve().parent
 
@@ -629,6 +631,7 @@ def main() -> int:
             print("Running Degraded Fusion Validation...")
             result = run_degraded_fusion_test(difficulty="INTERMEDIATE")
             print(json.dumps(result, indent=2))
+
         elif choice == "73":
             from fusion_degraded_validation import run_degraded_fusion_test
             import json
@@ -637,6 +640,15 @@ def main() -> int:
             result = run_degraded_fusion_test(difficulty="INTERMEDIATE")
             print(json.dumps(result, indent=2))
 
+        elif choice == "74":
+            from briefing_runbook import run_commander_brief_one_shot
+            import json
+
+            res = run_commander_brief_one_shot(
+                context="day74_commander_brief_one_shot",
+                update_baselines=False,
+            )
+            print(json.dumps(res, indent=2))
 
         else:
             print("Invalid option. Try again.")
@@ -646,4 +658,5 @@ def main() -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
+
 
