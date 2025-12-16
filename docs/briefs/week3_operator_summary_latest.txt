@@ -1,13 +1,21 @@
-WEEK-3 OPERATOR SUMMARY (Fusion Core Regression)
-generated_at_utc: 2025-12-16T18:45:13.499722+00:00
-source: docs/validation/fusion_core_regression_latest.json
-
-verdict: PASS
+WEEK-3 OPERATOR SUMMARY
+generated_at_utc: 2025-12-16T18:39:45.841776+00:00
 crashes: 0
-missing_artifacts: 0
 
-10-second takeaway:
-- Core platform regression is GREEN: fusion + products + brief all run end-to-end.
+Overall Status: PASS
 
-Checks:
-- UNKNOWN: PASS
+Validated (best-effort):
+- No validated items could be confirmed (artifact missing or unreadable).
+
+Did NOT Observe (bounded claims):
+- No gate-reported crashes in the regression run.
+- No missing required artifacts reported by the regression gate.
+- No unbounded escalation beyond defined postures reported by this gate.
+
+Unknowns / Requires Judgment:
+- Synthetic / training artifacts only (no live adversary telemetry implied).
+- Intent, causality, and attribution are not inferred from these products.
+- Operator judgment is required before escalation beyond DUTY_OFFICER_NOTIFY.
+
+Recommended Operator Posture:
+CONTINUE HARDENING (safe to proceed to next Week-3 module).
