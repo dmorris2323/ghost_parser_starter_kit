@@ -1,52 +1,21 @@
-{
-  "generated_at_utc": "2025-12-15T21:51:38.053169+00:00",
-  "type": "perimeter_incident_report",
-  "safe_notice": "Synthetic training artifact. Do not use as real-world intel.",
-  "inputs": {
-    "comms_state": "OK",
-    "sensor_health": {},
-    "operator_notes_present": false
-  },
-  "summary": {
-    "posture": "DUTY_OFFICER_NOTIFY",
-    "degraded": false,
-    "incident_counts": {
-      "CRIT": 0,
-      "HIGH": 1,
-      "MED": 1,
-      "LOW": 0,
-      "UNK": 0
-    },
-    "total_incidents": 2
-  },
-  "incidents": [
-    {
-      "id": "INC-001",
-      "zone": "NORTH_GATE",
-      "type": "UAS_SIGHTING",
-      "severity": "HIGH",
-      "timestamp_utc": "2025-12-15T21:51:38.052930+00:00",
-      "details": {
-        "alt_m": 60,
-        "bearing_deg": 20,
-        "duration_s": 45
-      }
-    },
-    {
-      "id": "INC-002",
-      "zone": "PERIMETER_EAST",
-      "type": "FENCE_TAMPER",
-      "severity": "MED",
-      "timestamp_utc": "2025-12-15T21:51:38.053163+00:00",
-      "details": {
-        "sensor_id": "FENCE-E-12",
-        "repeat_hits": 3
-      }
-    }
-  ],
-  "bounded_statements": [
-    "This product is generated from synthetic training telemetry.",
-    "Assessment is probabilistic and bounded; operator judgment applies."
-  ],
-  "unknowns": []
-}
+GLL — Perimeter Incident Report
+generated_at_utc: 2025-12-16T03:16:42.653175Z
+installation: BASE_DEFENSE_STRESS
+
+POSTURE: ROUTINE_MONITORING
+RISK_BAND: LOW
+RISK_SCORE: 19.25
+DEGRADED: False
+
+WHAT WE CAN SAY (BOUNDED):
+- Perimeter posture is ROUTINE_MONITORING with risk_band=LOW.
+- Risk score is bounded (risk_score=19.25).
+- Assessment is probabilistic and bounded; operator judgment applies.
+
+WHAT WE CANNOT SAY:
+- Cannot infer adversary intent or attribution from perimeter signals alone.
+- Cannot confirm breach without corroboration (human verification / security forces confirmation).
+
+EVENTS:
+- [2025-12-16T03:16:42.653163Z] INC_0000 zone=NORTH sev=LOW sensor=CAM conf=0.9 desc=
+- [2025-12-16T03:16:42.653168Z] INC_0001 zone=EAST sev=MEDIUM sensor=RF conf=0.7 desc=
