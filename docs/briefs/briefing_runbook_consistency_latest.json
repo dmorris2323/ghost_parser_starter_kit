@@ -1,0 +1,10 @@
+{
+  "generated_at_utc": "2025-12-16T14:50:46.775021+00:00",
+  "verdict": "PASS",
+  "violations": [],
+  "inputs": {
+    "commander_txt": "docs/briefs/commander_brief_latest.txt",
+    "prebrief_txt": "docs/briefs/prebrief_trust_annotations_latest.txt",
+    "npc_json": "docs/nuclear/nuclear_product_consistency_latest.json"
+  }
+}
