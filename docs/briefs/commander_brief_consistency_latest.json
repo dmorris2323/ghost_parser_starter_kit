@@ -1,0 +1,18 @@
+{
+  "generated_at_utc": "2025-12-16T13:57:48.180903+00:00",
+  "verdict": "PASS",
+  "violations": [],
+  "posture_detected": "DUTY_OFFICER_NOTIFY",
+  "required_tokens": [
+    "probabilistic",
+    "bounded",
+    "operator judgment"
+  ],
+  "required_sections": [
+    "1. What changed:",
+    "2. Why it matters:",
+    "3. What we know:",
+    "4. What we do NOT know:",
+    "5. Recommended posture:"
+  ]
+}

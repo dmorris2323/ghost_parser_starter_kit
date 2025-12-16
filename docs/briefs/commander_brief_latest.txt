@@ -1,0 +1,21 @@
+1. What changed:
+- Degraded validation report is present (degraded ops supported).
+- Fusion validation report is present (core pipeline validated).
+- Training feedback is present (operator coaching updated).
+- Nuclear decision card is present (bounded commander posture).
+- Prelaunch watchboard is present (watchfloor snapshot).
+
+2. Why it matters:
+This briefing packages GLL’s current posture using bounded statements and best-effort artifacts. It is designed to survive missing inputs and still provide a safe, operator-readable snapshot.
+
+3. What we know:
+- Fusion validation verdict/status: {'status': 'PASS', 'message': 'Controlled environment for this difficulty.'}
+- Degraded validation verdict/status: {'status': 'PASS', 'message': 'Degraded operations appear controlled (bounded alerts, no crash).'}
+
+4. What we do NOT know:
+- Intent, causality, and attribution are not inferred from synthetic telemetry.
+- Operator judgment is required before escalation beyond bounded posture.
+
+5. Recommended posture:
+DUTY_OFFICER_NOTIFY
+Assessment is probabilistic and bounded; operator judgment applies.

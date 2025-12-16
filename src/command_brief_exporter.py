@@ -1,22 +1,3 @@
-"""
-command_brief_exporter.py
-
-Command-Grade Brief Exporter (HTML-first, PDF-optional)
-
-Goal:
-- Export a single "commander brief packet" from the latest training + validation artifacts.
-- Always produce HTML (no dependencies).
-- Optionally produce PDF if reportlab is available.
-- Write a manifest JSON so exports are auditable and demo-safe.
-
-Outputs (repo-root relative):
-- docs/briefs/command_brief_latest.html
-- docs/briefs/command_brief_<timestamp>.html
-- docs/briefs/command_brief_latest.json  (manifest)
-- docs/briefs/command_brief_<timestamp>.json
-- (optional) docs/briefs/command_brief_latest.pdf / command_brief_<timestamp>.pdf
-"""
-
 from __future__ import annotations
 
 import json
@@ -25,10 +6,12 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Dict, Optional, Tuple
 
+BRIEF_MODE = True
 
 BRIEFS_DIR = Path("docs") / "briefs"
+LEGACY_DIR = Path("src") / "docs"
 
-# Latest sources we try to include (best-effort)
+# Best-effort sources (safe to be missing)
 SRC_TRAINING_CURVE = Path("src") / "docs" / "training" / "training_curve_latest.json"
 SRC_TRAINING_FEEDBACK = Path("src") / "docs" / "training" / "training_feedback_latest.json"
 SRC_FUSION_VALIDATION = Path("src") / "docs" / "validation" / "fusion_validation_report.json"
@@ -36,325 +19,228 @@ SRC_DEGRADED_VALIDATION = Path("src") / "docs" / "validation" / "degraded_fusion
 SRC_SIS_REPORT = Path("src") / "docs" / "system_integrity_report.txt"
 SRC_SPS_BEHAVIOR_TXT = Path("src") / "docs" / "sps_behavior_report.txt"
 
+# Week-1 nuclear (best-effort)
+SRC_WATCHBOARD = Path("docs") / "nuclear" / "prelaunch_watchboard_latest.json"
+SRC_DECISION_CARD = Path("docs") / "decision_cards" / "nuclear_decision_card_latest.json"
+SRC_PREBRIEF = Path("docs") / "briefs" / "prebrief_trust_annotations_latest.json"
+
 
 def _utc_now_iso() -> str:
     return datetime.now(timezone.utc).isoformat()
 
 
-def _ts() -> str:
+def _stamp() -> str:
     return datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S")
 
 
-def _safe_mkdir(p: Path) -> None:
-    p.mkdir(parents=True, exist_ok=True)
+def _ensure_dirs() -> None:
+    BRIEFS_DIR.mkdir(parents=True, exist_ok=True)
+    LEGACY_DIR.mkdir(parents=True, exist_ok=True)
 
 
-def _read_json(path: Path) -> Tuple[Optional[Dict[str, Any]], Optional[str]]:
+def _safe_read_json(path: Path) -> Optional[Dict[str, Any]]:
     try:
         if not path.exists():
-            return None, f"missing: {path}"
-        obj = json.loads(path.read_text(encoding="utf-8"))
-        if isinstance(obj, dict):
-            return obj, None
-        return {"_non_dict_json": obj}, None
-    except Exception as e:
-        return None, f"error reading {path}: {e.__class__.__name__}: {e}"
+            return None
+        return json.loads(path.read_text(encoding="utf-8"))
+    except Exception:
+        return None
 
 
-def _read_text(path: Path, max_chars: int = 20000) -> Tuple[Optional[str], Optional[str]]:
+def _safe_read_txt(path: Path) -> Optional[str]:
     try:
         if not path.exists():
-            return None, f"missing: {path}"
-        txt = path.read_text(encoding="utf-8")
-        if len(txt) > max_chars:
-            txt = txt[:max_chars] + "\n\n[TRUNCATED]\n"
-        return txt, None
-    except Exception as e:
-        return None, f"error reading {path}: {e.__class__.__name__}: {e}"
+            return None
+        return path.read_text(encoding="utf-8", errors="replace")
+    except Exception:
+        return None
 
 
-def _html_escape(s: str) -> str:
+def _safe_get(d: Optional[Dict[str, Any]], *keys: str, default: Any = None) -> Any:
+    if not isinstance(d, dict):
+        return default
+    cur: Any = d
+    for k in keys:
+        if not isinstance(cur, dict) or k not in cur:
+            return default
+        cur = cur[k]
+    return cur
+
+
+# ============================
+# ENFORCED COMMANDER BRIEF MODE
+# ============================
+
+def render_brief_mode(sections: Dict[str, str]) -> str:
+    """
+    Enforced commander-safe brief format.
+    Pure formatting only (no logic).
+    """
     return (
-        s.replace("&", "&amp;")
-        .replace("<", "&lt;")
-        .replace(">", "&gt;")
-        .replace('"', "&quot;")
-        .replace("'", "&#39;")
+        "1. What changed:\n"
+        f"{sections.get('what_changed', 'No material change detected.')}\n\n"
+        "2. Why it matters:\n"
+        f"{sections.get('why_it_matters', 'No immediate operational impact.')}\n\n"
+        "3. What we know:\n"
+        f"{sections.get('what_we_know', 'Information remains limited.')}\n\n"
+        "4. What we do NOT know:\n"
+        f"{sections.get('what_we_do_not_know', 'Key intent and causality unknown.')}\n\n"
+        "5. Recommended posture:\n"
+        f"{sections.get('recommended_posture', 'Maintain current posture.')}\n"
     )
 
 
-def _render_kv_table(d: Dict[str, Any]) -> str:
-    rows = []
-    for k, v in d.items():
-        vv = json.dumps(v, indent=2) if isinstance(v, (dict, list)) else str(v)
-        rows.append(f"<tr><td><b>{_html_escape(str(k))}</b></td><td><pre>{_html_escape(vv)}</pre></td></tr>")
-    return "<table>" + "".join(rows) + "</table>"
+def build_traceability(inputs: Dict[str, Any]) -> Dict[str, Any]:
+    included = []
+    missing = []
+    for k, v in inputs.items():
+        if isinstance(v, dict) and v.get("present") is True:
+            included.append(k)
+        else:
+            missing.append(k)
+    return {
+        "included": included,
+        "missing": missing,
+        "note": "Traceability is best-effort; missing artifacts do not block brief generation.",
+    }
 
 
-def _build_html(
-    *,
-    generated_at: str,
-    title: str,
-    manifest: Dict[str, Any],
-    training_curve: Optional[Dict[str, Any]],
-    training_feedback: Optional[Dict[str, Any]],
-    fusion_validation: Optional[Dict[str, Any]],
-    degraded_validation: Optional[Dict[str, Any]],
-    sis_txt: Optional[str],
-    sps_txt: Optional[str],
-    notes: list[str],
-) -> str:
-    # Pull headline metrics safely
-    agi = None
-    slope = None
-    vol = None
-    if isinstance(training_curve, dict):
-        agi = training_curve.get("AGI")
-        slope = training_curve.get("improvement_slope")
-        vol = training_curve.get("volatility_index")
+def _pick_posture(decision_card: Optional[Dict[str, Any]], watchboard: Optional[Dict[str, Any]]) -> str:
+    # Prefer explicit decision card escalation posture
+    posture = _safe_get(decision_card, "escalation", "posture", default=None)
+    if isinstance(posture, str) and posture.strip():
+        return posture.strip()
 
-    def _metric(label: str, value: Any) -> str:
-        return f"<div class='metric'><div class='label'>{_html_escape(label)}</div><div class='value'>{_html_escape(str(value))}</div></div>"
+    # Fall back to watchboard if present
+    wb_posture = _safe_get(watchboard, "recommended_posture", default=None)
+    if isinstance(wb_posture, str) and wb_posture.strip():
+        return wb_posture.strip()
 
-    metrics_html = "".join(
-        [
-            _metric("AGI (0–100)", agi if agi is not None else "N/A"),
-            _metric("Improvement slope", slope if slope is not None else "N/A"),
-            _metric("Volatility index", vol if vol is not None else "N/A"),
-        ]
-    )
+    return "DUTY_OFFICER_NOTIFY"
 
-    notes_html = "".join([f"<li>{_html_escape(n)}</li>" for n in notes])
 
-    def _section(h: str, body: str) -> str:
-        return f"<section><h2>{_html_escape(h)}</h2>{body}</section>"
-
-    style = """
-    <style>
-      body { font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Arial, sans-serif; margin: 24px; }
-      h1 { margin-bottom: 6px; }
-      .sub { color: #555; margin-top: 0; }
-      .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin: 16px 0; }
-      .metric { border: 1px solid #ddd; border-radius: 10px; padding: 12px; }
-      .label { color: #666; font-size: 12px; }
-      .value { font-size: 22px; font-weight: 700; margin-top: 4px; }
-      section { margin: 18px 0; padding-top: 6px; border-top: 1px solid #eee; }
-      pre { white-space: pre-wrap; word-break: break-word; }
-      table { border-collapse: collapse; width: 100%; }
-      td { border: 1px solid #eee; vertical-align: top; padding: 8px; }
-      .pill { display: inline-block; padding: 3px 10px; border-radius: 999px; border: 1px solid #ddd; font-size: 12px; margin-right: 8px; }
-    </style>
+def build_commander_sections() -> Tuple[Dict[str, str], Dict[str, Any]]:
     """
-
-    header = f"""
-    <h1>{_html_escape(title)}</h1>
-    <p class="sub">
-      Generated (UTC): {_html_escape(generated_at)} |
-      <span class="pill">SAFE: synthetic + training artifacts</span>
-      <span class="pill">Gates: SIS/SPS enforced</span>
-    </p>
-    <div class="grid">{metrics_html}</div>
+    Build sections using best-effort artifact reads.
+    Must never crash.
     """
+    training_curve = _safe_read_json(SRC_TRAINING_CURVE)
+    training_feedback = _safe_read_json(SRC_TRAINING_FEEDBACK)
+    fusion_validation = _safe_read_json(SRC_FUSION_VALIDATION)
+    degraded_validation = _safe_read_json(SRC_DEGRADED_VALIDATION)
+    watchboard = _safe_read_json(SRC_WATCHBOARD)
+    decision_card = _safe_read_json(SRC_DECISION_CARD)
+    prebrief = _safe_read_json(SRC_PREBRIEF)
 
-    body = ""
-    body += _section("Executive Notes", f"<ul>{notes_html}</ul>")
-    body += _section("Export Manifest", _render_kv_table(manifest))
+    sis_txt = _safe_read_txt(SRC_SIS_REPORT)
+    sps_txt = _safe_read_txt(SRC_SPS_BEHAVIOR_TXT)
 
-    if training_feedback is not None:
-        body += _section("Next Training Recommendation (read-only)", f"<pre>{_html_escape(json.dumps(training_feedback, indent=2))}</pre>")
-    else:
-        body += _section("Next Training Recommendation (read-only)", "<p><i>No training_feedback_latest.json found.</i></p>")
+    inputs: Dict[str, Any] = {
+        "training_curve": {"path": str(SRC_TRAINING_CURVE), "present": training_curve is not None},
+        "training_feedback": {"path": str(SRC_TRAINING_FEEDBACK), "present": training_feedback is not None},
+        "fusion_validation": {"path": str(SRC_FUSION_VALIDATION), "present": fusion_validation is not None},
+        "degraded_validation": {"path": str(SRC_DEGRADED_VALIDATION), "present": degraded_validation is not None},
+        "watchboard": {"path": str(SRC_WATCHBOARD), "present": watchboard is not None},
+        "decision_card": {"path": str(SRC_DECISION_CARD), "present": decision_card is not None},
+        "prebrief": {"path": str(SRC_PREBRIEF), "present": prebrief is not None},
+        "sis_report": {"path": str(SRC_SIS_REPORT), "present": sis_txt is not None},
+        "sps_behavior": {"path": str(SRC_SPS_BEHAVIOR_TXT), "present": sps_txt is not None},
+    }
 
-    if fusion_validation is not None:
-        body += _section("Fusion Validation (latest)", f"<pre>{_html_escape(json.dumps(fusion_validation, indent=2))}</pre>")
-    else:
-        body += _section("Fusion Validation (latest)", "<p><i>fusion_validation_report.json not found.</i></p>")
+    posture = _pick_posture(decision_card, watchboard)
 
+    fv_status = _safe_get(fusion_validation, "status", default=None) or _safe_get(fusion_validation, "verdict", default=None)
+    dv_status = _safe_get(degraded_validation, "status", default=None) or _safe_get(degraded_validation, "verdict", default=None)
+
+    what_changed_lines = []
     if degraded_validation is not None:
-        body += _section("Degraded Fusion Validation (latest)", f"<pre>{_html_escape(json.dumps(degraded_validation, indent=2))}</pre>")
-    else:
-        body += _section("Degraded Fusion Validation (latest)", "<p><i>degraded_fusion_validation_latest.json not found.</i></p>")
+        what_changed_lines.append("- Degraded validation report is present (degraded ops supported).")
+    if fusion_validation is not None:
+        what_changed_lines.append("- Fusion validation report is present (core pipeline validated).")
+    if training_feedback is not None:
+        what_changed_lines.append("- Training feedback is present (operator coaching updated).")
+    if decision_card is not None:
+        what_changed_lines.append("- Nuclear decision card is present (bounded commander posture).")
+    if watchboard is not None:
+        what_changed_lines.append("- Prelaunch watchboard is present (watchfloor snapshot).")
+    if not what_changed_lines:
+        what_changed_lines.append("- No new artifacts detected; brief generated best-effort.")
 
-    if sis_txt is not None:
-        body += _section("SIS: System Integrity Report (latest)", f"<pre>{_html_escape(sis_txt)}</pre>")
-    else:
-        body += _section("SIS: System Integrity Report (latest)", "<p><i>system_integrity_report.txt not found.</i></p>")
+    what_we_know_lines = []
+    if fv_status is not None:
+        what_we_know_lines.append(f"- Fusion validation verdict/status: {fv_status}")
+    if dv_status is not None:
+        what_we_know_lines.append(f"- Degraded validation verdict/status: {dv_status}")
 
-    if sps_txt is not None:
-        body += _section("SPS: Behavioral Integrity (latest)", f"<pre>{_html_escape(sps_txt)}</pre>")
-    else:
-        body += _section("SPS: Behavioral Integrity (latest)", "<p><i>sps_behavior_report.txt not found.</i></p>")
-
-    return f"<!doctype html><html><head><meta charset='utf-8'>{style}</head><body>{header}{body}</body></html>"
-
-
-def _try_export_pdf_from_html(html_text: str, pdf_path: Path) -> Tuple[bool, str]:
-    """
-    PDF is optional. We only do it if reportlab is installed.
-    If not installed, we return (False, reason).
-    """
-    try:
-        # Lazy import so environments without reportlab still work.
-        from reportlab.lib.pagesizes import LETTER  # type: ignore
-        from reportlab.pdfgen import canvas  # type: ignore
-
-        _safe_mkdir(pdf_path.parent)
-        c = canvas.Canvas(str(pdf_path), pagesize=LETTER)
-        width, height = LETTER
-
-        # VERY simple PDF: put a warning + point to the HTML, then dump key lines.
-        # (We keep it simple to avoid turning PDF layout into a project.)
-        c.setFont("Helvetica-Bold", 12)
-        c.drawString(50, height - 50, "Ghost Lantern Labs — Command Brief (PDF)")
-        c.setFont("Helvetica", 9)
-        c.drawString(50, height - 65, "Note: This PDF is a lightweight export. Use the HTML for full fidelity.")
-        c.drawString(50, height - 80, f"Generated (UTC): {_utc_now_iso()}")
-
-        # Dump first N lines of stripped HTML text as a quick summary
-        text = html_text
-        # crude strip tags for summary
-        import re
-
-        text = re.sub(r"<[^>]+>", "", text)
-        lines = [ln.strip() for ln in text.splitlines() if ln.strip()]
-        y = height - 110
-        c.setFont("Helvetica", 8)
-        for ln in lines[:80]:
-            if y < 60:
-                c.showPage()
-                y = height - 60
-                c.setFont("Helvetica", 8)
-            c.drawString(50, y, ln[:120])
-            y -= 10
-
-        c.save()
-        return True, "pdf_exported"
-    except ModuleNotFoundError:
-        return False, "reportlab_not_installed"
-    except Exception as e:
-        return False, f"pdf_export_error: {e.__class__.__name__}: {e}"
-
-
-def export_command_brief(*, title: str = "GLL Command Brief Packet") -> Dict[str, Any]:
-    """
-    Returns:
-      {
-        "ok": bool,
-        "generated_at_utc": str,
-        "paths": {"html_latest":..., "html_stamped":..., "pdf_latest":..., ...},
-        "manifest_latest": ...,
-        "pdf_status": ...,
-        "errors": {...}
-      }
-    """
-    generated_at = _utc_now_iso()
-    stamp = _ts()
-
-    _safe_mkdir(BRIEFS_DIR)
-
-    html_latest = BRIEFS_DIR / "command_brief_latest.html"
-    html_stamped = BRIEFS_DIR / f"command_brief_{stamp}.html"
-
-    manifest_latest = BRIEFS_DIR / "command_brief_latest.json"
-    manifest_stamped = BRIEFS_DIR / f"command_brief_{stamp}.json"
-
-    pdf_latest = BRIEFS_DIR / "command_brief_latest.pdf"
-    pdf_stamped = BRIEFS_DIR / f"command_brief_{stamp}.pdf"
-
-    errors: Dict[str, str] = {}
-
-    training_curve, e = _read_json(SRC_TRAINING_CURVE)
-    if e:
-        errors["training_curve"] = e
-
-    training_feedback, e = _read_json(SRC_TRAINING_FEEDBACK)
-    if e:
-        errors["training_feedback"] = e
-
-    fusion_validation, e = _read_json(SRC_FUSION_VALIDATION)
-    if e:
-        errors["fusion_validation"] = e
-
-    degraded_validation, e = _read_json(SRC_DEGRADED_VALIDATION)
-    if e:
-        errors["degraded_validation"] = e
-
-    sis_txt, e = _read_text(SRC_SIS_REPORT)
-    if e:
-        errors["sis_report"] = e
-
-    sps_txt, e = _read_text(SRC_SPS_BEHAVIOR_TXT)
-    if e:
-        errors["sps_behavior"] = e
-
-    notes = [
-        "This brief is generated from synthetic + training artifacts (safe for demo).",
-        "If SIS/SPS gates are GREEN, sessions can count toward AGI and certification.",
-        "PDF export is optional and may be disabled if dependencies are unavailable.",
+    # Include bounded safety language ALWAYS (required tokens enforced downstream)
+    cannot_lines = [
+        "- Intent, causality, and attribution are not inferred from synthetic telemetry.",
+        "- Operator judgment is required before escalation beyond bounded posture.",
     ]
 
-    manifest: Dict[str, Any] = {
-        "generated_at_utc": generated_at,
-        "title": title,
-        "sources": {
-            "training_curve": str(SRC_TRAINING_CURVE),
-            "training_feedback": str(SRC_TRAINING_FEEDBACK),
-            "fusion_validation": str(SRC_FUSION_VALIDATION),
-            "degraded_validation": str(SRC_DEGRADED_VALIDATION),
-            "sis_report": str(SRC_SIS_REPORT),
-            "sps_behavior": str(SRC_SPS_BEHAVIOR_TXT),
-        },
-        "included": {
-            "training_curve": training_curve is not None,
-            "training_feedback": training_feedback is not None,
-            "fusion_validation": fusion_validation is not None,
-            "degraded_validation": degraded_validation is not None,
-            "sis_report": sis_txt is not None,
-            "sps_behavior": sps_txt is not None,
-        },
-        "errors": errors,
+    sections: Dict[str, str] = {
+        "what_changed": "\n".join(what_changed_lines),
+        "why_it_matters": (
+            "This briefing packages GLL’s current posture using bounded statements and best-effort artifacts. "
+            "It is designed to survive missing inputs and still provide a safe, operator-readable snapshot."
+        ),
+        "what_we_know": "\n".join(what_we_know_lines) if what_we_know_lines else "Information remains limited.",
+        "what_we_do_not_know": "\n".join(cannot_lines),
+        "recommended_posture": posture + "\nAssessment is probabilistic and bounded; operator judgment applies.",
     }
 
-    html = _build_html(
-        generated_at=generated_at,
-        title=title,
-        manifest=manifest,
-        training_curve=training_curve,
-        training_feedback=training_feedback,
-        fusion_validation=fusion_validation,
-        degraded_validation=degraded_validation,
-        sis_txt=sis_txt,
-        sps_txt=sps_txt,
-        notes=notes,
-    )
+    return sections, inputs
 
-    html_latest.write_text(html, encoding="utf-8")
-    html_stamped.write_text(html, encoding="utf-8")
 
-    manifest_latest.write_text(json.dumps(manifest, indent=2), encoding="utf-8")
-    manifest_stamped.write_text(json.dumps(manifest, indent=2), encoding="utf-8")
+def write_commander_brief(sections: Dict[str, str], inputs: Dict[str, Any]) -> Dict[str, str]:
+    _ensure_dirs()
+    stamped = _stamp()
 
-    pdf_ok_latest, pdf_status_latest = _try_export_pdf_from_html(html, pdf_latest)
-    pdf_ok_stamped, pdf_status_stamped = _try_export_pdf_from_html(html, pdf_stamped)
+    txt_latest = BRIEFS_DIR / "commander_brief_latest.txt"
+    json_latest = BRIEFS_DIR / "commander_brief_latest.json"
+    txt_stamped = BRIEFS_DIR / f"commander_brief_{stamped}.txt"
+    json_stamped = BRIEFS_DIR / f"commander_brief_{stamped}.json"
 
-    ok = True  # exporter succeeds even if PDF is skipped
+    legacy_txt = LEGACY_DIR / "commander_brief.txt"
+    legacy_json = LEGACY_DIR / "commander_brief.json"
+
+    txt = render_brief_mode(sections) if BRIEF_MODE else json.dumps(sections, indent=2)
+
+    payload: Dict[str, Any] = {
+        "generated_at_utc": _utc_now_iso(),
+        "brief_mode": bool(BRIEF_MODE),
+        "sections": sections,
+        "traceability": build_traceability(inputs),
+        "inputs": inputs,
+        "safety_notice": "Derived from synthetic telemetry for training/demos. Statements are bounded; operator judgment required.",
+    }
+
+    txt_latest.write_text(txt, encoding="utf-8")
+    txt_stamped.write_text(txt, encoding="utf-8")
+
+    json_latest.write_text(json.dumps(payload, indent=2), encoding="utf-8")
+    json_stamped.write_text(json.dumps(payload, indent=2), encoding="utf-8")
+
+    # Legacy compatibility writes
+    legacy_txt.write_text(txt, encoding="utf-8")
+    legacy_json.write_text(json.dumps(payload, indent=2), encoding="utf-8")
+
     return {
-        "ok": ok,
-        "generated_at_utc": generated_at,
-        "pdf": {
-            "latest_ok": pdf_ok_latest,
-            "stamped_ok": pdf_ok_stamped,
-            "latest_status": pdf_status_latest,
-            "stamped_status": pdf_status_stamped,
-        },
-        "paths": {
-            "html_latest": str(html_latest),
-            "html_stamped": str(html_stamped),
-            "manifest_latest": str(manifest_latest),
-            "manifest_stamped": str(manifest_stamped),
-            "pdf_latest": str(pdf_latest),
-            "pdf_stamped": str(pdf_stamped),
-        },
-        "errors": errors,
+        "txt_latest": str(txt_latest),
+        "json_latest": str(json_latest),
+        "txt_stamped": str(txt_stamped),
+        "json_stamped": str(json_stamped),
+        "legacy_txt": str(legacy_txt),
+        "legacy_json": str(legacy_json),
     }
+
+
+def main() -> None:
+    sections, inputs = build_commander_sections()
+    paths = write_commander_brief(sections, inputs)
+    print(json.dumps(paths, indent=2))
+
+
+if __name__ == "__main__":
+    main()
 

@@ -1,0 +1,65 @@
+{
+  "generated_at_utc": "2025-12-16T13:57:48.150399+00:00",
+  "brief_mode": true,
+  "sections": {
+    "what_changed": "- Degraded validation report is present (degraded ops supported).\n- Fusion validation report is present (core pipeline validated).\n- Training feedback is present (operator coaching updated).\n- Nuclear decision card is present (bounded commander posture).\n- Prelaunch watchboard is present (watchfloor snapshot).",
+    "why_it_matters": "This briefing packages GLL\u2019s current posture using bounded statements and best-effort artifacts. It is designed to survive missing inputs and still provide a safe, operator-readable snapshot.",
+    "what_we_know": "- Fusion validation verdict/status: {'status': 'PASS', 'message': 'Controlled environment for this difficulty.'}\n- Degraded validation verdict/status: {'status': 'PASS', 'message': 'Degraded operations appear controlled (bounded alerts, no crash).'}",
+    "what_we_do_not_know": "- Intent, causality, and attribution are not inferred from synthetic telemetry.\n- Operator judgment is required before escalation beyond bounded posture.",
+    "recommended_posture": "DUTY_OFFICER_NOTIFY\nAssessment is probabilistic and bounded; operator judgment applies."
+  },
+  "traceability": {
+    "included": [
+      "training_curve",
+      "training_feedback",
+      "fusion_validation",
+      "degraded_validation",
+      "watchboard",
+      "decision_card",
+      "prebrief",
+      "sis_report",
+      "sps_behavior"
+    ],
+    "missing": [],
+    "note": "Traceability is best-effort; missing artifacts do not block brief generation."
+  },
+  "inputs": {
+    "training_curve": {
+      "path": "src/docs/training/training_curve_latest.json",
+      "present": true
+    },
+    "training_feedback": {
+      "path": "src/docs/training/training_feedback_latest.json",
+      "present": true
+    },
+    "fusion_validation": {
+      "path": "src/docs/validation/fusion_validation_report.json",
+      "present": true
+    },
+    "degraded_validation": {
+      "path": "src/docs/validation/degraded_fusion_validation_latest.json",
+      "present": true
+    },
+    "watchboard": {
+      "path": "docs/nuclear/prelaunch_watchboard_latest.json",
+      "present": true
+    },
+    "decision_card": {
+      "path": "docs/decision_cards/nuclear_decision_card_latest.json",
+      "present": true
+    },
+    "prebrief": {
+      "path": "docs/briefs/prebrief_trust_annotations_latest.json",
+      "present": true
+    },
+    "sis_report": {
+      "path": "src/docs/system_integrity_report.txt",
+      "present": true
+    },
+    "sps_behavior": {
+      "path": "src/docs/sps_behavior_report.txt",
+      "present": true
+    }
+  },
+  "safety_notice": "Derived from synthetic telemetry for training/demos. Statements are bounded; operator judgment required."
+}
