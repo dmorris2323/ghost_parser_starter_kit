@@ -1,0 +1,36 @@
+{
+  "generated_at_utc": "2025-12-16T19:44:39.233800+00:00",
+  "safe_notice": "This artifact is derived from synthetic inputs and is safe for training/demos.",
+  "domain": "LEGAL",
+  "product": "legal_case_snapshot",
+  "inputs": {
+    "case_type": "COLLECTIONS",
+    "matter_name": "Demo Matter",
+    "debtor_or_defendant": "UNKNOWN",
+    "jurisdiction": "UNKNOWN",
+    "stage": "PRE-SUIT",
+    "days_past_due": 9999,
+    "balance_usd": 99999999.0,
+    "risk_score": 99.9,
+    "red_flags": []
+  },
+  "assessment": {
+    "risk_band": "HIGH",
+    "recommended_posture": "HOLD_ACTION_PENDING_REVIEW",
+    "recommended_next_step": "Assessment is probabilistic and bounded; operator judgment applies. Recommend reviewing account file, verifying jurisdiction, and confirming evidentiary posture before any escalation.",
+    "ambiguity_flags": [
+      "UNKNOWN_PARTY",
+      "UNKNOWN_JURISDICTION"
+    ]
+  },
+  "what_we_can_say": [
+    "This is a training/demo artifact derived from synthetic inputs.",
+    "Risk band is HIGH (bounded).",
+    "Recommended posture is HOLD_ACTION_PENDING_REVIEW (bounded).",
+    "Operator judgment applies; consult counsel before escalation."
+  ],
+  "what_we_cannot_say": [
+    "We do not infer real-world intent, liability, or outcome from this snapshot.",
+    "We do not provide legal advice; this is an analytic training aid only."
+  ]
+}

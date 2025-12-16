@@ -1,0 +1,9 @@
+{
+  "generated_at_utc": "2025-12-16T19:44:39.234287+00:00",
+  "verdict": "PASS",
+  "runs": 25,
+  "crashes": 0,
+  "violations": [],
+  "latest": "docs/briefs/legal_case_snapshot_stress_latest.json",
+  "stamped": "docs/briefs/legal_case_snapshot_stress_20251216_194439.json"
+}
