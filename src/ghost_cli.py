@@ -66,7 +66,7 @@ Menu options:
  73) Degraded Fusion Validation (SAFE)
  74) Commander Brief One-Shot (PRE->export->consistency->POST)
  75) Week-3: Fusion Core Regression + Operator Summary (one-shot)
-
+ 76) Running Mobile Enjoy Mode (Week-3 demo pack paths)
 """
 
 import sys
@@ -653,21 +653,34 @@ def main() -> int:
         elif choice == "75":
             import json
             from gll_fusion_core_regression_gate import run_fusion_core_regression_gate
-            from week3_operator_summary import run_week3_operator_summary
+            from week3_operator_summary import write_week3_operator_summary
 
             print("Running Fusion Core Regression Gate...")
-            gate_result = run_fusion_core_regression_gate()
+            gate = run_fusion_core_regression_gate(
+                context="week3_one_shot",
+                update_baselines=False,
+                strict=False,
+            )
 
-            print("Generating Week-3 Operator Summary...")
-            summary_paths = run_week3_operator_summary()
+            print("Writing Week-3 Operator Summary...")
+            summary = write_week3_operator_summary()
 
-            output = {
-                "gate_verdict": gate_result.get("verdict"),
-                "gate_outputs": gate_result,
-                "operator_summary": summary_paths,
+            out = {
+                "week3_one_shot": True,
+                "gate_verdict": gate.get("verdict"),
+                "gate_latest_json": gate.get("latest_json"),
+                "operator_summary_latest": summary.get("txt_latest"),
             }
 
-            print(json.dumps(output, indent=2))
+            print(json.dumps(out, indent=2))
+
+        elif choice == "76":
+            from mobile_enjoy_mode import run_mobile_enjoy_mode
+            import json
+
+            print("Running Mobile Enjoy Mode (Week-3 demo pack paths)...")
+            res = run_mobile_enjoy_mode(context="week3_mobile_enjoy_mode_cli")
+            print(json.dumps(res, indent=2))
 
         else:
             print("Invalid option. Try again.")
