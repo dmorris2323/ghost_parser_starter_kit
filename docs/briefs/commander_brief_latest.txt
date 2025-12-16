@@ -9,7 +9,7 @@
 This briefing packages GLL’s current posture using bounded statements and best-effort artifacts. It is designed to survive missing inputs and still provide a safe, operator-readable snapshot.
 
 3. What we know:
-- Fusion validation verdict/status: {'status': 'PASS', 'message': 'Controlled environment for this difficulty.'}
+- Fusion validation verdict/status: FAIL
 - Degraded validation verdict/status: {'status': 'PASS', 'message': 'Degraded operations appear controlled (bounded alerts, no crash).'}
 
 4. What we do NOT know:

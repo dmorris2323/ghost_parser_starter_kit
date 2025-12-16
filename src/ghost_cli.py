@@ -65,6 +65,7 @@ Menu options:
  72) Degraded Fusion Validation (Resilience Test)MODULE 2 — CLI ENTRY (NO UI, NO DRAMA)
  73) Degraded Fusion Validation (SAFE)
  74) Commander Brief One-Shot (PRE->export->consistency->POST)
+ 75) Week-3: Fusion Core Regression + Operator Summary (one-shot)
 
 """
 
@@ -649,6 +650,24 @@ def main() -> int:
                 update_baselines=False,
             )
             print(json.dumps(res, indent=2))
+        elif choice == "75":
+            import json
+            from gll_fusion_core_regression_gate import run_fusion_core_regression_gate
+            from week3_operator_summary import run_week3_operator_summary
+
+            print("Running Fusion Core Regression Gate...")
+            gate_result = run_fusion_core_regression_gate()
+
+            print("Generating Week-3 Operator Summary...")
+            summary_paths = run_week3_operator_summary()
+
+            output = {
+                "gate_verdict": gate_result.get("verdict"),
+                "gate_outputs": gate_result,
+                "operator_summary": summary_paths,
+            }
+
+            print(json.dumps(output, indent=2))
 
         else:
             print("Invalid option. Try again.")

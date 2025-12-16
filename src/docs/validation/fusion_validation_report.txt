@@ -1,46 +1,8 @@
-GLL Synthetic Fusion Validation Report (SAFE)
-============================================
-Generated: 2025-12-15T03:52:28.586340+00:00
-Difficulty: ADVERSARIAL
-Seed: 70
-
-This report is generated from synthetic telemetry and is safe for training/demos.
-
-VERDICT: PASS — Controlled environment for this difficulty.
-
-Baseline Metrics
-  trust_proxy: 0.0
-  risk_score:  0.0
-  alerts:      {'total': 0, 'crit': 0, 'high': 0, 'attack_like': 0, 'anomaly': 0}
-
-Injected Metrics
-  trust_proxy: 0.0
-  risk_score:  0.0
-  alerts:      {'total': 0, 'crit': 0, 'high': 0, 'attack_like': 0, 'anomaly': 0}
-
-Delta vs Baseline
-  trust_proxy_delta: 0.0
-  risk_score_delta:  0.0
-  alerts_delta:      {'crit': 0, 'high': 0, 'attack_like': 0, 'anomaly': 0, 'total': 0}
-
-Pattern Injection
-  requested: CROSS_DOMAIN_CONFUSION
-  seed:      70
-  error:     None
-
-Real Module Attempts (best-effort)
-  attempted: {'fusion_trust': 'auto', 'operator_safety_layer': 'auto', 'crisis_mode_flag': 'auto', 'training_curve_engine': 'compute_training_curve'}
-  results:   {'crisis_mode': {'crisis_mode': 'OFF', 'updated_at': '2025-12-14T09:59:16.299702+00:00', 'reason': 'Day71 test end', 'operator': 'Ghost'}, 'training_curve': {'generated_at': '2025-12-15T03:52:28.585665+00:00', 'total_sessions': 16, 'counted_green_sessions': 1, 'AGI': 72.0, 'improvement_slope': 0.0, 'difficulty_weighted_average': 72.0, 'volatility_index': 0.0}}
-  errors:    {'fusion_trust': "ImportError: cannot import name 'status' from 'crisis_mode_flag' (/Users/dextermorris/ghost/parser_starter_kit/src/crisis_mode_flag.py)", 'operator_safety_layer': "ImportError: cannot import name 'status' from 'crisis_mode_flag' (/Users/dextermorris/ghost/parser_starter_kit/src/crisis_mode_flag.py)"}
-
-Training Feedback (recommendation)
-{'status': 'ERROR', 'reason': "Feedback engine failed: TypeError: recommend_next_training() got an unexpected keyword argument 'difficulty'"}
-
-Recommendations
-  - Use INTERMEDIATE without injection for baseline regression.
-  - Use ADVERSARIAL + injection to test SPS defenses and operator coaching.
-  - Use delta_vs_baseline to validate that injections change the system in expected directions.
-  - If PRE gate fails, freeze changes and fix integrity before proceeding.
-
-Paths
-{'json_latest': '/Users/dextermorris/ghost/parser_starter_kit/src/docs/validation/fusion_validation_report.json', 'json_stamped': '/Users/dextermorris/ghost/parser_starter_kit/src/docs/validation/fusion_validation_report_20251215_035228.json', 'txt': '/Users/dextermorris/ghost/parser_starter_kit/src/docs/validation/fusion_validation_report.txt'}
+Fusion Validation Harness
+generated_at_utc: 2025-12-16T18:39:45.806776+00:00
+context: fusion_validation_harness
+status: FAIL
+message: Validation did not provide a recognizable status/verdict.
+runner_note: Fallback: used existing src/docs/validation/fusion_validation_report.json (no runnable validation found).
+output_json: src/docs/validation/fusion_validation_report.json
+output_txt: src/docs/validation/fusion_validation_report.txt

@@ -1,5 +1,5 @@
 {
-  "generated_at_utc": "2025-12-16T15:54:52.601662Z",
+  "generated_at_utc": "2025-12-16T18:39:45.839084Z",
   "safe_notice": "Derived from synthetic/base-defense telemetry; safe for training/demos.",
   "installation": "PATRICK_SFB_TRAINING",
   "inputs": {
@@ -30,7 +30,7 @@
       "sensor": "CAMERA_A1",
       "severity": "MEDIUM",
       "confidence": 0.72,
-      "timestamp_utc": "2025-12-16T15:54:52.601625Z",
+      "timestamp_utc": "2025-12-16T18:39:45.839057Z",
       "description": "Motion detected near fence line; no visual confirmation yet."
     },
     {
@@ -39,7 +39,7 @@
       "sensor": "RF_SENSOR_B2",
       "severity": "HIGH",
       "confidence": 0.64,
-      "timestamp_utc": "2025-12-16T15:54:52.601631Z",
+      "timestamp_utc": "2025-12-16T18:39:45.839061Z",
       "description": "RF anomaly coincident with badge reader retries."
     }
   ],

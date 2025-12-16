@@ -1,0 +1,12 @@
+{
+  "generated_at_utc": "2025-12-16T18:45:13.499722+00:00",
+  "source": "docs/validation/fusion_core_regression_latest.json",
+  "verdict": "PASS",
+  "crashes": 0,
+  "missing_artifacts_count": 0,
+  "missing_artifacts": [],
+  "checks": {
+    "UNKNOWN": "PASS"
+  },
+  "operator_summary": "Core platform regression is GREEN: fusion + products + brief all run end-to-end."
+}

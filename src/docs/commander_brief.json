@@ -1,10 +1,10 @@
 {
-  "generated_at_utc": "2025-12-16T15:55:08.445081+00:00",
+  "generated_at_utc": "2025-12-16T18:39:45.828270+00:00",
   "brief_mode": true,
   "sections": {
     "what_changed": "- Degraded validation report is present (degraded ops supported).\n- Fusion validation report is present (core pipeline validated).\n- Training feedback is present (operator coaching updated).\n- Nuclear decision card is present (bounded commander posture).\n- Prelaunch watchboard is present (watchfloor snapshot).",
     "why_it_matters": "This briefing packages GLL\u2019s current posture using bounded statements and best-effort artifacts. It is designed to survive missing inputs and still provide a safe, operator-readable snapshot.",
-    "what_we_know": "- Fusion validation verdict/status: {'status': 'PASS', 'message': 'Controlled environment for this difficulty.'}\n- Degraded validation verdict/status: {'status': 'PASS', 'message': 'Degraded operations appear controlled (bounded alerts, no crash).'}",
+    "what_we_know": "- Fusion validation verdict/status: FAIL\n- Degraded validation verdict/status: {'status': 'PASS', 'message': 'Degraded operations appear controlled (bounded alerts, no crash).'}",
     "what_we_do_not_know": "- Intent, causality, and attribution are not inferred from synthetic telemetry.\n- Operator judgment is required before escalation beyond bounded posture.",
     "recommended_posture": "DUTY_OFFICER_NOTIFY\nAssessment is probabilistic and bounded; operator judgment applies.",
     "spectral_owl_reasoning_trace": "- Summary: Spectral Owl synthesized available validation, fusion, and base-defense artifacts to derive a bounded operational posture.\n- Observations: Fusion pipeline validation present and passed., Degraded operations validated within bounded parameters., Base defense posture derived from multi-product inputs.\n- Assumptions: Telemetry inputs are synthetic or simulated., No adversary intent is inferred from telemetry alone., Risk bands represent bounded confidence estimates.\n- Uncertainties: No critical uncertainties identified.\n- Analyst note: This reasoning trace is a bounded analytical summary. Operator judgment is required before escalation."

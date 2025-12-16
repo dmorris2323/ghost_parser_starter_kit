@@ -1,0 +1,13 @@
+WEEK-3 OPERATOR SUMMARY (Fusion Core Regression)
+generated_at_utc: 2025-12-16T18:45:13.499722+00:00
+source: docs/validation/fusion_core_regression_latest.json
+
+verdict: PASS
+crashes: 0
+missing_artifacts: 0
+
+10-second takeaway:
+- Core platform regression is GREEN: fusion + products + brief all run end-to-end.
+
+Checks:
+- UNKNOWN: PASS
