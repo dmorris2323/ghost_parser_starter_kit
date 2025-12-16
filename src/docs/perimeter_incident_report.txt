@@ -1,15 +1,15 @@
 GLL — Perimeter Incident Report
-generated_at_utc: 2025-12-16T03:21:38.316280Z
-installation: BASE_DEFENSE_STRESS
+generated_at_utc: 2025-12-16T15:54:52.601662Z
+installation: PATRICK_SFB_TRAINING
 
-POSTURE: ROUTINE_MONITORING
-RISK_BAND: LOW
-RISK_SCORE: 19.25
+POSTURE: DUTY_OFFICER_NOTIFY
+RISK_BAND: GUARDED
+RISK_SCORE: 31.68
 DEGRADED: False
 
 WHAT WE CAN SAY (BOUNDED):
-- Perimeter posture is ROUTINE_MONITORING with risk_band=LOW.
-- Risk score is bounded (risk_score=19.25).
+- Perimeter posture is DUTY_OFFICER_NOTIFY with risk_band=GUARDED.
+- Risk score is bounded (risk_score=31.68).
 - Assessment is probabilistic and bounded; operator judgment applies.
 
 WHAT WE CANNOT SAY:
@@ -17,5 +17,5 @@ WHAT WE CANNOT SAY:
 - Cannot confirm breach without corroboration (human verification / security forces confirmation).
 
 EVENTS:
-- [2025-12-16T03:21:38.316266Z] INC_0000 zone=NORTH sev=LOW sensor=CAM conf=0.9 desc=
-- [2025-12-16T03:21:38.316271Z] INC_0001 zone=EAST sev=MEDIUM sensor=RF conf=0.7 desc=
+- [2025-12-16T15:54:52.601625Z] INC_0001 zone=NORTH_PERIMETER sev=MEDIUM sensor=CAMERA_A1 conf=0.72 desc=Motion detected near fence line; no visual confirmation yet.
+- [2025-12-16T15:54:52.601631Z] INC_0002 zone=EAST_GATE sev=HIGH sensor=RF_SENSOR_B2 conf=0.64 desc=RF anomaly coincident with badge reader retries.

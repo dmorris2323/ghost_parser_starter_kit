@@ -1,6 +1,6 @@
 {
   "bundle_version": 2,
-  "generated_at": "2025-12-15T03:52:35.866921",
+  "generated_at": "2025-12-16T15:54:52.576458",
   "difficulty": "INTERMEDIATE",
   "seed": 73,
   "safe_notice": "Synthetic training telemetry only. Contains no real-world sensitive meaning.",
@@ -31,7 +31,7 @@
   "injections": [],
   "events": [
     {
-      "ts_utc": "2025-12-15T03:53:22.687693",
+      "ts_utc": "2025-12-16T15:55:39.397548",
       "domain": "LATENCY",
       "sensor": "SYN_LATENCY_01",
       "metric": "sensor_latency_ms_index",
@@ -42,7 +42,7 @@
       "note": "LATENCY: nominal synthetic telemetry. (confidence=0.97)"
     },
     {
-      "ts_utc": "2025-12-15T03:53:35.538504",
+      "ts_utc": "2025-12-16T15:55:52.248359",
       "domain": "CYBER",
       "sensor": "SYN_CYBER_01",
       "metric": "cyber_event_rate",
@@ -53,7 +53,7 @@
       "note": "CYBER: nominal synthetic telemetry. (confidence=0.97)"
     },
     {
-      "ts_utc": "2025-12-15T03:54:03.405266",
+      "ts_utc": "2025-12-16T15:56:20.115121",
       "domain": "LATENCY",
       "sensor": "SYN_LATENCY_02",
       "metric": "sensor_latency_ms_index",
@@ -64,7 +64,7 @@
       "note": "LATENCY: nominal synthetic telemetry. (confidence=0.97)"
     },
     {
-      "ts_utc": "2025-12-15T03:54:56.404114",
+      "ts_utc": "2025-12-16T15:57:13.113969",
       "domain": "EMS",
       "sensor": "SYN_EMS_02",
       "metric": "ems_noise_index",
@@ -75,7 +75,7 @@
       "note": "EMS: nominal synthetic telemetry. (confidence=0.97)"
     },
     {
-      "ts_utc": "2025-12-15T03:55:07.019695",
+      "ts_utc": "2025-12-16T15:57:23.729550",
       "domain": "EMS",
       "sensor": "SYN_EMS_03",
       "metric": "ems_noise_index",
@@ -86,7 +86,7 @@
       "note": "EMS: nominal synthetic telemetry. (confidence=0.97)"
     },
     {
-      "ts_utc": "2025-12-15T03:56:46.284198",
+      "ts_utc": "2025-12-16T15:59:02.994053",
       "domain": "EMS",
       "sensor": "SYN_EMS_01",
       "metric": "ems_noise_index",
@@ -97,7 +97,7 @@
       "note": "EMS: nominal synthetic telemetry. (confidence=0.97)"
     },
     {
-      "ts_utc": "2025-12-15T03:57:28.661632",
+      "ts_utc": "2025-12-16T15:59:45.371487",
       "domain": "CYBER",
       "sensor": "SYN_CYBER_01",
       "metric": "cyber_event_rate",
@@ -108,7 +108,7 @@
       "note": "CYBER: nominal synthetic telemetry. (confidence=0.97)"
     },
     {
-      "ts_utc": "2025-12-15T03:58:07.963894",
+      "ts_utc": "2025-12-16T16:00:24.673749",
       "domain": "SEISMIC",
       "sensor": "SYN_SEISMIC_02",
       "metric": "seismic_disturbance",
@@ -119,7 +119,7 @@
       "note": "SEISMIC: nominal synthetic telemetry. (confidence=0.97)"
     },
     {
-      "ts_utc": "2025-12-15T03:58:38.696026",
+      "ts_utc": "2025-12-16T16:00:55.405881",
       "domain": "LATENCY",
       "sensor": "SYN_LATENCY_02",
       "metric": "sensor_latency_ms_index",
@@ -130,7 +130,7 @@
       "note": "LATENCY: nominal synthetic telemetry. (confidence=0.97)"
     },
     {
-      "ts_utc": "2025-12-15T03:58:46.002820",
+      "ts_utc": "2025-12-16T16:01:02.712675",
       "domain": "CYBER",
       "sensor": "SYN_CYBER_01",
       "metric": "cyber_event_rate",
@@ -141,7 +141,7 @@
       "note": "CYBER: nominal synthetic telemetry. (confidence=0.97)"
     },
     {
-      "ts_utc": "2025-12-15T03:58:47.585973",
+      "ts_utc": "2025-12-16T16:01:04.295828",
       "domain": "SEISMIC",
       "sensor": "SYN_SEISMIC_03",
       "metric": "seismic_disturbance",
@@ -152,7 +152,7 @@
       "note": "SEISMIC: nominal synthetic telemetry. (confidence=0.97)"
     },
     {
-      "ts_utc": "2025-12-15T03:59:39.744610",
+      "ts_utc": "2025-12-16T16:01:56.454465",
       "domain": "CYBER",
       "sensor": "SYN_CYBER_03",
       "metric": "cyber_event_rate",
@@ -163,7 +163,7 @@
       "note": "CYBER: nominal synthetic telemetry. (confidence=0.97)"
     },
     {
-      "ts_utc": "2025-12-15T04:00:57.525979",
+      "ts_utc": "2025-12-16T16:03:14.235834",
       "domain": "EMS",
       "sensor": "SYN_EMS_02",
       "metric": "ems_noise_index",
@@ -174,7 +174,7 @@
       "note": "EMS: nominal synthetic telemetry. (confidence=0.97)"
     },
     {
-      "ts_utc": "2025-12-15T04:01:56.532729",
+      "ts_utc": "2025-12-16T16:04:13.242584",
       "domain": "COMMS",
       "sensor": "SYN_COMMS_01",
       "metric": "comms_state_index",
@@ -185,7 +185,7 @@
       "note": "COMMS: nominal synthetic telemetry. (confidence=0.97)"
     },
     {
-      "ts_utc": "2025-12-15T04:03:39.262142",
+      "ts_utc": "2025-12-16T16:05:55.971997",
       "domain": "COMMS",
       "sensor": "SYN_COMMS_01",
       "metric": "comms_state_index",
@@ -196,7 +196,7 @@
       "note": "COMMS: nominal synthetic telemetry. (confidence=0.97)"
     },
     {
-      "ts_utc": "2025-12-15T04:04:15.227073",
+      "ts_utc": "2025-12-16T16:06:31.936928",
       "domain": "COMMS",
       "sensor": "SYN_COMMS_03",
       "metric": "comms_state_index",
@@ -207,7 +207,7 @@
       "note": "COMMS: nominal synthetic telemetry. (confidence=0.97)"
     },
     {
-      "ts_utc": "2025-12-15T04:04:36.685810",
+      "ts_utc": "2025-12-16T16:06:53.395665",
       "domain": "EMS",
       "sensor": "SYN_EMS_02",
       "metric": "ems_noise_index",
@@ -218,7 +218,7 @@
       "note": "EMS: nominal synthetic telemetry. (confidence=0.97)"
     },
     {
-      "ts_utc": "2025-12-15T04:05:11.367980",
+      "ts_utc": "2025-12-16T16:07:28.077835",
       "domain": "SEISMIC",
       "sensor": "SYN_SEISMIC_03",
       "metric": "seismic_disturbance",
@@ -229,7 +229,7 @@
       "note": "SEISMIC: synthetic anomaly spike (training-safe). (confidence=0.85)"
     },
     {
-      "ts_utc": "2025-12-15T04:06:30.136216",
+      "ts_utc": "2025-12-16T16:08:46.846071",
       "domain": "OPTICAL",
       "sensor": "SYN_OPTICAL_02",
       "metric": "optical_activity",
@@ -240,7 +240,7 @@
       "note": "OPTICAL: nominal synthetic telemetry. (confidence=0.97)"
     },
     {
-      "ts_utc": "2025-12-15T04:06:58.476204",
+      "ts_utc": "2025-12-16T16:09:15.186059",
       "domain": "SEISMIC",
       "sensor": "SYN_SEISMIC_02",
       "metric": "seismic_disturbance",
@@ -251,7 +251,7 @@
       "note": "SEISMIC: synthetic attack-like pattern present (training-safe). (confidence=0.79)"
     },
     {
-      "ts_utc": "2025-12-15T04:07:03.216158",
+      "ts_utc": "2025-12-16T16:09:19.926013",
       "domain": "COMMS",
       "sensor": "SYN_COMMS_01",
       "metric": "comms_state_index",
@@ -262,7 +262,7 @@
       "note": "COMMS: nominal synthetic telemetry. (confidence=0.97)"
     },
     {
-      "ts_utc": "2025-12-15T04:07:28.741051",
+      "ts_utc": "2025-12-16T16:09:45.450906",
       "domain": "LATENCY",
       "sensor": "SYN_LATENCY_01",
       "metric": "sensor_latency_ms_index",
@@ -273,7 +273,7 @@
       "note": "LATENCY: nominal synthetic telemetry. (confidence=0.97)"
     },
     {
-      "ts_utc": "2025-12-15T04:08:02.155526",
+      "ts_utc": "2025-12-16T16:10:18.865381",
       "domain": "LATENCY",
       "sensor": "SYN_LATENCY_03",
       "metric": "sensor_latency_ms_index",
@@ -284,7 +284,7 @@
       "note": "LATENCY: nominal synthetic telemetry. (confidence=0.97)"
     },
     {
-      "ts_utc": "2025-12-15T04:10:12.158192",
+      "ts_utc": "2025-12-16T16:12:28.868047",
       "domain": "CYBER",
       "sensor": "SYN_CYBER_03",
       "metric": "cyber_event_rate",
@@ -295,7 +295,7 @@
       "note": "CYBER: nominal synthetic telemetry. (confidence=0.97)"
     },
     {
-      "ts_utc": "2025-12-15T04:10:43.726758",
+      "ts_utc": "2025-12-16T16:13:00.436613",
       "domain": "CYBER",
       "sensor": "SYN_CYBER_03",
       "metric": "cyber_event_rate",
@@ -306,7 +306,7 @@
       "note": "CYBER: synthetic attack-like pattern present (training-safe). (confidence=0.67)"
     },
     {
-      "ts_utc": "2025-12-15T04:10:56.266752",
+      "ts_utc": "2025-12-16T16:13:12.976607",
       "domain": "SEISMIC",
       "sensor": "SYN_SEISMIC_03",
       "metric": "seismic_disturbance",
@@ -317,7 +317,7 @@
       "note": "SEISMIC: nominal synthetic telemetry. (confidence=0.97)"
     },
     {
-      "ts_utc": "2025-12-15T04:11:28.495841",
+      "ts_utc": "2025-12-16T16:13:45.205696",
       "domain": "COMMS",
       "sensor": "SYN_COMMS_01",
       "metric": "comms_state_index",
@@ -328,7 +328,7 @@
       "note": "COMMS: nominal synthetic telemetry. (confidence=0.97)"
     },
     {
-      "ts_utc": "2025-12-15T04:12:31.621963",
+      "ts_utc": "2025-12-16T16:14:48.331818",
       "domain": "COMMS",
       "sensor": "SYN_COMMS_02",
       "metric": "comms_state_index",
@@ -339,7 +339,7 @@
       "note": "COMMS: synthetic anomaly spike (training-safe). (confidence=0.85)"
     },
     {
-      "ts_utc": "2025-12-15T04:13:09.392220",
+      "ts_utc": "2025-12-16T16:15:26.102075",
       "domain": "COMMS",
       "sensor": "SYN_COMMS_01",
       "metric": "comms_state_index",
@@ -350,7 +350,7 @@
       "note": "COMMS: nominal synthetic telemetry. (confidence=0.97)"
     },
     {
-      "ts_utc": "2025-12-15T04:15:35.828017",
+      "ts_utc": "2025-12-16T16:17:52.537872",
       "domain": "CYBER",
       "sensor": "SYN_CYBER_03",
       "metric": "cyber_event_rate",
@@ -361,7 +361,7 @@
       "note": "CYBER: nominal synthetic telemetry. (confidence=0.97)"
     },
     {
-      "ts_utc": "2025-12-15T04:16:30.811953",
+      "ts_utc": "2025-12-16T16:18:47.521808",
       "domain": "LATENCY",
       "sensor": "SYN_LATENCY_01",
       "metric": "sensor_latency_ms_index",
@@ -372,7 +372,7 @@
       "note": "LATENCY: nominal synthetic telemetry. (confidence=0.97)"
     },
     {
-      "ts_utc": "2025-12-15T04:16:36.412714",
+      "ts_utc": "2025-12-16T16:18:53.122569",
       "domain": "COMMS",
       "sensor": "SYN_COMMS_03",
       "metric": "comms_state_index",
@@ -383,7 +383,7 @@
       "note": "COMMS: nominal synthetic telemetry. (confidence=0.97)"
     },
     {
-      "ts_utc": "2025-12-15T04:17:14.139787",
+      "ts_utc": "2025-12-16T16:19:30.849642",
       "domain": "SEISMIC",
       "sensor": "SYN_SEISMIC_01",
       "metric": "seismic_disturbance",
@@ -394,7 +394,7 @@
       "note": "SEISMIC: synthetic attack-like pattern present (training-safe). (confidence=0.79)"
     },
     {
-      "ts_utc": "2025-12-15T04:17:38.381450",
+      "ts_utc": "2025-12-16T16:19:55.091305",
       "domain": "CYBER",
       "sensor": "SYN_CYBER_02",
       "metric": "cyber_event_rate",
@@ -405,7 +405,7 @@
       "note": "CYBER: nominal synthetic telemetry. (confidence=0.97)"
     },
     {
-      "ts_utc": "2025-12-15T04:18:57.354825",
+      "ts_utc": "2025-12-16T16:21:14.064680",
       "domain": "SEISMIC",
       "sensor": "SYN_SEISMIC_02",
       "metric": "seismic_disturbance",
@@ -416,7 +416,7 @@
       "note": "SEISMIC: nominal synthetic telemetry. (confidence=0.97)"
     },
     {
-      "ts_utc": "2025-12-15T04:21:27.331872",
+      "ts_utc": "2025-12-16T16:23:44.041727",
       "domain": "LATENCY",
       "sensor": "SYN_LATENCY_01",
       "metric": "sensor_latency_ms_index",
@@ -427,7 +427,7 @@
       "note": "LATENCY: synthetic anomaly spike (training-safe). (confidence=0.85)"
     },
     {
-      "ts_utc": "2025-12-15T04:22:52.512394",
+      "ts_utc": "2025-12-16T16:25:09.222249",
       "domain": "OPTICAL",
       "sensor": "SYN_OPTICAL_03",
       "metric": "optical_activity",
@@ -438,7 +438,7 @@
       "note": "OPTICAL: nominal synthetic telemetry. (confidence=0.97)"
     },
     {
-      "ts_utc": "2025-12-15T04:22:57.748517",
+      "ts_utc": "2025-12-16T16:25:14.458372",
       "domain": "COMMS",
       "sensor": "SYN_COMMS_03",
       "metric": "comms_state_index",
@@ -449,7 +449,7 @@
       "note": "COMMS: nominal synthetic telemetry. (confidence=0.97)"
     },
     {
-      "ts_utc": "2025-12-15T04:23:18.853273",
+      "ts_utc": "2025-12-16T16:25:35.563128",
       "domain": "COMMS",
       "sensor": "SYN_COMMS_01",
       "metric": "comms_state_index",
@@ -460,7 +460,7 @@
       "note": "COMMS: nominal synthetic telemetry. (confidence=0.97)"
     },
     {
-      "ts_utc": "2025-12-15T04:24:09.834939",
+      "ts_utc": "2025-12-16T16:26:26.544794",
       "domain": "COMMS",
       "sensor": "SYN_COMMS_02",
       "metric": "comms_state_index",
@@ -471,7 +471,7 @@
       "note": "COMMS: nominal synthetic telemetry. (confidence=0.97)"
     },
     {
-      "ts_utc": "2025-12-15T04:24:19.512749",
+      "ts_utc": "2025-12-16T16:26:36.222604",
       "domain": "RADIATION",
       "sensor": "SYN_RADIATION_01",
       "metric": "radiation_uSv_index",
@@ -482,7 +482,7 @@
       "note": "RADIATION: nominal synthetic telemetry. (confidence=0.97)"
     },
     {
-      "ts_utc": "2025-12-15T04:26:01.813441",
+      "ts_utc": "2025-12-16T16:28:18.523296",
       "domain": "SEISMIC",
       "sensor": "SYN_SEISMIC_02",
       "metric": "seismic_disturbance",
@@ -493,7 +493,7 @@
       "note": "SEISMIC: synthetic anomaly spike (training-safe). (confidence=0.85)"
     },
     {
-      "ts_utc": "2025-12-15T04:27:32.876383",
+      "ts_utc": "2025-12-16T16:29:49.586238",
       "domain": "RADIATION",
       "sensor": "SYN_RADIATION_02",
       "metric": "radiation_uSv_index",
@@ -504,7 +504,7 @@
       "note": "RADIATION: nominal synthetic telemetry. (confidence=0.97)"
     },
     {
-      "ts_utc": "2025-12-15T04:27:37.508717",
+      "ts_utc": "2025-12-16T16:29:54.218572",
       "domain": "CYBER",
       "sensor": "SYN_CYBER_03",
       "metric": "cyber_event_rate",
@@ -515,7 +515,7 @@
       "note": "CYBER: nominal synthetic telemetry. (confidence=0.97)"
     },
     {
-      "ts_utc": "2025-12-15T04:27:50.351956",
+      "ts_utc": "2025-12-16T16:30:07.061811",
       "domain": "COMMS",
       "sensor": "SYN_COMMS_03",
       "metric": "comms_state_index",
@@ -526,7 +526,7 @@
       "note": "COMMS: nominal synthetic telemetry. (confidence=0.97)"
     },
     {
-      "ts_utc": "2025-12-15T04:28:44.005459",
+      "ts_utc": "2025-12-16T16:31:00.715314",
       "domain": "SEISMIC",
       "sensor": "SYN_SEISMIC_01",
       "metric": "seismic_disturbance",
@@ -537,7 +537,7 @@
       "note": "SEISMIC: nominal synthetic telemetry. (confidence=0.97)"
     },
     {
-      "ts_utc": "2025-12-15T04:28:44.801378",
+      "ts_utc": "2025-12-16T16:31:01.511233",
       "domain": "LATENCY",
       "sensor": "SYN_LATENCY_03",
       "metric": "sensor_latency_ms_index",
@@ -548,7 +548,7 @@
       "note": "LATENCY: synthetic anomaly spike (training-safe). (confidence=0.85)"
     },
     {
-      "ts_utc": "2025-12-15T04:28:59.045462",
+      "ts_utc": "2025-12-16T16:31:15.755317",
       "domain": "CYBER",
       "sensor": "SYN_CYBER_02",
       "metric": "cyber_event_rate",
@@ -559,7 +559,7 @@
       "note": "CYBER: nominal synthetic telemetry. (confidence=0.97)"
     },
     {
-      "ts_utc": "2025-12-15T04:29:31.959205",
+      "ts_utc": "2025-12-16T16:31:48.669060",
       "domain": "OPTICAL",
       "sensor": "SYN_OPTICAL_03",
       "metric": "optical_activity",
@@ -570,7 +570,7 @@
       "note": "OPTICAL: nominal synthetic telemetry. (confidence=0.97)"
     },
     {
-      "ts_utc": "2025-12-15T04:31:02.095499",
+      "ts_utc": "2025-12-16T16:33:18.805354",
       "domain": "SEISMIC",
       "sensor": "SYN_SEISMIC_03",
       "metric": "seismic_disturbance",
@@ -581,7 +581,7 @@
       "note": "SEISMIC: nominal synthetic telemetry. (confidence=0.97)"
     },
     {
-      "ts_utc": "2025-12-15T04:31:17.381989",
+      "ts_utc": "2025-12-16T16:33:34.091844",
       "domain": "COMMS",
       "sensor": "SYN_COMMS_03",
       "metric": "comms_state_index",
@@ -592,7 +592,7 @@
       "note": "COMMS: nominal synthetic telemetry. (confidence=0.97)"
     },
     {
-      "ts_utc": "2025-12-15T04:31:49.290389",
+      "ts_utc": "2025-12-16T16:34:06.000244",
       "domain": "SEISMIC",
       "sensor": "SYN_SEISMIC_02",
       "metric": "seismic_disturbance",
@@ -603,7 +603,7 @@
       "note": "SEISMIC: nominal synthetic telemetry. (confidence=0.97)"
     },
     {
-      "ts_utc": "2025-12-15T04:32:23.728190",
+      "ts_utc": "2025-12-16T16:34:40.438045",
       "domain": "LATENCY",
       "sensor": "SYN_LATENCY_01",
       "metric": "sensor_latency_ms_index",
@@ -614,7 +614,7 @@
       "note": "LATENCY: nominal synthetic telemetry. (confidence=0.97)"
     },
     {
-      "ts_utc": "2025-12-15T04:32:48.933080",
+      "ts_utc": "2025-12-16T16:35:05.642935",
       "domain": "CYBER",
       "sensor": "SYN_CYBER_02",
       "metric": "cyber_event_rate",
@@ -625,7 +625,7 @@
       "note": "CYBER: nominal synthetic telemetry. (confidence=0.97)"
     },
     {
-      "ts_utc": "2025-12-15T04:35:00.865192",
+      "ts_utc": "2025-12-16T16:37:17.575047",
       "domain": "COMMS",
       "sensor": "SYN_COMMS_01",
       "metric": "comms_state_index",
@@ -636,7 +636,7 @@
       "note": "COMMS: nominal synthetic telemetry. (confidence=0.97)"
     },
     {
-      "ts_utc": "2025-12-15T04:37:01.060395",
+      "ts_utc": "2025-12-16T16:39:17.770250",
       "domain": "SEISMIC",
       "sensor": "SYN_SEISMIC_01",
       "metric": "seismic_disturbance",
@@ -647,7 +647,7 @@
       "note": "SEISMIC: nominal synthetic telemetry. (confidence=0.97)"
     },
     {
-      "ts_utc": "2025-12-15T04:37:18.184766",
+      "ts_utc": "2025-12-16T16:39:34.894621",
       "domain": "RADIATION",
       "sensor": "SYN_RADIATION_02",
       "metric": "radiation_uSv_index",

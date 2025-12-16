@@ -1,6 +1,6 @@
 Ghost Lantern Labs – System Integrity Report
 ------------------------------------------------
-Generated at (UTC): 2025-12-16T03:25:34.387499Z
+Generated at (UTC): 2025-12-16T15:55:22.392136Z
 
 Summary:
   Total tracked:      15

@@ -2644,3 +2644,46 @@ Day 71 (Spectral Owl Hardening): added crisis_mode_flag stable API + owl_degrade
 Day 71: Coach Interface Stabilization — obasi_training_coach now accepts **kwargs and always returns a string; session store normalized; training apps import-safe with sys.path injection; command center avoids reportlab crash via lazy import.
 Day 71: Gate-enforced sessions — training_dashboard runs SIS+SPS PRE/POST gates on append; sessions always log but only count toward AGI when PRE+POST GREEN/PASS. training_curve_engine now computes metrics from counted sessions only.
 Day 71: Operator certification streaks added (BEGINNER→INTERMEDIATE→ADVANCED→ADVERSARIAL). Store decoupled (no circular imports). Curve output now includes certification summary. Training apps display certification + next target progress.
+
+=== 2025-12-15 (Day 71) — Week-1 + Week-2 sealing push ===
+- Week-1 Nuclear hardening stabilized under ambiguity:
+  - decision_card_ambiguity_stress: PASS (violations=0)
+  - escalation_ladder_consistency: PASS
+  - prebrief_trust_consistency: PASS after adding required tokens (“probabilistic”, “bounded”, “operator judgment”)
+  - decision_card_confidence_stability: PASS (50 runs; confidence stable at LOW; no violations)
+- Nuclear product cohesion work:
+  - nuclear_product_consistency_gate stood up and used to align Decision Card ↔ Watchboard ↔ Prebrief outputs.
+  - Closed out Week-1 Nuclear (sealed + tagged): week1_nuclear_sealed
+- Week-2 Base Defense hardening + artifact standardization (docs/base_defense latest+stamped + legacy src/docs):
+  - installation_threat_map: standardized outputs + safe parsing; stress harness PASS (no crash; bounded posture; ambiguity flags populate)
+  - sensor_outage_predictor: artifacts standardized; stress PASS; PRE/POST gates PASS
+  - distributed_readiness_snapshot: stress PASS
+  - base_defense_storyboard: standardized outputs + stress PASS + consistency gate PASS
+  - perimeter_incident_report: standardized outputs + stress + gates; bounded posture under messy inputs
+- Owner-operator closeout:
+  - Big closeout commit pushed: “Week-2 Base Defense: closeout (standard artifacts + stress + gates)”
+  - Tagged and pushed: week2_base_defense_sealed
+
+Recommended next:
+- Start Option B tomorrow: Week-4 Spectral Owl Phase-2 routing (tight scope: multi-provider routing + deterministic degraded-mode; no UI).
+
+=== 2025-12-14 (Day 70) — Nuclear watchboard + escalation stability ===
+- Prelaunch watchboard execution stabilized end-to-end:
+  - prelaunch_watchboard_quickrun now runs and writes artifacts correctly (watchboard + prebrief annotations)
+- Escalation ladder stability tooling:
+  - escalation ladder consistency test built and brought to PASS (no illegal jumps; no oscillations)
+- Continued Week-1 nuclear hardening:
+  - Decision-card posture and “what we can say” bounded under degraded/ambiguous inputs (caps enforced).
+
+=== 2025-12-13 — Training stack stabilization + gate-enforced logging ===
+- Streamlit/GUI stability work:
+  - Resolved session logging path consolidation (single session store; no ad-hoc JSON writes).
+  - Tracked and fixed schema/key issues (e.g., session_id KeyError) to keep dashboard stable.
+- Training engines stabilized:
+  - Resolved circular import issues between training_session_store and certification engine.
+  - Fixed type/shape issues in feedback logic (unhashable dict error).
+- Gates:
+  - PRE gate runs successful (SIS + SPS generated cleanly).
+- Output discipline:
+  - Introduced/strengthened ignore rules for timestamped artifacts while keeping latest outputs tracked where needed.
+

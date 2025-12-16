@@ -1,30 +1,44 @@
 {
-  "generated_at_utc": "2025-12-16T03:21:38.074391+00:00",
-  "safe_notice": "This artifact is derived from synthetic telemetry and is safe for training/demos.",
+  "generated_at_utc": "2025-12-16T15:54:52.598809+00:00",
   "inputs": {
+    "zones_count": 3,
     "comms_state": "OK",
-    "zones_count": 2
-  },
-  "status": {
-    "degraded": false,
-    "comms_state": "OK"
+    "ems_state": "OK",
+    "degraded": false
   },
   "summary": {
-    "overall_risk_band": "LOW",
-    "max_risk_score": 10.0,
-    "recommended_posture": "ROUTINE_MONITORING"
+    "posture": "DUTY_OFFICER_NOTIFY",
+    "overall_risk_band": "ELEVATED",
+    "max_risk_score": 55.0
   },
-  "ambiguity_flags": [
-    "NON_DICT_ZONE_ITEM"
-  ],
-  "unknowns": [],
   "zones": [
     {
-      "zone": "A",
-      "risk_score": 10.0,
+      "zone": "NORTH",
+      "risk_score": 12.0,
       "risk_band": "LOW",
-      "notes": "",
-      "raw_risk": 10
+      "notes": "Routine activity."
+    },
+    {
+      "zone": "EAST",
+      "risk_score": 27.5,
+      "risk_band": "GUARDED",
+      "notes": "Minor anomalies."
+    },
+    {
+      "zone": "SOUTH",
+      "risk_score": 55.0,
+      "risk_band": "ELEVATED",
+      "notes": "Elevated signals; verify sensors."
     }
+  ],
+  "unknowns": [],
+  "ambiguity_flags": [],
+  "what_we_can_say": [
+    "Posture is DUTY_OFFICER_NOTIFY based on bounded zone risk.",
+    "Overall risk band is ELEVATED (max_risk_score=55.0)."
+  ],
+  "what_we_cannot_say": [
+    "Cannot infer adversary intent from this product.",
+    "Cannot attribute causality without corroborating sensors and operator judgment."
   ]
 }

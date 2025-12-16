@@ -1,5 +1,5 @@
 {
-  "generated_at_utc": "2025-12-16T15:16:58.842990+00:00",
+  "generated_at_utc": "2025-12-16T15:54:52.604068+00:00",
   "verdict": "PASS",
   "crashes": 0,
   "checks": [
@@ -7,7 +7,7 @@
       "ok": true,
       "label": "GATES_PRE",
       "result": {
-        "generated_at_utc": "2025-12-16T15:16:58.808252+00:00",
+        "generated_at_utc": "2025-12-16T15:54:52.560786+00:00",
         "gate_type": "PRE",
         "context": "day73_week3_fusion_core_regression",
         "update_baselines": false,
@@ -35,15 +35,15 @@
           "sps_behavior_json_path": "/Users/dextermorris/ghost/parser_starter_kit/src/docs/sps_behavior_report.json"
         },
         "errors": {},
-        "report_path": "/Users/dextermorris/ghost/parser_starter_kit/src/docs/integrity/run_gate_pre_day73_week3_fusion_core_regression_20251216_151658.txt",
-        "report_json": "/Users/dextermorris/ghost/parser_starter_kit/src/docs/integrity/run_gate_pre_day73_week3_fusion_core_regression_20251216_151658.json"
+        "report_path": "/Users/dextermorris/ghost/parser_starter_kit/src/docs/integrity/run_gate_pre_day73_week3_fusion_core_regression_20251216_155452.txt",
+        "report_json": "/Users/dextermorris/ghost/parser_starter_kit/src/docs/integrity/run_gate_pre_day73_week3_fusion_core_regression_20251216_155452.json"
       }
     },
     {
       "ok": true,
       "label": "GATES_POST",
       "result": {
-        "generated_at_utc": "2025-12-16T15:16:58.811160+00:00",
+        "generated_at_utc": "2025-12-16T15:54:52.568381+00:00",
         "gate_type": "POST",
         "context": "day73_week3_fusion_core_regression",
         "update_baselines": false,
@@ -71,8 +71,8 @@
           "sps_behavior_json_path": "/Users/dextermorris/ghost/parser_starter_kit/src/docs/sps_behavior_report.json"
         },
         "errors": {},
-        "report_path": "/Users/dextermorris/ghost/parser_starter_kit/src/docs/integrity/run_gate_post_day73_week3_fusion_core_regression_20251216_151658.txt",
-        "report_json": "/Users/dextermorris/ghost/parser_starter_kit/src/docs/integrity/run_gate_post_day73_week3_fusion_core_regression_20251216_151658.json"
+        "report_path": "/Users/dextermorris/ghost/parser_starter_kit/src/docs/integrity/run_gate_post_day73_week3_fusion_core_regression_20251216_155452.txt",
+        "report_json": "/Users/dextermorris/ghost/parser_starter_kit/src/docs/integrity/run_gate_post_day73_week3_fusion_core_regression_20251216_155452.json"
       }
     },
     {
@@ -81,7 +81,7 @@
       "result": {
         "entrypoint": "run_harness",
         "result": {
-          "generated_at_utc": "2025-12-16T15:16:58.814804+00:00",
+          "generated_at_utc": "2025-12-16T15:54:52.570635+00:00",
           "difficulty": "INTERMEDIATE",
           "status": "UNKNOWN",
           "message": "Loaded existing fusion validation report.",
@@ -302,11 +302,11 @@
       "result": {
         "json_latest": "docs/validation/degraded_fusion_validation_latest.json",
         "txt_latest": "docs/validation/degraded_fusion_validation_latest.txt",
-        "json_stamped": "docs/validation/degraded_fusion_validation_20251216_151658.json",
+        "json_stamped": "docs/validation/degraded_fusion_validation_20251216_155452.json",
         "report": {
           "artifact": "degraded_fusion_validation",
           "version": 1,
-          "generated_at": "2025-12-16T15:16:58.825205+00:00",
+          "generated_at": "2025-12-16T15:54:52.581511+00:00",
           "safe_notice": "This report is generated from synthetic telemetry and is safe for training/demos.",
           "inputs": {
             "difficulty": "INTERMEDIATE",
@@ -359,12 +359,12 @@
       "ok": true,
       "label": "COMMANDER_BRIEF_ONE_SHOT",
       "result": {
-        "generated_at_utc": "2025-12-16T15:16:58.836178+00:00",
+        "generated_at_utc": "2025-12-16T15:54:52.595844+00:00",
         "ok": true,
         "context": "day73_week3_fusion_core_regression_brief_one_shot",
         "gates": {
           "pre": {
-            "generated_at_utc": "2025-12-16T15:16:58.829440+00:00",
+            "generated_at_utc": "2025-12-16T15:54:52.585679+00:00",
             "gate_type": "PRE",
             "context": "day73_week3_fusion_core_regression_brief_one_shot",
             "update_baselines": false,
@@ -392,11 +392,11 @@
               "sps_behavior_json_path": "/Users/dextermorris/ghost/parser_starter_kit/src/docs/sps_behavior_report.json"
             },
             "errors": {},
-            "report_path": "/Users/dextermorris/ghost/parser_starter_kit/src/docs/integrity/run_gate_pre_day73_week3_fusion_core_regression_brief_one_shot_20251216_151658.txt",
-            "report_json": "/Users/dextermorris/ghost/parser_starter_kit/src/docs/integrity/run_gate_pre_day73_week3_fusion_core_regression_brief_one_shot_20251216_151658.json"
+            "report_path": "/Users/dextermorris/ghost/parser_starter_kit/src/docs/integrity/run_gate_pre_day73_week3_fusion_core_regression_brief_one_shot_20251216_155452.txt",
+            "report_json": "/Users/dextermorris/ghost/parser_starter_kit/src/docs/integrity/run_gate_pre_day73_week3_fusion_core_regression_brief_one_shot_20251216_155452.json"
           },
           "post": {
-            "generated_at_utc": "2025-12-16T15:16:58.835857+00:00",
+            "generated_at_utc": "2025-12-16T15:54:52.595596+00:00",
             "gate_type": "POST",
             "context": "day73_week3_fusion_core_regression_brief_one_shot",
             "update_baselines": false,
@@ -424,23 +424,24 @@
               "sps_behavior_json_path": "/Users/dextermorris/ghost/parser_starter_kit/src/docs/sps_behavior_report.json"
             },
             "errors": {},
-            "report_path": "/Users/dextermorris/ghost/parser_starter_kit/src/docs/integrity/run_gate_post_day73_week3_fusion_core_regression_brief_one_shot_20251216_151658.txt",
-            "report_json": "/Users/dextermorris/ghost/parser_starter_kit/src/docs/integrity/run_gate_post_day73_week3_fusion_core_regression_brief_one_shot_20251216_151658.json"
+            "report_path": "/Users/dextermorris/ghost/parser_starter_kit/src/docs/integrity/run_gate_post_day73_week3_fusion_core_regression_brief_one_shot_20251216_155452.txt",
+            "report_json": "/Users/dextermorris/ghost/parser_starter_kit/src/docs/integrity/run_gate_post_day73_week3_fusion_core_regression_brief_one_shot_20251216_155452.json"
           }
         },
         "commander_brief": {
           "latest_txt": "docs/briefs/commander_brief_latest.txt",
           "latest_json": "docs/briefs/commander_brief_latest.json",
-          "preview_txt": "1. What changed:\n- Degraded validation report is present (degraded ops supported).\n- Fusion validation report is present (core pipeline validated).\n- Training feedback is present (operator coaching updated).\n- Nuclear decision card is present (bounded commander posture).\n- Prelaunch watchboard is present (watchfloor snapshot).\n\n2. Why it matters:\nThis briefing packages GLL\u2019s current posture using bounded statements and best-effort artifacts. It is designed to survive missing inputs and still provide a safe, operator-readable snapshot.\n\n3. What we know:\n- Fusion validation verdict/status: {'status': 'PASS', 'message': 'Controlled environment for this difficulty.'}\n- Degraded validation verdict/status: {'status': 'PASS', 'message': 'Degraded operations appear controlled (bounded alerts, no crash).'}\n\n4. What we do NOT know:\n- Intent, causality, and attribution are not inferred from synthetic telemetry.\n- Operator judgment is required before escalation beyond bounded posture.\n\n5. Recommended posture:\nDUTY_OFFICER_NOTIFY\nAssessment is probabilistic and bounded; operator judgment applies.\n",
+          "preview_txt": "1. What changed:\n- Degraded validation report is present (degraded ops supported).\n- Fusion validation report is present (core pipeline validated).\n- Training feedback is present (operator coaching updated).\n- Nuclear decision card is present (bounded commander posture).\n- Prelaunch watchboard is present (watchfloor snapshot).\n\n2. Why it matters:\nThis briefing packages GLL\u2019s current posture using bounded statements and best-effort artifacts. It is designed to survive missing inputs and still provide a safe, operator-readable snapshot.\n\n3. What we know:\n- Fusion validation verdict/status: {'status': 'PASS', 'message': 'Controlled environment for this difficulty.'}\n- Degraded validation verdict/status: {'status': 'PASS', 'message': 'Degraded operations appear controlled (bounded alerts, no crash).'}\n\n4. What we do NOT know:\n- Intent, causality, and attribution are not inferred from synthetic telemetry.\n- Operator judgment is required before escalation beyond bounded posture.\n\n5. Recommended posture:\nDUTY_OFFICER_NOTIFY\nAssessment is probabilistic and bounded; operator judgment applies.\n\n6. Spectral Owl reasoning (best effort):\n- Summary: Spectral Owl synthesized available validation, fusion, and base-defense artifacts to derive a bounded operational posture.\n- Observations: Fusion pipeline validation present and passed., Degraded operations validated within bounded parameters., Base defense posture derived from multi-product inputs.\n- Assumptions: Telemetry inputs are synthetic or simulated., No adversary intent is inferred from telemetry alone., Risk bands represent bounded confidence estimates.\n- Uncertainties: No critical uncertainties identified.\n- Analyst note: This reasoning trace is a bounded analytical summary. Operator judgment is required before escalation.\n",
           "json_obj": {
-            "generated_at_utc": "2025-12-16T15:16:58.831737+00:00",
+            "generated_at_utc": "2025-12-16T15:54:52.590661+00:00",
             "brief_mode": true,
             "sections": {
               "what_changed": "- Degraded validation report is present (degraded ops supported).\n- Fusion validation report is present (core pipeline validated).\n- Training feedback is present (operator coaching updated).\n- Nuclear decision card is present (bounded commander posture).\n- Prelaunch watchboard is present (watchfloor snapshot).",
               "why_it_matters": "This briefing packages GLL\u2019s current posture using bounded statements and best-effort artifacts. It is designed to survive missing inputs and still provide a safe, operator-readable snapshot.",
               "what_we_know": "- Fusion validation verdict/status: {'status': 'PASS', 'message': 'Controlled environment for this difficulty.'}\n- Degraded validation verdict/status: {'status': 'PASS', 'message': 'Degraded operations appear controlled (bounded alerts, no crash).'}",
               "what_we_do_not_know": "- Intent, causality, and attribution are not inferred from synthetic telemetry.\n- Operator judgment is required before escalation beyond bounded posture.",
-              "recommended_posture": "DUTY_OFFICER_NOTIFY\nAssessment is probabilistic and bounded; operator judgment applies."
+              "recommended_posture": "DUTY_OFFICER_NOTIFY\nAssessment is probabilistic and bounded; operator judgment applies.",
+              "spectral_owl_reasoning_trace": "- Summary: Spectral Owl synthesized available validation, fusion, and base-defense artifacts to derive a bounded operational posture.\n- Observations: Fusion pipeline validation present and passed., Degraded operations validated within bounded parameters., Base defense posture derived from multi-product inputs.\n- Assumptions: Telemetry inputs are synthetic or simulated., No adversary intent is inferred from telemetry alone., Risk bands represent bounded confidence estimates.\n- Uncertainties: No critical uncertainties identified.\n- Analyst note: This reasoning trace is a bounded analytical summary. Operator judgment is required before escalation."
             },
             "traceability": {
               "included": [
@@ -452,7 +453,8 @@
                 "decision_card",
                 "prebrief",
                 "sis_report",
-                "sps_behavior"
+                "sps_behavior",
+                "owl_reasoning"
               ],
               "missing": [],
               "note": "Traceability is best-effort; missing artifacts do not block brief generation."
@@ -492,6 +494,10 @@
               },
               "sps_behavior": {
                 "path": "src/docs/sps_behavior_report.txt",
+                "present": true
+              },
+              "owl_reasoning": {
+                "path": "docs/analysis/spectral_owl_reasoning_latest.json",
                 "present": true
               }
             },

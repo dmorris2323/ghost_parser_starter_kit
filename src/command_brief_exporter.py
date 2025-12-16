@@ -18,6 +18,7 @@ SRC_FUSION_VALIDATION = Path("src") / "docs" / "validation" / "fusion_validation
 SRC_DEGRADED_VALIDATION = Path("src") / "docs" / "validation" / "degraded_fusion_validation_latest.json"
 SRC_SIS_REPORT = Path("src") / "docs" / "system_integrity_report.txt"
 SRC_SPS_BEHAVIOR_TXT = Path("src") / "docs" / "sps_behavior_report.txt"
+SRC_OWL_REASONING = Path("docs") / "analysis" / "spectral_owl_reasoning_latest.json"
 
 # Week-1 nuclear (best-effort)
 SRC_WATCHBOARD = Path("docs") / "nuclear" / "prelaunch_watchboard_latest.json"
@@ -87,6 +88,9 @@ def render_brief_mode(sections: Dict[str, str]) -> str:
         f"{sections.get('what_we_do_not_know', 'Key intent and causality unknown.')}\n\n"
         "5. Recommended posture:\n"
         f"{sections.get('recommended_posture', 'Maintain current posture.')}\n"
+        "\n6. Spectral Owl reasoning (best effort):\n"
+        f"{sections.get('spectral_owl_reasoning_trace', 'Unavailable.')}\n"
+
     )
 
 
@@ -118,6 +122,14 @@ def _pick_posture(decision_card: Optional[Dict[str, Any]], watchboard: Optional[
 
     return "DUTY_OFFICER_NOTIFY"
 
+def _read_json_best_effort(path: Path) -> Optional[dict]:
+    try:
+        if not path.exists():
+            return None
+        with path.open("r", encoding="utf-8") as f:
+            return json.load(f)
+    except Exception:
+        return None
 
 def build_commander_sections() -> Tuple[Dict[str, str], Dict[str, Any]]:
     """
@@ -132,6 +144,9 @@ def build_commander_sections() -> Tuple[Dict[str, str], Dict[str, Any]]:
     decision_card = _safe_read_json(SRC_DECISION_CARD)
     prebrief = _safe_read_json(SRC_PREBRIEF)
 
+    # Spectral Owl reasoning trace (best-effort)
+    owl_reasoning = _safe_read_json(SRC_OWL_REASONING)
+
     sis_txt = _safe_read_txt(SRC_SIS_REPORT)
     sps_txt = _safe_read_txt(SRC_SPS_BEHAVIOR_TXT)
 
@@ -145,6 +160,8 @@ def build_commander_sections() -> Tuple[Dict[str, str], Dict[str, Any]]:
         "prebrief": {"path": str(SRC_PREBRIEF), "present": prebrief is not None},
         "sis_report": {"path": str(SRC_SIS_REPORT), "present": sis_txt is not None},
         "sps_behavior": {"path": str(SRC_SPS_BEHAVIOR_TXT), "present": sps_txt is not None},
+        "owl_reasoning": {"path": str(SRC_OWL_REASONING), "present": owl_reasoning is not None},
+
     }
 
     posture = _pick_posture(decision_card, watchboard)
@@ -188,6 +205,14 @@ def build_commander_sections() -> Tuple[Dict[str, str], Dict[str, Any]]:
         "what_we_do_not_know": "\n".join(cannot_lines),
         "recommended_posture": posture + "\nAssessment is probabilistic and bounded; operator judgment applies.",
     }
+    sections["spectral_owl_reasoning_trace"] = (
+        f"- Summary: {(owl_reasoning or {}).get('summary', 'Unavailable.')}\n"
+        f"- Observations: {', '.join(((owl_reasoning or {}).get('observations') or [])) or 'None'}\n"
+        f"- Assumptions: {', '.join(((owl_reasoning or {}).get('assumptions') or [])) or 'None'}\n"
+        f"- Uncertainties: {', '.join(((owl_reasoning or {}).get('uncertainties') or [])) or 'None'}\n"
+        f"- Analyst note: {(owl_reasoning or {}).get('analyst_note', 'Operator judgment applies.')}"
+    )
+
 
     return sections, inputs
 

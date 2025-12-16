@@ -1,15 +1,18 @@
-INSTALLATION THREAT MAP (TRAINING)
-generated_at_utc: 2025-12-16T03:21:38.074391+00:00
-degraded: False
-comms_state: OK
+Installation Threat Map
+generated_at_utc: 2025-12-16T15:54:52.598809+00:00
+posture: DUTY_OFFICER_NOTIFY
+overall_risk_band: ELEVATED
+max_risk_score: 55.0
 
-SUMMARY
-- overall_risk_band: LOW
-- max_risk_score: 10.0
-- recommended_posture: ROUTINE_MONITORING
+zones:
+- NORTH: risk_score=12.0 band=LOW notes=Routine activity.
+- EAST: risk_score=27.5 band=GUARDED notes=Minor anomalies.
+- SOUTH: risk_score=55.0 band=ELEVATED notes=Elevated signals; verify sensors.
 
-AMBIGUITY FLAGS
-- NON_DICT_ZONE_ITEM
+what_we_can_say:
+- Posture is DUTY_OFFICER_NOTIFY based on bounded zone risk.
+- Overall risk band is ELEVATED (max_risk_score=55.0).
 
-ZONES
-- A: risk_score=10.0 band=LOW notes=
+what_we_cannot_say:
+- Cannot infer adversary intent from this product.
+- Cannot attribute causality without corroborating sensors and operator judgment.

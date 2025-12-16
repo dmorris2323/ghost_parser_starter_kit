@@ -1,51 +1,51 @@
 {
-  "generated_at_utc": "2025-12-16T03:21:38.316280Z",
+  "generated_at_utc": "2025-12-16T15:54:52.601662Z",
   "safe_notice": "Derived from synthetic/base-defense telemetry; safe for training/demos.",
-  "installation": "BASE_DEFENSE_STRESS",
+  "installation": "PATRICK_SFB_TRAINING",
   "inputs": {
     "event_count_input": 2,
     "comms_state": "OK"
   },
   "status": {
-    "posture": "ROUTINE_MONITORING",
-    "risk_band": "LOW",
-    "risk_score": 19.25,
+    "posture": "DUTY_OFFICER_NOTIFY",
+    "risk_band": "GUARDED",
+    "risk_score": 31.68,
     "degraded": false,
     "ambiguity_flags": [],
     "unknowns": []
   },
   "rollup": {
     "zone_scores": {
-      "NORTH": 9.0,
-      "EAST": 19.25
+      "NORTH_PERIMETER": 18.0,
+      "EAST_GATE": 31.68
     },
     "event_count": 2,
-    "max_risk_score": 19.25,
-    "risk_band": "LOW"
+    "max_risk_score": 31.68,
+    "risk_band": "GUARDED"
   },
   "events": [
     {
-      "incident_id": "INC_0000",
-      "zone": "NORTH",
-      "sensor": "CAM",
-      "severity": "LOW",
-      "confidence": 0.9,
-      "timestamp_utc": "2025-12-16T03:21:38.316266Z",
-      "description": ""
+      "incident_id": "INC_0001",
+      "zone": "NORTH_PERIMETER",
+      "sensor": "CAMERA_A1",
+      "severity": "MEDIUM",
+      "confidence": 0.72,
+      "timestamp_utc": "2025-12-16T15:54:52.601625Z",
+      "description": "Motion detected near fence line; no visual confirmation yet."
     },
     {
-      "incident_id": "INC_0001",
-      "zone": "EAST",
-      "sensor": "RF",
-      "severity": "MEDIUM",
-      "confidence": 0.7,
-      "timestamp_utc": "2025-12-16T03:21:38.316271Z",
-      "description": ""
+      "incident_id": "INC_0002",
+      "zone": "EAST_GATE",
+      "sensor": "RF_SENSOR_B2",
+      "severity": "HIGH",
+      "confidence": 0.64,
+      "timestamp_utc": "2025-12-16T15:54:52.601631Z",
+      "description": "RF anomaly coincident with badge reader retries."
     }
   ],
   "what_we_can_say": [
-    "Perimeter posture is ROUTINE_MONITORING with risk_band=LOW.",
-    "Risk score is bounded (risk_score=19.25).",
+    "Perimeter posture is DUTY_OFFICER_NOTIFY with risk_band=GUARDED.",
+    "Risk score is bounded (risk_score=31.68).",
     "Assessment is probabilistic and bounded; operator judgment applies."
   ],
   "what_we_cannot_say": [
