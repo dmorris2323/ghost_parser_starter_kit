@@ -1,0 +1,25 @@
+Fusion Core Regression Gate
+generated_at_utc: 2025-12-16T15:16:58.842990+00:00
+verdict: PASS
+crashes: 0
+
+Required artifacts:
+- src/docs/validation/fusion_validation_report.json: OK
+- src/docs/validation/degraded_fusion_validation_latest.json: OK
+- docs/briefs/commander_brief_latest.txt: OK
+- docs/briefs/prebrief_trust_annotations_latest.txt: OK
+- docs/base_defense/sensor_outage_predictor_latest.json: OK
+- docs/base_defense/installation_threat_map_latest.json: OK
+- docs/base_defense/perimeter_incident_report_latest.json: OK
+- docs/base_defense/base_defense_storyboard_latest.json: OK
+
+Checks:
+- PASS: GATES_PRE
+- PASS: GATES_POST
+- PASS: FUSION_VALIDATION
+- PASS: DEGRADED_FUSION_VALIDATION
+- PASS: COMMANDER_BRIEF_ONE_SHOT
+- PASS: BASEDEF_SENSOR_OUTAGE
+- PASS: BASEDEF_INSTALLATION_THREAT_MAP
+- PASS: BASEDEF_PERIMETER_INCIDENT
+- PASS: BASEDEF_STORYBOARD
