@@ -1,0 +1,19 @@
+{
+  "generated_at_utc": "2025-12-16T20:04:44.362274+00:00",
+  "context": "week3_shari_demo_runbook_fusion_core_regression",
+  "update_baselines": false,
+  "strict": false,
+  "checks": {
+    "fusion_validation": "PASS",
+    "degraded_validation": "PASS",
+    "commander_brief": "PASS",
+    "prebrief": "PASS",
+    "sensor_outage": "PASS",
+    "installation_threat": "PASS",
+    "perimeter_incident": "PASS",
+    "base_defense_storyboard": "PASS"
+  },
+  "missing_artifacts": [],
+  "crashes": 0,
+  "verdict": "PASS"
+}

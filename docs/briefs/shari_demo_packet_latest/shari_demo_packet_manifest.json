@@ -1,0 +1,107 @@
+{
+  "generated_at_utc": "2025-12-16T20:08:08.084304+00:00",
+  "context": "week3_shari_demo_packet",
+  "packet_latest": "docs/briefs/shari_demo_packet_latest",
+  "packet_stamped": "docs/briefs/shari_demo_packet_20251216_200808",
+  "files": [
+    {
+      "name": "commander_brief_latest.txt",
+      "copied": true,
+      "source": "docs/briefs/commander_brief_latest.txt"
+    },
+    {
+      "name": "commander_brief_latest.txt",
+      "copied": true,
+      "source": "docs/briefs/commander_brief_latest.txt"
+    },
+    {
+      "name": "commander_brief_latest.json",
+      "copied": true,
+      "source": "docs/briefs/commander_brief_latest.json"
+    },
+    {
+      "name": "commander_brief_latest.json",
+      "copied": true,
+      "source": "docs/briefs/commander_brief_latest.json"
+    },
+    {
+      "name": "week3_operator_summary_latest.txt",
+      "copied": true,
+      "source": "docs/briefs/week3_operator_summary_latest.txt"
+    },
+    {
+      "name": "week3_operator_summary_latest.txt",
+      "copied": true,
+      "source": "docs/briefs/week3_operator_summary_latest.txt"
+    },
+    {
+      "name": "legal_case_snapshot_latest.txt",
+      "copied": true,
+      "source": "docs/briefs/legal_case_snapshot_latest.txt"
+    },
+    {
+      "name": "legal_case_snapshot_latest.txt",
+      "copied": true,
+      "source": "docs/briefs/legal_case_snapshot_latest.txt"
+    },
+    {
+      "name": "legal_case_snapshot_latest.json",
+      "copied": true,
+      "source": "docs/briefs/legal_case_snapshot_latest.json"
+    },
+    {
+      "name": "legal_case_snapshot_latest.json",
+      "copied": true,
+      "source": "docs/briefs/legal_case_snapshot_latest.json"
+    },
+    {
+      "name": "week3_shari_demo_checklist_latest.txt",
+      "copied": true,
+      "source": "docs/briefs/week3_shari_demo_checklist_latest.txt"
+    },
+    {
+      "name": "week3_shari_demo_checklist_latest.txt",
+      "copied": true,
+      "source": "docs/briefs/week3_shari_demo_checklist_latest.txt"
+    },
+    {
+      "name": "mobile_enjoy_manifest_latest.json",
+      "copied": true,
+      "source": "docs/briefs/mobile_enjoy_manifest_latest.json"
+    },
+    {
+      "name": "mobile_enjoy_manifest_latest.json",
+      "copied": true,
+      "source": "docs/briefs/mobile_enjoy_manifest_latest.json"
+    },
+    {
+      "name": "week3_demo_pack_gate_latest.json",
+      "copied": true,
+      "source": "docs/validation/week3_demo_pack_gate_latest.json"
+    },
+    {
+      "name": "week3_demo_pack_gate_latest.json",
+      "copied": true,
+      "source": "docs/validation/week3_demo_pack_gate_latest.json"
+    },
+    {
+      "name": "fusion_core_regression_latest.json",
+      "copied": true,
+      "source": "docs/validation/fusion_core_regression_latest.json"
+    },
+    {
+      "name": "fusion_core_regression_latest.json",
+      "copied": true,
+      "source": "docs/validation/fusion_core_regression_latest.json"
+    },
+    {
+      "name": "README_START_HERE.txt",
+      "copied": true,
+      "source": "generated"
+    }
+  ],
+  "notes": [
+    "This packet is demo-only and read-only.",
+    "Assessment is probabilistic and bounded; operator judgment applies."
+  ]
+}

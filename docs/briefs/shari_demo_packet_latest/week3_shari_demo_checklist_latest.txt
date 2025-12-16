@@ -1,0 +1,13 @@
+WEEK-3 SHARI DEMO CHECKLIST (ONE-SHOT)
+generated_at_utc: 2025-12-16T20:04:44.306389+00:00
+verdict: PARTIAL_PASS
+
+Open these files (in order):
+1) Commander brief: docs/briefs/commander_brief_latest.txt
+2) Operator summary: docs/briefs/week3_operator_summary_latest.txt
+3) Legal snapshot: docs/briefs/legal_case_snapshot_latest.txt
+4) Mobile manifest: docs/briefs/mobile_enjoy_manifest_latest.json
+
+DEMO NOTE: Commander brief shows 'Fusion validation: FAIL' due to best-effort artifact read/formatting. Week-3 Fusion Core Regression Gate is PASS, which is the controlling demo-health signal for this runbook. Operator judgment applies.
+
+Bounded warning: Assessment is probabilistic and bounded; operator judgment applies.

@@ -1,0 +1,17 @@
+LEGAL CASE SNAPSHOT (DEMO / TRAINING)
+generated_at_utc: 2025-12-16T19:44:39.233800+00:00
+
+Matter: Demo Matter
+Type: COLLECTIONS | Stage: PRE-SUIT
+Party: UNKNOWN | Jurisdiction: UNKNOWN
+Days Past Due: 9999 | Balance (USD): 99999999.0
+Risk Score: 99.9 | Risk Band: HIGH
+
+Recommended posture: HOLD_ACTION_PENDING_REVIEW
+Next step: Assessment is probabilistic and bounded; operator judgment applies. Recommend reviewing account file, verifying jurisdiction, and confirming evidentiary posture before any escalation.
+
+Ambiguity flags:
+- UNKNOWN_PARTY
+- UNKNOWN_JURISDICTION
+
+NOTICE: Assessment is probabilistic and bounded; operator judgment applies.
