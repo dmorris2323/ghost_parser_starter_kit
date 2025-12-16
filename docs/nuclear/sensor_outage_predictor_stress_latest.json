@@ -1,0 +1,14 @@
+{
+  "generated_at_utc": "2025-12-15T20:25:35.321462+00:00",
+  "verdict": "PASS",
+  "cases": 400,
+  "crashes": 0,
+  "violations_count": 0,
+  "violations_preview": [],
+  "sample_paths": {
+    "json_latest": "docs/base_defense/sensor_outage_predictor_latest.json",
+    "txt_latest": "docs/base_defense/sensor_outage_predictor_latest.txt",
+    "json_stamped": "docs/base_defense/sensor_outage_predictor_20251215_202535.json",
+    "txt_stamped": "docs/base_defense/sensor_outage_predictor_20251215_202535.txt"
+  }
+}

@@ -1,16 +1,17 @@
 {
-  "generated_at_utc": "2025-12-15T13:58:54.749699+00:00",
+  "generated_at_utc": "2025-12-15T16:08:23.444018+00:00",
+  "safe_notice": "This report is generated from synthetic telemetry and is safe for training/demos.",
+  "inputs": {
+    "annotations_latest_path": "docs/briefs/prebrief_trust_annotations_latest.json"
+  },
   "verdict": "PASS",
-  "decision_card": {
-    "posture": "UNKNOWN",
-    "confidence": "UNKNOWN"
-  },
-  "watchboard": {
-    "posture": "UNKNOWN"
-  },
-  "prebrief": {
-    "posture": "UNKNOWN",
-    "confidence": "UNKNOWN"
-  },
-  "violations": []
+  "crashes": 0,
+  "violations_count": 0,
+  "violations": [],
+  "paths": {
+    "json_latest": "docs/nuclear/prebrief_trust_consistency_latest.json",
+    "txt_latest": "docs/nuclear/prebrief_trust_consistency_latest.txt",
+    "json_stamped": "docs/nuclear/prebrief_trust_consistency_20251215_160823.json",
+    "txt_stamped": "docs/nuclear/prebrief_trust_consistency_20251215_160823.txt"
+  }
 }

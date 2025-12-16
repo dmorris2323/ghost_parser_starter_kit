@@ -1,0 +1,10 @@
+Distributed Readiness Snapshot (SAFE/SYNTHETIC)
+generated_at_utc: 2025-12-16T03:21:38.200373+00:00
+readiness_band: RED
+readiness_score_0_100: 61.2
+degraded: False
+
+Recommended actions:
+- Duty officer notify immediately; treat as degraded readiness until proven otherwise.
+- Initiate focused checks: comms/power restoration, sensor coverage recovery, incident surge response.
+- Escalate to installation leadership if critical services are confirmed down.

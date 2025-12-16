@@ -1,9 +1,55 @@
 {
-  "product_type": "Perimeter Incident Report",
-  "generated_at": "2025-12-10T16:57:09.889182Z",
-  "total_events": 0,
-  "sector_counts": {},
-  "pattern_counts": {},
-  "recent_events": [],
-  "note": "No perimeter incidents recorded yet; this is a shaped default."
+  "generated_at_utc": "2025-12-16T03:21:38.316280Z",
+  "safe_notice": "Derived from synthetic/base-defense telemetry; safe for training/demos.",
+  "installation": "BASE_DEFENSE_STRESS",
+  "inputs": {
+    "event_count_input": 2,
+    "comms_state": "OK"
+  },
+  "status": {
+    "posture": "ROUTINE_MONITORING",
+    "risk_band": "LOW",
+    "risk_score": 19.25,
+    "degraded": false,
+    "ambiguity_flags": [],
+    "unknowns": []
+  },
+  "rollup": {
+    "zone_scores": {
+      "NORTH": 9.0,
+      "EAST": 19.25
+    },
+    "event_count": 2,
+    "max_risk_score": 19.25,
+    "risk_band": "LOW"
+  },
+  "events": [
+    {
+      "incident_id": "INC_0000",
+      "zone": "NORTH",
+      "sensor": "CAM",
+      "severity": "LOW",
+      "confidence": 0.9,
+      "timestamp_utc": "2025-12-16T03:21:38.316266Z",
+      "description": ""
+    },
+    {
+      "incident_id": "INC_0001",
+      "zone": "EAST",
+      "sensor": "RF",
+      "severity": "MEDIUM",
+      "confidence": 0.7,
+      "timestamp_utc": "2025-12-16T03:21:38.316271Z",
+      "description": ""
+    }
+  ],
+  "what_we_can_say": [
+    "Perimeter posture is ROUTINE_MONITORING with risk_band=LOW.",
+    "Risk score is bounded (risk_score=19.25).",
+    "Assessment is probabilistic and bounded; operator judgment applies."
+  ],
+  "what_we_cannot_say": [
+    "Cannot infer adversary intent or attribution from perimeter signals alone.",
+    "Cannot confirm breach without corroboration (human verification / security forces confirmation)."
+  ]
 }

@@ -1,9 +1,17 @@
-=== INSTALLATION THREAT MAP ===
-Generated at: 2025-12-11T03:09:55.682165Z
-Overall Status: GREEN
+INSTALLATION THREAT MAP (TRAINING)
+generated_at_utc: 2025-12-16T03:21:38.042610+00:00
+degraded: False
+comms_state: OK
 
-Sector breakdown:
-  - PERIMETER_NORTH: critical=0 high=0 other=0
-  - PERIMETER_SOUTH: critical=0 high=0 other=0
-  - PERIMETER_EAST: critical=0 high=0 other=0
-  - PERIMETER_WEST: critical=0 high=0 other=0
+SUMMARY
+- overall_risk_band: ELEVATED
+- max_risk_score: 61.0
+- recommended_posture: DUTY_OFFICER_NOTIFY
+
+AMBIGUITY FLAGS
+- NON_NUMERIC_SENSOR_INPUT
+
+ZONES
+- NORTH: risk_score=12.5 band=LOW notes=Routine patrols.
+- EAST: risk_score=61.0 band=ELEVATED notes=Repeated fence alarms.
+- SOUTH: risk_score=0.0 band=LOW notes=Sensor glitch.

@@ -1,5 +1,5 @@
 {
-  "generated_at": "2025-12-15T15:25:50.777847+00:00",
+  "generated_at": "2025-12-15T19:48:03.701031+00:00",
   "safe_notice": "This watchboard is generated from synthetic telemetry and is safe for training/demos.",
   "inputs": {
     "trust_score": 82.0,
@@ -21,7 +21,7 @@
     "previous_posture": "DUTY_OFFICER_NOTIFY"
   },
   "decision_card": {
-    "generated_at": "2025-12-15T15:25:50.777479+00:00",
+    "generated_at": "2025-12-15T19:48:03.700753+00:00",
     "safe_notice": "Synthetic decision-support output (training/demo). Not real missile telemetry.",
     "inputs": {
       "trust_score": 82,

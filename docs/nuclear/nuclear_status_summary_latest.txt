@@ -1,9 +1,17 @@
-GLL — NUCLEAR STATUS SUMMARY (SHIFT CHANGE)
-Generated (UTC): 2025-12-15T12:23:50.011988+00:00
+Nuclear Status Summary (Training)
+generated_at_utc: 2025-12-15T15:34:35.368052+00:00
 
-NUCLEAR STATUS: DUTY_OFFICER_NOTIFY | CONFIDENCE=LOW | RISK=GUARDED | DEGRADED=YES | MISSING_SIGNALS=3
+posture: DUTY_OFFICER_NOTIFY
+confidence: LOW
+risk_band: GUARDED
+degraded: True
+alerts: crit=0 high=3 anomaly=14
+trust_score: 0.0
+risk_score: 0.0
+ambiguity_flags: ALERT_ANOMALY_CONTEXT, DEGRADED_OPS, EMS_CONTESTED, MISSING_COMMS_STATE, MISSING_RADIATION_uSv, MISSING_SEISMIC_MAG, MISSING_SIGNALS
 
-Notes:
-- Assessment is bounded and probabilistic
-- Degraded operations handled gracefully
-- Escalation posture unchanged unless stated above
+What we can say (bounded):
+- System posture is DUTY_OFFICER_NOTIFY with confidence=LOW.
+- Risk is assessed in a bounded band (risk_band=GUARDED, risk_score=0.00).
+- Trust is bounded (trust_score=0.00); interpretation remains probabilistic.
+- Ambiguity present: ALERT_ANOMALY_CONTEXT, DEGRADED_OPS, EMS_CONTESTED, MISSING_COMMS_STATE, MISSING_RADIATION_uSv, MISSING_SEISMIC_MAG, MISSING_SIGNALS.

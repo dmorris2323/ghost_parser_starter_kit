@@ -1,0 +1,16 @@
+GLL — ESCALATION LADDER (LATEST)
+Generated (UTC): 2025-12-15T11:43:57.643511+00:00
+
+Posture: DUTY_OFFICER_NOTIFY
+
+Drivers:
+- Risk: 48.0
+- Trust: 82.0
+- Confidence: LOW
+- Degraded: True
+- Alerts: crit=0 high=3 attack_like=0 anomaly=14
+
+Actions:
+- Notify duty leadership per local SOP; provide bounded language only.
+- Cross-check independent sources; do not rely on a single indicator stream.
+- Prepare a short decision card + pre-brief trust annotations for leadership.

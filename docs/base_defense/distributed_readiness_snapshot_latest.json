@@ -1,0 +1,29 @@
+{
+  "generated_at_utc": "2025-12-16T03:21:38.200373+00:00",
+  "safe_notice": "This artifact is derived from synthetic training inputs and is safe for demos/training.",
+  "degraded": false,
+  "missing_inputs": [],
+  "readiness": {
+    "score_0_100": 61.2,
+    "band": "RED"
+  },
+  "inputs_used": {
+    "comms_ok": true,
+    "power_ok": true,
+    "sensor_coverage_pct": 78.0,
+    "open_incidents": 4,
+    "incident_severity_max": 2.0,
+    "staffing_pct": 82.0,
+    "cyber_alerts_high": 2,
+    "perimeter_events": 6,
+    "notes": [
+      "Synthetic base-defense readiness proxy. Not real-world data."
+    ]
+  },
+  "recommended_actions": [
+    "Duty officer notify immediately; treat as degraded readiness until proven otherwise.",
+    "Initiate focused checks: comms/power restoration, sensor coverage recovery, incident surge response.",
+    "Escalate to installation leadership if critical services are confirmed down."
+  ],
+  "unknowns": []
+}

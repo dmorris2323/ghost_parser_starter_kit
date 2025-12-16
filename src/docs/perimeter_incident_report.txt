@@ -1,11 +1,21 @@
-=== PERIMETER INCIDENT REPORT ===
-Generated at: 2025-12-10T16:57:09.889182Z
-Total events in log: 0
+GLL — Perimeter Incident Report
+generated_at_utc: 2025-12-16T03:21:38.316280Z
+installation: BASE_DEFENSE_STRESS
 
-NOTE: No perimeter incidents recorded yet; this is a shaped default.
+POSTURE: ROUTINE_MONITORING
+RISK_BAND: LOW
+RISK_SCORE: 19.25
+DEGRADED: False
 
-Sector incident counts:
+WHAT WE CAN SAY (BOUNDED):
+- Perimeter posture is ROUTINE_MONITORING with risk_band=LOW.
+- Risk score is bounded (risk_score=19.25).
+- Assessment is probabilistic and bounded; operator judgment applies.
 
-Pattern counts:
+WHAT WE CANNOT SAY:
+- Cannot infer adversary intent or attribution from perimeter signals alone.
+- Cannot confirm breach without corroboration (human verification / security forces confirmation).
 
-Most recent events:
+EVENTS:
+- [2025-12-16T03:21:38.316266Z] INC_0000 zone=NORTH sev=LOW sensor=CAM conf=0.9 desc=
+- [2025-12-16T03:21:38.316271Z] INC_0001 zone=EAST sev=MEDIUM sensor=RF conf=0.7 desc=

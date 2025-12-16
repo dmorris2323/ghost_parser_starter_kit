@@ -1,20 +1,24 @@
-GLL — NUCLEAR DECISION CARD
-Generated (UTC): 2025-12-15T14:08:31.633811+00:00
-Scenario: Synthetic / Training
+GLL Nuclear Decision Card (SAFE/TRAINING)
+Generated: 2025-12-15T19:48:03.661943+00:00
 
+Posture: DUTY_OFFICER_NOTIFY
 Confidence: LOW
-Risk Band:  GUARDED
-Degraded:   True
-Flags:      DEGRADED_OPS, MISSING_SIGNALS
+Risk band: GUARDED
 
-Key Judgment:
-- No immediate indicators of confirmed nuclear event.
+Ambiguity flags:
+  - DEGRADED_OPS
+  - MISSING_COMMS_STATE
+  - MISSING_RADIATION_uSv
+  - MISSING_SEISMIC_MAG
+  - EMS_CONTESTED
+  - ALERT_ANOMALY_CONTEXT
+  - MISSING_SIGNALS
 
-Signals (proxy):
-- Trust: 82.0
-- Risk:  48.0
-- Alerts: crit=0 high=3 attack_like=0 anomaly=14
-- Missing signals: 3
+Escalation reason (bounded):
+  ['risk>=35 => base=DUTY_OFFICER_NOTIFY']
 
-Escalation Ladder:
-- Posture: DUTY_OFFICER_NOTIFY
+What we can say (bounded):
+- System posture is DUTY_OFFICER_NOTIFY with confidence=LOW.
+- Risk is assessed in a bounded band (risk_score=48.00).
+- Trust is bounded (trust_score=82.00); interpretation remains probabilistic.
+- Ambiguity flags: DEGRADED_OPS, MISSING_COMMS_STATE, MISSING_RADIATION_uSv, MISSING_SEISMIC_MAG, EMS_CONTESTED, ALERT_ANOMALY_CONTEXT, MISSING_SIGNALS.

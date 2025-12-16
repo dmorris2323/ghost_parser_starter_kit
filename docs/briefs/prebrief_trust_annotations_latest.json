@@ -1,6 +1,6 @@
 {
-  "generated_at": "2025-12-15T15:25:50.779029+00:00",
-  "safe_notice": "This artifact is derived from synthetic telemetry and is safe for training/demos.",
+  "generated_at": "2025-12-15T19:48:03.729243+00:00",
+  "safe_notice": "This artifact is derived from synthetic telemetry and is safe for training/demos. Assessment is probabilistic and bounded; operator judgment applies.",
   "inputs": {
     "watchboard_present": true,
     "watchboard_path": "docs/nuclear/prelaunch_watchboard_latest.json"
@@ -22,28 +22,23 @@
     "cap_applied": false,
     "deescalation_blocked": false
   },
-  "prebrief_notes": {
-    "what_we_can_say_bounded": [
-      "System posture is DUTY_OFFICER_NOTIFY with confidence=LOW.",
-      "Risk is assessed in a bounded band (risk_band=GUARDED).",
-      "Interpretation remains probabilistic due to degraded operations and/or ambiguity flags.",
-      "Ambiguity flags present: DEGRADED_OPS, MISSING_COMMS_STATE, MISSING_RADIATION_uSv, MISSING_SEISMIC_MAG, EMS_CONTESTED, ALERT_ANOMALY_CONTEXT, MISSING_SIGNALS."
-    ],
-    "what_we_cannot_say": [
-      "Cannot assert signal-specific conclusions due to missing inputs: comms_state, radiation_usv, seismic_mag, signals.",
-      "Cannot infer intent; this product only summarizes bounded risk/trust posture from synthetic telemetry."
-    ],
-    "unknowns": [
-      "MISSING_COMMS_STATE",
-      "MISSING_RADIATION_USV",
-      "MISSING_RADIATION_uSv",
-      "MISSING_SEISMIC_MAG",
-      "MISSING_SIGNALS"
-    ]
-  },
-  "operator_instruction": [
-    "Brief only bounded statements.",
-    "If confidence is LOW/UNKNOWN or degraded=True, do not expand inference beyond listed text.",
-    "If posture \u2265 UNIT_COMMANDER_ALERT persists across multiple cycles, initiate operator review and re-run baseline validation."
+  "required_operator_framing": "Assessment is probabilistic and bounded; operator judgment is required before escalation beyond DUTY_OFFICER_NOTIFY.",
+  "what_we_can_say": [
+    "Assessment is probabilistic and bounded; operator judgment is required before escalation beyond DUTY_OFFICER_NOTIFY.",
+    "System posture is DUTY_OFFICER_NOTIFY with confidence=LOW.",
+    "Risk is assessed in a bounded band (risk_band=GUARDED).",
+    "Interpretation remains probabilistic due to degraded operations and/or ambiguity flags.",
+    "Ambiguity flags present: DEGRADED_OPS, MISSING_COMMS_STATE, MISSING_RADIATION_uSv, MISSING_SEISMIC_MAG, EMS_CONTESTED, ALERT_ANOMALY_CONTEXT, MISSING_SIGNALS."
+  ],
+  "what_we_cannot_say": [
+    "Cannot assert signal-specific conclusions due to missing inputs: comms_state, radiation_usv, seismic_mag, signals.",
+    "Cannot infer intent; this product only summarizes bounded risk/trust posture from synthetic telemetry."
+  ],
+  "unknowns": [
+    "MISSING_COMMS_STATE",
+    "MISSING_RADIATION_USV",
+    "MISSING_RADIATION_uSv",
+    "MISSING_SEISMIC_MAG",
+    "MISSING_SIGNALS"
   ]
 }

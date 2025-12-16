@@ -1,5 +1,5 @@
 GLL — Perimeter Incident Report
-generated_at_utc: 2025-12-16T03:16:42.653175Z
+generated_at_utc: 2025-12-16T03:21:38.316280Z
 installation: BASE_DEFENSE_STRESS
 
 POSTURE: ROUTINE_MONITORING
@@ -17,5 +17,5 @@ WHAT WE CANNOT SAY:
 - Cannot confirm breach without corroboration (human verification / security forces confirmation).
 
 EVENTS:
-- [2025-12-16T03:16:42.653163Z] INC_0000 zone=NORTH sev=LOW sensor=CAM conf=0.9 desc=
-- [2025-12-16T03:16:42.653168Z] INC_0001 zone=EAST sev=MEDIUM sensor=RF conf=0.7 desc=
+- [2025-12-16T03:21:38.316266Z] INC_0000 zone=NORTH sev=LOW sensor=CAM conf=0.9 desc=
+- [2025-12-16T03:21:38.316271Z] INC_0001 zone=EAST sev=MEDIUM sensor=RF conf=0.7 desc=

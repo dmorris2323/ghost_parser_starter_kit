@@ -1,0 +1,15 @@
+{
+  "generated_at_utc": "2025-12-16T03:21:38.407677+00:00",
+  "verdict": "PASS",
+  "violations": [],
+  "inputs": {
+    "storyboard_latest": "docs/base_defense/base_defense_storyboard_latest.json",
+    "installation_threat_map_latest": "docs/base_defense/installation_threat_map_latest.json",
+    "sensor_outage_predictor_latest": "docs/base_defense/sensor_outage_predictor_latest.json",
+    "distributed_readiness_snapshot_latest": "docs/base_defense/distributed_readiness_snapshot_latest.json"
+  },
+  "observed": {
+    "posture": "ROUTINE_MONITORING",
+    "risk_band": "LOW"
+  }
+}

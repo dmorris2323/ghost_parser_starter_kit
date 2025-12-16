@@ -1,27 +1,34 @@
-GLL PRE-BRIEF TRUST ANNOTATIONS (TRAINING SAFE)
-====================================================
-Generated: 2025-12-15T15:25:50.779029+00:00
-Posture: DUTY_OFFICER_NOTIFY | Confidence: LOW | Risk band: GUARDED
-Degraded: True | Cap applied: False | De-escalation blocked: False
+Prebrief Trust Annotations
+generated_at_utc: 2025-12-15T19:48:03.729243+00:00
 
-BOUNDED STATEMENTS (BRIEF THESE):
+This artifact is derived from synthetic telemetry and is safe for training/demos. Assessment is probabilistic and bounded; operator judgment applies.
+
+[Trust Posture]
+posture: DUTY_OFFICER_NOTIFY
+confidence: LOW
+risk_band: GUARDED
+degraded: True
+ambiguity_flags: DEGRADED_OPS, MISSING_COMMS_STATE, MISSING_RADIATION_uSv, MISSING_SEISMIC_MAG, EMS_CONTESTED, ALERT_ANOMALY_CONTEXT, MISSING_SIGNALS
+cap_applied: False
+deescalation_blocked: False
+
+[Required Operator Framing]
+Assessment is probabilistic and bounded; operator judgment is required before escalation beyond DUTY_OFFICER_NOTIFY.
+
+[What We Can Say]
+- Assessment is probabilistic and bounded; operator judgment is required before escalation beyond DUTY_OFFICER_NOTIFY.
 - System posture is DUTY_OFFICER_NOTIFY with confidence=LOW.
 - Risk is assessed in a bounded band (risk_band=GUARDED).
 - Interpretation remains probabilistic due to degraded operations and/or ambiguity flags.
 - Ambiguity flags present: DEGRADED_OPS, MISSING_COMMS_STATE, MISSING_RADIATION_uSv, MISSING_SEISMIC_MAG, EMS_CONTESTED, ALERT_ANOMALY_CONTEXT, MISSING_SIGNALS.
 
-DO NOT CLAIM:
+[What We Cannot Say]
 - Cannot assert signal-specific conclusions due to missing inputs: comms_state, radiation_usv, seismic_mag, signals.
 - Cannot infer intent; this product only summarizes bounded risk/trust posture from synthetic telemetry.
 
-UNKNOWNS:
+[Unknowns]
 - MISSING_COMMS_STATE
 - MISSING_RADIATION_USV
 - MISSING_RADIATION_uSv
 - MISSING_SEISMIC_MAG
 - MISSING_SIGNALS
-
-OPERATOR INSTRUCTION:
-- Brief only bounded statements.
-- If confidence is LOW/UNKNOWN or degraded=True, do not expand inference beyond listed text.
-- If posture ≥ UNIT_COMMANDER_ALERT persists across multiple cycles, initiate operator review and re-run baseline validation.

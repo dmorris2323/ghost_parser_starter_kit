@@ -1,5 +1,5 @@
 {
-  "generated_at_utc": "2025-12-16T03:16:42.653175Z",
+  "generated_at_utc": "2025-12-16T03:21:38.316280Z",
   "safe_notice": "Derived from synthetic/base-defense telemetry; safe for training/demos.",
   "installation": "BASE_DEFENSE_STRESS",
   "inputs": {
@@ -30,7 +30,7 @@
       "sensor": "CAM",
       "severity": "LOW",
       "confidence": 0.9,
-      "timestamp_utc": "2025-12-16T03:16:42.653163Z",
+      "timestamp_utc": "2025-12-16T03:21:38.316266Z",
       "description": ""
     },
     {
@@ -39,7 +39,7 @@
       "sensor": "RF",
       "severity": "MEDIUM",
       "confidence": 0.7,
-      "timestamp_utc": "2025-12-16T03:16:42.653168Z",
+      "timestamp_utc": "2025-12-16T03:21:38.316271Z",
       "description": ""
     }
   ],

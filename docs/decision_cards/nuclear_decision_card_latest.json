@@ -1,53 +1,47 @@
 {
-  "generated_at_utc": "2025-12-15T14:08:31.633811+00:00",
-  "type": "NUCLEAR_DECISION_CARD",
-  "scenario": "Synthetic / Training",
-  "safe_notice": "This product may be generated from synthetic telemetry for training/demos.",
+  "generated_at": "2025-12-15T19:48:03.661943+00:00",
+  "safe_notice": "Synthetic decision-support output (training/demo). Not real missile telemetry.",
+  "inputs": {
+    "trust_score": 82,
+    "risk_score": 48,
+    "alerts": {
+      "total": 17,
+      "crit": 0,
+      "high": 3,
+      "anomaly": 14,
+      "attack_like": 0
+    },
+    "degraded": true,
+    "comms_state": null,
+    "radiation_usv": null,
+    "seismic_mag": null,
+    "ems_state": "NOISY"
+  },
   "status": {
     "degraded": true,
     "confidence": "LOW",
     "risk_band": "GUARDED",
     "ambiguity_flags": [
       "DEGRADED_OPS",
+      "MISSING_COMMS_STATE",
+      "MISSING_RADIATION_uSv",
+      "MISSING_SEISMIC_MAG",
+      "EMS_CONTESTED",
+      "ALERT_ANOMALY_CONTEXT",
       "MISSING_SIGNALS"
     ]
   },
-  "key_judgment": "No immediate indicators of confirmed nuclear event.",
-  "signals": {
-    "trust_score": 82.0,
-    "risk_score": 48.0,
-    "alerts": {
-      "crit": 0,
-      "high": 3,
-      "attack_like": 0,
-      "anomaly": 14,
-      "total": 0
-    },
-    "comms_state": null,
-    "ems_state": "NOISY",
-    "radiation_usv": null,
-    "seismic_mag": null,
-    "missing_signal_count": 3
-  },
   "escalation": {
     "posture": "DUTY_OFFICER_NOTIFY",
-    "cap_applied": false,
-    "allowed_jump_steps": 1,
-    "deescalation_blocked": false,
     "reason": [
       "risk>=35 => base=DUTY_OFFICER_NOTIFY"
-    ]
+    ],
+    "confidence": "LOW"
   },
-  "knowns": [
-    "Trust score: 82.0 (proxy)",
-    "Risk score: 48.0 (proxy)",
-    "Alerts: crit=0, high=3, attack_like=0, anomaly=14",
-    "EMS state: NOISY"
-  ],
-  "unknowns": [
-    "Comms state unavailable",
-    "Radiation uSv unavailable",
-    "Seismic magnitude unavailable"
-  ],
-  "notes": ""
+  "what_we_can_say": [
+    "System posture is DUTY_OFFICER_NOTIFY with confidence=LOW.",
+    "Risk is assessed in a bounded band (risk_score=48.00).",
+    "Trust is bounded (trust_score=82.00); interpretation remains probabilistic.",
+    "Ambiguity flags: DEGRADED_OPS, MISSING_COMMS_STATE, MISSING_RADIATION_uSv, MISSING_SEISMIC_MAG, EMS_CONTESTED, ALERT_ANOMALY_CONTEXT, MISSING_SIGNALS."
+  ]
 }

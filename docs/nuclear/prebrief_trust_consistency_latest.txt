@@ -1,0 +1,7 @@
+Prebrief Trust Consistency
+generated_at_utc: 2025-12-15T16:08:23.444018+00:00
+verdict: PASS
+crashes: 0
+violations: 0
+
+No violations.
