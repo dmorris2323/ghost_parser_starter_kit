@@ -1,10 +1,14 @@
 # src/obasi_command_center.py
 """
-OBASI COMMAND CENTER (Module 5C — Visual Elevation + Demo Flow)
+OBASI COMMAND CENTER (Module 5D — Presentation Mode)
 - Premium HUD styling (Batman/Iron-Man command center)
 - Animated status lights (subtle pulse)
-- Micro-telemetry tiles: artifact coverage, verdicts, crashes
-- Demo Flow controls: button strip to guide briefing order
+- Micro-telemetry tiles + Demo Flow controls
+- PRESENTATION MODE:
+    * Large typography + tighter layout
+    * Hide JSON by default
+    * "Briefing View" (clean, minimal, commander-facing)
+    * Full-width sections, stage-ready
 - READ-ONLY: no mutation, no baselines
 
 Run:
@@ -107,16 +111,27 @@ def _init_state() -> None:
         st.session_state["show_json"] = True
     if "show_paths" not in st.session_state:
         st.session_state["show_paths"] = False
+    # Module 5D
+    if "presentation" not in st.session_state:
+        st.session_state["presentation"] = True
+    if "briefing_view" not in st.session_state:
+        st.session_state["briefing_view"] = True
 
 
 # ----------------------------
 # HUD Styling
 # ----------------------------
-def _inject_hud_css() -> None:
+def _inject_hud_css(presentation: bool) -> None:
+    # presentation tweaks: larger type, tighter whitespace, hide some chrome
+    size_scale = 1.10 if presentation else 1.00
+    code_font = "1.00rem" if presentation else "0.92rem"
+    pad_top = "0.55rem" if presentation else "1.05rem"
+    max_w = "1440px" if presentation else "1280px"
+
     st.markdown(
-        """
+        f"""
 <style>
-:root{
+:root{{
   --bg0:#070A0F;
   --bg1:#0B1220;
   --text:#DDE7FF;
@@ -127,45 +142,46 @@ def _inject_hud_css() -> None:
   --red:#FF3B3B;
   --green:#3CFF9A;
   --shadow: 0 12px 40px rgba(0,0,0,.55);
-}
+}}
 
-.stApp {
+.stApp {{
   background: radial-gradient(1200px 800px at 15% 20%, rgba(20,241,255,.09), rgba(0,0,0,0) 55%),
               radial-gradient(900px 700px at 85% 30%, rgba(0,183,255,.08), rgba(0,0,0,0) 55%),
               linear-gradient(180deg, var(--bg0), var(--bg1) 30%, var(--bg0));
   color: var(--text);
-}
+  font-size: {size_scale}em;
+}}
 
-.block-container{
-  padding-top: 1.05rem;
+.block-container{{
+  padding-top: {pad_top};
   padding-bottom: 2rem;
-  max-width: 1280px;
-}
+  max-width: {max_w};
+}}
 
-header {visibility: hidden;}
-footer {visibility: hidden;}
+header {{visibility: hidden;}}
+footer {{visibility: hidden;}}
 
 /* Title HUD */
-.hud-title{
+.hud-title{{
   text-align:center;
   font-weight: 900;
   letter-spacing: .22em;
   text-transform: uppercase;
-  font-size: 2.35rem;
-  margin: .35rem 0 .2rem 0;
+  font-size: 2.55rem;
+  margin: .25rem 0 .18rem 0;
   color: var(--cyan);
   text-shadow: 0 0 18px rgba(20,241,255,.22);
-}
-.hud-sub{
+}}
+.hud-sub{{
   text-align:center;
-  font-size: .95rem;
+  font-size: 1.02rem;
   color: var(--muted);
   letter-spacing: .08em;
-  margin-bottom: .65rem;
-}
+  margin-bottom: .6rem;
+}}
 
 /* Banner panel */
-.banner{
+.banner{{
   border: 1px solid rgba(20,241,255,.35);
   background: linear-gradient(180deg, rgba(20,241,255,.08), rgba(0,0,0,0));
   border-radius: 16px;
@@ -173,8 +189,8 @@ footer {visibility: hidden;}
   box-shadow: var(--shadow);
   position: relative;
   overflow: hidden;
-}
-.banner:before{
+}}
+.banner:before{{
   content:"";
   position:absolute;
   inset:-80px -60px auto auto;
@@ -182,127 +198,128 @@ footer {visibility: hidden;}
   height: 260px;
   background: radial-gradient(circle, rgba(20,241,255,.18), rgba(0,0,0,0) 70%);
   filter: blur(2px);
-}
-.banner .label{
-  font-size:.75rem;
+}}
+.banner .label{{
+  font-size:.78rem;
   text-transform:uppercase;
   letter-spacing:.18em;
   color: var(--muted);
   margin-bottom: 4px;
-}
-.banner .msg{
+}}
+.banner .msg{{
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
   white-space: pre-wrap;
   color: var(--text);
   line-height: 1.35;
-}
+}}
 
 /* Chips */
-.chips{
+.chips{{
   display:flex;
   gap: 10px;
   flex-wrap: wrap;
   margin: 12px 0 10px 0;
-}
-.chip{
+}}
+.chip{{
   border: 1px solid rgba(221,231,255,.14);
   background: linear-gradient(180deg, rgba(255,255,255,.05), rgba(0,0,0,0));
   border-radius: 999px;
   padding: 10px 14px;
   box-shadow: 0 10px 30px rgba(0,0,0,.35);
   min-width: 220px;
-}
-.chip .k{
+}}
+.chip .k{{
   font-size: .72rem;
   text-transform: uppercase;
   letter-spacing: .18em;
   color: var(--muted);
-}
-.chip .v{
-  font-size: 1.30rem;
-  font-weight: 800;
+}}
+.chip .v{{
+  font-size: 1.38rem;
+  font-weight: 900;
   letter-spacing: .04em;
   margin-top: 4px;
-}
+}}
 
 /* Tiles */
-.tiles{
+.tiles{{
   display:flex;
   gap: 12px;
   flex-wrap: wrap;
   margin: 10px 0 18px 0;
-}
-.tile{
+}}
+.tile{{
   border: 1px solid rgba(20,241,255,.16);
   background: linear-gradient(180deg, rgba(11,18,32,.92), rgba(7,10,15,.86));
   border-radius: 16px;
   padding: 12px 14px;
   box-shadow: var(--shadow);
   min-width: 210px;
-}
-.tile .t{
+}}
+.tile .t{{
   font-size: .72rem;
   text-transform: uppercase;
   letter-spacing: .18em;
   color: var(--muted);
-}
-.tile .n{
-  font-size: 1.45rem;
+}}
+.tile .n{{
+  font-size: 1.55rem;
   font-weight: 900;
   margin-top: 4px;
-}
+}}
 
 /* Status dots */
-.dot{
+.dot{{
   display:inline-block;
   width: 10px;
   height: 10px;
   border-radius: 50%;
   margin-right: 8px;
-}
-.dot.ok{ background: var(--green); box-shadow: 0 0 18px rgba(60,255,154,.26); }
-.dot.bad{ background: var(--red);   box-shadow: 0 0 18px rgba(255,59,59,.22); }
-.dot.warn{ background: var(--amber); box-shadow: 0 0 18px rgba(255,176,32,.22); }
+}}
+.dot.ok{{ background: var(--green); box-shadow: 0 0 18px rgba(60,255,154,.26); }}
+.dot.bad{{ background: var(--red);   box-shadow: 0 0 18px rgba(255,59,59,.22); }}
+.dot.warn{{ background: var(--amber); box-shadow: 0 0 18px rgba(255,176,32,.22); }}
 
-/* Animated pulse (Module 5C) */
-@keyframes pulseGlow {
-  0%   { transform: scale(1.0); filter: brightness(1.0); }
-  50%  { transform: scale(1.18); filter: brightness(1.35); }
-  100% { transform: scale(1.0); filter: brightness(1.0); }
-}
-.pulse { animation: pulseGlow 1.6s ease-in-out infinite; }
+/* Animated pulse */
+@keyframes pulseGlow {{
+  0%   {{ transform: scale(1.0); filter: brightness(1.0); }}
+  50%  {{ transform: scale(1.18); filter: brightness(1.35); }}
+  100% {{ transform: scale(1.0); filter: brightness(1.0); }}
+}}
+.pulse {{ animation: pulseGlow 1.6s ease-in-out infinite; }}
 
 /* Expanders premium */
-details {
+details {{
   border-radius: 14px !important;
   border: 1px solid rgba(221,231,255,.12) !important;
   background: rgba(10,19,36,.45) !important;
-}
+}}
 
 /* Code blocks darker */
-.stCodeBlock, pre {
+.stCodeBlock, pre {{
   background: rgba(5,8,12,.65) !important;
   border: 1px solid rgba(221,231,255,.10) !important;
-}
+  font-size: {code_font} !important;
+}}
 
 /* Buttons */
-.stButton button{
+.stButton button{{
   border-radius: 999px;
   border: 1px solid rgba(20,241,255,.35);
   background: linear-gradient(180deg, rgba(20,241,255,.12), rgba(0,0,0,0));
   color: var(--text);
   box-shadow: 0 12px 30px rgba(0,0,0,.35);
-}
-.stButton button:hover{
+}}
+.stButton button:hover{{
   border: 1px solid rgba(20,241,255,.55);
   transform: translateY(-1px);
-}
+}}
 
 /* Sidebar */
-section[data-testid="stSidebar"]{
+section[data-testid="stSidebar"]{{
   background: linear-gradient(180deg, rgba(5,8,12,.88), rgba(7,10,15,.82));
   border-right: 1px solid rgba(20,241,255,.12);
-}
+}}
 </style>
         """,
         unsafe_allow_html=True,
@@ -345,7 +362,7 @@ def _chips(system_status: str, mode: str, env: str, generated_at: str) -> None:
   </div>
   <div class="chip">
     <div class="k">Generated (UTC)</div>
-    <div class="v" style="font-size:1.05rem;font-weight:800;">{generated_at}</div>
+    <div class="v" style="font-size:1.08rem;font-weight:900;">{generated_at}</div>
   </div>
 </div>
         """,
@@ -415,14 +432,14 @@ def load_artifacts() -> dict:
         p = paths[k]
         res["payloads"][k] = _read_text(p) if _exists(p) else ""
 
-    # System status
+    # Status
     demo_gate = res["payloads"].get("demo_gate_json", {}) or {}
     verdict = _pick_verdict(demo_gate)
     if verdict == "UNKNOWN":
         verdict = _pick_verdict(res["payloads"].get("fusion_reg_json", {}) or {})
     res["system_status"] = verdict if verdict else "UNKNOWN"
 
-    # Crashes (best-effort across known shapes)
+    # crashes
     crashes = 0
     if isinstance(demo_gate, dict):
         crashes = max(crashes, _as_int(demo_gate.get("crashes", 0), 0))
@@ -446,21 +463,16 @@ def load_artifacts() -> dict:
         "pct": int(round((present_count / total) * 100)) if total else 0,
     }
 
-    # Pack gate verdict (optional)
-    pack_gate = res["payloads"].get("demo_pack_gate_json", {}) or {}
-    res["pack_gate_verdict"] = _pick_verdict(pack_gate)
-
-    # Fusion verdict
-    res["fusion_verdict"] = _pick_verdict(fr)
-
-    # Demo gate verdict
+    # Verdicts
     res["demo_gate_verdict"] = _pick_verdict(demo_gate)
+    res["fusion_verdict"] = _pick_verdict(fr)
+    res["pack_gate_verdict"] = _pick_verdict(res["payloads"].get("demo_pack_gate_json", {}) or {})
 
     return res
 
 
 # ----------------------------
-# Demo Flow Controls (Module 5C)
+# Demo Flow Controls
 # ----------------------------
 def _demo_flow_controls() -> None:
     st.markdown("#### Demo Flow")
@@ -490,15 +502,64 @@ def _demo_flow_controls() -> None:
 def _expander_default(name: str) -> bool:
     focus = st.session_state.get("focus", "overview")
     if focus == "overview":
-        return name in ("readiness_txt", "narrative", "commander_brief")
+        return name in ("briefing_view", "readiness_txt", "commander_brief")
     mapping = {
         "readiness": {"readiness_txt", "readiness_json", "pack_gate"},
         "operator": {"operator_summary"},
-        "commander": {"commander_brief", "commander_json", "narrative"},
+        "commander": {"briefing_view", "commander_brief", "commander_json", "narrative"},
         "legal": {"legal_snapshot", "legal_json"},
         "validation": {"fusion_regression_txt", "fusion_regression_json", "mobile_manifest"},
     }
     return name in mapping.get(focus, set())
+
+
+# ----------------------------
+# Presentation panels
+# ----------------------------
+def _briefing_view_panel(data: dict, compact: bool) -> None:
+    """
+    Clean, commander-facing: just the essentials in one continuous panel.
+    """
+    cov = data.get("coverage", {})
+    demo_gate = data.get("demo_gate_verdict", "UNKNOWN")
+    fusion = data.get("fusion_verdict", "UNKNOWN")
+    pack = data.get("pack_gate_verdict", "UNKNOWN")
+    crashes = data.get("crashes", 0)
+
+    commander_txt = data["payloads"].get("commander_txt", "")
+    operator_txt = data["payloads"].get("operator_txt", "")
+    narrative_txt = data["payloads"].get("narrative_txt", "")
+
+    st.markdown("### 🎯 Briefing View (Stage / Commander)")
+    st.caption("Minimal, high-signal. Designed for screen share.")
+
+    # Topline row
+    r1, r2, r3, r4, r5 = st.columns(5)
+    r1.metric("Demo Gate", demo_gate)
+    r2.metric("Pack Gate", pack)
+    r3.metric("Fusion Regression", fusion)
+    r4.metric("Crashes", str(crashes))
+    r5.metric("Coverage", f"{cov.get('present',0)}/{cov.get('total',0)} ({cov.get('pct',0)}%)")
+
+    st.markdown("---")
+
+    st.markdown("#### Commander Brief (first lines)")
+    if commander_txt:
+        st.code(_safe_snip(commander_txt, 1500) if compact else _safe_snip(commander_txt, 2200), language="markdown")
+    else:
+        st.warning("Missing: docs/briefs/commander_brief_latest.txt")
+
+    st.markdown("#### Operator Summary (first lines)")
+    if operator_txt:
+        st.code(_safe_snip(operator_txt, 1100) if compact else _safe_snip(operator_txt, 1600), language="markdown")
+    else:
+        st.info("Missing: docs/briefs/week3_operator_summary_latest.txt")
+
+    st.markdown("#### Demo Narrative (talk track)")
+    if narrative_txt:
+        st.code(_safe_snip(narrative_txt, 2000) if compact else _safe_snip(narrative_txt, 2800), language="markdown")
+    else:
+        st.info("Missing: docs/briefs/week3_demo_narrative_latest.txt")
 
 
 # ----------------------------
@@ -513,7 +574,17 @@ def main() -> int:
         layout="wide",
         initial_sidebar_state="expanded",
     )
-    _inject_hud_css()
+
+    # Sidebar toggles first, so CSS can respect Presentation Mode
+    st.sidebar.markdown("### Mode")
+    st.session_state["presentation"] = st.sidebar.checkbox("Presentation Mode (recommended)", value=st.session_state["presentation"])
+    st.session_state["briefing_view"] = st.sidebar.checkbox("Briefing View (stage)", value=st.session_state["briefing_view"])
+
+    # In presentation mode: hide JSON by default
+    if st.session_state["presentation"]:
+        st.session_state["show_json"] = False
+
+    _inject_hud_css(st.session_state["presentation"])
     _hud_header()
 
     data = load_artifacts()
@@ -527,7 +598,7 @@ def main() -> int:
     gen = data.get("generated_at_utc", _now_utc_iso())
     _chips(sys_status, mode, env, gen)
 
-    # Micro-telemetry tiles (Module 5C)
+    # Micro-telemetry tiles
     cov = data.get("coverage", {})
     _tiles(
         [
@@ -540,19 +611,19 @@ def main() -> int:
         ]
     )
 
-    # Demo Flow controls (Module 5C)
     _demo_flow_controls()
 
-    # Sidebar (UI-only controls)
+    # Sidebar controls
     st.sidebar.markdown("### Controls")
     auto_refresh = st.sidebar.checkbox("Auto-refresh (demo)", value=False)
     refresh_secs = st.sidebar.slider("Refresh interval (seconds)", 5, 60, 15, step=5)
 
-    st.session_state["compact"] = st.sidebar.checkbox("Compact text (less whitespace)", value=st.session_state["compact"])
-    st.session_state["show_json"] = st.sidebar.checkbox("Show JSON panels", value=st.session_state["show_json"])
+    st.session_state["compact"] = st.sidebar.checkbox("Compact text", value=True if st.session_state["presentation"] else st.session_state["compact"])
+    # show_json already forced false in presentation, but allow override when not presenting
+    if not st.session_state["presentation"]:
+        st.session_state["show_json"] = st.sidebar.checkbox("Show JSON panels", value=st.session_state["show_json"])
     st.session_state["show_paths"] = st.sidebar.checkbox("Show artifact paths (operator only)", value=st.session_state["show_paths"])
 
-    # Quick focus selector (secondary nav)
     st.sidebar.markdown("---")
     st.sidebar.markdown("### Demo Focus")
     focus = st.sidebar.radio(
@@ -584,14 +655,19 @@ setTimeout(function() {{
         with st.sidebar.expander("Artifact Paths", expanded=False):
             st.code(json.dumps(data["paths"], indent=2), language="json")
 
-    # Main columns
-    left, right = st.columns(2, gap="large")
     compact = bool(st.session_state["compact"])
     show_json = bool(st.session_state["show_json"])
 
-    # ----------------------------
-    # Left: Commander + Narrative + Legal + Operator
-    # ----------------------------
+    # MODULE 5D: Presentation layout
+    if st.session_state["briefing_view"]:
+        with st.expander("Briefing View (Stage / Commander)", expanded=_expander_default("briefing_view")):
+            _briefing_view_panel(data, compact)
+
+        st.markdown("---")
+
+    # Two-column detail view stays available even in Presentation Mode
+    left, right = st.columns(2, gap="large")
+
     with left:
         st.markdown("### 🧠 Commander / Briefing Outputs")
         st.caption("Bounded, commander-safe outputs. Demo-locked; operator judgment applies.")
@@ -624,9 +700,14 @@ setTimeout(function() {{
             else:
                 st.info("Missing: docs/briefs/legal_case_snapshot_latest.txt")
 
-    # ----------------------------
-    # Right: Readiness + Validation + Manifests
-    # ----------------------------
+        if show_json:
+            with st.expander("Legal Snapshot (JSON)", expanded=_expander_default("legal_json")):
+                leg_json = data["payloads"].get("legal_json", {}) or {}
+                if leg_json:
+                    st.json(leg_json)
+                else:
+                    st.info("Missing: docs/briefs/legal_case_snapshot_latest.json")
+
     with right:
         st.markdown("### 🛡️ Readiness & System Validation")
         st.caption("Proof of demo safety + regression posture. Gate-driven.")
@@ -659,10 +740,8 @@ setTimeout(function() {{
                 else:
                     st.info("Missing: docs/validation/week3_demo_readiness_gate_latest.json")
 
-        # Pack gate JSON (optional)
-        pack_gate = data["payloads"].get("demo_pack_gate_json", {}) or {}
-        if show_json:
             with st.expander("Demo Pack Gate (JSON)", expanded=_expander_default("pack_gate")):
+                pack_gate = data["payloads"].get("demo_pack_gate_json", {}) or {}
                 if pack_gate:
                     st.json(pack_gate)
                 else:
@@ -696,28 +775,19 @@ setTimeout(function() {{
                 else:
                     st.info("Missing: docs/validation/fusion_core_regression_latest.json")
 
-        mobile_manifest = data["payloads"].get("mobile_manifest", {}) or {}
-        with st.expander("Mobile Enjoy Manifest (JSON)", expanded=_expander_default("mobile_manifest")):
-            if mobile_manifest:
-                st.json(mobile_manifest)
-            else:
-                st.info("Missing: docs/briefs/mobile_enjoy_manifest_latest.json")
+            with st.expander("Mobile Enjoy Manifest (JSON)", expanded=_expander_default("mobile_manifest")):
+                mobile_manifest = data["payloads"].get("mobile_manifest", {}) or {}
+                if mobile_manifest:
+                    st.json(mobile_manifest)
+                else:
+                    st.info("Missing: docs/briefs/mobile_enjoy_manifest_latest.json")
 
-        # Optional JSON envelopes for commander/legal
-        if show_json:
             with st.expander("Commander Brief (JSON envelope)", expanded=_expander_default("commander_json")):
                 cmd_json = data["payloads"].get("commander_json", {}) or {}
                 if cmd_json:
                     st.json(cmd_json)
                 else:
                     st.info("Missing: docs/briefs/commander_brief_latest.json")
-
-            with st.expander("Legal Snapshot (JSON)", expanded=_expander_default("legal_json")):
-                leg_json = data["payloads"].get("legal_json", {}) or {}
-                if leg_json:
-                    st.json(leg_json)
-                else:
-                    st.info("Missing: docs/briefs/legal_case_snapshot_latest.json")
 
     st.markdown("---")
     st.caption("OBASI HUD • Demo-Locked • Read-Only • Operator judgment applies.")
