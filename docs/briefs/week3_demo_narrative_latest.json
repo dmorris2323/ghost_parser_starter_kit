@@ -1,0 +1,84 @@
+{
+  "generated_at_utc": "2025-12-17T02:40:57.785286+00:00",
+  "context": "week3_demo_narrative_control",
+  "artifacts": {
+    "fusion_core_regression_txt": {
+      "path": "docs/validation/fusion_core_regression_latest.txt",
+      "present": true
+    },
+    "commander_brief_txt": {
+      "path": "docs/briefs/commander_brief_latest.txt",
+      "present": true
+    },
+    "operator_summary_txt": {
+      "path": "docs/briefs/week3_operator_summary_latest.txt",
+      "present": true
+    },
+    "legal_case_snapshot_txt": {
+      "path": "docs/briefs/legal_case_snapshot_latest.txt",
+      "present": true
+    },
+    "mobile_enjoy_manifest_json": {
+      "path": "docs/briefs/mobile_enjoy_manifest_latest.json",
+      "present": true
+    },
+    "week3_demo_pack_gate_json": {
+      "path": "docs/validation/week3_demo_pack_gate_latest.json",
+      "present": true
+    }
+  },
+  "previews": {
+    "fusion_core_regression_head": "Fusion Core Regression Gate\ngenerated_at_utc: 2025-12-17T02:32:08.018914+00:00\nverdict: PASS\nmissing_artifacts: 0",
+    "commander_brief_head": "1. What changed:\n- Training Curve is present.\n- Training Feedback is present.\n- Fusion Validation is present.\n- Degraded Validation is present.\n- Watchboard is present.\n- Decision Card is present.\n- Prebrief is present.\n- Sis Report Txt is present.\n- Sps Behavior Txt is present.\n\n2. Why it matters:\nThis briefing packages GLL\u2019s current posture using bounded statements and best-effort artifacts. It is designed to survive missing inputs and still provide a safe, operator-readable snapshot.\n\n3. What we know:\n- Fusion validation verdict/status: FAIL\n- Degraded validation verdict/status: UNKNOWN",
+    "operator_summary_head": "WEEK-3 OPERATOR SUMMARY\ngenerated_at_utc: 2025-12-17T02:32:08.023141+00:00\n\nFusion Core Regression Verdict: PASS\nCrashes: 0\n\nOperator note: If verdict is FAIL, do not brief as GREEN. Fix regressions first.\nNOTICE: Assessment is probabilistic and bounded; operator judgment applies.\n\nDEMO MODE ACTIVE \u2014 READ ONLY\nNo baselines updated. No training. No mutation.\nAssessment is probabilistic and bounded; operator judgment applies.",
+    "legal_case_snapshot_head": "LEGAL CASE SNAPSHOT (DEMO / TRAINING)\ngenerated_at_utc: 2025-12-17T02:30:53.667514+00:00\n\nMatter: Code 116 Collections Demo\nType: COLLECTIONS | Stage: DEMAND LETTER\nParty: JOHN DOE (Synthetic) | Jurisdiction: GA\nDays Past Due: 62 | Balance (USD): 3487.22\nRisk Score: 57.0 | Risk Band: MEDIUM\n\nRecommended posture: LEGAL_REVIEW_RECOMMENDED\nNext step: Send demand letter + validate debtor identity; prep suit package if non-response in 10\u201314 days.\n\nAmbiguity flags:\n- None\n\nNOTICE: Assessment is probabilistic and bounded; operator judgment applies."
+  },
+  "mobile_manifest_present": true,
+  "demo_pack_gate_present": true,
+  "blocks": [
+    {
+      "title": "0) Opening (10 seconds)",
+      "say": "This is a DEMO-LOCKED Ghost Lantern Labs briefing.\nRead-only. No baselines updated. No training mutations.\nAssessment is probabilistic and bounded; operator judgment applies.",
+      "do": "Open docs/briefs/week3_demo_narrative_latest.txt and read section 1\u20132."
+    },
+    {
+      "title": "1) Proof of Control (10 seconds)",
+      "say": "First: I prove stability.\nThe Fusion Core Regression Gate confirms key subsystems run without breaking.",
+      "do": "Open docs/validation/fusion_core_regression_latest.txt and read verdict lines."
+    },
+    {
+      "title": "2) Commander Brief (30 seconds)",
+      "say": "Next: the commander brief.\nIt survives missing inputs and still outputs a bounded posture statement.",
+      "do": "Open docs/briefs/commander_brief_latest.txt and read sections 1\u20135 only."
+    },
+    {
+      "title": "3) Operator Summary (10 seconds)",
+      "say": "This is the 10-second checkpoint.\nIt answers: did the core gate pass, yes or no.",
+      "do": "Open docs/briefs/week3_operator_summary_latest.txt and read the verdict line."
+    },
+    {
+      "title": "4) Shari Hook (30 seconds)",
+      "say": "Here\u2019s the legal snapshot so a non-technical professional can instantly relate.\nIt shows the same safety pattern: bounded risk, ambiguity flags, operator judgment.",
+      "do": "Open docs/briefs/legal_case_snapshot_latest.txt and read the posture + ambiguity flags."
+    },
+    {
+      "title": "5) Mobile Enjoy Mode (15 seconds)",
+      "say": "This is the 'enjoy what we built' view.\nIt lists the demo artifacts and provides previews. Still read-only.",
+      "do": "Open docs/briefs/mobile_enjoy_manifest_latest.json and show the 'previews' section."
+    },
+    {
+      "title": "6) Close (10 seconds)",
+      "say": "That\u2019s the demo: stable gates, bounded brief outputs, and a relatable legal snapshot.\nNext step is making it prettier (GUI polish) without weakening safety controls.",
+      "do": "Stop. Do not change baselines during the demo."
+    }
+  ],
+  "demo_notice": "DEMO MODE ACTIVE \u2014 READ ONLY\nNo baselines updated. No training. No mutation.\nAssessment is probabilistic and bounded; operator judgment applies.",
+  "demo_lock": true,
+  "demo_context": "week3_demo_narrative_control",
+  "demo_generated_at_utc": "2025-12-17T02:40:57.788553+00:00",
+  "demo_notes": [
+    "Demo lock enforced.",
+    "System is operating in read-only mode.",
+    "Outputs are deterministic and safe for briefing."
+  ]
+}
