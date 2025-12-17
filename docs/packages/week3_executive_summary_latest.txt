@@ -1,5 +1,5 @@
 WEEK-3 EXECUTIVE SUMMARY — OBASI (DEMO SAFE)
-generated_at_utc: 2025-12-17T20:04:30.854875+00:00
+generated_at_utc: 2025-12-17T20:13:31.334061+00:00
 context: week3_executive_summary_auto_from_packager
 
 STATUS:
@@ -58,9 +58,4 @@ Preview (first lines):
   1. What changed:
   - Degraded validation report is present (degraded ops supported).
   - Fusion validation report is present (core pipeline validated).
-  - Training feedback is present (operator coaching updated).
-  - Nuclear decision card is present (bounded commander posture).
-  - Prelaunch watchboard is present (watchfloor snapshot).
-  
-  2. Why it matters:
-  This briefing packages GLL’s current posture using bounded statements and best-effort artifacts. It i
+  - Training f
