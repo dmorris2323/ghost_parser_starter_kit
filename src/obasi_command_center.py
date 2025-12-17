@@ -1,7 +1,7 @@
 # src/obasi_command_center.py
 """
-OBASI COMMAND CENTER — MODULE 6E
-One-button demo execution + last-run telemetry
+OBASI COMMAND CENTER — MODULE 6F
+Cinematic boot intro + one-button demo execution HUD
 READ-ONLY • DEMO-LOCKED • COMMANDER-SAFE
 """
 
@@ -43,9 +43,6 @@ ORCHESTRATOR = ROOT / "src" / "week3_demo_orchestrator.py"
 # ============================
 def utc_now() -> str:
     return datetime.now(timezone.utc).isoformat()
-
-def ts_short() -> str:
-    return utc_now().split("T")[1][:8]
 
 def read_txt(p: Path, limit=12000) -> Optional[str]:
     try:
@@ -108,7 +105,7 @@ def run_demo_orchestrator() -> dict:
     return result
 
 # ============================
-# CSS (HUD)
+# CSS — HUD + CINEMATIC INTRO
 # ============================
 def hud_css():
     st.markdown("""
@@ -119,12 +116,30 @@ def hud_css():
       color: #E5EEFF;
       font-family: ui-monospace, monospace;
     }
-    .title {
+    .boot {
       text-align:center;
-      font-size:2.6rem;
-      letter-spacing:.28em;
-      font-weight:900;
+      margin-top:20vh;
+    }
+    .boot h1 {
+      font-size:3rem;
+      letter-spacing:.4em;
       color:#14F1FF;
+      margin-bottom:.2em;
+    }
+    .boot p {
+      opacity:.85;
+      letter-spacing:.15em;
+    }
+    .scan {
+      margin-top:20px;
+      height:4px;
+      background: linear-gradient(90deg, transparent, #14F1FF, transparent);
+      animation: scan 1.5s infinite;
+    }
+    @keyframes scan {
+      0% {opacity:.2}
+      50% {opacity:1}
+      100% {opacity:.2}
     }
     .panel {
       border:1px solid rgba(20,241,255,.35);
@@ -133,11 +148,41 @@ def hud_css():
       background: rgba(8,12,22,.8);
       margin-bottom:10px;
     }
+    .title {
+      text-align:center;
+      font-size:2.6rem;
+      letter-spacing:.28em;
+      font-weight:900;
+      color:#14F1FF;
+    }
     </style>
     """, unsafe_allow_html=True)
 
 # ============================
-# UI
+# Cinematic Boot
+# ============================
+def cinematic_boot():
+    hud_css()
+    st.markdown(
+        """
+        <div class="boot">
+          <h1>OBASI</h1>
+          <p>INTELLIGENCE FUSION SYSTEM</p>
+          <div class="scan"></div>
+          <br/>
+          <p>INITIALIZING SENSOR FUSION</p>
+          <p>LOADING BOUNDED ANALYTICS</p>
+          <p>ENFORCING DEMO LOCK</p>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
+    time.sleep(3.8)
+    st.session_state.boot_complete = True
+    st.rerun()
+
+# ============================
+# Command Center
 # ============================
 def command_center():
     st.set_page_config(
@@ -157,49 +202,44 @@ def command_center():
     if "last_demo_run" not in st.session_state:
         st.session_state.last_demo_run = None
 
-    cols = st.columns([1, 1, 2])
+    col1, col2 = st.columns([1, 3])
 
-    with cols[0]:
+    with col1:
         if st.button("▶ RUN FULL WEEK-3 DEMO", type="primary"):
             with st.spinner("Executing demo (read-only)…"):
                 st.session_state.last_demo_run = run_demo_orchestrator()
-                time.sleep(0.6)
             st.toast("Demo execution complete.", icon="🦉")
 
-    with cols[1]:
-        st.caption(f"UI refresh: {ts_short()} UTC")
+    with col2:
+        st.caption(f"UTC: {utc_now()}")
 
-    # Telemetry Panel
-    st.markdown('<div class="panel"><h3>Last Demo Run Telemetry</h3></div>', unsafe_allow_html=True)
-
-    run = st.session_state.last_demo_run
-    if run:
-        st.json(run, expanded=True)
+    st.markdown('<div class="panel"><h3>Last Demo Telemetry</h3></div>', unsafe_allow_html=True)
+    if st.session_state.last_demo_run:
+        st.json(st.session_state.last_demo_run, expanded=True)
     else:
         st.info("No demo run executed in this session.")
 
-    # Artifacts
     left, right = st.columns(2)
 
     with left:
         st.markdown('<div class="panel"><h3>Commander Brief</h3></div>', unsafe_allow_html=True)
         st.text_area(
-            "commander",
+            "cmd",
             read_txt(BRIEFS / "commander_brief_latest.txt") or "Missing commander brief.",
-            height=380,
+            height=360,
         )
 
     with right:
         st.markdown('<div class="panel"><h3>Operator Summary</h3></div>', unsafe_allow_html=True)
         st.text_area(
-            "operator",
+            "op",
             read_txt(BRIEFS / "week3_operator_summary_latest.txt") or "Missing operator summary.",
             height=180,
         )
 
         st.markdown('<div class="panel"><h3>Readiness Gate</h3></div>', unsafe_allow_html=True)
         st.text_area(
-            "readiness",
+            "gate",
             read_txt(VALIDATION / "week3_demo_readiness_gate_latest.txt") or "Missing readiness gate.",
             height=180,
         )
@@ -210,7 +250,13 @@ def command_center():
 # Entry
 # ============================
 def main():
-    command_center()
+    if "boot_complete" not in st.session_state:
+        st.session_state.boot_complete = False
+
+    if not st.session_state.boot_complete:
+        cinematic_boot()
+    else:
+        command_center()
 
 if __name__ == "__main__":
     main()
