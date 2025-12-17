@@ -1,0 +1,66 @@
+WEEK-3 EXECUTIVE SUMMARY — OBASI (DEMO SAFE)
+generated_at_utc: 2025-12-17T20:04:30.854875+00:00
+context: week3_executive_summary_auto_from_packager
+
+STATUS:
+- orchestrator_verdict: PASS
+- readiness_verdict: PASS (strict=True)
+- package_verdict: PASS
+
+DEMO LOCK:
+DEMO MODE ACTIVE — READ ONLY
+No baselines updated. No training. No mutation.
+Assessment is probabilistic and bounded; operator judgment applies.
+
+OPERATOR SUMMARY (head):
+WEEK-3 OPERATOR SUMMARY
+generated_at_utc: 2025-12-17T16:25:24.393645+00:00
+
+Fusion Core Regression Verdict: PASS
+Crashes: 0
+
+Operator note: If verdict is FAIL, do not brief as GREEN. Fix regressions first.
+NOTICE: Assessment is probabilistic and bounded; operator judgment applies.
+
+DEMO MODE ACTIVE — READ ONLY
+No baselines updated. No training. No mutation.
+Assessment is probabilistic and bounded; operator judgment applies.
+
+NARRATIVE (head):
+WEEK-3 DEMO NARRATIVE (COMMANDER-SAFE)
+generated_at_utc: 2025-12-17T16:25:24.510312+00:00
+context: week3_demo_narrative
+
+MISSION: Show a locked, read-only GLL demo that feels like a real command center.
+RULE: No baselines updated. No training. No mutation. Operator judgment applies.
+
+=== 0) OPENING (10 seconds) ===
+“This is Ghost Lantern Labs — a fusion platform designed to output bounded, operator-safe products.”
+“Today’s demo is demo-locked: read-only, no learning, no changes.”
+
+=== 1) READINESS STATUS (10 seconds) ===
+- Demo Readiness Gate: PASS
+- Demo Pack Gate: PASS
+- Fusion Core Regression: PASS
+
+=== 2) OPERATOR SUMMARY (10 seconds) ===
+Read:
+  WEEK-3 OPERATOR SUMMARY
+  generated_at_utc: 2025-12-17T16:25:24.393645+00:00
+  
+  Fusion Core Regression Verdict: PASS
+  Crashes: 0
+  
+
+=== 3) COMMANDER BRIEF (20–30 seconds) ===
+Goal: bounded posture + what changed/why/known/unknown/recommendation.
+Preview (first lines):
+  1. What changed:
+  - Degraded validation report is present (degraded ops supported).
+  - Fusion validation report is present (core pipeline validated).
+  - Training feedback is present (operator coaching updated).
+  - Nuclear decision card is present (bounded commander posture).
+  - Prelaunch watchboard is present (watchfloor snapshot).
+  
+  2. Why it matters:
+  This briefing packages GLL’s current posture using bounded statements and best-effort artifacts. It i

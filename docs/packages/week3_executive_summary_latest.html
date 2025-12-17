@@ -1,0 +1,386 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Week-3 Executive Summary — Obasi</title>
+  <style>
+    :root {
+      --bg0: #070a10;
+      --bg1: #0b1220;
+      --panel: rgba(12, 18, 32, 0.75);
+      --line: rgba(90, 220, 255, 0.18);
+      --glow: rgba(90, 220, 255, 0.35);
+      --text: rgba(230, 245, 255, 0.92);
+      --muted: rgba(190, 220, 240, 0.70);
+      --accent: rgba(90, 220, 255, 0.95);
+      --good: rgba(120, 255, 190, 0.95);
+      --bad: rgba(255, 130, 130, 0.95);
+      --warn: rgba(255, 210, 130, 0.95);
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      --sans: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: var(--sans);
+      background: radial-gradient(1200px 800px at 20% 10%, rgba(90,220,255,0.10), transparent 60%),
+                  radial-gradient(900px 700px at 90% 20%, rgba(120,255,190,0.06), transparent 55%),
+                  linear-gradient(180deg, var(--bg0), var(--bg1));
+      color: var(--text);
+      min-height: 100vh;
+    }
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      backdrop-filter: blur(10px);
+      background: rgba(7,10,16,0.55);
+      border-bottom: 1px solid var(--line);
+    }
+    .topbar-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 14px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+    }
+    .brand {
+      display: flex;
+      flex-direction: column;
+      line-height: 1.2;
+    }
+    .brand .title {
+      font-weight: 800;
+      letter-spacing: 0.6px;
+      font-size: 14px;
+      text-transform: uppercase;
+      color: var(--accent);
+      text-shadow: 0 0 14px var(--glow);
+    }
+    .brand .subtitle {
+      font-size: 12px;
+      color: var(--muted);
+    }
+    .meta {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--muted);
+      text-align: right;
+      line-height: 1.35;
+    }
+    .wrap {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 18px 16px 30px;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: 1.2fr 0.8fr;
+      gap: 14px;
+    }
+    @media (max-width: 980px) {
+      .grid { grid-template-columns: 1fr; }
+      .meta { text-align: left; }
+    }
+    .panel {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      box-shadow: 0 0 0 1px rgba(90,220,255,0.06) inset, 0 18px 50px rgba(0,0,0,0.35);
+      border-radius: 14px;
+      overflow: hidden;
+      position: relative;
+    }
+    .panel::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(800px 200px at 20% 0%, rgba(90,220,255,0.06), transparent 60%);
+      pointer-events: none;
+    }
+    .panel-head {
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--line);
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 10px;
+    }
+    .panel-title {
+      font-weight: 800;
+      letter-spacing: 0.4px;
+      font-size: 12px;
+      text-transform: uppercase;
+      color: rgba(235,250,255,0.92);
+    }
+    .badge {
+      font-family: var(--mono);
+      font-size: 11px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      background: rgba(0,0,0,0.25);
+      color: var(--muted);
+    }
+    .badge.good { color: var(--good); border-color: rgba(120,255,190,0.28); }
+    .badge.bad  { color: var(--bad);  border-color: rgba(255,130,130,0.28); }
+    .badge.warn { color: var(--warn); border-color: rgba(255,210,130,0.28); }
+    .panel-body {
+      padding: 12px 14px;
+    }
+    .kv {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+    .k {
+      border: 1px solid rgba(90,220,255,0.10);
+      border-radius: 12px;
+      padding: 10px 12px;
+      background: rgba(0,0,0,0.20);
+    }
+    .k .label {
+      font-size: 11px;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+      margin-bottom: 6px;
+    }
+    .k .value {
+      font-family: var(--mono);
+      font-size: 12px;
+      color: rgba(230,245,255,0.92);
+    }
+    .mono {
+      font-family: var(--mono);
+      font-size: 12px;
+      color: rgba(230,245,255,0.88);
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+    }
+    .callout {
+      padding: 10px 12px;
+      border-radius: 12px;
+      border: 1px dashed rgba(90,220,255,0.22);
+      background: rgba(0,0,0,0.22);
+      color: rgba(230,245,255,0.86);
+      font-size: 12px;
+      line-height: 1.45;
+    }
+    .divider {
+      height: 1px;
+      background: var(--line);
+      margin: 12px 0;
+    }
+    .small {
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.45;
+    }
+    .footer {
+      margin-top: 14px;
+      font-family: var(--mono);
+      font-size: 11px;
+      color: rgba(190,220,240,0.62);
+    }
+    a { color: var(--accent); text-decoration: none; }
+  </style>
+</head>
+<body>
+  <div class="topbar">
+    <div class="topbar-inner">
+      <div class="brand">
+        <div class="title">OBASI // COMMAND CENTER</div>
+        <div class="subtitle">Obasi Command Center — Week-3 Cloud-Ready Demo Package</div>
+      </div>
+      <div class="meta">
+        generated_at_utc: 2025-12-17T20:04:30.854875+00:00<br/>
+        context: week3_executive_summary_auto_from_packager<br/>
+        safety: Assessment is probabilistic and bounded; operator judgment applies.
+      </div>
+    </div>
+  </div>
+
+  <div class="wrap">
+    <div class="grid">
+      <div class="panel">
+        <div class="panel-head">
+          <div class="panel-title">SYSTEM STATUS</div>
+          <div class="badge good">
+            Orchestrator: PASS
+          </div>
+        </div>
+        <div class="panel-body">
+          <div class="callout">
+            <b>DEMO MODE ACTIVE — READ ONLY</b><br/>
+            Assessment is probabilistic and bounded; operator judgment applies.
+          </div>
+
+          <div class="divider"></div>
+
+          <div class="kv">
+            <div class="k">
+              <div class="label">Readiness Gate</div>
+              <div class="value">verdict=PASS | strict=True | crashes=0</div>
+            </div>
+            <div class="k">
+              <div class="label">Orchestrator</div>
+              <div class="value">verdict=PASS | crashes=0</div>
+            </div>
+            <div class="k">
+              <div class="label">Cloud Package</div>
+              <div class="value">verdict=PASS | required_missing=0</div>
+            </div>
+            <div class="k">
+              <div class="label">Primary Outputs</div>
+              <div class="value">
+                commander_brief_latest.txt<br/>
+                week3_demo_narrative_latest.txt<br/>
+                legal_case_snapshot_latest.txt<br/>
+                week3_operator_summary_latest.txt
+              </div>
+            </div>
+          </div>
+
+          <div class="divider"></div>
+
+          <div class="panel-title" style="margin-bottom:8px;">10-SECOND SIGNAL (Operator Summary)</div>
+          <div class="mono">WEEK-3 OPERATOR SUMMARY
+generated_at_utc: 2025-12-17T16:25:24.393645+00:00
+
+Fusion Core Regression Verdict: PASS
+Crashes: 0
+
+Operator note: If verdict is FAIL, do not brief as GREEN. Fix regressions first.
+NOTICE: Assessment is probabilistic and bounded; operator judgment applies.
+
+DEMO MODE ACTIVE — READ ONLY
+No baselines updated. No training. No mutation.
+Assessment is probabilistic and bounded; operator judgment applies.</div>
+
+          <div class="divider"></div>
+
+          <div class="panel-title" style="margin-bottom:8px;">DEMO NARRATIVE (Read First)</div>
+          <div class="mono">WEEK-3 DEMO NARRATIVE (COMMANDER-SAFE)
+generated_at_utc: 2025-12-17T16:25:24.510312+00:00
+context: week3_demo_narrative
+
+MISSION: Show a locked, read-only GLL demo that feels like a real command center.
+RULE: No baselines updated. No training. No mutation. Operator judgment applies.
+
+=== 0) OPENING (10 seconds) ===
+“This is Ghost Lantern Labs — a fusion platform designed to output bounded, operator-safe products.”
+“Today’s demo is demo-locked: read-only, no learning, no changes.”
+
+=== 1) READINESS STATUS (10 seconds) ===
+- Demo Readiness Gate: PASS
+- Demo Pack Gate: PASS
+- Fusion Core Regression: PASS
+
+=== 2) OPERATOR SUMMARY (10 seconds) ===
+Read:
+  WEEK-3 OPERATOR SUMMARY
+  generated_at_utc: 2025-12-17T16:25:24.393645+00:00
+  
+  Fusion Core Regression Verdict: PASS
+  Crashes: 0
+  
+
+=== 3) COMMANDER BRIEF (20–30 seconds) ===
+Goal: bounded posture + what changed/why/known/unknown/recommendation.
+Preview (first lines):
+  1. What changed:
+  - Degraded validation report is present (degraded ops supported).
+  - Fusion validation report is present (core pipeline validated).
+  - Training feedback is present (operator coaching updated).
+  - Nuclear decision card is present (bounded commander posture).
+  - Prelaunch watchboard is present (watchfloor snapshot).
+  
+  2. Why it matters:
+  This briefing packages GLL’s current posture using bounded statements and best-effort artifacts. It i</div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-head">
+          <div class="panel-title">COMMANDER SAFE PREVIEWS</div>
+          <div class="badge">Bounded / Demo-Safe</div>
+        </div>
+        <div class="panel-body">
+          <div class="panel-title" style="margin-bottom:8px;">Commander Brief (head)</div>
+          <div class="mono">1. What changed:
+- Degraded validation report is present (degraded ops supported).
+- Fusion validation report is present (core pipeline validated).
+- Training feedback is present (operator coaching updated).
+- Nuclear decision card is present (bounded commander posture).
+- Prelaunch watchboard is present (watchfloor snapshot).
+
+2. Why it matters:
+This briefing packages GLL’s current posture using bounded statements and best-effort artifacts. It is designed to survive missing inputs and still provide a safe, operator-readable snapshot.
+
+3. What we know:
+- Fusion validation verdict/status: FAIL (Validation did not provide a recognizable status/verdict.)
+- Degraded validation verdict/status: PRESENT (Present (unstructured).)
+- System Integrity Report present (SIS).
+- SPS behavior report present.
+
+4. What we do NOT know:
+- Intent, causality, and attribution are not inferred from synthetic telemetry.
+- Operator judgment is required before escalation beyond bounded posture.
+
+5. Recommended posture:
+DUTY_OFFICER_NOTIFY
+Assessment is probabilistic and bounded; operator judgment applies.
+
+
+DEMO MODE ACTIVE — READ ONLY
+No baselines updated. No training. No mutation.
+Assessment is probabilistic and bounded; operator judgment applies.
+</div>
+
+          <div class="divider"></div>
+
+          <div class="panel-title" style="margin-bottom:8px;">Legal Snapshot (head)</div>
+          <div class="mono">LEGAL CASE SNAPSHOT (DEMO / TRAINING)
+generated_at_utc: 2025-12-17T16:25:24.433343+00:00
+
+Matter: Demo Matter
+Type: COLLECTIONS | Stage: PRE-SUIT
+Party: UNKNOWN | Jurisdiction: UNKNOWN
+Days Past Due: 9999 | Balance (USD): 99999999.0
+Risk Score: 99.9 | Risk Band: CRITICAL
+
+Recommended posture: HOLD_ACTION_PENDING_REVIEW
+Next step: Assessment is probabilistic and bounded; operator judgment applies. Recommend reviewing account file, verifying jurisdiction, and confirming evidentiary posture before any escalation.
+
+Ambiguity flags:
+- UNKNOWN_PARTY
+- UNKNOWN_JURISDICTION
+
+NOTICE: Assessment is probabilistic and bounded; operator judgment applies.
+
+DEMO MODE ACTIVE — READ ONLY
+No baselines updated. No training. No mutation.
+Assessment is probabilistic and bounded; operator judgment applies.
+</div>
+
+          <div class="divider"></div>
+
+          <div class="small">
+            <b>Non-negotiables:</b><br/>
+            • No attribution from synthetic telemetry.<br/>
+            • No baselines updated during demo lock.<br/>
+            • Operator judgment applies before escalation.<br/>
+          </div>
+
+          <div class="footer">
+            Files live under <code>docs/briefs</code>, <code>docs/validation</code>, <code>docs/packages</code>.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

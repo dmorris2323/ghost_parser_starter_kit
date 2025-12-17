@@ -1,5 +1,5 @@
 {
-  "generated_at_utc": "2025-12-17T19:56:18.983453+00:00",
+  "generated_at_utc": "2025-12-17T20:04:30.811645+00:00",
   "context": "week3_cloud_demo_packager",
   "strict": true,
   "verdict": "PASS",
@@ -25,41 +25,53 @@
     "docs/packages/week3_customer_handoff_one_pager_latest.md",
     "docs/packages/week3_customer_handoff_one_pager_latest.txt",
     "docs/packages/week3_demo_runbook_latest.md",
-    "docs/packages/week3_demo_runbook_latest.txt"
+    "docs/packages/week3_demo_runbook_latest.txt",
+    "docs/packages/week3_executive_summary_latest.html",
+    "docs/packages/week3_executive_summary_latest.txt"
   ],
   "missing_files": [],
   "outputs": {
     "zip_latest": "docs/packages/week3_cloud_demo_package_latest.zip",
-    "zip_stamped": "docs/packages/week3_cloud_demo_package_20251217_195618.zip",
+    "zip_stamped": "docs/packages/week3_cloud_demo_package_20251217_200430.zip",
     "manifest_latest": "docs/packages/week3_cloud_demo_package_manifest_latest.json",
-    "manifest_stamped": "docs/packages/week3_cloud_demo_package_manifest_20251217_195618.json"
+    "manifest_stamped": "docs/packages/week3_cloud_demo_package_manifest_20251217_200430.json"
   },
-  "one_pager_generation": {
-    "generated_at_utc": "2025-12-17T19:56:18.995809+00:00",
-    "context": "week3_customer_handoff_one_pager_auto_from_packager",
-    "demo_lock": {
-      "module_present": true,
-      "demo_locked": true,
-      "banner": "DEMO MODE ACTIVE \u2014 READ ONLY\nNo baselines updated. No training. No mutation.\nAssessment is probabilistic and bounded; operator judgment applies."
+  "generation": {
+    "one_pager": {
+      "generated_at_utc": "2025-12-17T20:04:30.845154+00:00",
+      "context": "week3_customer_handoff_one_pager_auto_from_packager",
+      "demo_lock": {
+        "module_present": true,
+        "demo_locked": true,
+        "banner": "DEMO MODE ACTIVE \u2014 READ ONLY\nNo baselines updated. No training. No mutation.\nAssessment is probabilistic and bounded; operator judgment applies."
+      },
+      "orchestrator_verdict": "PASS",
+      "readiness_verdict": "PASS",
+      "demo_pack_verdict": "PASS",
+      "paths": {
+        "latest_md": "docs/packages/week3_customer_handoff_one_pager_latest.md",
+        "stamped_md": "docs/packages/week3_customer_handoff_one_pager_20251217_200430.md",
+        "latest_txt": "docs/packages/week3_customer_handoff_one_pager_latest.txt",
+        "stamped_txt": "docs/packages/week3_customer_handoff_one_pager_20251217_200430.txt"
+      }
     },
-    "orchestrator_verdict": "PASS",
-    "readiness_verdict": "PASS",
-    "demo_pack_verdict": "PASS",
-    "paths": {
-      "latest_md": "docs/packages/week3_customer_handoff_one_pager_latest.md",
-      "stamped_md": "docs/packages/week3_customer_handoff_one_pager_20251217_195618.md",
-      "latest_txt": "docs/packages/week3_customer_handoff_one_pager_latest.txt",
-      "stamped_txt": "docs/packages/week3_customer_handoff_one_pager_20251217_195618.txt"
-    }
-  },
-  "runbook_generation": {
-    "generated_at_utc": "2025-12-17T19:56:18.999674+00:00",
-    "context": "week3_demo_runbook_auto_from_packager",
-    "paths": {
-      "latest_md": "docs/packages/week3_demo_runbook_latest.md",
-      "stamped_md": "docs/packages/week3_demo_runbook_20251217_195618.md",
-      "latest_txt": "docs/packages/week3_demo_runbook_latest.txt",
-      "stamped_txt": "docs/packages/week3_demo_runbook_20251217_195618.txt"
+    "runbook": {
+      "generated_at_utc": "2025-12-17T20:04:30.847894+00:00",
+      "context": "week3_demo_runbook_auto_from_packager",
+      "paths": {
+        "latest_md": "docs/packages/week3_demo_runbook_latest.md",
+        "stamped_md": "docs/packages/week3_demo_runbook_20251217_200430.md",
+        "latest_txt": "docs/packages/week3_demo_runbook_latest.txt",
+        "stamped_txt": "docs/packages/week3_demo_runbook_20251217_200430.txt"
+      }
+    },
+    "executive_summary": {
+      "generated_at_utc": "2025-12-17T20:04:30.854875+00:00",
+      "context": "week3_executive_summary_auto_from_packager",
+      "html_latest": "docs/packages/week3_executive_summary_latest.html",
+      "html_stamped": "docs/packages/week3_executive_summary_20251217_200430.html",
+      "txt_latest": "docs/packages/week3_executive_summary_latest.txt",
+      "txt_stamped": "docs/packages/week3_executive_summary_20251217_200430.txt"
     }
   },
   "notes": [
