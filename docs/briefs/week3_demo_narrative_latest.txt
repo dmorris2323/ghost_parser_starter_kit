@@ -1,131 +1,99 @@
 WEEK-3 DEMO NARRATIVE (COMMANDER-SAFE)
-generated_at_utc: 2025-12-17T02:40:57.785286+00:00
-context: week3_demo_narrative_control
+generated_at_utc: 2025-12-17T13:02:25.622997+00:00
+context: week3_demo_narrative
+
+MISSION: Show a locked, read-only GLL demo that feels like a real command center.
+RULE: No baselines updated. No training. No mutation. Operator judgment applies.
+
+=== 0) OPENING (10 seconds) ===
+“This is Ghost Lantern Labs — a fusion platform designed to output bounded, operator-safe products.”
+“Today’s demo is demo-locked: read-only, no learning, no changes.”
+
+=== 1) READINESS STATUS (10 seconds) ===
+- Demo Readiness Gate: PASS
+- Demo Pack Gate: PASS
+- Fusion Core Regression: PASS
+
+=== 2) OPERATOR SUMMARY (10 seconds) ===
+Read:
+  WEEK-3 OPERATOR SUMMARY
+  generated_at_utc: 2025-12-17T13:02:25.517781+00:00
+  
+  Fusion Core Regression Verdict: PASS
+  Crashes: 0
+  
+
+=== 3) COMMANDER BRIEF (20–30 seconds) ===
+Goal: bounded posture + what changed/why/known/unknown/recommendation.
+Preview (first lines):
+  1. What changed:
+  - Training Curve is present.
+  - Training Feedback is present.
+  - Fusion Validation is present.
+  - Degraded Validation is present.
+  - Watchboard is present.
+  - Decision Card is present.
+  - Prebrief is present.
+  - Sis Report Txt is present.
+  - Sps Behavior Txt is present.
+  
+  2. Why it matters:
+  This briefing packages GLL’s current posture using bounded statements and best-effort artifacts. It is designed to survive missing inputs and still provide a safe, operator-readable snapshot.
+  
+  3. What we know:
+  - Fusion validation verdict/status: FAIL
+  - Degraded validation verdict/status: UNKNOWN
+  
+  4. What we do NOT know:
+  - Intent, causality, and attribution are not inferred from synthetic telemetry.
+  - Operator judgment is required before escalation beyond bounded posture.
+  
+  5. Recommended posture:
+  DUTY_OFFICER_NOTIFY
+  Assessment is probabilistic and bounded; operator judgment applies.
+  
+  DEMO MODE ACTIVE — READ ONLY
+  No baselines updated. No training. No mutation.
+
+=== 4) SHARI HOOK — LEGAL SNAPSHOT (20 seconds) ===
+Goal: show a familiar domain output (collections-style snapshot) with ambiguity flags and posture.
+Preview (first lines):
+  LEGAL CASE SNAPSHOT (DEMO / TRAINING)
+  generated_at_utc: 2025-12-17T13:02:25.556164+00:00
+  
+  Matter: Demo Matter
+  Type: COLLECTIONS | Stage: PRE-SUIT
+  Party: UNKNOWN | Jurisdiction: UNKNOWN
+  Days Past Due: 9999 | Balance (USD): 99999999.0
+  Risk Score: 99.9 | Risk Band: CRITICAL
+  
+  Recommended posture: HOLD_ACTION_PENDING_REVIEW
+  Next step: Assessment is probabilistic and bounded; operator judgment applies. Recommend reviewing account file, verifying jurisdiction, and confirming evidentiary posture before any escalation.
+  
+  Ambiguity flags:
+  - UNKNOWN_PARTY
+  - UNKNOWN_JURISDICTION
+  
+  NOTICE: Assessment is probabilistic and bounded; operator judgment applies.
+  
+
+=== 5) WHAT THIS PROVES (10 seconds) ===
+- The system can generate multiple mission products from the same “truth layer” artifacts.
+- Everything is bounded, operator-safe, and resilient to missing inputs.
+- Demo lock prevents accidental learning or mutation during a stakeholder demo.
+
+=== 6) CLOSE (5 seconds) ===
+“This is a controlled demo. In real ops, products are still bounded; operator judgment remains mandatory.”
+Assessment is probabilistic and bounded; operator judgment applies.
+
+=== PRESENCE CHECKS (for you, not for the demo) ===
+- week3_demo_readiness_gate_latest.json: OK (docs/validation/week3_demo_readiness_gate_latest.json)
+- week3_demo_pack_gate_latest.json: OK (docs/validation/week3_demo_pack_gate_latest.json)
+- fusion_core_regression_latest.json: OK (docs/validation/fusion_core_regression_latest.json)
+- week3_operator_summary_latest.txt: OK (docs/briefs/week3_operator_summary_latest.txt)
+- commander_brief_latest.txt: OK (docs/briefs/commander_brief_latest.txt)
+- legal_case_snapshot_latest.txt: OK (docs/briefs/legal_case_snapshot_latest.txt)
 
 DEMO MODE ACTIVE — READ ONLY
 No baselines updated. No training. No mutation.
 Assessment is probabilistic and bounded; operator judgment applies.
-
-WHAT THIS DEMO IS:
-- A bounded, read-only demonstration of stability + briefing outputs.
-- No real-world attribution. No intent inference. Demo-safe synthetic posture.
-
-WHAT YOU WILL SHOW (IN ORDER):
-1. 0) Opening (10 seconds)
-2. 1) Proof of Control (10 seconds)
-3. 2) Commander Brief (30 seconds)
-4. 3) Operator Summary (10 seconds)
-5. 4) Shari Hook (30 seconds)
-6. 5) Mobile Enjoy Mode (15 seconds)
-7. 6) Close (10 seconds)
-
-DEMO SCRIPT (WHAT TO SAY / WHAT TO OPEN):
-
-0) Opening (10 seconds)
-Say:
-This is a DEMO-LOCKED Ghost Lantern Labs briefing.
-Read-only. No baselines updated. No training mutations.
-Assessment is probabilistic and bounded; operator judgment applies.
-Do:
-Open docs/briefs/week3_demo_narrative_latest.txt and read section 1–2.
-
-1) Proof of Control (10 seconds)
-Say:
-First: I prove stability.
-The Fusion Core Regression Gate confirms key subsystems run without breaking.
-Do:
-Open docs/validation/fusion_core_regression_latest.txt and read verdict lines.
-
-2) Commander Brief (30 seconds)
-Say:
-Next: the commander brief.
-It survives missing inputs and still outputs a bounded posture statement.
-Do:
-Open docs/briefs/commander_brief_latest.txt and read sections 1–5 only.
-
-3) Operator Summary (10 seconds)
-Say:
-This is the 10-second checkpoint.
-It answers: did the core gate pass, yes or no.
-Do:
-Open docs/briefs/week3_operator_summary_latest.txt and read the verdict line.
-
-4) Shari Hook (30 seconds)
-Say:
-Here’s the legal snapshot so a non-technical professional can instantly relate.
-It shows the same safety pattern: bounded risk, ambiguity flags, operator judgment.
-Do:
-Open docs/briefs/legal_case_snapshot_latest.txt and read the posture + ambiguity flags.
-
-5) Mobile Enjoy Mode (15 seconds)
-Say:
-This is the 'enjoy what we built' view.
-It lists the demo artifacts and provides previews. Still read-only.
-Do:
-Open docs/briefs/mobile_enjoy_manifest_latest.json and show the 'previews' section.
-
-6) Close (10 seconds)
-Say:
-That’s the demo: stable gates, bounded brief outputs, and a relatable legal snapshot.
-Next step is making it prettier (GUI polish) without weakening safety controls.
-Do:
-Stop. Do not change baselines during the demo.
-
-BEST-EFFORT PREVIEWS (FOR QUICK REHEARSAL):
-
-Fusion Core Regression Gate (head):
-Fusion Core Regression Gate
-generated_at_utc: 2025-12-17T02:32:08.018914+00:00
-verdict: PASS
-missing_artifacts: 0
-
-Commander Brief (head):
-1. What changed:
-- Training Curve is present.
-- Training Feedback is present.
-- Fusion Validation is present.
-- Degraded Validation is present.
-- Watchboard is present.
-- Decision Card is present.
-- Prebrief is present.
-- Sis Report Txt is present.
-- Sps Behavior Txt is present.
-
-2. Why it matters:
-This briefing packages GLL’s current posture using bounded statements and best-effort artifacts. It is designed to survive missing inputs and still provide a safe, operator-readable snapshot.
-
-3. What we know:
-- Fusion validation verdict/status: FAIL
-- Degraded validation verdict/status: UNKNOWN
-
-Week-3 Operator Summary (head):
-WEEK-3 OPERATOR SUMMARY
-generated_at_utc: 2025-12-17T02:32:08.023141+00:00
-
-Fusion Core Regression Verdict: PASS
-Crashes: 0
-
-Operator note: If verdict is FAIL, do not brief as GREEN. Fix regressions first.
-NOTICE: Assessment is probabilistic and bounded; operator judgment applies.
-
-DEMO MODE ACTIVE — READ ONLY
-No baselines updated. No training. No mutation.
-Assessment is probabilistic and bounded; operator judgment applies.
-
-Legal Case Snapshot (head):
-LEGAL CASE SNAPSHOT (DEMO / TRAINING)
-generated_at_utc: 2025-12-17T02:30:53.667514+00:00
-
-Matter: Code 116 Collections Demo
-Type: COLLECTIONS | Stage: DEMAND LETTER
-Party: JOHN DOE (Synthetic) | Jurisdiction: GA
-Days Past Due: 62 | Balance (USD): 3487.22
-Risk Score: 57.0 | Risk Band: MEDIUM
-
-Recommended posture: LEGAL_REVIEW_RECOMMENDED
-Next step: Send demand letter + validate debtor identity; prep suit package if non-response in 10–14 days.
-
-Ambiguity flags:
-- None
-
-NOTICE: Assessment is probabilistic and bounded; operator judgment applies.
