@@ -1,0 +1,41 @@
+WEEK-3 DEMO RUNBOOK — OBASI / GLL (CUSTOMER HANDOFF)
+generated_at_utc: 2025-12-17T19:56:18.999674+00:00
+context: week3_demo_runbook_auto_from_packager
+
+DEMO SAFETY:
+DEMO MODE ACTIVE — READ ONLY
+DEMO MODE ACTIVE — READ ONLY
+No baselines updated. No training. No mutation.
+Assessment is probabilistic and bounded; operator judgment applies.
+
+SUCCESS CRITERIA (best effort):
+- Orchestrator verdict: PASS
+- Readiness verdict: PASS
+- Package manifest verdict: PASS
+
+QUICKSTART (repo):
+python src/week3_demo_orchestrator.py
+
+ZIP-ONLY REVIEW (no code):
+unzip week3_cloud_demo_package_latest.zip -d week3_demo_pkg
+cd week3_demo_pkg
+cat docs/briefs/week3_demo_narrative_latest.txt
+cat docs/briefs/commander_brief_latest.txt | head -n 80
+cat docs/briefs/legal_case_snapshot_latest.txt
+cat docs/briefs/week3_operator_summary_latest.txt
+cat docs/validation/week3_demo_readiness_gate_latest.txt
+cat docs/packages/week3_customer_handoff_one_pager_latest.txt
+
+DEMO ORDER:
+1) Narrative (read-only)
+2) Commander brief (bounded)
+3) Legal snapshot (Shari Hook)
+4) Operator summary
+5) Readiness gate
+
+TROUBLESHOOTING:
+- If a gate fails: open docs/validation/*latest.txt and fix the named violation first.
+- If demo lock missing: re-run the generator script for that artifact.
+
+CONTRACTOR-SAFE LANGUAGE:
+- Probabilistic and bounded outputs; synthetic demo data; operator judgment applies.

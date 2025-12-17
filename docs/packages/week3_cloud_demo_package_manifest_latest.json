@@ -1,5 +1,5 @@
 {
-  "generated_at_utc": "2025-12-17T19:49:46.126381+00:00",
+  "generated_at_utc": "2025-12-17T19:56:18.983453+00:00",
   "context": "week3_cloud_demo_packager",
   "strict": true,
   "verdict": "PASS",
@@ -23,17 +23,19 @@
     "docs/validation/week3_demo_readiness_gate_latest.json",
     "docs/validation/week3_demo_readiness_gate_latest.txt",
     "docs/packages/week3_customer_handoff_one_pager_latest.md",
-    "docs/packages/week3_customer_handoff_one_pager_latest.txt"
+    "docs/packages/week3_customer_handoff_one_pager_latest.txt",
+    "docs/packages/week3_demo_runbook_latest.md",
+    "docs/packages/week3_demo_runbook_latest.txt"
   ],
   "missing_files": [],
   "outputs": {
     "zip_latest": "docs/packages/week3_cloud_demo_package_latest.zip",
-    "zip_stamped": "docs/packages/week3_cloud_demo_package_20251217_194946.zip",
+    "zip_stamped": "docs/packages/week3_cloud_demo_package_20251217_195618.zip",
     "manifest_latest": "docs/packages/week3_cloud_demo_package_manifest_latest.json",
-    "manifest_stamped": "docs/packages/week3_cloud_demo_package_manifest_20251217_194946.json"
+    "manifest_stamped": "docs/packages/week3_cloud_demo_package_manifest_20251217_195618.json"
   },
   "one_pager_generation": {
-    "generated_at_utc": "2025-12-17T19:49:46.136226+00:00",
+    "generated_at_utc": "2025-12-17T19:56:18.995809+00:00",
     "context": "week3_customer_handoff_one_pager_auto_from_packager",
     "demo_lock": {
       "module_present": true,
@@ -45,9 +47,19 @@
     "demo_pack_verdict": "PASS",
     "paths": {
       "latest_md": "docs/packages/week3_customer_handoff_one_pager_latest.md",
-      "stamped_md": "docs/packages/week3_customer_handoff_one_pager_20251217_194946.md",
+      "stamped_md": "docs/packages/week3_customer_handoff_one_pager_20251217_195618.md",
       "latest_txt": "docs/packages/week3_customer_handoff_one_pager_latest.txt",
-      "stamped_txt": "docs/packages/week3_customer_handoff_one_pager_20251217_194946.txt"
+      "stamped_txt": "docs/packages/week3_customer_handoff_one_pager_20251217_195618.txt"
+    }
+  },
+  "runbook_generation": {
+    "generated_at_utc": "2025-12-17T19:56:18.999674+00:00",
+    "context": "week3_demo_runbook_auto_from_packager",
+    "paths": {
+      "latest_md": "docs/packages/week3_demo_runbook_latest.md",
+      "stamped_md": "docs/packages/week3_demo_runbook_20251217_195618.md",
+      "latest_txt": "docs/packages/week3_demo_runbook_latest.txt",
+      "stamped_txt": "docs/packages/week3_demo_runbook_20251217_195618.txt"
     }
   },
   "notes": [
