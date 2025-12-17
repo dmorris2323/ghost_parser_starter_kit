@@ -1,15 +1,13 @@
 # src/obasi_command_center.py
 """
-OBASI COMMAND CENTER (Module 5D — Presentation Mode)
+OBASI COMMAND CENTER (Module 5E — Demo Auto-Sequence)
 - Premium HUD styling (Batman/Iron-Man command center)
-- Animated status lights (subtle pulse)
-- Micro-telemetry tiles + Demo Flow controls
-- PRESENTATION MODE:
-    * Large typography + tighter layout
-    * Hide JSON by default
-    * "Briefing View" (clean, minimal, commander-facing)
-    * Full-width sections, stage-ready
-- READ-ONLY: no mutation, no baselines
+- PRESENTATION MODE + BRIEFING VIEW (Module 5D)
+- NEW in 5E: Demo Auto-Sequence (Start/Stop)
+    * Automatically advances focus: readiness -> operator -> commander -> legal -> validation -> overview
+    * Adjustable seconds per step
+    * One-cycle or looping
+    * Uses safe refresh (no mutation), keeps session state
 
 Run:
   streamlit run src/obasi_command_center.py
@@ -42,6 +40,8 @@ ROOT = Path(__file__).resolve().parents[1]
 DOCS = ROOT / "docs"
 BRIEFS = DOCS / "briefs"
 VALIDATION = DOCS / "validation"
+
+DEMO_SEQUENCE = ["readiness", "operator", "commander", "legal", "validation", "overview"]
 
 
 # ----------------------------
@@ -102,6 +102,11 @@ def _safe_snip(s: str, max_chars: int = 1400) -> str:
     return s[:max_chars] + "\n…(truncated)…"
 
 
+def _now_epoch() -> float:
+    # Use Streamlit's monotonic-ish time via datetime; good enough for demo stepping
+    return datetime.now(timezone.utc).timestamp()
+
+
 def _init_state() -> None:
     if "focus" not in st.session_state:
         st.session_state["focus"] = "overview"
@@ -111,18 +116,30 @@ def _init_state() -> None:
         st.session_state["show_json"] = True
     if "show_paths" not in st.session_state:
         st.session_state["show_paths"] = False
+
     # Module 5D
     if "presentation" not in st.session_state:
         st.session_state["presentation"] = True
     if "briefing_view" not in st.session_state:
         st.session_state["briefing_view"] = True
 
+    # Module 5E: auto-sequence
+    if "seq_running" not in st.session_state:
+        st.session_state["seq_running"] = False
+    if "seq_start_ts" not in st.session_state:
+        st.session_state["seq_start_ts"] = 0.0
+    if "seq_seconds_per_step" not in st.session_state:
+        st.session_state["seq_seconds_per_step"] = 12
+    if "seq_loop" not in st.session_state:
+        st.session_state["seq_loop"] = True
+    if "seq_last_step" not in st.session_state:
+        st.session_state["seq_last_step"] = -1
+
 
 # ----------------------------
 # HUD Styling
 # ----------------------------
 def _inject_hud_css(presentation: bool) -> None:
-    # presentation tweaks: larger type, tighter whitespace, hide some chrome
     size_scale = 1.10 if presentation else 1.00
     code_font = "1.00rem" if presentation else "0.92rem"
     pad_top = "0.55rem" if presentation else "1.05rem"
@@ -161,7 +178,6 @@ def _inject_hud_css(presentation: bool) -> None:
 header {{visibility: hidden;}}
 footer {{visibility: hidden;}}
 
-/* Title HUD */
 .hud-title{{
   text-align:center;
   font-weight: 900;
@@ -180,7 +196,6 @@ footer {{visibility: hidden;}}
   margin-bottom: .6rem;
 }}
 
-/* Banner panel */
 .banner{{
   border: 1px solid rgba(20,241,255,.35);
   background: linear-gradient(180deg, rgba(20,241,255,.08), rgba(0,0,0,0));
@@ -213,7 +228,6 @@ footer {{visibility: hidden;}}
   line-height: 1.35;
 }}
 
-/* Chips */
 .chips{{
   display:flex;
   gap: 10px;
@@ -241,7 +255,6 @@ footer {{visibility: hidden;}}
   margin-top: 4px;
 }}
 
-/* Tiles */
 .tiles{{
   display:flex;
   gap: 12px;
@@ -268,7 +281,6 @@ footer {{visibility: hidden;}}
   margin-top: 4px;
 }}
 
-/* Status dots */
 .dot{{
   display:inline-block;
   width: 10px;
@@ -280,7 +292,6 @@ footer {{visibility: hidden;}}
 .dot.bad{{ background: var(--red);   box-shadow: 0 0 18px rgba(255,59,59,.22); }}
 .dot.warn{{ background: var(--amber); box-shadow: 0 0 18px rgba(255,176,32,.22); }}
 
-/* Animated pulse */
 @keyframes pulseGlow {{
   0%   {{ transform: scale(1.0); filter: brightness(1.0); }}
   50%  {{ transform: scale(1.18); filter: brightness(1.35); }}
@@ -288,21 +299,18 @@ footer {{visibility: hidden;}}
 }}
 .pulse {{ animation: pulseGlow 1.6s ease-in-out infinite; }}
 
-/* Expanders premium */
 details {{
   border-radius: 14px !important;
   border: 1px solid rgba(221,231,255,.12) !important;
   background: rgba(10,19,36,.45) !important;
 }}
 
-/* Code blocks darker */
 .stCodeBlock, pre {{
   background: rgba(5,8,12,.65) !important;
   border: 1px solid rgba(221,231,255,.10) !important;
   font-size: {code_font} !important;
 }}
 
-/* Buttons */
 .stButton button{{
   border-radius: 999px;
   border: 1px solid rgba(20,241,255,.35);
@@ -315,7 +323,6 @@ details {{
   transform: translateY(-1px);
 }}
 
-/* Sidebar */
 section[data-testid="stSidebar"]{{
   background: linear-gradient(180deg, rgba(5,8,12,.88), rgba(7,10,15,.82));
   border-right: 1px solid rgba(20,241,255,.12);
@@ -472,6 +479,56 @@ def load_artifacts() -> dict:
 
 
 # ----------------------------
+# Module 5E: Auto-Sequence Engine
+# ----------------------------
+def _sequence_tick() -> None:
+    """
+    If sequence is running, compute which focus should be active based on elapsed time.
+    Stops after one cycle if seq_loop == False.
+    """
+    if not st.session_state.get("seq_running", False):
+        return
+
+    secs = max(5, int(st.session_state.get("seq_seconds_per_step", 12)))
+    start_ts = float(st.session_state.get("seq_start_ts", 0.0) or 0.0)
+    if start_ts <= 0:
+        st.session_state["seq_start_ts"] = _now_epoch()
+        st.session_state["seq_last_step"] = -1
+        start_ts = st.session_state["seq_start_ts"]
+
+    elapsed = max(0.0, _now_epoch() - start_ts)
+    step = int(elapsed // secs)
+
+    total_steps = len(DEMO_SEQUENCE)
+    if total_steps <= 0:
+        return
+
+    if not st.session_state.get("seq_loop", True) and step >= total_steps:
+        # end on last view
+        st.session_state["focus"] = DEMO_SEQUENCE[-1]
+        st.session_state["seq_running"] = False
+        return
+
+    idx = step % total_steps
+    if step != st.session_state.get("seq_last_step", -1):
+        st.session_state["focus"] = DEMO_SEQUENCE[idx]
+        st.session_state["seq_last_step"] = step
+
+
+def _inject_refresh_js(ms: int) -> None:
+    st.markdown(
+        f"""
+<script>
+setTimeout(function() {{
+  window.location.reload();
+}}, {int(ms)});
+</script>
+        """,
+        unsafe_allow_html=True,
+    )
+
+
+# ----------------------------
 # Demo Flow Controls
 # ----------------------------
 def _demo_flow_controls() -> None:
@@ -517,9 +574,6 @@ def _expander_default(name: str) -> bool:
 # Presentation panels
 # ----------------------------
 def _briefing_view_panel(data: dict, compact: bool) -> None:
-    """
-    Clean, commander-facing: just the essentials in one continuous panel.
-    """
     cov = data.get("coverage", {})
     demo_gate = data.get("demo_gate_verdict", "UNKNOWN")
     fusion = data.get("fusion_verdict", "UNKNOWN")
@@ -533,7 +587,6 @@ def _briefing_view_panel(data: dict, compact: bool) -> None:
     st.markdown("### 🎯 Briefing View (Stage / Commander)")
     st.caption("Minimal, high-signal. Designed for screen share.")
 
-    # Topline row
     r1, r2, r3, r4, r5 = st.columns(5)
     r1.metric("Demo Gate", demo_gate)
     r2.metric("Pack Gate", pack)
@@ -575,7 +628,7 @@ def main() -> int:
         initial_sidebar_state="expanded",
     )
 
-    # Sidebar toggles first, so CSS can respect Presentation Mode
+    # ---- Sidebar: Mode (5D) ----
     st.sidebar.markdown("### Mode")
     st.session_state["presentation"] = st.sidebar.checkbox("Presentation Mode (recommended)", value=st.session_state["presentation"])
     st.session_state["briefing_view"] = st.sidebar.checkbox("Briefing View (stage)", value=st.session_state["briefing_view"])
@@ -585,7 +638,42 @@ def main() -> int:
         st.session_state["show_json"] = False
 
     _inject_hud_css(st.session_state["presentation"])
-    _hud_header()
+    st.markdown('<div class="hud-title">OBASI COMMAND CENTER</div>', unsafe_allow_html=True)
+    st.markdown('<div class="hud-sub">Spectral Owl • Week-3 Demo • Read-Only HUD</div>', unsafe_allow_html=True)
+
+    # ---- Sidebar: Module 5E Auto-Sequence ----
+    st.sidebar.markdown("---")
+    st.sidebar.markdown("### Module 5E — Demo Auto-Sequence")
+
+    seq_cols = st.sidebar.columns(2)
+    if seq_cols[0].button("▶ Start", use_container_width=True):
+        st.session_state["seq_running"] = True
+        st.session_state["seq_start_ts"] = _now_epoch()
+        st.session_state["seq_last_step"] = -1
+        st.rerun()
+
+    if seq_cols[1].button("■ Stop", use_container_width=True):
+        st.session_state["seq_running"] = False
+        st.rerun()
+
+    st.session_state["seq_seconds_per_step"] = st.sidebar.slider(
+        "Seconds per step",
+        6, 30,
+        int(st.session_state["seq_seconds_per_step"]),
+        step=1,
+    )
+    st.session_state["seq_loop"] = st.sidebar.checkbox("Loop sequence", value=bool(st.session_state["seq_loop"]))
+
+    # Run the tick BEFORE rendering the rest so focus updates are applied cleanly
+    _sequence_tick()
+
+    # Status line
+    if st.session_state.get("seq_running", False):
+        secs = int(st.session_state.get("seq_seconds_per_step", 12))
+        st.sidebar.success(f"Auto-Sequence: RUNNING ({secs}s/step)")
+        st.sidebar.caption(f"Sequence: {' → '.join(DEMO_SEQUENCE)}")
+    else:
+        st.sidebar.info("Auto-Sequence: OFF")
 
     data = load_artifacts()
 
@@ -598,7 +686,6 @@ def main() -> int:
     gen = data.get("generated_at_utc", _now_utc_iso())
     _chips(sys_status, mode, env, gen)
 
-    # Micro-telemetry tiles
     cov = data.get("coverage", {})
     _tiles(
         [
@@ -613,17 +700,18 @@ def main() -> int:
 
     _demo_flow_controls()
 
-    # Sidebar controls
+    # ---- Sidebar: Controls ----
+    st.sidebar.markdown("---")
     st.sidebar.markdown("### Controls")
-    auto_refresh = st.sidebar.checkbox("Auto-refresh (demo)", value=False)
+    auto_refresh = st.sidebar.checkbox("Auto-refresh (manual demo)", value=False)
     refresh_secs = st.sidebar.slider("Refresh interval (seconds)", 5, 60, 15, step=5)
 
     st.session_state["compact"] = st.sidebar.checkbox("Compact text", value=True if st.session_state["presentation"] else st.session_state["compact"])
-    # show_json already forced false in presentation, but allow override when not presenting
     if not st.session_state["presentation"]:
         st.session_state["show_json"] = st.sidebar.checkbox("Show JSON panels", value=st.session_state["show_json"])
     st.session_state["show_paths"] = st.sidebar.checkbox("Show artifact paths (operator only)", value=st.session_state["show_paths"])
 
+    # ---- Sidebar: Demo Focus ----
     st.sidebar.markdown("---")
     st.sidebar.markdown("### Demo Focus")
     focus = st.sidebar.radio(
@@ -638,18 +726,15 @@ def main() -> int:
     if st.sidebar.button("Refresh Now"):
         st.rerun()
 
-    if auto_refresh:
+    # Auto-refresh behavior:
+    # - If sequence is running, we *must* refresh at the step cadence so it advances.
+    # - Otherwise, use the optional manual refresh toggle.
+    if st.session_state.get("seq_running", False):
+        ms = int(max(6, int(st.session_state.get("seq_seconds_per_step", 12))) * 1000)
+        _inject_refresh_js(ms)
+    elif auto_refresh:
         st.sidebar.caption("Auto-refresh enabled.")
-        st.markdown(
-            f"""
-<script>
-setTimeout(function() {{
-  window.location.reload();
-}}, {int(refresh_secs)*1000});
-</script>
-            """,
-            unsafe_allow_html=True,
-        )
+        _inject_refresh_js(int(refresh_secs) * 1000)
 
     if st.session_state["show_paths"]:
         with st.sidebar.expander("Artifact Paths", expanded=False):
@@ -658,14 +743,13 @@ setTimeout(function() {{
     compact = bool(st.session_state["compact"])
     show_json = bool(st.session_state["show_json"])
 
-    # MODULE 5D: Presentation layout
+    # ---- Presentation layout (5D) ----
     if st.session_state["briefing_view"]:
         with st.expander("Briefing View (Stage / Commander)", expanded=_expander_default("briefing_view")):
             _briefing_view_panel(data, compact)
 
         st.markdown("---")
 
-    # Two-column detail view stays available even in Presentation Mode
     left, right = st.columns(2, gap="large")
 
     with left:
