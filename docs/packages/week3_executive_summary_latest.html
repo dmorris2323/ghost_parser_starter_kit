@@ -9,7 +9,6 @@
       --bg0: #05070c;
       --bg1: #0a1221;
       --panel: rgba(10, 16, 30, 0.78);
-      --panel2: rgba(8, 12, 22, 0.55);
       --line: rgba(90, 220, 255, 0.18);
       --glow: rgba(90, 220, 255, 0.30);
       --text: rgba(230, 245, 255, 0.92);
@@ -310,7 +309,7 @@
         <div class="subtitle">Obasi Command Center — Week-3 Cloud-Ready Demo Package</div>
       </div>
       <div class="meta">
-        generated_at_utc: 2025-12-17T20:13:31.334061+00:00<br/>
+        generated_at_utc: 2025-12-17T20:23:02.743202+00:00<br/>
         context: week3_executive_summary_auto_from_packager<br/>
         safety: Assessment is probabilistic and bounded; operator judgment applies.
       </div>
@@ -337,26 +336,40 @@
           <div class="kv">
             <div class="k">
               <div class="label">Readiness Gate</div>
-              <div class="value">verdict=PASS | strict=True | crashes=0</div>
+              <div class="value">verdict=PASS | strict=True</div>
             </div>
             <div class="k">
               <div class="label">Cloud Package</div>
               <div class="value">verdict=PASS | required_missing=0</div>
             </div>
             <div class="k">
-              <div class="label">Operator Summary (head)</div>
-              <div class="value">WEEK-3 OPERATOR SUMMARY</div>
+              <div class="label">Auto-Detected Radar</div>
+              <div class="value">docs/base_defense/installation_threat_map_latest.txt</div>
             </div>
             <div class="k">
-              <div class="label">Non-negotiables</div>
-              <div class="value">No baselines updated during demo lock.<br/>No attribution from synthetic telemetry.<br/>Operator judgment applies.</div>
+              <div class="label">Auto-Detected Heat Map</div>
+              <div class="value">NOT FOUND</div>
             </div>
           </div>
 
           <div class="divider"></div>
 
+          
+<div class="panel-title" style="margin-bottom:10px;">RADAR (viewer link)</div>
+<div class="small">Radar artifact detected: <span class="mono">docs/base_defense/installation_threat_map_latest.txt</span></div>
+<div class="divider"></div>
+
+
           <div class="panel-title" style="margin-bottom:10px;">TACTICAL TILES (click to load viewer)</div>
           <div class="tiles">
+
+            <div class="tile" onclick="loadArtifact('../base_defense/installation_threat_map_latest.txt','Radar Map')">
+              <div class="tile-top">
+                <div class="tile-name">Radar Map</div>
+                <div class="tile-tag">Radar</div>
+              </div>
+              <div class="tile-path">../base_defense/installation_threat_map_latest.txt</div>
+            </div>
 
             <div class="tile" onclick="loadArtifact('../briefs/commander_brief_latest.txt','Commander Brief')">
               <div class="tile-top">
@@ -462,12 +475,12 @@ Preview (first lines):
         <div class="panel-body">
           <div class="viewer">
             <div class="viewer-head">
-              <div class="viewer-title" id="viewerTitle">Commander Brief</div>
+              <div class="viewer-title" id="viewerTitle">Radar Map</div>
               <div class="viewer-actions">
-                <a id="openNewTab" href="../briefs/commander_brief_latest.txt" target="_blank" rel="noopener">Open</a>
+                <a id="openNewTab" href="../base_defense/installation_threat_map_latest.txt" target="_blank" rel="noopener">Open</a>
               </div>
             </div>
-            <iframe id="viewerFrame" src="../briefs/commander_brief_latest.txt"></iframe>
+            <iframe id="viewerFrame" src="../base_defense/installation_threat_map_latest.txt"></iframe>
           </div>
 
           <div class="divider"></div>
@@ -529,8 +542,7 @@ Assessment is probabilistic and bounded; operator judgment applies.
           <div class="divider"></div>
 
           <div class="small">
-            Tip: This HTML is designed to be opened locally from <code>docs/packages/</code>.
-            Tiles load artifacts via relative paths (<code>../briefs</code>, <code>../validation</code>).
+            Tip: Open from <code>docs/packages/</code>. Tiles use relative paths (../briefs, ../validation).
           </div>
         </div>
       </div>

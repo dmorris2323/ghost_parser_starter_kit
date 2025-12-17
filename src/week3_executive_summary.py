@@ -4,7 +4,7 @@ from __future__ import annotations
 import json
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Any, Dict
+from typing import Any, Dict, List, Optional, Tuple
 
 ROOT = Path(__file__).resolve().parents[1]
 BRIEFS_DIR = ROOT / "docs" / "briefs"
@@ -57,15 +57,85 @@ def _demo_lock_banner_best_effort() -> str:
         return ""
 
 
+def _candidate_artifacts() -> Dict[str, List[Path]]:
+    """
+    Heuristic scan list for radar/heatmap artifacts.
+    This avoids needing you to remember exact paths.
+    Add/remove candidates here as your repo evolves.
+    """
+    docs = ROOT / "docs"
+    src_docs = ROOT / "src" / "docs"
+
+    # Common places you’ve used already
+    candidates = {
+        "radar": [
+            docs / "briefs" / "radar_map_latest.png",
+            docs / "briefs" / "radar_map_latest.jpg",
+            docs / "briefs" / "radar_map_latest.html",
+            docs / "briefs" / "radar_map_latest.txt",
+            docs / "briefs" / "radar_map_latest.json",
+            docs / "briefs" / "radar_overlay_latest.png",
+            docs / "briefs" / "radar_overlay_latest.html",
+            docs / "briefs" / "radar_overlay_latest.txt",
+            docs / "briefs" / "mobile_radar_latest.png",
+            docs / "briefs" / "mobile_radar_latest.html",
+            docs / "visuals" / "radar_map_latest.png",
+            docs / "visuals" / "radar_overlay_latest.png",
+            docs / "visuals" / "radar_map_latest.html",
+            docs / "exports" / "radar_map_latest.png",
+            docs / "exports" / "radar_overlay_latest.png",
+            docs / "exports" / "gui_radar_overlay_latest.png",
+            docs / "exports" / "gui_minimap_overlay_latest.png",
+            docs / "exports" / "minimap_overlay_latest.png",
+            docs / "base_defense" / "installation_threat_map_latest.txt",   # fallback “map-like” text artifact
+            docs / "base_defense" / "installation_threat_map_latest.json",
+            src_docs / "installation_threat_map.txt",
+            src_docs / "installation_threat_map.json",
+        ],
+        "heatmap": [
+            docs / "briefs" / "heat_map_latest.png",
+            docs / "briefs" / "heatmap_latest.png",
+            docs / "briefs" / "fusion_heat_index_latest.txt",
+            docs / "briefs" / "fusion_heat_index_latest.json",
+            docs / "briefs" / "heatmap_latest.html",
+            docs / "visuals" / "heatmap_latest.png",
+            docs / "visuals" / "heatmap_latest.html",
+            docs / "exports" / "heatmap_latest.png",
+            docs / "exports" / "fusion_heatmap_latest.png",
+        ],
+    }
+    return candidates
+
+
+def _find_first_existing(paths: List[Path]) -> Optional[Path]:
+    for p in paths:
+        try:
+            if p.exists():
+                return p
+        except Exception:
+            continue
+    return None
+
+
+def _as_viewer_relpath(p: Path) -> str:
+    """
+    HTML lives in docs/packages. Viewer links should be relative to that location.
+    e.g. docs/briefs/foo.txt => ../briefs/foo.txt
+    """
+    try:
+        rel = p.relative_to(ROOT / "docs")
+        # docs/packages => ../<rel>
+        return "../" + str(rel).replace("\\", "/")
+    except Exception:
+        return _safe_rel(p).replace("\\", "/")
+
+
 def write_week3_executive_summary(
     context: str = "week3_executive_summary",
 ) -> Dict[str, Any]:
     """
-    Premium, demo-safe Executive Summary HTML (HUD theme) + interactive artifact viewer.
-    Outputs:
-      - docs/packages/week3_executive_summary_latest.html
-      - stamped variant
-      - optional txt mirror for quick diff
+    Premium demo-safe Executive Summary HTML (HUD theme) + interactive artifact viewer.
+    Adds radar + heatmap tiles ONLY when artifacts are detected.
     Must never crash.
     """
     PACKAGES_DIR.mkdir(parents=True, exist_ok=True)
@@ -85,9 +155,7 @@ def write_week3_executive_summary(
     ops_summary_head = _read_text_best_effort(BRIEFS_DIR / "week3_operator_summary_latest.txt", max_chars=500)
 
     orch_verdict = str(orch_json.get("verdict", "UNKNOWN")).upper()
-    orch_crashes = orch_json.get("crashes", "UNKNOWN")
     readiness_verdict = str(readiness_json.get("verdict", "UNKNOWN")).upper()
-    readiness_crashes = readiness_json.get("crashes", "UNKNOWN")
     readiness_strict = readiness_json.get("strict", True)
     package_verdict = str(pack_manifest.get("verdict", "UNKNOWN")).upper()
     package_missing = pack_manifest.get("required_missing", [])
@@ -96,9 +164,16 @@ def write_week3_executive_summary(
     safety_line = "Assessment is probabilistic and bounded; operator judgment applies."
     demo_line = "DEMO MODE ACTIVE — READ ONLY" if banner else "DEMO LOCK NOT DETECTED (enable for stakeholder demo)"
 
-    # Viewer targets (relative to docs/packages HTML location)
-    # NOTE: HTML lives in docs/packages -> use ../briefs and ../validation paths.
-    viewer_items = [
+    # Auto-detect radar + heatmap
+    candidates = _candidate_artifacts()
+    radar_path = _find_first_existing(candidates["radar"])
+    heatmap_path = _find_first_existing(candidates["heatmap"])
+
+    radar_view = _as_viewer_relpath(radar_path) if radar_path else ""
+    heatmap_view = _as_viewer_relpath(heatmap_path) if heatmap_path else ""
+
+    # Base viewer items
+    viewer_items: List[Tuple[str, str, str]] = [
         ("Commander Brief", "../briefs/commander_brief_latest.txt", "Brief"),
         ("Demo Narrative", "../briefs/week3_demo_narrative_latest.txt", "Narrative"),
         ("Legal Snapshot", "../briefs/legal_case_snapshot_latest.txt", "Legal"),
@@ -108,10 +183,40 @@ def write_week3_executive_summary(
         ("Package Manifest", "week3_cloud_demo_package_manifest_latest.json", "Pkg"),
     ]
 
+    # Conditionally insert “Radar” and “Heat Map”
+    if radar_view:
+        viewer_items.insert(0, ("Radar Map", radar_view, "Radar"))
+    if heatmap_view:
+        viewer_items.insert(1 if radar_view else 0, ("Heat Map", heatmap_view, "Heat"))
+
+    # Choose what to show in the right-side iframe on load
+    default_title = "Radar Map" if radar_view else "Commander Brief"
+    default_src = radar_view if radar_view else "../briefs/commander_brief_latest.txt"
+
     def esc(s: str) -> str:
         return s.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
 
-    # HUD HTML with interactive viewer (iframe)
+    # Build an embedded “left panel preview” for Radar (if image) else just a tile+viewer
+    radar_preview_html = ""
+    if radar_view:
+        lower = radar_view.lower()
+        if lower.endswith(".png") or lower.endswith(".jpg") or lower.endswith(".jpeg"):
+            radar_preview_html = f"""
+<div class="panel-title" style="margin-bottom:10px;">RADAR PREVIEW</div>
+<div style="border-radius:14px;border:1px solid rgba(90,220,255,0.18);overflow:hidden;background:rgba(0,0,0,0.18);">
+  <img src="{esc(radar_view)}" alt="Radar" style="width:100%;display:block;opacity:0.95;" />
+</div>
+<div class="small" style="margin-top:8px;">source: <span class="mono">{esc(_safe_rel(radar_path) if radar_path else "unknown")}</span></div>
+<div class="divider"></div>
+"""
+        else:
+            radar_preview_html = f"""
+<div class="panel-title" style="margin-bottom:10px;">RADAR (viewer link)</div>
+<div class="small">Radar artifact detected: <span class="mono">{esc(_safe_rel(radar_path) if radar_path else "unknown")}</span></div>
+<div class="divider"></div>
+"""
+
+    # HUD HTML
     html = f"""<!doctype html>
 <html lang="en">
 <head>
@@ -123,7 +228,6 @@ def write_week3_executive_summary(
       --bg0: #05070c;
       --bg1: #0a1221;
       --panel: rgba(10, 16, 30, 0.78);
-      --panel2: rgba(8, 12, 22, 0.55);
       --line: rgba(90, 220, 255, 0.18);
       --glow: rgba(90, 220, 255, 0.30);
       --text: rgba(230, 245, 255, 0.92);
@@ -451,29 +555,30 @@ def write_week3_executive_summary(
           <div class="kv">
             <div class="k">
               <div class="label">Readiness Gate</div>
-              <div class="value">verdict={esc(readiness_verdict)} | strict={esc(str(readiness_strict))} | crashes={esc(str(readiness_crashes))}</div>
+              <div class="value">verdict={esc(readiness_verdict)} | strict={esc(str(readiness_strict))}</div>
             </div>
             <div class="k">
               <div class="label">Cloud Package</div>
               <div class="value">verdict={esc(package_verdict)} | required_missing={esc(str(len(package_missing) if isinstance(package_missing, list) else "UNK"))}</div>
             </div>
             <div class="k">
-              <div class="label">Operator Summary (head)</div>
-              <div class="value">{esc((ops_summary_head.splitlines() or ["Unavailable."])[0])}</div>
+              <div class="label">Auto-Detected Radar</div>
+              <div class="value">{esc(_safe_rel(radar_path) if radar_path else "NOT FOUND")}</div>
             </div>
             <div class="k">
-              <div class="label">Non-negotiables</div>
-              <div class="value">No baselines updated during demo lock.<br/>No attribution from synthetic telemetry.<br/>Operator judgment applies.</div>
+              <div class="label">Auto-Detected Heat Map</div>
+              <div class="value">{esc(_safe_rel(heatmap_path) if heatmap_path else "NOT FOUND")}</div>
             </div>
           </div>
 
           <div class="divider"></div>
 
+          {radar_preview_html}
+
           <div class="panel-title" style="margin-bottom:10px;">TACTICAL TILES (click to load viewer)</div>
           <div class="tiles">
 """
 
-    # tiles
     for name, path, tag in viewer_items:
         html += f"""
             <div class="tile" onclick="loadArtifact('{esc(path)}','{esc(name)}')">
@@ -503,12 +608,12 @@ def write_week3_executive_summary(
         <div class="panel-body">
           <div class="viewer">
             <div class="viewer-head">
-              <div class="viewer-title" id="viewerTitle">Commander Brief</div>
+              <div class="viewer-title" id="viewerTitle">{esc(default_title)}</div>
               <div class="viewer-actions">
-                <a id="openNewTab" href="../briefs/commander_brief_latest.txt" target="_blank" rel="noopener">Open</a>
+                <a id="openNewTab" href="{esc(default_src)}" target="_blank" rel="noopener">Open</a>
               </div>
             </div>
-            <iframe id="viewerFrame" src="../briefs/commander_brief_latest.txt"></iframe>
+            <iframe id="viewerFrame" src="{esc(default_src)}"></iframe>
           </div>
 
           <div class="divider"></div>
@@ -524,8 +629,7 @@ def write_week3_executive_summary(
           <div class="divider"></div>
 
           <div class="small">
-            Tip: This HTML is designed to be opened locally from <code>docs/packages/</code>.
-            Tiles load artifacts via relative paths (<code>../briefs</code>, <code>../validation</code>).
+            Tip: Open from <code>docs/packages/</code>. Tiles use relative paths (../briefs, ../validation).
           </div>
         </div>
       </div>
@@ -548,7 +652,7 @@ def write_week3_executive_summary(
 </html>
 """
 
-    # TXT mirror (simple)
+    # TXT mirror
     txt = []
     txt.append("WEEK-3 EXECUTIVE SUMMARY — OBASI (DEMO SAFE)")
     txt.append(f"generated_at_utc: {generated}")
@@ -558,6 +662,8 @@ def write_week3_executive_summary(
     txt.append(f"- orchestrator_verdict: {orch_verdict}")
     txt.append(f"- readiness_verdict: {readiness_verdict} (strict={readiness_strict})")
     txt.append(f"- package_verdict: {package_verdict}")
+    txt.append(f"- radar_detected: {_safe_rel(radar_path) if radar_path else 'NOT FOUND'}")
+    txt.append(f"- heatmap_detected: {_safe_rel(heatmap_path) if heatmap_path else 'NOT FOUND'}")
     txt.append("")
     if banner:
         txt.append("DEMO LOCK:")
@@ -600,6 +706,10 @@ def write_week3_executive_summary(
         "html_stamped": _safe_rel(stamped_html),
         "txt_latest": _safe_rel(latest_txt),
         "txt_stamped": _safe_rel(stamped_txt),
+        "radar_detected": _safe_rel(radar_path) if radar_path else None,
+        "heatmap_detected": _safe_rel(heatmap_path) if heatmap_path else None,
+        "radar_candidates_checked": [_safe_rel(p) for p in _candidate_artifacts()["radar"]],
+        "heatmap_candidates_checked": [_safe_rel(p) for p in _candidate_artifacts()["heatmap"]],
     }
 
 

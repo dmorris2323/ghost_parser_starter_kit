@@ -1,11 +1,13 @@
 WEEK-3 EXECUTIVE SUMMARY — OBASI (DEMO SAFE)
-generated_at_utc: 2025-12-17T20:13:31.334061+00:00
+generated_at_utc: 2025-12-17T20:23:02.743202+00:00
 context: week3_executive_summary_auto_from_packager
 
 STATUS:
 - orchestrator_verdict: PASS
 - readiness_verdict: PASS (strict=True)
 - package_verdict: PASS
+- radar_detected: docs/base_defense/installation_threat_map_latest.txt
+- heatmap_detected: NOT FOUND
 
 DEMO LOCK:
 DEMO MODE ACTIVE — READ ONLY
