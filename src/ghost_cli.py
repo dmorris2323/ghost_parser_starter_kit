@@ -67,6 +67,10 @@ Menu options:
  74) Commander Brief One-Shot (PRE->export->consistency->POST)
  75) Week-3: Fusion Core Regression + Operator Summary (one-shot)
  76) Running Mobile Enjoy Mode (Week-3 demo pack paths)
+ 77) Running Week-3 Shari Demo Runbook
+ 78) Week-3: One-Button Shari Demo Orchestrator (RUN ALL + READY TO BRIEF)
+ 79) Week-3: Build Cloud Demo Package (zip + manifest)
+
 """
 
 import sys
@@ -680,6 +684,32 @@ def main() -> int:
 
             print("Running Mobile Enjoy Mode (Week-3 demo pack paths)...")
             res = run_mobile_enjoy_mode(context="week3_mobile_enjoy_mode_cli")
+            print(json.dumps(res, indent=2))
+        
+        elif choice == "77":
+            from week3_shari_demo_runbook import run_week3_shari_demo_runbook
+            import json
+
+            print("Running Week-3 Shari Demo Runbook (one-shot)...")
+            res = run_week3_shari_demo_runbook(context="week3_shari_demo_runbook_cli", update_baselines=False)
+            print(json.dumps(res, indent=2))
+
+        elif choice == "78":
+            import subprocess
+
+            print("Running Week-3 One-Button Demo Orchestrator...")
+            cp = subprocess.run(
+                ["python", "src/week3_demo_orchestrator.py"],
+                capture_output=False,
+                text=True,
+                check=False,
+            )
+        elif choice == "79":
+            from week3_cloud_demo_packager_cli import run_week3_cloud_demo_packager_cli
+            import json
+
+            print("Week-3: Building Cloud Demo Package (contractor framing)...")
+            res = run_week3_cloud_demo_packager_cli()
             print(json.dumps(res, indent=2))
 
         else:
