@@ -1,13 +1,28 @@
-WEEK-3 SHARI DEMO CHECKLIST (ONE-SHOT)
-generated_at_utc: 2025-12-16T20:04:44.306389+00:00
-verdict: PARTIAL_PASS
+WEEK-3 SHARI DEMO CHECKLIST (ONE-BUTTON PACKET)
+generated_at_utc: 2025-12-17T03:25:14.680800+00:00
+verdict: PASS
 
-Open these files (in order):
-1) Commander brief: docs/briefs/commander_brief_latest.txt
-2) Operator summary: docs/briefs/week3_operator_summary_latest.txt
-3) Legal snapshot: docs/briefs/legal_case_snapshot_latest.txt
-4) Mobile manifest: docs/briefs/mobile_enjoy_manifest_latest.json
+DEMO MODE ACTIVE — READ ONLY
+No baselines updated. No training. No mutation.
+Assessment is probabilistic and bounded; operator judgment applies.
 
-DEMO NOTE: Commander brief shows 'Fusion validation: FAIL' due to best-effort artifact read/formatting. Week-3 Fusion Core Regression Gate is PASS, which is the controlling demo-health signal for this runbook. Operator judgment applies.
+WHAT TO SHOW (3-minute flow):
+1) Operator Summary (10 seconds): docs/briefs/week3_operator_summary_latest.txt
+2) Commander Brief (bounded): docs/briefs/commander_brief_latest.txt
+3) Legal Snapshot (Shari hook): docs/briefs/legal_case_snapshot_latest.txt
+4) Demo Narrative (optional): docs/briefs/week3_demo_narrative_latest.txt
+5) Proof: Demo Readiness Gate: docs/validation/week3_demo_readiness_gate_latest.txt
 
-Bounded warning: Assessment is probabilistic and bounded; operator judgment applies.
+PRESENCE CHECKS:
+- commander_brief_txt: OK (docs/briefs/commander_brief_latest.txt)
+- commander_brief_json: OK (docs/briefs/commander_brief_latest.json)
+- week3_operator_summary_txt: OK (docs/briefs/week3_operator_summary_latest.txt)
+- legal_case_snapshot_txt: OK (docs/briefs/legal_case_snapshot_latest.txt)
+- legal_case_snapshot_json: OK (docs/briefs/legal_case_snapshot_latest.json)
+- mobile_enjoy_manifest: OK (docs/briefs/mobile_enjoy_manifest_latest.json)
+- week3_demo_narrative_txt: OK (docs/briefs/week3_demo_narrative_latest.txt)
+- fusion_core_regression_txt: OK (docs/validation/fusion_core_regression_latest.txt)
+- fusion_core_regression_json: OK (docs/validation/fusion_core_regression_latest.json)
+- week3_demo_pack_gate: OK (docs/validation/week3_demo_pack_gate_latest.json)
+- week3_demo_readiness_txt: OK (docs/validation/week3_demo_readiness_gate_latest.txt)
+- week3_demo_readiness_json: OK (docs/validation/week3_demo_readiness_gate_latest.json)

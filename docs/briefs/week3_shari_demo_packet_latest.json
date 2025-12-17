@@ -1,0 +1,143 @@
+{
+  "generated_at_utc": "2025-12-17T03:25:14.680800+00:00",
+  "context": "week3_shari_demo_packet",
+  "strict": true,
+  "verdict": "PASS",
+  "demo_lock": true,
+  "demo_notice": "DEMO MODE ACTIVE \u2014 READ ONLY\nNo baselines updated. No training. No mutation.\nAssessment is probabilistic and bounded; operator judgment applies.",
+  "artifacts": {
+    "commander_brief_txt": {
+      "path": "docs/briefs/commander_brief_latest.txt",
+      "present": true
+    },
+    "commander_brief_json": {
+      "path": "docs/briefs/commander_brief_latest.json",
+      "present": true
+    },
+    "week3_operator_summary_txt": {
+      "path": "docs/briefs/week3_operator_summary_latest.txt",
+      "present": true
+    },
+    "legal_case_snapshot_txt": {
+      "path": "docs/briefs/legal_case_snapshot_latest.txt",
+      "present": true
+    },
+    "legal_case_snapshot_json": {
+      "path": "docs/briefs/legal_case_snapshot_latest.json",
+      "present": true
+    },
+    "mobile_enjoy_manifest": {
+      "path": "docs/briefs/mobile_enjoy_manifest_latest.json",
+      "present": true
+    },
+    "week3_demo_narrative_txt": {
+      "path": "docs/briefs/week3_demo_narrative_latest.txt",
+      "present": true
+    },
+    "fusion_core_regression_txt": {
+      "path": "docs/validation/fusion_core_regression_latest.txt",
+      "present": true
+    },
+    "fusion_core_regression_json": {
+      "path": "docs/validation/fusion_core_regression_latest.json",
+      "present": true
+    },
+    "week3_demo_pack_gate": {
+      "path": "docs/validation/week3_demo_pack_gate_latest.json",
+      "present": true
+    },
+    "week3_demo_readiness_txt": {
+      "path": "docs/validation/week3_demo_readiness_gate_latest.txt",
+      "present": true
+    },
+    "week3_demo_readiness_json": {
+      "path": "docs/validation/week3_demo_readiness_gate_latest.json",
+      "present": true
+    }
+  },
+  "previews": {
+    "operator_summary_head": "WEEK-3 OPERATOR SUMMARY\ngenerated_at_utc: 2025-12-17T03:25:14.773836+00:00\n\nFusion Core Regression Verdict: PASS\nCrashes: 0\n\nOperator note: If verdict is FAIL, do not brief as GREEN. Fix regressions first.\nNOTICE: Assessment is probabilistic and bounded; operator judgment applies.\n\nDEMO MODE ACTIVE \u2014 READ ONLY\nNo baselines updated. No training. No mutation.\nAssessment is probabilistic and bounded; operator judgment applies.",
+    "legal_snapshot_head": "LEGAL CASE SNAPSHOT (DEMO / TRAINING)\ngenerated_at_utc: 2025-12-17T03:25:14.809323+00:00\n\nMatter: Demo Matter\nType: COLLECTIONS | Stage: PRE-SUIT\nParty: UNKNOWN | Jurisdiction: UNKNOWN\nDays Past Due: 9999 | Balance (USD): 99999999.0\nRisk Score: 99.9 | Risk Band: CRITICAL\n\nRecommended posture: HOLD_ACTION_PENDING_REVIEW\nNext step: Assessment is probabilistic and bounded; operator judgment applies. Recommend reviewing account file, verifying jurisdiction, and confirming evidentiary posture before any escalation.\n\nAmbiguity flags:\n- UNKNOWN_PARTY\n- UNKNOWN_JURISDICTION\n\nNOTICE: Assessment is probabilistic and bounded; operator judgment applies.\n\nDEMO MODE ACTIVE \u2014 READ ONLY\nNo baselines updated. No training. No mutation.\nAssessment is probabilistic and bounded; operator judgment applies.",
+    "commander_brief_head": "1. What changed:\n- Training Curve is present.\n- Training Feedback is present.\n- Fusion Validation is present.\n- Degraded Validation is present.\n- Watchboard is present.\n- Decision Card is present.\n- Prebrief is present.\n- Sis Report Txt is present.\n- Sps Behavior Txt is present.\n\n2. Why it matters:\nThis briefing packages GLL\u2019s current posture using bounded statements and best-effort artifacts. It is designed to survive missing inputs and still provide a safe, operator-readable snapshot.\n\n3. What we know:\n- Fusion validation verdict/status: FAIL\n- Degraded validation verdict/status: UNKNOWN\n\n4. What we do NOT know:\n- Intent, causality, and attribution are not inferred from synthetic telemetry.\n- Operator judgment is required before escalation beyond bounded posture.\n\n5. Recommended posture:\nDUTY_OFFICER_NOTIFY\nAssessment is probabilistic and bounded; operator judgment applies.\n\nDEMO MODE ACTIVE \u2014 READ ONLY\nNo baselines updated. No training. No mutation.\nAssessment is probabilistic and bounded; operator judgment applies.\n\n\nDEMO MODE ACTIVE \u2014 READ ONLY\nNo baselines updated. No training. No mutation.\nAssessment is probabilistic and bounded; operator judgment applies.",
+    "demo_narrative_head": "WEEK-3 DEMO NARRATIVE (COMMANDER-SAFE)\ngenerated_at_utc: 2025-12-17T02:45:21.533707+00:00\ncontext: week3_demo_narrative_control\n\nDEMO MODE ACTIVE \u2014 READ ONLY\nNo baselines updated. No training. No mutation.\nAssessment is probabilistic and bounded; operator judgment applies.\n\nWHAT THIS DEMO IS:\n- A bounded, read-only demonstration of stability + briefing outputs.\n- No real-world attribution. No intent inference. Demo-safe synthetic posture.\n\nWHAT YOU WILL SHOW (IN ORDER):\n1. 0) Opening (10 seconds)\n2. 1) Proof of Control (10 seconds)\n3. 2) Commander Brief (30 seconds)\n4. 3) Operator Summary (10 seconds)\n5. 4) Shari Hook (30 seconds)\n6. 5) Mobile Enjoy Mode (15 seconds)\n7. 6) Close (10 seconds)\n\nDEMO SCRIPT (WHAT TO SAY / WHAT TO OPEN):\n\n0) Opening (10 seconds)\nSay:\nThis is a DEMO-LOCKED Ghost Lantern Labs briefing.\nRead-only. No baselines updated. No training mutations.\nAssessment is probabilistic and bounded; operator judgment applies.\nDo:\nOpen docs/briefs/week3_demo_narrative_latest.txt and read section 1\u20132.\n\n1) Proof of Control (10 seconds)\nSay:\nFirst: I prove stability.\nThe Fusion Core Regression Gate confirms key subsystems run without breaking.\nDo:\nOpen docs/validation/fusion_core_regression_latest.txt and read verdict lines.\n\n2) Commander Brief (30 seconds)\nSay:\nNext: the commander brief.\nIt survives missing inputs and still outputs a bounded posture statement.\nDo:\nOpen docs/briefs/commander_brief_latest.txt and read sections 1\u20135 only.\n\n3) Operator Summary (10 seconds)\nSay:\nThis is the 10-second checkpoint.\nIt answers: did the core gate pass, yes or no.\nDo:\nOpen docs/briefs/week3_operator_summary_latest.txt and read the verdict line.\n\n4) Shari Hook (30 seconds)\nSay:\nHere\u2019s the legal snapshot so a non-technical professional can instantly relate.\nIt shows the same safety pattern: bounded risk, ambiguity flags, operator judgment.\nDo:\nOpen docs/briefs/legal_case_snapshot_latest.txt and read the posture + ambiguity flags.\n\n5) Mobile Enjoy Mode (15 seconds)",
+    "readiness_gate_head": "WEEK-3 DEMO READINESS GATE\ngenerated_at_utc: 2025-12-17T03:25:15.206092+00:00\ncontext: week3_demo_readiness_gate\nstrict: True\nverdict: PASS\ncrashes: 0\n\nDemo lock:\n- module_present: True\n- demo_locked: True\n\nPresence checks:\n- docs/briefs/commander_brief_latest.txt: OK\n- docs/briefs/commander_brief_latest.json: OK\n- docs/briefs/week3_operator_summary_latest.txt: OK\n- docs/briefs/legal_case_snapshot_latest.txt: OK\n- docs/briefs/legal_case_snapshot_latest.json: OK\n- docs/briefs/mobile_enjoy_manifest_latest.json: OK\n- docs/validation/fusion_core_regression_latest.json: OK\n- docs/validation/fusion_core_regression_latest.txt: OK\n- docs/validation/week3_demo_pack_gate_latest.json: OK\n- docs/briefs/week3_demo_narrative_latest.txt: OK"
+  },
+  "runs": [
+    {
+      "label": "fusion_core_regression_gate",
+      "script": "src/gll_fusion_core_regression_gate.py",
+      "ok": true,
+      "returncode": 0,
+      "note": "fusion_core_regression_gate:OK",
+      "stdout_tail": "ated_at_utc\": \"2025-12-17T03:25:14.705723+00:00\",\n  \"context\": \"fusion_core_regression\",\n  \"update_baselines\": false,\n  \"strict\": false,\n  \"checks\": {\n    \"fusion_validation\": \"PASS\",\n    \"degraded_validation\": \"PASS\",\n    \"commander_brief\": \"PASS\",\n    \"prebrief\": \"PASS\",\n    \"sensor_outage\": \"PASS\",\n    \"installation_threat\": \"PASS\",\n    \"perimeter_incident\": \"PASS\",\n    \"base_defense_storyboard\": \"PASS\"\n  },\n  \"missing_artifacts\": [],\n  \"crashes\": 0,\n  \"verdict\": \"PASS\",\n  \"latest_json\": \"docs/validation/fusion_core_regression_latest.json\",\n  \"stamped_json\": \"docs/validation/fusion_core_regression_20251217_032514.json\",\n  \"latest_txt\": \"docs/validation/fusion_core_regression_latest.txt\"\n}",
+      "stderr_tail": "/Users/dextermorris/ghost/parser_starter_kit/src/gll_fusion_core_regression_gate.py:81: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).\n  stamped = DOCS_VALIDATION / f\"fusion_core_regression_{datetime.utcnow().strftime('%Y%m%d_%H%M%S')}.json\""
+    },
+    {
+      "label": "commander_brief_exporter",
+      "script": "src/command_brief_exporter.py",
+      "ok": true,
+      "returncode": 0,
+      "note": "commander_brief_exporter:OK",
+      "stdout_tail": "{\n  \"txt_latest\": \"docs/briefs/commander_brief_latest.txt\",\n  \"json_latest\": \"docs/briefs/commander_brief_latest.json\",\n  \"txt_stamped\": \"docs/briefs/commander_brief_20251217_032514.txt\",\n  \"json_stamped\": \"docs/briefs/commander_brief_20251217_032514.json\",\n  \"legacy_txt\": \"src/docs/commander_brief.txt\",\n  \"legacy_json\": \"src/docs/commander_brief.json\"\n}",
+      "stderr_tail": ""
+    },
+    {
+      "label": "week3_operator_summary",
+      "script": "src/week3_operator_summary.py",
+      "ok": true,
+      "returncode": 0,
+      "note": "week3_operator_summary:OK",
+      "stdout_tail": "{\n  \"generated_at_utc\": \"2025-12-17T03:25:14.774399+00:00\",\n  \"source\": \"docs/validation/fusion_core_regression_latest.json\",\n  \"verdict\": \"PASS\",\n  \"crashes\": 0,\n  \"txt_latest\": \"docs/briefs/week3_operator_summary_latest.txt\",\n  \"txt_stamped\": \"docs/briefs/week3_operator_summary_20251217_032514.txt\",\n  \"demo_lock\": true\n}",
+      "stderr_tail": ""
+    },
+    {
+      "label": "legal_case_snapshot",
+      "script": "src/legal_case_snapshot.py",
+      "ok": true,
+      "returncode": 0,
+      "note": "legal_case_snapshot:OK",
+      "stdout_tail": "{\n  \"json_latest\": \"docs/briefs/legal_case_snapshot_latest.json\",\n  \"txt_latest\": \"docs/briefs/legal_case_snapshot_latest.txt\",\n  \"json_stamped\": \"docs/briefs/legal_case_snapshot_20251217_032514.json\",\n  \"txt_stamped\": \"docs/briefs/legal_case_snapshot_20251217_032514.txt\",\n  \"legacy_json\": \"src/docs/legal_case_snapshot.json\",\n  \"legacy_txt\": \"src/docs/legal_case_snapshot.txt\"\n}",
+      "stderr_tail": ""
+    },
+    {
+      "label": "week3_demo_narrative",
+      "script": "src/week3_demo_narrative.py",
+      "ok": false,
+      "returncode": 127,
+      "note": "week3_demo_narrative:SKIP (missing src/week3_demo_narrative.py)",
+      "stdout_tail": "",
+      "stderr_tail": ""
+    },
+    {
+      "label": "week3_demo_pack_gate",
+      "script": "src/week3_demo_pack_gate.py",
+      "ok": true,
+      "returncode": 0,
+      "note": "week3_demo_pack_gate:OK",
+      "stdout_tail": "{\n  \"generated_at_utc\": \"2025-12-17T03:25:14.839965+00:00\",\n  \"context\": \"week3_demo_pack\",\n  \"verdict\": \"PASS\",\n  \"missing\": [],\n  \"latest\": \"docs/validation/week3_demo_pack_gate_latest.json\",\n  \"stamped\": \"docs/validation/week3_demo_pack_gate_20251217_032514.json\"\n}",
+      "stderr_tail": "/Users/dextermorris/ghost/parser_starter_kit/src/week3_demo_pack_gate.py:21: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).\n  return datetime.utcnow().strftime(\"%Y%m%d_%H%M%S\")"
+    },
+    {
+      "label": "mobile_enjoy_mode",
+      "script": "src/mobile_enjoy_mode.py",
+      "ok": true,
+      "returncode": 0,
+      "note": "mobile_enjoy_mode:OK",
+      "stdout_tail": ": FAIL\\n- Degraded validation verdict/status: UNKNOWN\\n\\n4. What we do NOT know:\\n- Intent, causality, and attribution are not inferred from synthetic telemetry.\\n- Operator judgment is required before escalation beyond bounded posture.\\n\\n5. Recommended posture:\"\n  },\n  \"demo_lock\": true,\n  \"demo_context\": \"week3_mobile_enjoy_mode\",\n  \"demo_generated_at_utc\": \"2025-12-17T03:25:15.168891+00:00\",\n  \"demo_notes\": [\n    \"Demo lock enforced.\",\n    \"System is operating in read-only mode.\",\n    \"Outputs are deterministic and safe for briefing.\"\n  ],\n  \"manifest_latest\": \"docs/briefs/mobile_enjoy_manifest_latest.json\",\n  \"manifest_stamped\": \"docs/briefs/mobile_enjoy_manifest_20251217_032515.json\"\n}",
+      "stderr_tail": ""
+    },
+    {
+      "label": "week3_demo_readiness_gate",
+      "script": "src/week3_demo_readiness_gate.py",
+      "ok": true,
+      "returncode": 0,
+      "note": "week3_demo_readiness_gate:OK",
+      "stdout_tail": "{\n  \"latest_json\": \"docs/validation/week3_demo_readiness_gate_latest.json\",\n  \"latest_txt\": \"docs/validation/week3_demo_readiness_gate_latest.txt\",\n  \"stamped_json\": \"docs/validation/week3_demo_readiness_gate_20251217_032515.json\",\n  \"stamped_txt\": \"docs/validation/week3_demo_readiness_gate_20251217_032515.txt\"\n}\nVerdict: PASS",
+      "stderr_tail": ""
+    }
+  ],
+  "notes": [
+    "Assessment is probabilistic and bounded; operator judgment applies.",
+    "This packet is demo-safe and should survive missing inputs."
+  ]
+}
