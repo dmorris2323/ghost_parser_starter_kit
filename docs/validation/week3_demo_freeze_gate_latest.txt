@@ -1,8 +1,9 @@
-Verdict: FAIL
+Verdict: PASS
 WEEK-3 DEMO FREEZE GATE
-generated_at_utc: 2025-12-18T15:32:00.469454+00:00
-demo_safe: False
+generated_at_utc: 2025-12-18T15:56:55.558992+00:00
+demo_safe: True
 mode: DEMO_FREEZE
+loaded_from: /Users/dextermorris/ghost/parser_starter_kit/docs/demo/demo_freeze_manifest.json
+manifest demo_safe value: True
+banner_len: 141
 
-Violations:
-- DEMO_SAFE_FALSE

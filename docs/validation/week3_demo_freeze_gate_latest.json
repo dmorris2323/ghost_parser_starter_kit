@@ -1,15 +1,12 @@
 {
-  "generated_at_utc": "2025-12-18T15:32:00.469454+00:00",
+  "generated_at_utc": "2025-12-18T15:56:55.558992+00:00",
   "context": "week3_demo_freeze_gate",
-  "strict": true,
-  "verdict": "FAIL",
-  "demo_safe": false,
-  "manifest_mode": "DEMO_FREEZE",
+  "verdict": "PASS",
+  "violations": [],
   "required_missing": [],
-  "optional_present": [],
-  "violations": [
-    "DEMO_SAFE_FALSE"
-  ],
-  "banner_checks": [],
-  "manifest_path": "docs/demo/demo_freeze_manifest.json"
+  "demo_safe": true,
+  "mode": "DEMO_FREEZE",
+  "loaded_from": "/Users/dextermorris/ghost/parser_starter_kit/docs/demo/demo_freeze_manifest.json",
+  "manifest_demo_safe_value": true,
+  "banner_len": 141
 }
