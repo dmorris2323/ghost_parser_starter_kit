@@ -1,199 +1,167 @@
 # src/spectral_owl_explain.py
-"""
-Spectral Owl Explain (LOCKED)
------------------------------
-Reads latest demo artifacts (best effort) and returns stable explanation dicts.
-
-IMPORTANT:
-- This is deterministic formatting + bounded interpretation.
-- Not an LLM.
-- Never crashes.
-"""
-
 from __future__ import annotations
 
 import json
 from pathlib import Path
-from typing import Any, Dict, Optional
+from typing import Any, Dict
 
 from spectral_owl_reasoning_templates import render_template
 
-
-# -----------------------------
-# Repo paths (best effort)
-# -----------------------------
-_THIS_FILE = Path(__file__).resolve()
-SRC_DIR = _THIS_FILE.parent
-REPO_ROOT = SRC_DIR.parent
-
+REPO_ROOT = Path(__file__).resolve().parent.parent
 BRIEFS_DIR = REPO_ROOT / "docs" / "briefs"
 BASEDEF_DIR = REPO_ROOT / "docs" / "base_defense"
 
 
-def _read_json_best_effort(path: Path) -> Optional[dict]:
+def _read_text_best_effort(p: Path) -> str:
     try:
-        if not path.exists():
-            return None
-        return json.loads(path.read_text(encoding="utf-8"))
+        if not p.exists():
+            return ""
+        return p.read_text(encoding="utf-8", errors="replace")
     except Exception:
-        return None
+        return ""
 
 
-def _read_txt_best_effort(path: Path) -> Optional[str]:
+def _read_json_best_effort(p: Path) -> Dict[str, Any]:
     try:
-        if not path.exists():
-            return None
-        return path.read_text(encoding="utf-8")
+        if not p.exists():
+            return {}
+        return json.loads(p.read_text(encoding="utf-8", errors="replace"))
     except Exception:
-        return None
+        return {}
 
 
 def explain_installation_threat_map() -> Dict[str, str]:
-    """
-    Uses docs/base_defense/installation_threat_map_latest.json if present.
-    Falls back to txt parse if needed.
-    """
-    latest_json = BASEDEF_DIR / "installation_threat_map_latest.json"
-    latest_txt = BASEDEF_DIR / "installation_threat_map_latest.txt"
+    txt = ""
+    for cand in [
+        BASEDEF_DIR / "installation_threat_map_latest.txt",
+        BRIEFS_DIR / "installation_threat_map_latest.txt",
+    ]:
+        txt = _read_text_best_effort(cand).strip()
+        if txt:
+            break
 
-    data: Dict[str, Any] = {}
-    j = _read_json_best_effort(latest_json)
-    if isinstance(j, dict):
-        # Try to normalize expected fields
-        data["posture"] = j.get("posture") or j.get("recommended_posture") or "DUTY_OFFICER_NOTIFY"
-        data["overall_risk_band"] = j.get("overall_risk_band") or j.get("risk_band") or "UNKNOWN"
-        data["max_risk_score"] = j.get("max_risk_score") or j.get("risk_score") or ""
-        # Zones can be dict or list; normalize
-        zones = j.get("zones")
-        if isinstance(zones, list):
-            norm = []
-            for item in zones:
-                if isinstance(item, dict):
-                    # expected: {"zone": "NORTH", "risk_score": 12.0, "band": "LOW", "notes": "..."}
-                    norm.append(
-                        {
-                            "zone": item.get("zone") or item.get("name") or "ZONE",
-                            "risk_score": item.get("risk_score", ""),
-                            "band": item.get("band", ""),
-                            "notes": item.get("notes", ""),
-                        }
-                    )
-            data["zones"] = norm
-        elif isinstance(zones, dict):
-            # map->list
-            norm = []
-            for k, v in zones.items():
-                if isinstance(v, dict):
-                    norm.append(
-                        {
-                            "zone": k,
-                            "risk_score": v.get("risk_score", ""),
-                            "band": v.get("band", ""),
-                            "notes": v.get("notes", ""),
-                        }
-                    )
-            data["zones"] = norm
-    else:
-        # fallback: text only (no strict parsing; keep bounded)
-        t = _read_txt_best_effort(latest_txt) or ""
-        data["posture"] = "DUTY_OFFICER_NOTIFY"
-        data["overall_risk_band"] = "UNKNOWN"
-        data["max_risk_score"] = ""
-        data["zones"] = [f"TXT_PRESENT:{bool(t.strip())}"]
-
-    return render_template("installation_threat_map", data)
+    return render_template(
+        headline="Installation Threat Map — Bounded Zone Posture",
+        summary=(
+            "This product summarizes installation risk by zone using bounded scoring. "
+            "It is not attribution or intent detection."
+        ),
+        confidence="Medium (bounded; depends on sensor coverage + freshness).",
+        recommended_posture="DUTY_OFFICER_NOTIFY if any zone reaches ELEVATED+ (bounded policy).",
+        what_we_know=[
+            "Zone risk bands are derived from bounded scoring, not narrative attribution.",
+            "Max zone score drives overall band and posture recommendation.",
+            "Outputs are safe even when inputs are incomplete (bounded defaults).",
+        ],
+        what_we_do_not_know=[
+            "We cannot infer adversary intent from this map alone.",
+            "We cannot attribute causality without corroborating sensors and operator judgment.",
+            "We cannot confirm persistence vs. transient anomalies without time-series context.",
+        ],
+        assumptions=[
+            "The latest artifact is the most relevant snapshot.",
+            "Risk scoring rules are consistent across zones.",
+            "Operator will validate sensor availability before escalation.",
+        ],
+        uncertainties=[
+            "Sensor outage / latency may understate true risk.",
+            "Zone boundaries may not align to actual facility layout in demo mode.",
+        ],
+        operator_actions=[
+            "Open the artifact text and validate zone notes against other products.",
+            "If ELEVATED+, verify sensor health and request corroboration (bounded escalation).",
+            "Document decision trail: what changed, what’s confirmed, what remains unknown.",
+        ],
+        notice="Assessment is probabilistic and bounded; operator judgment applies.",
+    )
 
 
 def explain_commander_brief() -> Dict[str, str]:
-    """
-    Uses docs/briefs/commander_brief_latest.txt/json (best effort).
-    We keep it bounded: extract statuses where possible.
-    """
-    latest_json = BRIEFS_DIR / "commander_brief_latest.json"
-    latest_txt = BRIEFS_DIR / "commander_brief_latest.txt"
+    txt = _read_text_best_effort(BRIEFS_DIR / "commander_brief_latest.txt").strip()
+    j = _read_json_best_effort(BRIEFS_DIR / "commander_brief_latest.json")
 
-    data: Dict[str, Any] = {}
-    j = _read_json_best_effort(latest_json)
-    if isinstance(j, dict):
-        # Some versions store envelope/report differently; best effort
-        envelope = j
-        report = j.get("report") if isinstance(j.get("report"), dict) else {}
-        # statuses we can safely show
-        data["fusion_validation_status"] = (
-            report.get("fusion_validation_status")
-            or report.get("fusion_validation_verdict")
-            or envelope.get("fusion_validation_status")
-            or "UNKNOWN"
-        )
-        data["degraded_validation_status"] = (
-            report.get("degraded_validation_status")
-            or report.get("degraded_validation_verdict")
-            or envelope.get("degraded_validation_status")
-            or "UNKNOWN"
-        )
-        data["recommended_posture"] = (
-            report.get("recommended_posture")
-            or envelope.get("recommended_posture")
-            or envelope.get("posture")
-            or "MAINTAIN_CURRENT_POSTURE"
-        )
-    else:
-        # fallback: scan the text for a posture/status hint (still bounded)
-        t = _read_txt_best_effort(latest_txt) or ""
-        posture = "MAINTAIN_CURRENT_POSTURE"
-        if "DUTY_OFFICER_NOTIFY" in t:
-            posture = "DUTY_OFFICER_NOTIFY"
-        data["fusion_validation_status"] = "UNKNOWN"
-        data["degraded_validation_status"] = "UNKNOWN"
-        data["recommended_posture"] = posture
+    posture = "UNKNOWN"
+    try:
+        posture = str(j.get("recommended_posture") or j.get("posture") or "UNKNOWN")
+    except Exception:
+        posture = "UNKNOWN"
 
-    return render_template("commander_brief", data)
+    return render_template(
+        headline="Commander Brief — What changed / Why it matters / What’s next",
+        summary=(
+            "This is the executive wrapper: it turns multiple artifacts into a bounded, "
+            "operator-readable snapshot designed to survive missing inputs."
+        ),
+        confidence="Medium-High (if readiness gate PASS; otherwise bounded/limited).",
+        recommended_posture=posture,
+        what_we_know=[
+            "The brief is generated from available artifacts at runtime.",
+            "It is designed to be safe under degraded conditions (no crashes).",
+            "It uses bounded language and explicitly states what we cannot say.",
+        ],
+        what_we_do_not_know=[
+            "Intent, causality, and attribution are not inferred from synthetic telemetry.",
+            "Single-product conclusions are not allowed—corroboration required.",
+        ],
+        assumptions=[
+            "Artifacts are current and generated from the same demo run window.",
+            "Operator reviews violations/gates before using for decisions.",
+        ],
+        uncertainties=[
+            "If any upstream artifacts are stale, posture could lag reality.",
+            "If a module was run out of order, dependencies may mislead.",
+        ],
+        operator_actions=[
+            "Verify readiness gate status before briefing.",
+            "Use this brief as a starting point—then open supporting artifacts.",
+            "Escalate only after corroboration or policy threshold is met.",
+        ],
+        notice="Assessment is probabilistic and bounded; operator judgment applies.",
+    )
 
 
 def explain_legal_snapshot() -> Dict[str, str]:
-    """
-    Uses docs/briefs/legal_case_snapshot_latest.json/txt.
-    """
-    latest_json = BRIEFS_DIR / "legal_case_snapshot_latest.json"
-    latest_txt = BRIEFS_DIR / "legal_case_snapshot_latest.txt"
+    txt = _read_text_best_effort(BRIEFS_DIR / "legal_case_snapshot_latest.txt").strip()
+    j = _read_json_best_effort(BRIEFS_DIR / "legal_case_snapshot_latest.json")
 
-    data: Dict[str, Any] = {}
-    j = _read_json_best_effort(latest_json)
-    if isinstance(j, dict):
-        data["risk_band"] = j.get("risk_band") or j.get("risk_band_name") or "UNKNOWN"
-        data["risk_score"] = j.get("risk_score") or ""
-        data["recommended_posture"] = j.get("recommended_posture") or "HOLD_ACTION_PENDING_REVIEW"
-        flags = j.get("ambiguity_flags")
-        if isinstance(flags, list):
-            data["ambiguity_flags"] = flags
-        else:
-            data["ambiguity_flags"] = []
-    else:
-        t = _read_txt_best_effort(latest_txt) or ""
-        # keep bounded: don’t parse too hard
-        data["risk_band"] = "UNKNOWN"
-        data["risk_score"] = ""
-        data["recommended_posture"] = "HOLD_ACTION_PENDING_REVIEW"
-        data["ambiguity_flags"] = ["TXT_PRESENT" if bool(t.strip()) else "TXT_MISSING"]
+    band = "UNKNOWN"
+    posture = "HOLD_ACTION_PENDING_REVIEW"
+    try:
+        band = str(j.get("risk_band") or j.get("risk", {}).get("band") or "UNKNOWN")
+        posture = str(j.get("recommended_posture") or posture)
+    except Exception:
+        pass
 
-    return render_template("legal_snapshot", data)
-
-
-def main() -> int:
-    """
-    Quick local smoke test:
-      python src/spectral_owl_explain.py
-    """
-    ex1 = explain_installation_threat_map()
-    ex2 = explain_commander_brief()
-    ex3 = explain_legal_snapshot()
-
-    print("installation_threat_map keys:", list(ex1.keys()))
-    print("commander_brief keys:", list(ex2.keys()))
-    print("legal_snapshot keys:", list(ex3.keys()))
-    return 0
-
-
-if __name__ == "__main__":
-    raise SystemExit(main())
+    return render_template(
+        headline="Legal Snapshot — Demo-Safe Case Triage (Bounded)",
+        summary=(
+            "This product demonstrates bounded decision support: it highlights missing data, "
+            "risk banding, and a conservative posture to prevent overreach."
+        ),
+        confidence="Low-Medium (demo inputs; unknown party/jurisdiction triggers ambiguity flags).",
+        recommended_posture=posture,
+        what_we_know=[
+            f"Risk band is reported as: {band}.",
+            "Ambiguity flags signal missing critical facts (party/jurisdiction).",
+            "Recommended posture is conservative by design (prevents incorrect action).",
+        ],
+        what_we_do_not_know=[
+            "We cannot recommend escalation without verified account file + jurisdiction.",
+            "We cannot assert legal sufficiency or evidentiary posture from demo data.",
+        ],
+        assumptions=[
+            "Missing facts are treated as high-risk until verified.",
+            "Operator will review source documentation before action.",
+        ],
+        uncertainties=[
+            "Demo values may exaggerate risk to prove guardrails.",
+            "Real workflows require firm-specific policy and attorney review.",
+        ],
+        operator_actions=[
+            "Verify party identity, jurisdiction, and evidentiary posture.",
+            "Confirm debt details and chain of documentation.",
+            "Keep posture HOLD until required facts are confirmed.",
+        ],
+        notice="Assessment is probabilistic and bounded; operator judgment applies.",
+    )
 
