@@ -1,36 +1,11 @@
 {
-  "schema_version": "10F.1",
-  "generated_at_utc": "2025-12-18T00:00:00+00:00",
+  "schema_version": "1.0",
+  "generated_at_utc": "MANUAL_OVERRIDE",
   "mode": "DEMO_FREEZE",
   "demo_safe": true,
-  "required_banner_text": "DEMO MODE ACTIVE — READ ONLY\nNo baselines updated. No training. No mutation.\nAssessment is probabilistic and bounded; operator judgment applies.",
-  "notes": "This manifest freezes the demo into read-only, bounded outputs. If demo_safe is true, UI must display required_banner_text.",
-  "required_files": [
-    "docs/briefs/commander_brief_latest.txt",
-    "docs/briefs/commander_brief_latest.json",
-    "docs/briefs/week3_operator_summary_latest.txt",
-    "docs/briefs/legal_case_snapshot_latest.txt",
-    "docs/briefs/legal_case_snapshot_latest.json",
-    "docs/briefs/week3_demo_narrative_latest.txt",
-    "docs/briefs/week3_shari_demo_packet_latest.txt",
-    "docs/validation/week3_demo_readiness_gate_latest.json",
-    "docs/validation/week3_demo_readiness_gate_latest.txt",
-    "docs/validation/fusion_core_regression_latest.json",
-    "docs/validation/fusion_core_regression_latest.txt",
-    "docs/packages/week3_cloud_demo_package_latest.zip",
-    "docs/packages/week3_cloud_demo_package_manifest_latest.json"
-  ],
-  "optional_files": [
-    "docs/briefs/mobile_enjoy_manifest_latest.json",
-    "docs/base_defense/installation_threat_map_latest.txt"
-  ],
-  "freeze_outputs": {
-    "manifest_latest": "docs/demo/demo_freeze_manifest_latest.json",
-    "manifest_stamped_dir": "docs/demo",
-    "pack_latest": "docs/packages/week3_demo_freeze_pack_latest.zip",
-    "pack_stamped_dir": "docs/packages",
-    "gate_latest_json": "docs/validation/week3_demo_freeze_gate_latest.json",
-    "gate_latest_txt": "docs/validation/week3_demo_freeze_gate_latest.txt"
-  }
+  "required_banner_text": "DEMO FREEZE — READ ONLY\\nNo baselines updated. No training. No mutation.\\nAssessment is probabilistic and bounded; operator judgment applies.",
+  "notes": [
+    "This manifest is a contractual demo boundary.",
+    "If demo_safe is false, the demo freeze gate must fail."
+  ]
 }
-

@@ -1,0 +1,8 @@
+Verdict: FAIL
+WEEK-3 DEMO FREEZE GATE
+generated_at_utc: 2025-12-18T15:32:00.469454+00:00
+demo_safe: False
+mode: DEMO_FREEZE
+
+Violations:
+- DEMO_SAFE_FALSE
