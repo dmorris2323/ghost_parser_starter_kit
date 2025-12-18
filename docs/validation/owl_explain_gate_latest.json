@@ -1,0 +1,119 @@
+{
+  "generated_at_utc": "2025-12-18T14:08:45.122335+00:00",
+  "context": "owl_explain_gate",
+  "verdict": "FAIL",
+  "crashes": 0,
+  "violations": [
+    "explain_installation_threat_map: explain_installation_threat_map: confidence not in ['HIGH', 'LOW', 'MEDIUM', 'UNKNOWN'] (got 'Confidence: UNKNOWN')",
+    "explain_commander_brief: explain_commander_brief: confidence not in ['HIGH', 'LOW', 'MEDIUM', 'UNKNOWN'] (got 'Confidence: LOW')",
+    "explain_legal_snapshot: explain_legal_snapshot: confidence not in ['HIGH', 'LOW', 'MEDIUM', 'UNKNOWN'] (got 'Confidence: LOW')"
+  ],
+  "checks": {
+    "generated_at_utc": "2025-12-18T14:08:45.122335+00:00",
+    "context": "owl_explain_gate",
+    "strict": true,
+    "module_import": {
+      "ok": true,
+      "module": "src.spectral_owl_explain",
+      "error": null
+    },
+    "functions": {
+      "installation_threat_map": {
+        "present": true,
+        "ok": false,
+        "violations": [
+          "explain_installation_threat_map: confidence not in ['HIGH', 'LOW', 'MEDIUM', 'UNKNOWN'] (got 'Confidence: UNKNOWN')"
+        ],
+        "keys": [
+          "headline",
+          "summary",
+          "confidence",
+          "recommended_posture",
+          "what_we_know",
+          "what_we_do_not_know",
+          "assumptions",
+          "uncertainties",
+          "operator_actions",
+          "notice"
+        ],
+        "normalized_preview": {
+          "headline": "Spectral Owl Explanation \u2014 Radar / Installation Threat Map",
+          "summary": "This is a bounded, best-effort explanation derived from the latest available artifacts. No intent, attribution, or causality is inferred without corroboration.\n\nSignal: risk band UNKNOWN.",
+          "confidence": "Confidence: UNKNOWN",
+          "recommended_posture": "Recommended posture: DUTY_OFFICER_NOTIFY",
+          "what_we_know": "- Posture is DUTY_OFFICER_NOTIFY based on bounded zone risk.\n- Overall risk band is UNKNOWN.",
+          "what_we_do_not_know": "- Cannot infer adversary intent from this product.\n- Cannot attribute causality without corroborating sensors and operator judgment.",
+          "assumptions": "- Inputs are bounded summaries; underlying sensor details may be incomplete.\n- Zone bands reflect risk scoring rules, not intent.",
+          "uncertainties": "- Sensor health and coverage limitations may distort risk banding.\n- Operator confirmation may change posture.",
+          "operator_actions": "- Verify sensor status for highest-risk zone(s).\n- Check for corroboration across independent sensors before escalation.\n- Maintain bounded language in reporting.",
+          "notice": "Assessment is probabilistic and bounded; operator judgment applies."
+        }
+      },
+      "commander_brief": {
+        "present": true,
+        "ok": false,
+        "violations": [
+          "explain_commander_brief: confidence not in ['HIGH', 'LOW', 'MEDIUM', 'UNKNOWN'] (got 'Confidence: LOW')"
+        ],
+        "keys": [
+          "headline",
+          "summary",
+          "confidence",
+          "recommended_posture",
+          "what_we_know",
+          "what_we_do_not_know",
+          "assumptions",
+          "uncertainties",
+          "operator_actions",
+          "notice",
+          "demo_notice"
+        ],
+        "normalized_preview": {
+          "headline": "Spectral Owl Explanation \u2014 Commander Brief",
+          "summary": "This is a bounded, best-effort explanation derived from the latest available artifacts. No intent, attribution, or causality is inferred without corroboration.",
+          "confidence": "Confidence: LOW",
+          "recommended_posture": "Recommended posture: MAINTAIN_CURRENT_POSTURE",
+          "what_we_know": "- This brief is composed from best-effort artifacts and bounded statements.\n- It is designed to remain readable even when some upstream products are missing.",
+          "what_we_do_not_know": "- Intent, causality, and attribution are not inferred from synthetic telemetry.\n- Escalation decisions require operator review.",
+          "assumptions": "- Latest artifacts reflect the most recent run, not necessarily the full operational picture.\n- Commander brief language remains bounded and non-attributive by design.",
+          "uncertainties": "- Missing or degraded upstream artifacts may change recommended posture.",
+          "operator_actions": "- Review the brief\u2019s 'What we do NOT know' section before any escalation.\n- Cross-check the referenced validation artifacts for PASS/FAIL context.",
+          "notice": "Assessment is probabilistic and bounded; operator judgment applies."
+        }
+      },
+      "legal_snapshot": {
+        "present": true,
+        "ok": false,
+        "violations": [
+          "explain_legal_snapshot: confidence not in ['HIGH', 'LOW', 'MEDIUM', 'UNKNOWN'] (got 'Confidence: LOW')"
+        ],
+        "keys": [
+          "headline",
+          "summary",
+          "confidence",
+          "recommended_posture",
+          "what_we_know",
+          "what_we_do_not_know",
+          "assumptions",
+          "uncertainties",
+          "operator_actions",
+          "notice",
+          "demo_notice"
+        ],
+        "normalized_preview": {
+          "headline": "Spectral Owl Explanation \u2014 Legal Case Snapshot",
+          "summary": "This is a bounded, best-effort explanation derived from the latest available artifacts. No intent, attribution, or causality is inferred without corroboration.",
+          "confidence": "Confidence: LOW",
+          "recommended_posture": "Recommended posture: HOLD_ACTION_PENDING_REVIEW",
+          "what_we_know": "- This is a demo/training snapshot intended to show bounded decision support.\n- Unknown party/jurisdiction flags indicate missing facts that must be verified.",
+          "what_we_do_not_know": "- Cannot determine legal strategy without account file, jurisdiction, and evidence posture.\n- Cannot validate identities from this artifact alone.",
+          "assumptions": "- Numbers and bands are simulated for demo/training unless verified by operator.\n- All outputs are bounded and non-advisory; attorney/operator judgment applies.",
+          "uncertainties": "- Jurisdiction and party identity missing materially changes outcome.",
+          "operator_actions": "- Verify party identity and jurisdiction.\n- Confirm evidentiary posture (contract, statements, notice, service).\n- Do not escalate beyond HOLD posture without verification.",
+          "notice": "Assessment is probabilistic and bounded; operator judgment applies."
+        }
+      }
+    }
+  },
+  "notice": "Assessment is probabilistic and bounded; operator judgment applies."
+}
