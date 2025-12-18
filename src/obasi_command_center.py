@@ -8,14 +8,13 @@ import json
 import sys
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Any, Dict, Optional
+from typing import Dict, Optional
 
 import streamlit as st
 import streamlit.components.v1 as components
 
 # -----------------------------
 # Path bootstrap (critical for Streamlit)
-# Ensures repo root + src/ are importable even if src/ is not a package.
 # -----------------------------
 _THIS_FILE = Path(__file__).resolve()
 SRC_DIR = _THIS_FILE.parent
@@ -39,9 +38,9 @@ except Exception:
     def demo_lock_banner() -> str:
         return ""
 
+
 # -----------------------------
-# Module 10D: Spectral Owl explain wiring (best-effort)
-# If missing, the GUI still runs and shows a safe fallback explanation.
+# Spectral Owl explain wiring (best-effort)
 # -----------------------------
 try:
     from spectral_owl_explain import (
@@ -55,7 +54,7 @@ except Exception:
         return {
             "Status": "Unavailable",
             "Reason": f"{name} explainer module not importable in this environment.",
-            "Fix": "Ensure src/spectral_owl_explain.py exists and imports are correct. (GUI will still run.)",
+            "Fix": "Ensure src/spectral_owl_explain.py exists and its imports are correct. (GUI will still run.)",
             "Operator note": "Assessment is probabilistic and bounded; operator judgment applies.",
         }
 
@@ -125,7 +124,13 @@ def _file_card(label: str, p: Path, kind: str = "txt") -> None:
         if ok:
             try:
                 data = p.read_text(encoding="utf-8", errors="ignore")
-                st.download_button("Download", data, file_name=p.name, use_container_width=True)
+                st.download_button(
+                    "Download",
+                    data,
+                    file_name=p.name,
+                    use_container_width=True,
+                    key=f"dl_{p.as_posix()}",
+                )
             except Exception:
                 st.write("")
 
@@ -188,11 +193,6 @@ section[data-testid="stSidebar"] * { color: #d6f7ff; }
 .stButton > button:hover {
   border: 1px solid rgba(255, 77, 166, 0.35) !important;
   background: linear-gradient(180deg, rgba(255, 77, 166, 0.14), rgba(0, 255, 209, 0.06)) !important;
-}
-details {
-  border: 1px solid rgba(0, 255, 209, 0.18) !important;
-  border-radius: 14px !important;
-  background: rgba(0,0,0,0.18) !important;
 }
 pre, code {
   background: rgba(0,0,0,0.32) !important;
@@ -332,11 +332,11 @@ def main() -> int:
 
     st.sidebar.markdown("---")
     st.sidebar.markdown("### Quick Explainers")
-    if st.sidebar.button("🦉 Explain Radar / Threat Map", use_container_width=True):
+    if st.sidebar.button("🦉 Explain Radar / Threat Map", use_container_width=True, key="sb_explain_threat"):
         _sidebar_explain("Threat Map Explanation", explain_installation_threat_map())
-    if st.sidebar.button("🦉 Explain Commander Brief", use_container_width=True):
+    if st.sidebar.button("🦉 Explain Commander Brief", use_container_width=True, key="sb_explain_commander"):
         _sidebar_explain("Commander Brief Explanation", explain_commander_brief())
-    if st.sidebar.button("🦉 Explain Legal Snapshot", use_container_width=True):
+    if st.sidebar.button("🦉 Explain Legal Snapshot", use_container_width=True, key="sb_explain_legal"):
         _sidebar_explain("Legal Snapshot Explanation", explain_legal_snapshot())
 
     st.sidebar.markdown("---")
@@ -362,10 +362,10 @@ def main() -> int:
 
         col_a, col_b = st.columns(2)
         with col_a:
-            if st.button("Open Threat Map (TXT)", use_container_width=True):
+            if st.button("Open Threat Map (TXT)", use_container_width=True, key="btn_open_threat_txt"):
                 st.code(_read_text_best_effort(threat_map_txt), language="text")
         with col_b:
-            if st.button("Open Threat Map (JSON)", use_container_width=True):
+            if st.button("Open Threat Map (JSON)", use_container_width=True, key="btn_open_threat_json"):
                 st.json(_read_json_best_effort(threat_map_json) or {})
 
         st.markdown("</div>", unsafe_allow_html=True)
@@ -376,13 +376,13 @@ def main() -> int:
 
         top_cols = st.columns([1, 1, 1])
         with top_cols[0]:
-            if st.button("🦉 Explain Commander Brief", use_container_width=True):
+            if st.button("🦉 Explain Commander Brief", use_container_width=True, key="main_explain_commander"):
                 _sidebar_explain("Commander Brief Explanation", explain_commander_brief())
         with top_cols[1]:
-            if st.button("Open Brief (TXT)", use_container_width=True):
+            if st.button("Open Brief (TXT)", use_container_width=True, key="btn_open_commander_txt"):
                 st.code(_read_text_best_effort(commander_txt), language="text")
         with top_cols[2]:
-            if st.button("Open Brief (JSON)", use_container_width=True):
+            if st.button("Open Brief (JSON)", use_container_width=True, key="btn_open_commander_json"):
                 st.json(_read_json_best_effort(commander_json) or {})
 
         with st.expander("Preview (head)", expanded=True):
@@ -399,10 +399,10 @@ def main() -> int:
 
         rcols = st.columns([1, 1])
         with rcols[0]:
-            if st.button("🦉 Explain Legal Snapshot", use_container_width=True):
+            if st.button("🦉 Explain Legal Snapshot", use_container_width=True, key="main_explain_legal"):
                 _sidebar_explain("Legal Snapshot Explanation", explain_legal_snapshot())
         with rcols[1]:
-            if st.button("Open Legal Snapshot (TXT)", use_container_width=True):
+            if st.button("Open Legal Snapshot (TXT)", use_container_width=True, key="btn_open_legal_txt"):
                 st.code(_read_text_best_effort(legal_txt), language="text")
 
         with st.expander("Preview (head)", expanded=True):
@@ -440,7 +440,7 @@ def main() -> int:
 <div style="margin-top:14px; padding:10px 12px; border-radius:14px;
             border:1px solid rgba(0,255,209,0.18);
             background: rgba(0,0,0,0.18); color: rgba(214,247,255,0.80);">
-  <b>Operator note:</b> This is a demo GUI. It reads existing artifacts and does not mutate baselines.
+  <b>Operator note:</b> Demo GUI reads existing artifacts only (no mutation).
   <span style="opacity:.8;">Assessment is probabilistic and bounded; operator judgment applies.</span>
 </div>
 """,
