@@ -1,14 +1,48 @@
+# src/obasi_command_center.py
+# Obasi Command Center — premium demo HUD (Streamlit)
+# SAFE: read-only, best-effort, never crashes.
+
+from __future__ import annotations
+
 import json
-import os
+import sys
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Dict, Optional
 
 import streamlit as st
 import streamlit.components.v1 as components
 
-# =========================
-# Spectral Owl explain hooks
-# =========================
+# -----------------------------
+# Path bootstrap (critical for Streamlit)
+# Ensures repo root + src/ are importable even if src/ is not a package.
+# -----------------------------
+_THIS_FILE = Path(__file__).resolve()
+SRC_DIR = _THIS_FILE.parent
+REPO_ROOT = SRC_DIR.parent
+
+if str(REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(REPO_ROOT))
+if str(SRC_DIR) not in sys.path:
+    sys.path.insert(0, str(SRC_DIR))
+
+# -----------------------------
+# Optional Demo Lock integration (never required)
+# -----------------------------
+try:
+    from demo_lock import is_demo_locked, demo_lock_banner
+except Exception:
+
+    def is_demo_locked() -> bool:
+        return False
+
+    def demo_lock_banner() -> str:
+        return ""
+
+# -----------------------------
+# Module 10D: Spectral Owl explain wiring (best-effort)
+# If missing, the GUI still runs and shows a safe fallback explanation.
+# -----------------------------
 try:
     from spectral_owl_explain import (
         explain_installation_threat_map,
@@ -16,35 +50,47 @@ try:
         explain_legal_snapshot,
     )
 except Exception:
-    # Hard fail not allowed in demo GUI
+
+    def _fallback_explain(name: str) -> Dict[str, str]:
+        return {
+            "Status": "Unavailable",
+            "Reason": f"{name} explainer module not importable in this environment.",
+            "Fix": "Ensure src/spectral_owl_explain.py exists and imports are correct. (GUI will still run.)",
+            "Operator note": "Assessment is probabilistic and bounded; operator judgment applies.",
+        }
+
     def explain_installation_threat_map() -> Dict[str, str]:
-        return {"ERROR": "spectral_owl_explain.py not available."}
+        return _fallback_explain("Threat Map")
 
     def explain_commander_brief() -> Dict[str, str]:
-        return {"ERROR": "spectral_owl_explain.py not available."}
+        return _fallback_explain("Commander Brief")
 
     def explain_legal_snapshot() -> Dict[str, str]:
-        return {"ERROR": "spectral_owl_explain.py not available."}
+        return _fallback_explain("Legal Snapshot")
 
 
-BASE = Path(".")
-DOCS = BASE / "docs"
+DOCS = REPO_ROOT / "docs"
 BRIEFS = DOCS / "briefs"
+BASE_DEF = DOCS / "base_defense"
 VALIDATION = DOCS / "validation"
-BASEDEF = DOCS / "base_defense"
+PACKAGES = DOCS / "packages"
 
 
-# -------------------------
-# Safe file reads
-# -------------------------
-def _read_text_best_effort(p: Path, max_chars: int = 120_000) -> str:
+# -----------------------------
+# Helpers (best-effort, no crash)
+# -----------------------------
+def _utc_now_iso() -> str:
+    return datetime.now(timezone.utc).isoformat()
+
+
+def _read_text_best_effort(p: Path, max_chars: int = 60_000) -> str:
     try:
         if not p.exists():
             return ""
-        txt = p.read_text(encoding="utf-8", errors="ignore")
-        if len(txt) > max_chars:
-            return txt[:max_chars] + "\n\n[TRUNCATED]"
-        return txt
+        t = p.read_text(encoding="utf-8", errors="ignore")
+        if len(t) > max_chars:
+            return t[:max_chars] + "\n\n[TRUNCATED]"
+        return t
     except Exception:
         return ""
 
@@ -58,154 +104,179 @@ def _read_json_best_effort(p: Path) -> Optional[dict]:
         return None
 
 
-def _open_file_in_os(path: Path) -> str:
-    """
-    Best effort 'open' for macOS demo convenience.
-    Never crash.
-    """
+def _present(p: Path) -> bool:
     try:
-        if not path.exists():
-            return "MISSING"
-        # macOS
-        os.system(f'open "{str(path)}"')
-        return "OK"
+        return p.exists()
     except Exception:
-        return "ERROR"
+        return False
 
 
-# -------------------------
-# HUD radar animation
-# -------------------------
-def _radar_widget(height_px: int = 260) -> None:
-    """
-    Pure eye-candy radar sweep. No live tracking claims.
-    """
-    html = f"""
-    <div style="border:1px solid rgba(80,255,180,0.25); border-radius:14px; padding:10px; background: rgba(0,0,0,0.45);">
-      <div style="font-family: ui-monospace, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
-                  color: rgba(140,255,210,0.95); font-size: 12px; letter-spacing: 0.06em; margin-bottom:6px;">
-        OBASI RADAR (VISUAL ONLY)
-      </div>
-      <canvas id="radar" width="560" height="{height_px}" style="width:100%; height:{height_px}px;"></canvas>
-      <div style="margin-top:6px; color: rgba(160,255,220,0.75); font-size:11px; font-family: ui-monospace, monospace;">
-        Demo visualization. Not live tracking. No intent/attribution implied.
-      </div>
-    </div>
-    <script>
-      const canvas = document.getElementById('radar');
-      const ctx = canvas.getContext('2d');
-      const W = canvas.width, H = canvas.height;
-      const cx = W*0.35, cy = H*0.55;
-      const R = Math.min(W,H)*0.42;
-
-      function rand(min,max){{ return Math.random()*(max-min)+min; }}
-
-      const blips = Array.from({{length: 14}}).map(()=>({{
-        r: rand(R*0.15, R*0.98),
-        a: rand(0, Math.PI*2),
-        s: rand(0.3, 1.0),
-        p: rand(0.2, 1.0)
-      }}));
-
-      let t = 0;
-
-      function draw() {{
-        t += 0.018;
-        ctx.clearRect(0,0,W,H);
-
-        // background
-        ctx.fillStyle = 'rgba(0,0,0,0.0)';
-        ctx.fillRect(0,0,W,H);
-
-        // grid circles
-        for (let i=1;i<=4;i++) {{
-          ctx.beginPath();
-          ctx.arc(cx,cy,(R*i/4),0,Math.PI*2);
-          ctx.strokeStyle = 'rgba(80,255,180,0.10)';
-          ctx.lineWidth = 1;
-          ctx.stroke();
-        }}
-
-        // cross lines
-        ctx.beginPath();
-        ctx.moveTo(cx-R, cy); ctx.lineTo(cx+R, cy);
-        ctx.moveTo(cx, cy-R); ctx.lineTo(cx, cy+R);
-        ctx.strokeStyle = 'rgba(80,255,180,0.10)';
-        ctx.stroke();
-
-        // sweep
-        const sweepA = (t % (Math.PI*2));
-        const grad = ctx.createRadialGradient(cx,cy,0,cx,cy,R);
-        grad.addColorStop(0, 'rgba(80,255,180,0.00)');
-        grad.addColorStop(0.65, 'rgba(80,255,180,0.08)');
-        grad.addColorStop(1, 'rgba(80,255,180,0.00)');
-
-        ctx.save();
-        ctx.translate(cx,cy);
-        ctx.rotate(sweepA);
-        ctx.beginPath();
-        ctx.moveTo(0,0);
-        ctx.arc(0,0,R, -0.12, 0.12);
-        ctx.closePath();
-        ctx.fillStyle = grad;
-        ctx.fill();
-        ctx.restore();
-
-        // blips
-        blips.forEach((b, idx)=>{{
-          const x = cx + Math.cos(b.a + t*0.2*b.s)*b.r;
-          const y = cy + Math.sin(b.a + t*0.2*b.s)*b.r;
-          const pulse = (Math.sin(t*3 + idx) * 0.5 + 0.5);
-          const alpha = 0.15 + pulse*0.55*b.p;
-
-          ctx.beginPath();
-          ctx.arc(x,y, 2.0 + pulse*2.2, 0, Math.PI*2);
-          ctx.fillStyle = `rgba(140,255,210,${{alpha}})`;
-          ctx.fill();
-
-          ctx.beginPath();
-          ctx.arc(x,y, 7.0 + pulse*6.0, 0, Math.PI*2);
-          ctx.strokeStyle = `rgba(140,255,210,${{alpha*0.35}})`;
-          ctx.lineWidth = 1;
-          ctx.stroke();
-        }});
-
-        requestAnimationFrame(draw);
-      }}
-      draw();
-    </script>
-    """
-    components.html(html, height=height_px + 80)
+def _file_card(label: str, p: Path, kind: str = "txt") -> None:
+    ok = _present(p)
+    cols = st.columns([2, 1, 1, 2])
+    with cols[0]:
+        st.write(f"**{label}**")
+        st.caption(str(p))
+    with cols[1]:
+        st.write("✅" if ok else "—")
+    with cols[2]:
+        st.write(kind.upper())
+    with cols[3]:
+        if ok:
+            try:
+                data = p.read_text(encoding="utf-8", errors="ignore")
+                st.download_button("Download", data, file_name=p.name, use_container_width=True)
+            except Exception:
+                st.write("")
 
 
-# -------------------------
-# UI helpers
-# -------------------------
-def _hud_title(text: str) -> None:
-    st.markdown(
-        f"""
-        <div style="
-            padding: 14px 16px;
-            border-radius: 16px;
-            background: linear-gradient(135deg, rgba(0,0,0,0.72), rgba(0,40,30,0.32));
-            border: 1px solid rgba(80,255,180,0.25);
-            box-shadow: 0 0 24px rgba(80,255,180,0.08);
-            ">
-          <div style="font-size: 22px; font-weight: 800; letter-spacing: 0.06em; color: rgba(200,255,235,0.95);">
-            {text}
-          </div>
-          <div style="margin-top:6px; font-size: 12px; letter-spacing: 0.08em; color: rgba(160,255,220,0.65);">
-            Demo-safe • Bounded statements • Operator judgment applies
-          </div>
-        </div>
-        """,
-        unsafe_allow_html=True,
-    )
+def _hud_css() -> str:
+    return """
+<style>
+html, body, [class*="css"]  {
+  font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+}
+.stApp {
+  background: radial-gradient(1200px 800px at 15% 10%, rgba(0, 255, 209, 0.10), rgba(0,0,0,0)),
+              radial-gradient(900px 600px at 85% 0%, rgba(255, 77, 166, 0.08), rgba(0,0,0,0)),
+              linear-gradient(180deg, #05070b 0%, #05060a 40%, #02030a 100%);
+  color: #d6f7ff;
+}
+section[data-testid="stSidebar"] {
+  background: linear-gradient(180deg, rgba(2,10,18,0.96), rgba(3,6,14,0.96));
+  border-right: 1px solid rgba(0, 255, 209, 0.20);
+}
+section[data-testid="stSidebar"] * { color: #d6f7ff; }
+
+.hud-card {
+  border: 1px solid rgba(0, 255, 209, 0.22);
+  background: linear-gradient(180deg, rgba(7, 16, 30, 0.55), rgba(3, 6, 14, 0.55));
+  box-shadow: 0 0 0 1px rgba(255,255,255,0.04) inset, 0 16px 40px rgba(0,0,0,0.45);
+  border-radius: 16px;
+  padding: 14px 14px 10px 14px;
+}
+.hud-title {
+  font-size: 14px;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: rgba(214, 247, 255, 0.85);
+  margin-bottom: 6px;
+}
+.hud-kpi {
+  font-size: 28px;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  margin: 0;
+}
+.hud-sub {
+  font-size: 12px;
+  color: rgba(214, 247, 255, 0.70);
+  margin-top: -2px;
+}
+.hud-divider {
+  height: 1px;
+  background: linear-gradient(90deg, rgba(0,255,209,0.35), rgba(255,77,166,0.18), rgba(0,0,0,0));
+  margin: 10px 0 8px 0;
+}
+.stButton > button {
+  border-radius: 12px !important;
+  border: 1px solid rgba(0, 255, 209, 0.30) !important;
+  background: linear-gradient(180deg, rgba(0, 255, 209, 0.10), rgba(0, 255, 209, 0.03)) !important;
+  color: #d6f7ff !important;
+  font-weight: 700 !important;
+}
+.stButton > button:hover {
+  border: 1px solid rgba(255, 77, 166, 0.35) !important;
+  background: linear-gradient(180deg, rgba(255, 77, 166, 0.14), rgba(0, 255, 209, 0.06)) !important;
+}
+details {
+  border: 1px solid rgba(0, 255, 209, 0.18) !important;
+  border-radius: 14px !important;
+  background: rgba(0,0,0,0.18) !important;
+}
+pre, code {
+  background: rgba(0,0,0,0.32) !important;
+  border: 1px solid rgba(0, 255, 209, 0.15) !important;
+}
+.hud-header {
+  border: 1px solid rgba(0,255,209,0.22);
+  background: linear-gradient(90deg, rgba(0,255,209,0.08), rgba(255,77,166,0.06), rgba(0,0,0,0));
+  border-radius: 18px;
+  padding: 14px 16px;
+  margin-bottom: 14px;
+}
+.hud-header h1 { font-size: 24px; margin: 0; letter-spacing: .06em; }
+.hud-header p {
+  margin: 2px 0 0 0;
+  color: rgba(214, 247, 255, 0.72);
+  font-size: 12px;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+.hud-badge {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 999px;
+  border: 1px solid rgba(0,255,209,0.35);
+  background: rgba(0,255,209,0.08);
+  font-size: 11px;
+  letter-spacing: .10em;
+  text-transform: uppercase;
+  color: rgba(214,247,255,0.88);
+}
+</style>
+"""
+
+
+def _radar_widget_html(size_px: int = 280) -> str:
+    s = int(size_px)
+    return f"""
+<div style="display:flex; align-items:center; justify-content:center;">
+  <div style="
+    width:{s}px; height:{s}px; border-radius:50%;
+    border:1px solid rgba(0,255,209,0.35);
+    background:
+      radial-gradient(circle at center, rgba(0,255,209,0.12), rgba(0,0,0,0) 60%),
+      repeating-radial-gradient(circle at center, rgba(0,255,209,0.18) 0 1px, rgba(0,0,0,0) 1px 22px),
+      repeating-linear-gradient(0deg, rgba(0,255,209,0.10) 0 1px, rgba(0,0,0,0) 1px 22px),
+      repeating-linear-gradient(90deg, rgba(0,255,209,0.10) 0 1px, rgba(0,0,0,0) 1px 22px);
+    box-shadow: 0 0 0 1px rgba(255,255,255,0.04) inset, 0 18px 50px rgba(0,0,0,0.55);
+    position:relative;
+    overflow:hidden;
+  ">
+    <div style="
+      position:absolute; inset:-20%;
+      background: conic-gradient(from 0deg, rgba(0,255,209,0.0) 0 70%, rgba(0,255,209,0.22) 82%, rgba(0,255,209,0.0) 100%);
+      animation: spin 2.8s linear infinite;
+      "></div>
+
+    <div style="position:absolute; width:8px; height:8px; border-radius:50%; background:rgba(255,77,166,0.75); left:68%; top:38%;
+                box-shadow:0 0 14px rgba(255,77,166,0.8); animation:pulse 1.6s ease-in-out infinite;"></div>
+    <div style="position:absolute; width:6px; height:6px; border-radius:50%; background:rgba(0,255,209,0.85); left:28%; top:62%;
+                box-shadow:0 0 12px rgba(0,255,209,0.8); animation:pulse 1.9s ease-in-out infinite;"></div>
+    <div style="position:absolute; width:5px; height:5px; border-radius:50%; background:rgba(0,255,209,0.7); left:44%; top:24%;
+                box-shadow:0 0 10px rgba(0,255,209,0.6); animation:pulse 2.3s ease-in-out infinite;"></div>
+
+    <div style="position:absolute; inset:0; border-radius:50%;
+      background: radial-gradient(circle at center, rgba(0,0,0,0) 0 55%, rgba(0,0,0,0.18) 70%, rgba(0,0,0,0.55) 100%);
+      pointer-events:none;"></div>
+  </div>
+</div>
+
+<style>
+@keyframes spin {{ from {{ transform: rotate(0deg); }} to {{ transform: rotate(360deg); }} }}
+@keyframes pulse {{
+  0%, 100% {{ transform: scale(1); opacity: .65; }}
+  50% {{ transform: scale(1.35); opacity: 1; }}
+}}
+</style>
+"""
 
 
 def _sidebar_explain(title: str, payload: Dict[str, str]) -> None:
-    st.sidebar.markdown("## 🦉 Spectral Owl Explanation")
-    st.sidebar.caption(title)
+    st.sidebar.markdown(f"## 🦉 {title}")
+    if is_demo_locked():
+        st.sidebar.warning(demo_lock_banner())
     for k, v in payload.items():
         st.sidebar.markdown(f"**{k}**")
         st.sidebar.write(v)
@@ -218,180 +289,162 @@ def main() -> int:
         layout="wide",
         initial_sidebar_state="expanded",
     )
+    st.markdown(_hud_css(), unsafe_allow_html=True)
 
-    # Global HUD styling
     st.markdown(
-        """
-        <style>
-          .stApp { background: radial-gradient(circle at 20% 10%, rgba(0,35,25,0.55), rgba(0,0,0,0.92)); }
-          h1,h2,h3 { letter-spacing: 0.05em; }
-          [data-testid="stSidebar"] {
-            background: linear-gradient(180deg, rgba(0,0,0,0.92), rgba(0,25,18,0.55));
-            border-right: 1px solid rgba(80,255,180,0.18);
-          }
-          .hudCard {
-            border: 1px solid rgba(80,255,180,0.22);
-            border-radius: 16px;
-            padding: 14px;
-            background: rgba(0,0,0,0.52);
-            box-shadow: 0 0 22px rgba(80,255,180,0.06);
-          }
-          .hudLabel {
-            font-family: ui-monospace, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-            color: rgba(160,255,220,0.85);
-            font-size: 12px;
-            letter-spacing: 0.10em;
-            margin-bottom: 8px;
-          }
-          .hudText {
-            color: rgba(220,255,245,0.92);
-            font-size: 14px;
-            line-height: 1.35;
-            white-space: pre-wrap;
-          }
-        </style>
-        """,
+        f"""
+<div class="hud-header">
+  <span class="hud-badge">OBASI • COMMAND CENTER</span>
+  <h1>Ghost Lantern Labs — Demo War Room</h1>
+  <p>Read-only • Bounded outputs • Operator judgment applies • generated_at_utc: {_utc_now_iso()}</p>
+</div>
+""",
         unsafe_allow_html=True,
     )
 
-    _hud_title("OBASI COMMAND CENTER — WEEK-3 DEMO HUD")
-
-    # Sidebar controls
-    st.sidebar.markdown("### Controls")
-    if st.sidebar.button("Refresh / Reload"):
-        st.rerun()
-
-    show_raw = st.sidebar.toggle("Show raw JSON where available", value=False)
-
-    # Load artifacts (best effort)
     commander_txt = BRIEFS / "commander_brief_latest.txt"
     commander_json = BRIEFS / "commander_brief_latest.json"
+    operator_summary = BRIEFS / "week3_operator_summary_latest.txt"
     legal_txt = BRIEFS / "legal_case_snapshot_latest.txt"
     legal_json = BRIEFS / "legal_case_snapshot_latest.json"
-    operator_summary_txt = BRIEFS / "week3_operator_summary_latest.txt"
-    narrative_txt = BRIEFS / "week3_demo_narrative_latest.txt"
-    mobile_manifest_json = BRIEFS / "mobile_enjoy_manifest_latest.json"
+    threat_map_txt = BASE_DEF / "installation_threat_map_latest.txt"
+    threat_map_json = BASE_DEF / "installation_threat_map_latest.json"
+    mobile_manifest = BRIEFS / "mobile_enjoy_manifest_latest.json"
+    demo_orchestrator_txt = BRIEFS / "week3_demo_orchestrator_latest.txt"
+    demo_readiness_txt = VALIDATION / "week3_demo_readiness_gate_latest.txt"
 
-    threat_map_txt = BASEDEF / "installation_threat_map_latest.txt"
-    threat_map_json = BASEDEF / "installation_threat_map_latest.json"
+    commander_head = "\n".join(_read_text_best_effort(commander_txt).splitlines()[:40])
+    operator_head = "\n".join(_read_text_best_effort(operator_summary).splitlines()[:18])
+    legal_head = "\n".join(_read_text_best_effort(legal_txt).splitlines()[:28])
+    readiness_head = "\n".join(_read_text_best_effort(demo_readiness_txt).splitlines()[:32])
+    orchestrator_head = "\n".join(_read_text_best_effort(demo_orchestrator_txt).splitlines()[:28])
 
-    # Read
-    commander_text = _read_text_best_effort(commander_txt)
-    legal_text = _read_text_best_effort(legal_txt)
-    operator_text = _read_text_best_effort(operator_summary_txt)
-    narrative_text = _read_text_best_effort(narrative_txt)
-    threat_text = _read_text_best_effort(threat_map_txt)
+    threat_j = _read_json_best_effort(threat_map_json) or {}
+    posture = str(threat_j.get("posture", "UNKNOWN"))
+    band = str(threat_j.get("overall_risk_band", threat_j.get("overall_band", "UNKNOWN")))
+    max_score = str(threat_j.get("max_risk_score", "N/A"))
 
-    commander_obj = _read_json_best_effort(commander_json)
-    legal_obj = _read_json_best_effort(legal_json)
-    threat_obj = _read_json_best_effort(threat_map_json)
-    mobile_obj = _read_json_best_effort(mobile_manifest_json)
+    # Sidebar quick actions
+    st.sidebar.markdown("### System")
+    st.sidebar.write(f"**Demo lock:** {'✅ ON' if is_demo_locked() else 'OFF'}")
+    if is_demo_locked():
+        st.sidebar.info(demo_lock_banner())
 
-    # Layout
-    left, right = st.columns([0.42, 0.58], gap="large")
+    st.sidebar.markdown("---")
+    st.sidebar.markdown("### Quick Explainers")
+    if st.sidebar.button("🦉 Explain Radar / Threat Map", use_container_width=True):
+        _sidebar_explain("Threat Map Explanation", explain_installation_threat_map())
+    if st.sidebar.button("🦉 Explain Commander Brief", use_container_width=True):
+        _sidebar_explain("Commander Brief Explanation", explain_commander_brief())
+    if st.sidebar.button("🦉 Explain Legal Snapshot", use_container_width=True):
+        _sidebar_explain("Legal Snapshot Explanation", explain_legal_snapshot())
+
+    st.sidebar.markdown("---")
+    st.sidebar.markdown("### Artifacts (downloads)")
+    _file_card("Commander Brief (TXT)", commander_txt, "txt")
+    _file_card("Commander Brief (JSON)", commander_json, "json")
+    _file_card("Week-3 Operator Summary (TXT)", operator_summary, "txt")
+    _file_card("Legal Snapshot (TXT)", legal_txt, "txt")
+    _file_card("Legal Snapshot (JSON)", legal_json, "json")
+    _file_card("Threat Map (TXT)", threat_map_txt, "txt")
+    _file_card("Threat Map (JSON)", threat_map_json, "json")
+    _file_card("Mobile Enjoy Manifest (JSON)", mobile_manifest, "json")
+
+    left, mid, right = st.columns([1.0, 1.25, 1.0], gap="large")
 
     with left:
-        st.markdown('<div class="hudCard">', unsafe_allow_html=True)
-        st.markdown('<div class="hudLabel">RADAR VISUAL</div>', unsafe_allow_html=True)
-        _radar_widget(height_px=250)
-        if st.button("🦉 Explain Radar / Threat Map"):
-            _sidebar_explain("Installation Threat Map (bounded)", explain_installation_threat_map())
-        st.markdown("</div>", unsafe_allow_html=True)
+        st.markdown('<div class="hud-card">', unsafe_allow_html=True)
+        st.markdown('<div class="hud-title">Radar / Installation Threat Map</div>', unsafe_allow_html=True)
+        components.html(_radar_widget_html(280), height=310)
+        st.markdown('<div class="hud-divider"></div>', unsafe_allow_html=True)
+        st.markdown(f'<p class="hud-kpi">{band}</p>', unsafe_allow_html=True)
+        st.markdown(f'<div class="hud-sub">posture: {posture} • max_risk_score: {max_score}</div>', unsafe_allow_html=True)
 
-        st.markdown('<div class="hudCard" style="margin-top:14px;">', unsafe_allow_html=True)
-        st.markdown('<div class="hudLabel">INSTALLATION THREAT MAP (ARTIFACT)</div>', unsafe_allow_html=True)
-
-        c1, c2, c3 = st.columns([0.34, 0.33, 0.33])
-        with c1:
-            if st.button("Open TXT"):
-                _open_file_in_os(threat_map_txt)
-        with c2:
-            if st.button("Open JSON"):
-                _open_file_in_os(threat_map_json)
-        with c3:
-            st.write("")
-
-        st.markdown(f'<div class="hudText">{threat_text or "MISSING: docs/base_defense/installation_threat_map_latest.txt"}</div>', unsafe_allow_html=True)
-
-        if show_raw and threat_obj is not None:
-            st.json(threat_obj)
+        col_a, col_b = st.columns(2)
+        with col_a:
+            if st.button("Open Threat Map (TXT)", use_container_width=True):
+                st.code(_read_text_best_effort(threat_map_txt), language="text")
+        with col_b:
+            if st.button("Open Threat Map (JSON)", use_container_width=True):
+                st.json(_read_json_best_effort(threat_map_json) or {})
 
         st.markdown("</div>", unsafe_allow_html=True)
 
-        st.markdown('<div class="hudCard" style="margin-top:14px;">', unsafe_allow_html=True)
-        st.markdown('<div class="hudLabel">WEEK-3 OPERATOR SUMMARY</div>', unsafe_allow_html=True)
-        st.markdown(f'<div class="hudText">{operator_text or "MISSING: docs/briefs/week3_operator_summary_latest.txt"}</div>', unsafe_allow_html=True)
+    with mid:
+        st.markdown('<div class="hud-card">', unsafe_allow_html=True)
+        st.markdown('<div class="hud-title">Commander Brief</div>', unsafe_allow_html=True)
+
+        top_cols = st.columns([1, 1, 1])
+        with top_cols[0]:
+            if st.button("🦉 Explain Commander Brief", use_container_width=True):
+                _sidebar_explain("Commander Brief Explanation", explain_commander_brief())
+        with top_cols[1]:
+            if st.button("Open Brief (TXT)", use_container_width=True):
+                st.code(_read_text_best_effort(commander_txt), language="text")
+        with top_cols[2]:
+            if st.button("Open Brief (JSON)", use_container_width=True):
+                st.json(_read_json_best_effort(commander_json) or {})
+
+        with st.expander("Preview (head)", expanded=True):
+            if commander_head.strip():
+                st.code(commander_head, language="text")
+            else:
+                st.info("Commander brief not found yet. Generate docs/briefs/commander_brief_latest.*")
+
         st.markdown("</div>", unsafe_allow_html=True)
 
     with right:
-        st.markdown('<div class="hudCard">', unsafe_allow_html=True)
-        st.markdown('<div class="hudLabel">COMMANDER BRIEF</div>', unsafe_allow_html=True)
+        st.markdown('<div class="hud-card">', unsafe_allow_html=True)
+        st.markdown('<div class="hud-title">Shari Demo • Legal Snapshot</div>', unsafe_allow_html=True)
 
-        c1, c2, c3 = st.columns([0.34, 0.33, 0.33])
-        with c1:
-            if st.button("Open Brief TXT"):
-                _open_file_in_os(commander_txt)
-        with c2:
-            if st.button("Open Brief JSON"):
-                _open_file_in_os(commander_json)
-        with c3:
-            if st.button("🦉 Explain Commander Brief"):
-                _sidebar_explain("Commander Brief (bounded)", explain_commander_brief())
+        rcols = st.columns([1, 1])
+        with rcols[0]:
+            if st.button("🦉 Explain Legal Snapshot", use_container_width=True):
+                _sidebar_explain("Legal Snapshot Explanation", explain_legal_snapshot())
+        with rcols[1]:
+            if st.button("Open Legal Snapshot (TXT)", use_container_width=True):
+                st.code(_read_text_best_effort(legal_txt), language="text")
 
-        st.markdown(f'<div class="hudText">{commander_text or "MISSING: docs/briefs/commander_brief_latest.txt"}</div>', unsafe_allow_html=True)
+        with st.expander("Preview (head)", expanded=True):
+            if legal_head.strip():
+                st.code(legal_head, language="text")
+            else:
+                st.info("Legal snapshot not found yet. Run: python src/legal_case_snapshot.py")
 
-        if show_raw and commander_obj is not None:
-            st.json(commander_obj)
-
-        st.markdown("</div>", unsafe_allow_html=True)
-
-        st.markdown('<div class="hudCard" style="margin-top:14px;">', unsafe_allow_html=True)
-        st.markdown('<div class="hudLabel">LEGAL CASE SNAPSHOT (SHARI HOOK)</div>', unsafe_allow_html=True)
-
-        c1, c2, c3 = st.columns([0.34, 0.33, 0.33])
-        with c1:
-            if st.button("Open Legal TXT"):
-                _open_file_in_os(legal_txt)
-        with c2:
-            if st.button("Open Legal JSON"):
-                _open_file_in_os(legal_json)
-        with c3:
-            if st.button("🦉 Explain Legal Snapshot"):
-                _sidebar_explain("Legal Snapshot (bounded)", explain_legal_snapshot())
-
-        st.markdown(f'<div class="hudText">{legal_text or "MISSING: docs/briefs/legal_case_snapshot_latest.txt"}</div>', unsafe_allow_html=True)
-
-        if show_raw and legal_obj is not None:
-            st.json(legal_obj)
-
-        st.markdown("</div>", unsafe_allow_html=True)
-
-        st.markdown('<div class="hudCard" style="margin-top:14px;">', unsafe_allow_html=True)
-        st.markdown('<div class="hudLabel">DEMO NARRATIVE (RUNBOOK)</div>', unsafe_allow_html=True)
-        st.markdown(f'<div class="hudText">{narrative_text or "MISSING: docs/briefs/week3_demo_narrative_latest.txt"}</div>', unsafe_allow_html=True)
-        st.markdown("</div>", unsafe_allow_html=True)
-
-        st.markdown('<div class="hudCard" style="margin-top:14px;">', unsafe_allow_html=True)
-        st.markdown('<div class="hudLabel">MOBILE ENJOY MANIFEST (DEMO PACK PATHS)</div>', unsafe_allow_html=True)
-        if mobile_obj is None:
-            st.markdown('<div class="hudText">MISSING: docs/briefs/mobile_enjoy_manifest_latest.json</div>', unsafe_allow_html=True)
+        st.markdown('<div class="hud-divider"></div>', unsafe_allow_html=True)
+        st.markdown('<div class="hud-title">Week-3 Operator Summary</div>', unsafe_allow_html=True)
+        if operator_head.strip():
+            st.code(operator_head, language="text")
         else:
-            st.json(mobile_obj)
+            st.info("Operator summary not found yet. Run: python src/week3_operator_summary.py")
+
+        st.markdown('<div class="hud-divider"></div>', unsafe_allow_html=True)
+        st.markdown('<div class="hud-title">Demo Readiness / Orchestrator</div>', unsafe_allow_html=True)
+
+        with st.expander("Readiness Gate (head)", expanded=False):
+            if readiness_head.strip():
+                st.code(readiness_head, language="text")
+            else:
+                st.info("Readiness gate not found yet. Run: python src/week3_demo_readiness_gate.py")
+
+        with st.expander("Orchestrator (head)", expanded=False):
+            if orchestrator_head.strip():
+                st.code(orchestrator_head, language="text")
+            else:
+                st.info("Orchestrator output not found yet. Run: python src/week3_demo_orchestrator.py")
+
         st.markdown("</div>", unsafe_allow_html=True)
 
-    st.sidebar.markdown("---")
-    st.sidebar.markdown("### Paths (debug)")
-    st.sidebar.code(
-        "\n".join(
-            [
-                f"commander_txt: {commander_txt}",
-                f"threat_map_txt: {threat_map_txt}",
-                f"legal_txt: {legal_txt}",
-                f"operator_summary_txt: {operator_summary_txt}",
-                f"narrative_txt: {narrative_txt}",
-                f"mobile_manifest_json: {mobile_manifest_json}",
-            ]
-        )
+    st.markdown(
+        """
+<div style="margin-top:14px; padding:10px 12px; border-radius:14px;
+            border:1px solid rgba(0,255,209,0.18);
+            background: rgba(0,0,0,0.18); color: rgba(214,247,255,0.80);">
+  <b>Operator note:</b> This is a demo GUI. It reads existing artifacts and does not mutate baselines.
+  <span style="opacity:.8;">Assessment is probabilistic and bounded; operator judgment applies.</span>
+</div>
+""",
+        unsafe_allow_html=True,
     )
 
     return 0
