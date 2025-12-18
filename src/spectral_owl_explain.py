@@ -1,221 +1,199 @@
+# src/spectral_owl_explain.py
+"""
+Spectral Owl Explain (LOCKED)
+-----------------------------
+Reads latest demo artifacts (best effort) and returns stable explanation dicts.
+
+IMPORTANT:
+- This is deterministic formatting + bounded interpretation.
+- Not an LLM.
+- Never crashes.
+"""
+
 from __future__ import annotations
 
 import json
 from pathlib import Path
 from typing import Any, Dict, Optional
 
-from src.spectral_owl_reasoning_templates import render_template, pack_bullets
-
-# Optional demo lock integration (never required)
-try:
-    from demo_lock import is_demo_locked, demo_lock_banner
-except Exception:
-
-    def is_demo_locked() -> bool:
-        return False
-
-    def demo_lock_banner() -> str:
-        return ""
+from spectral_owl_reasoning_templates import render_template
 
 
-BASE = Path(".")
-DOCS = BASE / "docs"
-BRIEFS = DOCS / "briefs"
-BASEDEF = DOCS / "base_defense"
+# -----------------------------
+# Repo paths (best effort)
+# -----------------------------
+_THIS_FILE = Path(__file__).resolve()
+SRC_DIR = _THIS_FILE.parent
+REPO_ROOT = SRC_DIR.parent
+
+BRIEFS_DIR = REPO_ROOT / "docs" / "briefs"
+BASEDEF_DIR = REPO_ROOT / "docs" / "base_defense"
 
 
-def _read_json_best_effort(p: Path) -> Optional[dict]:
+def _read_json_best_effort(path: Path) -> Optional[dict]:
     try:
-        if not p.exists():
+        if not path.exists():
             return None
-        return json.loads(p.read_text(encoding="utf-8", errors="ignore"))
+        return json.loads(path.read_text(encoding="utf-8"))
     except Exception:
         return None
 
 
-def _read_text_best_effort(p: Path, max_chars: int = 120_000) -> str:
+def _read_txt_best_effort(path: Path) -> Optional[str]:
     try:
-        if not p.exists():
-            return ""
-        t = p.read_text(encoding="utf-8", errors="ignore")
-        return t if len(t) <= max_chars else (t[:max_chars] + "\n\n[TRUNCATED]")
+        if not path.exists():
+            return None
+        return path.read_text(encoding="utf-8")
     except Exception:
-        return ""
+        return None
 
 
-def _s(x: Any, default: str = "") -> str:
-    try:
-        if x is None:
-            return default
-        if isinstance(x, str):
-            return x.strip()
-        return str(x).strip()
-    except Exception:
-        return default
-
-
-# ==========================================================
-# EXPLAINERS (LOCKED TEMPLATE OUTPUT)
-# ==========================================================
 def explain_installation_threat_map() -> Dict[str, str]:
     """
-    Reads docs/base_defense/installation_threat_map_latest.(json/txt)
-    Returns locked template dict. Never crashes.
+    Uses docs/base_defense/installation_threat_map_latest.json if present.
+    Falls back to txt parse if needed.
     """
-    j = _read_json_best_effort(BASEDEF / "installation_threat_map_latest.json") or {}
-    posture = _s(j.get("posture"), "UNKNOWN")
-    band = _s(j.get("overall_risk_band"), _s(j.get("overall_band"), "UNKNOWN"))
-    max_score = _s(j.get("max_risk_score"), "N/A")
+    latest_json = BASEDEF_DIR / "installation_threat_map_latest.json"
+    latest_txt = BASEDEF_DIR / "installation_threat_map_latest.txt"
 
-    zones = j.get("zones") or []
-    zone_lines = []
-    try:
-        for z in zones:
-            name = _s(z.get("name") or z.get("zone") or "ZONE")
-            rs = _s(z.get("risk_score"), "N/A")
-            b = _s(z.get("band"), "UNKNOWN")
-            notes = _s(z.get("notes"), "")
-            zone_lines.append(f"{name}: risk_score={rs} band={b}" + (f" notes={notes}" if notes else ""))
-    except Exception:
-        zone_lines = []
+    data: Dict[str, Any] = {}
+    j = _read_json_best_effort(latest_json)
+    if isinstance(j, dict):
+        # Try to normalize expected fields
+        data["posture"] = j.get("posture") or j.get("recommended_posture") or "DUTY_OFFICER_NOTIFY"
+        data["overall_risk_band"] = j.get("overall_risk_band") or j.get("risk_band") or "UNKNOWN"
+        data["max_risk_score"] = j.get("max_risk_score") or j.get("risk_score") or ""
+        # Zones can be dict or list; normalize
+        zones = j.get("zones")
+        if isinstance(zones, list):
+            norm = []
+            for item in zones:
+                if isinstance(item, dict):
+                    # expected: {"zone": "NORTH", "risk_score": 12.0, "band": "LOW", "notes": "..."}
+                    norm.append(
+                        {
+                            "zone": item.get("zone") or item.get("name") or "ZONE",
+                            "risk_score": item.get("risk_score", ""),
+                            "band": item.get("band", ""),
+                            "notes": item.get("notes", ""),
+                        }
+                    )
+            data["zones"] = norm
+        elif isinstance(zones, dict):
+            # map->list
+            norm = []
+            for k, v in zones.items():
+                if isinstance(v, dict):
+                    norm.append(
+                        {
+                            "zone": k,
+                            "risk_score": v.get("risk_score", ""),
+                            "band": v.get("band", ""),
+                            "notes": v.get("notes", ""),
+                        }
+                    )
+            data["zones"] = norm
+    else:
+        # fallback: text only (no strict parsing; keep bounded)
+        t = _read_txt_best_effort(latest_txt) or ""
+        data["posture"] = "DUTY_OFFICER_NOTIFY"
+        data["overall_risk_band"] = "UNKNOWN"
+        data["max_risk_score"] = ""
+        data["zones"] = [f"TXT_PRESENT:{bool(t.strip())}"]
 
-    summary = f"Installation Threat Map indicates bounded posture '{posture}' with overall risk band '{band}'."
-    what_changed = pack_bullets(
-        "Observed zone posture",
-        [
-            f"posture={posture}",
-            f"overall_risk_band={band}",
-            f"max_risk_score={max_score}",
-        ],
-    )
-    why_it_matters = (
-        "This product provides a bounded installation-level risk snapshot for duty officer awareness. "
-        "It does not claim adversary intent or attribution."
-    )
-    what_we_know = pack_bullets("Zones (bounded)", zone_lines[:12] if zone_lines else ["No zone breakdown present."])
-    what_we_do_not_know = (
-        "Adversary intent, causality, and attribution cannot be inferred from this map alone. "
-        "Corroboration across sensors and operator judgment are required."
-    )
-    recommended_posture = posture if posture != "UNKNOWN" else "DUTY_OFFICER_NOTIFY (bounded default if elevated signals suspected)"
-    confidence = "MODERATE — depends on sensor completeness and freshness of zone inputs."
-    next_action = "Open the installation threat map TXT/JSON and confirm zone drivers; verify sensor health before escalation."
-
-    return render_template(
-        domain="Installation Threat Map",
-        summary=summary,
-        what_changed=what_changed,
-        why_it_matters=why_it_matters,
-        what_we_know=what_we_know,
-        what_we_do_not_know=what_we_do_not_know,
-        recommended_posture=recommended_posture,
-        confidence_bounded=confidence,
-        operator_next_action=next_action,
-        demo_locked=is_demo_locked(),
-        demo_banner=demo_lock_banner(),
-    )
+    return render_template("installation_threat_map", data)
 
 
 def explain_commander_brief() -> Dict[str, str]:
     """
-    Reads docs/briefs/commander_brief_latest.(json/txt)
-    Returns locked template dict. Never crashes.
+    Uses docs/briefs/commander_brief_latest.txt/json (best effort).
+    We keep it bounded: extract statuses where possible.
     """
-    txt = _read_text_best_effort(BRIEFS / "commander_brief_latest.txt")
-    j = _read_json_best_effort(BRIEFS / "commander_brief_latest.json") or {}
+    latest_json = BRIEFS_DIR / "commander_brief_latest.json"
+    latest_txt = BRIEFS_DIR / "commander_brief_latest.txt"
 
-    posture = _s(j.get("recommended_posture") or j.get("posture"), "UNKNOWN")
-    what_changed = _s(j.get("what_changed"), "")
-    why_it_matters = _s(j.get("why_it_matters"), "")
-    what_we_know = _s(j.get("what_we_know"), "")
-    what_we_do_not_know = _s(j.get("what_we_do_not_know"), "")
+    data: Dict[str, Any] = {}
+    j = _read_json_best_effort(latest_json)
+    if isinstance(j, dict):
+        # Some versions store envelope/report differently; best effort
+        envelope = j
+        report = j.get("report") if isinstance(j.get("report"), dict) else {}
+        # statuses we can safely show
+        data["fusion_validation_status"] = (
+            report.get("fusion_validation_status")
+            or report.get("fusion_validation_verdict")
+            or envelope.get("fusion_validation_status")
+            or "UNKNOWN"
+        )
+        data["degraded_validation_status"] = (
+            report.get("degraded_validation_status")
+            or report.get("degraded_validation_verdict")
+            or envelope.get("degraded_validation_status")
+            or "UNKNOWN"
+        )
+        data["recommended_posture"] = (
+            report.get("recommended_posture")
+            or envelope.get("recommended_posture")
+            or envelope.get("posture")
+            or "MAINTAIN_CURRENT_POSTURE"
+        )
+    else:
+        # fallback: scan the text for a posture/status hint (still bounded)
+        t = _read_txt_best_effort(latest_txt) or ""
+        posture = "MAINTAIN_CURRENT_POSTURE"
+        if "DUTY_OFFICER_NOTIFY" in t:
+            posture = "DUTY_OFFICER_NOTIFY"
+        data["fusion_validation_status"] = "UNKNOWN"
+        data["degraded_validation_status"] = "UNKNOWN"
+        data["recommended_posture"] = posture
 
-    if not any([what_changed, why_it_matters, what_we_know, what_we_do_not_know]) and txt:
-        head = "\n".join(txt.splitlines()[:40])
-        what_changed = head
-
-    summary = "Commander Brief explanation synthesized from the latest exported commander brief artifact."
-    if posture != "UNKNOWN":
-        summary = f"Commander Brief indicates posture '{posture}' using bounded statements."
-
-    wc = what_changed or "No material change detected from available brief sections."
-    wim = why_it_matters or "Operational impact bounded; maintain guardrails."
-    wwk = what_we_know or "Information remains limited."
-    wwdk = what_we_do_not_know or "Intent, causality, and attribution remain unknown."
-
-    recommended_posture = posture if posture != "UNKNOWN" else "Maintain current posture."
-    confidence = "MODERATE — depends on the completeness of upstream validation artifacts feeding the brief."
-    next_action = "Review commander brief sections; corroborate with validation reports before any escalation."
-
-    return render_template(
-        domain="Commander Brief",
-        summary=summary,
-        what_changed=wc,
-        why_it_matters=wim,
-        what_we_know=wwk,
-        what_we_do_not_know=wwdk,
-        recommended_posture=recommended_posture,
-        confidence_bounded=confidence,
-        operator_next_action=next_action,
-        demo_locked=is_demo_locked(),
-        demo_banner=demo_lock_banner(),
-    )
+    return render_template("commander_brief", data)
 
 
 def explain_legal_snapshot() -> Dict[str, str]:
     """
-    Reads docs/briefs/legal_case_snapshot_latest.(json/txt)
-    Returns locked template dict. Never crashes.
+    Uses docs/briefs/legal_case_snapshot_latest.json/txt.
     """
-    j = _read_json_best_effort(BRIEFS / "legal_case_snapshot_latest.json") or {}
-    txt = _read_text_best_effort(BRIEFS / "legal_case_snapshot_latest.txt")
+    latest_json = BRIEFS_DIR / "legal_case_snapshot_latest.json"
+    latest_txt = BRIEFS_DIR / "legal_case_snapshot_latest.txt"
 
-    risk_band = _s(j.get("risk_band"), "UNKNOWN")
-    posture = _s(j.get("recommended_posture") or j.get("posture"), "UNKNOWN")
-    flags = j.get("ambiguity_flags") or []
+    data: Dict[str, Any] = {}
+    j = _read_json_best_effort(latest_json)
+    if isinstance(j, dict):
+        data["risk_band"] = j.get("risk_band") or j.get("risk_band_name") or "UNKNOWN"
+        data["risk_score"] = j.get("risk_score") or ""
+        data["recommended_posture"] = j.get("recommended_posture") or "HOLD_ACTION_PENDING_REVIEW"
+        flags = j.get("ambiguity_flags")
+        if isinstance(flags, list):
+            data["ambiguity_flags"] = flags
+        else:
+            data["ambiguity_flags"] = []
+    else:
+        t = _read_txt_best_effort(latest_txt) or ""
+        # keep bounded: don’t parse too hard
+        data["risk_band"] = "UNKNOWN"
+        data["risk_score"] = ""
+        data["recommended_posture"] = "HOLD_ACTION_PENDING_REVIEW"
+        data["ambiguity_flags"] = ["TXT_PRESENT" if bool(t.strip()) else "TXT_MISSING"]
 
-    summary = f"Legal snapshot indicates risk band '{risk_band}' with bounded recommended posture '{posture}'."
-    what_changed = pack_bullets(
-        "Snapshot fields",
-        [
-            f"risk_band={risk_band}",
-            f"posture={posture}",
-            f"ambiguity_flags_count={len(flags) if isinstance(flags, list) else 'N/A'}",
-        ],
-    )
-    why_it_matters = (
-        "This is a demo-safe, bounded legal triage snapshot. "
-        "It does not replace attorney judgment or case file review."
-    )
-    what_we_know = pack_bullets(
-        "Bounded facts",
-        [
-            f"risk_band={risk_band}",
-            f"recommended_posture={posture}",
-            f"ambiguity_flags={', '.join([_s(x) for x in flags]) if isinstance(flags, list) and flags else 'None'}",
-        ],
-    )
-    what_we_do_not_know = (
-        "Jurisdiction-specific requirements, evidentiary posture, and party identity may be unknown or incomplete. "
-        "Operator/attorney review required before action."
-    )
-    recommended_posture = posture if posture != "UNKNOWN" else "HOLD_ACTION_PENDING_REVIEW"
-    confidence = "LOW to MODERATE — bounded by missing case facts and intentionally conservative defaults."
-    next_action = "Open the legal snapshot TXT; confirm party/jurisdiction and evidence posture before escalation."
+    return render_template("legal_snapshot", data)
 
-    _ = txt  # reserved for future use
 
-    return render_template(
-        domain="Legal Case Snapshot",
-        summary=summary,
-        what_changed=what_changed,
-        why_it_matters=why_it_matters,
-        what_we_know=what_we_know,
-        what_we_do_not_know=what_we_do_not_know,
-        recommended_posture=recommended_posture,
-        confidence_bounded=confidence,
-        operator_next_action=next_action,
-        demo_locked=is_demo_locked(),
-        demo_banner=demo_lock_banner(),
-    )
+def main() -> int:
+    """
+    Quick local smoke test:
+      python src/spectral_owl_explain.py
+    """
+    ex1 = explain_installation_threat_map()
+    ex2 = explain_commander_brief()
+    ex3 = explain_legal_snapshot()
+
+    print("installation_threat_map keys:", list(ex1.keys()))
+    print("commander_brief keys:", list(ex2.keys()))
+    print("legal_snapshot keys:", list(ex3.keys()))
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
 
