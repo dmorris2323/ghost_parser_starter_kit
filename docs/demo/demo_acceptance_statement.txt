@@ -1,0 +1,13 @@
+DEMO ACCEPTANCE STATEMENT
+
+This system is a demonstration platform operating in DEMO FREEZE mode.
+
+• Outputs are bounded, read-only, and non-adaptive
+• No training, mutation, or autonomous tasking occurs
+• All assessments require human operator judgment
+• This demo does not represent live operational deployment
+
+Acceptance of this demo confirms understanding of scope,
+limitations, and intended use.
+
+Generated for briefing and evaluation purposes only.
