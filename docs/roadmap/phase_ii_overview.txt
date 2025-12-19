@@ -1,0 +1,43 @@
+PHASE II OVERVIEW — POST-BMT ONLY
+
+Phase II represents the transition from a bounded demonstration platform
+to a controlled, authorized, operationally-aligned system.
+
+This phase is intentionally NOT implemented prior to BMT.
+
+------------------------------------
+WHAT PHASE II WOULD ENABLE
+------------------------------------
+• Optional connection to approved live or simulated data sources
+• Expanded analytical depth with oversight controls
+• Mission-aligned workflows informed by unit posture
+• Cloud-hosted deployment under approved authority
+• Human-in-the-loop AI assistance (no autonomy)
+
+------------------------------------
+WHAT PHASE II REQUIRES
+------------------------------------
+• Appropriate clearance environment
+• Explicit mission authorization
+• Legal and policy approval
+• Data governance and audit controls
+• AI guardrails and oversight model
+• Security review and accreditation pathway
+
+------------------------------------
+WHAT PHASE II DOES NOT ASSUME
+------------------------------------
+• No autonomous decision-making
+• No replacement of analysts or commanders
+• No self-learning or mutation
+• No live operational deployment by default
+
+------------------------------------
+STATUS
+------------------------------------
+Phase II is intentionally deferred until after BMT and Tech School,
+when mission context, clearance posture, and operational reality
+are fully understood.
+
+This restraint is deliberate and professional.
+
