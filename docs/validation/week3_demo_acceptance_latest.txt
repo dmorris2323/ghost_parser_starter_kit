@@ -1,6 +1,15 @@
 DEMO STATUS: ACCEPTED
 MODE: DEMO_FREEZE
-READY FOR: Briefing / Evaluation
-NOT READY FOR: Operational deployment
+
+READY FOR:
+• Briefing
+• Evaluation
+• Concept demonstration
+
+NOT READY FOR:
+• Operational deployment
+• Live data integration
+• Autonomous decision-making
 
 No further changes permitted without Phase II authorization.
+

@@ -1,35 +1,23 @@
-PHASE II HANDOFF CHECKLIST
+PHASE II CAPABILITY CONSIDERATIONS
 
-This document answers the question:
-“What would it take to make this real?”
-
-------------------------------------
-THIS DEMO DOES
-------------------------------------
+This demo DOES:
 ✓ Generate bounded analytical summaries
 ✓ Produce commander-safe artifacts
 ✓ Demonstrate UI/UX flow and fusion concepts
 ✓ Enforce demo freeze and safety controls
 
-------------------------------------
-THIS DEMO DOES NOT
-------------------------------------
+This demo DOES NOT:
 ✗ Perform autonomous decision-making
 ✗ Replace human analysts or commanders
 ✗ Connect to live sensors or classified networks
 ✗ Learn, adapt, or self-modify
 
-------------------------------------
-PHASE II WOULD REQUIRE
-------------------------------------
+Phase II would require:
 • Explicit authorization for live data sources
-• AI autonomy guardrails and oversight
-• Cloud deployment authority
-• Legal, policy, and security review
+• AI autonomy guardrails and oversight model
+• Cloud deployment authority and security review
+• Legal and policy approval for operational use
 
-------------------------------------
-STATUS
-------------------------------------
-Phase II is intentionally deferred.
-No changes permitted without authorization.
+This checklist exists to prevent scope creep and
+misinterpretation of demo intent.
 
