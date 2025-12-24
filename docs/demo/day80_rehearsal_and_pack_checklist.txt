@@ -1,0 +1,56 @@
+DAY 80 — REHEARSAL + DEMO PACK FINALIZATION (DEMO FREEZE)
+
+RULES (HARD)
+- No new features.
+- Only: verify, rehearse, package, and fix breakage.
+- If something fails: fix only the failing file / import / manifest.
+- Stop when all gates PASS and the demo runs end-to-end.
+
+REHEARSAL GOAL
+- You can run the demo from cold start in under 5 minutes.
+- No tracebacks. No confusing UI. No missing “latest” artifacts.
+- You can explain: what it does, what it cannot do, why it is safe.
+
+STEP 1 — VERIFY CORE ARTIFACTS (must exist)
+docs/demo/demo_freeze_manifest.json
+docs/demo/demo_acceptance_statement.txt
+docs/demo/phase_ii_handoff_checklist.txt
+docs/validation/week3_demo_acceptance_latest.txt
+docs/validation/week3_demo_freeze_gate_latest.txt
+docs/validation/day79_demo_lockin_audit_latest.txt
+
+STEP 2 — VERIFY DEMO PRODUCTS (must exist)
+docs/briefs/commander_brief_latest.txt
+docs/briefs/commander_brief_latest.json
+docs/briefs/week3_operator_summary_latest.txt
+docs/briefs/legal_case_snapshot_latest.txt
+docs/briefs/legal_case_snapshot_latest.json
+docs/briefs/week3_demo_narrative_latest.txt
+docs/briefs/week3_shari_demo_packet_latest.txt
+docs/base_defense/installation_threat_map_latest.txt
+docs/briefs/mobile_enjoy_manifest_latest.json
+
+STEP 3 — VERIFY PACKAGES (must exist)
+docs/packages/week3_cloud_demo_package_latest.zip
+docs/packages/week3_demo_freeze_pack_latest.zip
+
+STEP 4 — RUN GATES (must PASS)
+python src/week3_demo_readiness_gate.py
+python src/week3_demo_freeze_gate.py
+python src/day79_demo_lockin_audit.py
+python src/day80_rehearsal_pack_audit.py
+
+STEP 5 — REHEARSAL RUN (no exceptions)
+python src/week3_demo_orchestrator.py
+streamlit run src/obasi_command_center.py
+
+STEP 6 — STOP CONDITIONS
+- If any audit FAILS: fix only the listed missing file / violation.
+- If UI tracebacks: fix imports, duplicate keys, missing modules only.
+- Do not add visuals/features today.
+
+DAY 80 SUCCESS
+- day80_rehearsal_pack_audit: PASS
+- all gates PASS
+- demo orchestrator PASS
+- Streamlit boots with no tracebacks
