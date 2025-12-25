@@ -1,15 +1,13 @@
 DEMO STATUS: ACCEPTED
 MODE: DEMO_FREEZE
+READY FOR: Briefing / Evaluation
+NOT READY FOR: Operational deployment
 
-READY FOR:
-• Briefing
-• Evaluation
-• Concept demonstration
-
-NOT READY FOR:
-• Operational deployment
-• Live data integration
-• Autonomous decision-making
+generated_at_utc: 2025-12-25T12:22:23.683963+00:00
+demo_safe: True
+loaded_from: demo_freeze_loader.load_demo_freeze_manifest()
+banner_len: 141
+demo_acceptance_statement_present: True
+phase_ii_handoff_checklist_present: True
 
 No further changes permitted without Phase II authorization.
-

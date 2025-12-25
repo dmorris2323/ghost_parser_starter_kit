@@ -1,9 +1,9 @@
-PHASE II CAPABILITY CONSIDERATIONS
+PHASE II CAPABILITY CONSIDERATIONS (HANDOFF CHECKLIST)
 
 This demo DOES:
 ✓ Generate bounded analytical summaries
 ✓ Produce commander-safe artifacts
-✓ Demonstrate UI/UX flow and fusion concepts
+✓ Demonstrate UI/UX flow and data fusion concepts
 ✓ Enforce demo freeze and safety controls
 
 This demo DOES NOT:
@@ -12,12 +12,13 @@ This demo DOES NOT:
 ✗ Connect to live sensors or classified networks
 ✗ Learn, adapt, or self-modify
 
-Phase II would require:
+Phase II would require (NOT AUTHORIZED PRE-BMT):
 • Explicit authorization for live data sources
 • AI autonomy guardrails and oversight model
 • Cloud deployment authority and security review
 • Legal and policy approval for operational use
+• Security architecture, logging, and red-team validation
 
-This checklist exists to prevent scope creep and
-misinterpretation of demo intent.
+Operator note:
+This checklist exists to prevent scope creep and misinterpretation.
 
